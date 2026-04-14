@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Playables SDK -->
+<script>// Playables SDK v1.0.0
+// Game lifecycle bridge: rAF-based game-ready detection + event communication
+(function() {
+  'use strict';
+
+  // Idempotency: skip if already initialized (e.g., server-side injection
+  // followed by client-side inject-javascript via the Bloks webview component).
+  if (window.playablesSDK) return;
+
+  var HANDLER_NAME = 'playablesGameEventHandler';
+  var ANDROID_BRIDGE_NAME = '_MetaPlayablesBridge';
+  var RAF_FRAME_THRESHOLD = 3;
+
+  var gameReadySent = false;
+  var firstInteractionSent = false;
+  var errorSent = false;
+  var frameCount = 0;
+  var originalRAF = window.requestAnimationFrame;
+
+  // --- Transport Layer ---
+
+  function hasIOSBridge() {
+    return !!(window.webkit &&
+              window.webkit.messageHandlers &&
+              window.webkit.messageHandlers[HANDLER_NAME]);
+  }
+
+  function hasAndroidBridge() {
+    return !!(window[ANDROID_BRIDGE_NAME] &&
+              typeof window[ANDROID_BRIDGE_NAME].postEvent === 'function');
+  }
+
+  function isInIframe() {
+    return !!(window.parent && window.parent !== window);
+  }
+
+  function sendEvent(eventName, payload) {
+    var message = {
+      type: eventName,
+      payload: payload || {},
+      timestamp: Date.now()
+    };
+
+    if (hasIOSBridge()) {
+      try {
+        window.webkit.messageHandlers[HANDLER_NAME].postMessage(message);
+      } catch (e) { /* ignore */ }
+      return;
+    }
+
+    if (hasAndroidBridge()) {
+    try {
+      var p = payload || {};
+      p.__secureToken = window.__fbAndroidBridgeAuthToken || '';
+      window[ANDROID_BRIDGE_NAME].postEvent(
+        eventName,
+        JSON.stringify(p)
+      );
+    } catch (e) { /* ignore */ }
+    return;
+  }
+
+    if (isInIframe()) {
+      try {
+        window.parent.postMessage(message, '*');
+      } catch (e) { /* ignore */ }
+      return;
+    }
+  }
+
+  // --- rAF Game-Ready Detection ---
+
+  function onFrame() {
+    if (gameReadySent) return;
+
+    frameCount++;
+    if (frameCount >= RAF_FRAME_THRESHOLD) {
+      gameReadySent = true;
+      sendEvent('game_ready', {
+        frame_count: frameCount,
+        detected_at: Date.now()
+      });
+      return;
+    }
+
+    originalRAF.call(window, onFrame);
+  }
+
+  if (originalRAF) {
+    window.requestAnimationFrame = function(callback) {
+      if (!gameReadySent) {
+        return originalRAF.call(window, function(timestamp) {
+          frameCount++;
+          if (frameCount >= RAF_FRAME_THRESHOLD && !gameReadySent) {
+            gameReadySent = true;
+            sendEvent('game_ready', {
+              frame_count: frameCount,
+              detected_at: Date.now()
+            });
+          }
+          callback(timestamp);
+        });
+      }
+      return originalRAF.call(window, callback);
+    };
+  }
+
+  // --- First User Interaction Detection ---
+
+  function setupFirstInteractionDetection() {
+    var events = ['touchstart', 'mousedown', 'keydown'];
+
+    function onFirstInteraction() {
+      if (firstInteractionSent) return;
+      firstInteractionSent = true;
+      sendEvent('user_interaction_start', null);
+
+      for (var i = 0; i < events.length; i++) {
+        document.removeEventListener(events[i], onFirstInteraction, true);
+      }
+    }
+
+    for (var i = 0; i < events.length; i++) {
+      document.addEventListener(events[i], onFirstInteraction, true);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupFirstInteractionDetection);
+  } else {
+    setupFirstInteractionDetection();
+  }
+
+  // --- Auto Error Capture ---
+
+  window.addEventListener('error', function(event) {
+    if (errorSent) return;
+    errorSent = true;
+    sendEvent('error', {
+      message: event.message || 'Unknown error',
+      source: event.filename || '',
+      lineno: event.lineno || 0,
+      colno: event.colno || 0,
+      auto_captured: true
+    });
+  });
+
+  window.addEventListener('unhandledrejection', function(event) {
+    if (errorSent) return;
+    errorSent = true;
+    var reason = event.reason;
+    sendEvent('error', {
+      message: (reason instanceof Error) ? reason.message : String(reason),
+      type: 'unhandled_promise_rejection',
+      auto_captured: true
+    });
+  });
+
+  // --- Public API ---
+
+  window.playablesSDK = {
+    complete: function(score) {
+      sendEvent('game_ended', {
+        score: score,
+        completed: true
+      });
+    },
+
+    error: function(message) {
+      if (errorSent) return;
+      errorSent = true;
+      sendEvent('error', {
+        message: message || 'Unknown error',
+        auto_captured: false
+      });
+    },
+
+    sendEvent: function(eventName, payload) {
+      if (!eventName || typeof eventName !== 'string') return;
+      sendEvent(eventName, payload);
+    }
+  };
+
+  // Kick off rAF detection in case no game code calls rAF immediately
+  if (originalRAF) {
+    originalRAF.call(window, onFrame);
+  }
+})();</script>
+<script>window.Intl=window.Intl||{};Intl.t=function(s){return(Intl._locale&&Intl._locale[s])||s;};</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduS Trader - Daily Strategic Game Plan | 14 Abril 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --teal: #3dd6c0; }
+        body { font-family: 'Inter', sans-serif; background-color: #050709; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0a1015; }
+        ::-webkit-scrollbar-thumb { background: #3dd6c0; border-radius: 3px; }
+        .teal-glow { box-shadow: 0 0 40px rgba(61, 214, 192, 0.12), inset 0 1px 0 rgba(61, 214, 192, 0.1); }
+        .grid-pattern { background-image: radial-gradient(rgba(61,214,192,0.08) 1px, transparent 1px); background-size: 24px 24px; }
+    </style>
+</head>
+<body class="text-slate-200 antialiased">
+    <div class="fixed inset-0 -z-10">
+        <div class="absolute inset-0 bg-[#050709]"></div>
+        <div class="absolute inset-0 grid-pattern opacity-40"></div>
+        <div class="absolute top-0 -left-1/4 w-[800px] h-[800px] bg-[#3dd6c0]/10 rounded-full blur-[150px]"></div>
+        <div class="absolute bottom-0 -right-1/4 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px]"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-40 backdrop-blur-xl bg-[#080c11]/80 border-b border-slate-800/80">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-[72px]">
+                <div class="flex items-center gap-4">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#3dd6c0]/30 to-[#3dd6c0]/5 border border-[#3dd6c0]/30 flex items-center justify-center teal-glow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 17L9 11L13 15L21 7" stroke="#3dd6c0" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M17 7H21V11" stroke="#3dd6c0" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight leading-none">EduS <span class="text-[#3dd6c0]">TRADER</span></h1>
+                        <p class="text-[11px] text-slate-400 uppercase tracking-[0.2em] font-medium mt-1">Institutional Edge</p>
+                    </div>
+                <div class="hidden md:flex items-center gap-6">
+                    <div class="text-right">
+                        <div class="font-mono text-sm text-white">14 ABRIL 2026</div>
+                        <div class="text-xs text-[#3dd6c0] font-medium">09:55 ET • PRE-MARKET</div>
+                    </div>
+                    <div class="w-px h-10 bg-slate-800"></div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-center">
+                            <div class="text-[10px] text-slate-500 uppercase">ES</div>
+                            <div class="font-mono text-lg font-semibold text-white">6957.00</div>
+                            <div class="text-[11px] text-emerald-400">+43.25</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-[10px] text-slate-500 uppercase">NQ</div>
+                            <div class="font-mono text-lg font-semibold text-white">25726</div>
+                            <div class="text-[11px] text-emerald-400">+206.5</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- TITLE -->
+        <div class="mb-8">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="px-3 py-1 rounded-full bg-[#3dd6c0]/10 border border-[#3dd6c0]/30 text-[#3dd6c0] text-xs font-semibold uppercase tracking-wider">Daily Strategic Game Plan</span>
+                <span class="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold">LIVE</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold tracking-tight">ES & NQ • Apertura con Gap Alcista</h2>
+            <p class="text-slate-400 mt-2">Plan operativo institucional para la sesión de Nueva York</p>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            
+            <!-- 1) SENTIMIENTO Y FUNDAMENTALES -->
+            <section class="xl:col-span-8">
+                <div class="h-full rounded-2xl bg-[#0b1218]/80 backdrop-blur-xl border border-slate-800 p-6 lg:p-7 teal-glow">
+                    <div class="flex items-start justify-between mb-5">
+                        <h3 class="text-lg font-semibold flex items-center gap-2">
+                            <span class="w-1.5 h-6 bg-[#3dd6c0] rounded-full"></span>
+                            1. Sentimiento y Fundamentales
+                        </h3>
+                        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                            <div class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></div>
+                            <span class="text-xs font-semibold text-amber-300 uppercase tracking-wider">Risk-On Cauteloso</span>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-5 gap-6">
+                        <div class="md:col-span-3 space-y-4">
+                            <p class="text-sm leading-relaxed text-slate-300">
+                                Futuros descuentan <span class="text-white font-medium">esperanzas de desescalada en Medio Oriente</span> tras diálogo indirecto, aunque persiste el bloqueo naval de EE.UU. El crudo WTI se sostiene cerca de <span class="font-mono text-[#3dd6c0]">$100</span>, actuando como impuesto inflacionario implícito antes del PPI.
+                            </p>
+                            <div class="p-4 rounded-xl bg-[#3dd6c0]/5 border border-[#3dd6c0]/20">
+                                <div class="text-xs text-[#3dd6c0] uppercase font-semibold mb-1">Tesis Macro</div>
+                                <p class="text-sm text-slate-200">Mercado premia desescalada geopolítica + earnings bancarios. Riesgo: PPI caliente reactiva narrativa "higher for longer".</p>
+                            </div>
+                        <div class="md:col-span-2">
+                            <div class="text-xs uppercase text-slate-500 font-semibold mb-2">Earnings Clave (Pre-market)</div>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="px-2.5 py-1 rounded-md bg-slate-800/80 border border-slate-700 text-xs font-mono">BLK</span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-800/80 border border-slate-700 text-xs font-mono">JPM</span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-800/80 border border-slate-700 text-xs font-mono">WFC</span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-800/80 border border-slate-700 text-xs font-mono">C</span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-800/80 border border-slate-700 text-xs font-mono">JNJ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-slate-800">
+                                    <th class="text-left py-2.5 px-3 text-xs font-semibold text-slate-400 uppercase">Hora ET</th>
+                                    <th class="text-left py-2.5 px-3 text-xs font-semibold text-slate-400 uppercase">Dato</th>
+                                    <th class="text-left py-2.5 px-3 text-xs font-semibold text-slate-400 uppercase">Impacto</th>
+                                    <th class="text-left py-2.5 px-3 text-xs font-semibold text-slate-400 uppercase">Nota Liquidez</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/60">
+                                <tr class="hover:bg-slate-800/30">
+                                    <td class="py-3 px-3 font-mono text-white">12:30</td>
+                                    <td class="py-3 px-3 font-medium">PPI m/m & Core PPI</td>
+                                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-red-500/15 text-red-400 border border-red-500/30">ALTO</span></td>
+                                    <td class="py-3 px-3 text-slate-400 text-xs">Reducir 70% 12:20-12:45</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/30">
+                                    <td class="py-3 px-3 font-mono text-white">16:00</td>
+                                    <td class="py-3 px-3 font-medium">Discurso BoE Bailey</td>
+                                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30">MEDIO</span></td>
+                                    <td class="py-3 px-3 text-slate-400 text-xs">Afecta GBP, spillover bajo</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CONTEXTO CORPORATIVO (lado) -->
+            <section class="xl:col-span-4">
+                <div class="h-full rounded-2xl bg-[#0b1218]/80 backdrop-blur-xl border border-slate-800 p-6">
+                    <h3 class="text-lg font-semibold flex items-center gap-2 mb-5">
+                        <span class="w-1.5 h-6 bg-[#3dd6c0] rounded-full"></span>
+                        4. Contexto Corporativo
+                    </h3>
+                    
+                    <div class="mb-5">
+                        <div class="text-xs uppercase text-slate-500 font-semibold mb-2.5">7 Magníficas</div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-900/60 border border-slate-800"><span class="text-xs font-mono">NVDA</span><span class="text-xs font-mono text-emerald-400">+0.25%</span></div>
+                            <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-900/60 border border-slate-800"><span class="text-xs font-mono">META</span><span class="text-xs font-mono text-emerald-400">+9.0%*</span></div>
+                            <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-900/60 border border-slate-800"><span class="text-xs font-mono">TSLA</span><span class="text-xs font-mono text-emerald-400">+2.4%</span></div>
+                            <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-900/60 border border-slate-800"><span class="text-xs font-mono">MSFT</span><span class="text-xs font-mono text-red-400">-7.5%</span></div>
+                            <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-900/60 border border-slate-800"><span class="text-xs font-mono">AAPL</span><span class="text-xs font-mono text-emerald-400">+0.8%</span></div>
+                            <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-900/60 border border-slate-800"><span class="text-xs font-mono">GOOGL</span><span class="text-xs font-mono text-slate-400">+0.1%</span></div>
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-1.5">*cierre previo</p>
+                    </div>
+
+                    <div>
+                        <div class="text-xs uppercase text-slate-500 font-semibold mb-2.5">Top Movers S&P 500 Pre</div>
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between py-2 px-3 rounded-lg bg-emerald-500/5 border border-emerald-500/15"><div class="flex items-center gap-2"><span class="font-mono text-sm">BLK</span><span class="text-[11px] text-slate-400">BlackRock</span></div><span class="font-mono text-sm text-emerald-400">+2.4%</span></div>
+                            <div class="flex items-center justify-between py-2 px-3 rounded-lg bg-emerald-500/5 border border-emerald-500/15"><div class="flex items-center gap-2"><span class="font-mono text-sm">AAL</span><span class="text-[11px] text-slate-400">American Air</span></div><span class="font-mono text-sm text-emerald-400">+6.8%</span></div>
+                            <div class="flex items-center justify-between py-2 px-3 rounded-lg bg-emerald-500/5 border border-emerald-500/15"><div class="flex items-center gap-2"><span class="font-mono text-sm">UAL</span><span class="text-[11px] text-slate-400">United</span></div><span class="font-mono text-sm text-emerald-400">+2.4%</span></div>
+                            <div class="flex items-center justify-between py-2 px-3 rounded-lg bg-red-500/5 border border-red-500/15"><div class="flex items-center gap-2"><span class="font-mono text-sm">WFC</span><span class="text-[11px] text-slate-400">Wells Fargo</span></div><span class="font-mono text-sm text-red-400">-2.5%</span></div>
+                            <div class="flex items-center justify-between py-2 px-3 rounded-lg bg-red-500/5 border border-red-500/15"><div class="flex items-center gap-2"><span class="font-mono text-sm">JPM</span><span class="text-[11px] text-slate-400">JPMorgan</span></div><span class="font-mono text-sm text-red-400">-0.8%</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2) ANÁLISIS ESTRUCTURAL -->
+            <section class="xl:col-span-12">
+                <div class="rounded-2xl bg-[#0b1218]/80 backdrop-blur-xl border border-slate-800 p-6 lg:p-7">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold flex items-center gap-2">
+                            <span class="w-1.5 h-6 bg-[#3dd6c0] rounded-full"></span>
+                            2. Análisis Estructural
+                        </h3>
+                        <button id="copyBtn" onclick="copyLevels()" class="px-3 py-1.5 rounded-lg bg-[#3dd6c0]/10 hover:bg-[#3dd6c0]/20 border border-[#3dd6c0]/30 text-[#3dd6c0] text-xs font-medium transition">Copiar Niveles</button>
+                    </div>
+
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <!-- ES -->
+                        <div class="p-5 rounded-xl bg-gradient-to-br from-slate-900/80 to-slate-900/40 border border-slate-800">
+                            <div class="flex items-baseline justify-between mb-4">
+                                <h4 class="font-bold text-xl">ES • S&P 500</h4>
+                                <div class="text-right"><div class="font-mono text-2xl font-bold text-white">6,957.00</div><div class="text-xs text-emerald-400">Gap +1.1% vs cierre</div></div>
+                            </div>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-4">
+                                <div class="p-2.5 rounded-lg bg-[#0a1015] border border-slate-800"><div class="text-[10px] text-slate-500 uppercase">VAH</div><div class="font-mono font-semibold text-white">6885.75</div></div>
+                                <div class="p-2.5 rounded-lg bg-[#0a1015] border border-slate-800"><div class="text-[10px] text-slate-500 uppercase">POC</div><div class="font-mono font-semibold text-[#3dd6c0]">6856.25</div></div>
+                                <div class="p-2.5 rounded-lg bg-[#0a1015] border border-slate-800"><div class="text-[10px] text-slate-500 uppercase">VAL</div><div class="font-mono font-semibold text-white">6827.75</div></div>
+                                <div class="p-2.5 rounded-lg bg-[#3dd6c0]/10 border border-[#3dd6c0]/30"><div class="text-[10px] text-[#3dd6c0] uppercase">Open > VA</div><div class="font-mono font-semibold text-[#3dd6c0]">6961.87</div></div>
+                                <div class="p-2.5 rounded-lg bg-[#0a1015] border border-slate-800"><div class="text-[10px] text-slate-500 uppercase">onPOC</div><div class="font-mono font-semibold text-amber-300">6939.00</div></div>
+                                <div class="p-2.5 rounded-lg bg-[#0a1015] border border-slate-800"><div class="text-[10px] text-slate-500 uppercase">onVAH</div><div class="font-mono font-semibold">6943.00</div></div>
+                                <div class="p-2.5 rounded-lg bg-[#0a1015] border border-slate-800"><div class="text-[10px] text-slate-500 uppercase">ORB H</div><div class="font-mono font-semibold text-amber-300">6946.00</div></div>
+                                <div class="p-2.5 rounded-lg bg-[#0a1015] border border-slate-800"><div class="text-[10px] text-slate-500 uppercase">Pre-High</div><div class="font-mono font-semibold">6949.50</div></div>
+                            </div>
+                            <p class="text-xs leading-relaxed text-slate-300">Apertura confirmada por encima de VA previo. <span class="text-white">Imbalance long</span> de Market Profile. Ausencia de single prints inferiores sugiere compradores en control.</p>
+                        </div>
+
+                        <!-- NQ -->
+                        <div class="p-5 rounded-xl bg-gradient-to-br from-slate-900/80 to-slate-900/40 border border-slate-800">
+                            <div class="flex items-baseline justify-between mb-4">
+                                <h4 class="font-bold text-xl">NQ • Nasdaq 100</h4>
+                                <div class="text-right"><div class="font-mono text-2xl font-bold text-white">25,726</div><div class="text-xs text-emerald-400">Liderazgo tech</div></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2.5 mb-4">
+                                <div class="p-3 rounded-lg bg-[#0a1015] border border-slate-800"><div class="text-[10px] text-slate-500 uppercase">Área Valor ON</div><div class="font-mono font-semibold text-white">25664 - 25682</div></div>
+                                <div class="p-3 rounded-lg bg-[#0a1015] border border-slate-800"><div class="text-[10px] text-slate-500 uppercase">High Overnight</div><div class="font-mono font-semibold text-amber-300">25770</div></div>
+                            </div>
+                            <div class="p-4 rounded-lg bg-[#3dd6c0]/5 border border-[#3dd6c0]/20">
+                                <div class="text-xs font-semibold text-[#3dd6c0] uppercase mb-2">Lectura Wyckoff + MP</div>
+                                <p class="text-sm text-slate-200 leading-relaxed">Fase D de <strong>Markup</strong> post-acumulación. Spring validado en VAL 6827.75. El precio acepta sobre onVAH con volumen creciente. Objetivo estructural: extensión hacia 7010 si se mantiene la aceptación sobre 6946. Imbalance comprador claro, evitar shorts contra tendencia antes del PPI.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3) MATRIZ DE ESCENARIOS -->
+            <section class="xl:col-span-8">
+                <div class="rounded-2xl bg-[#0b1218]/80 backdrop-blur-xl border border-slate-800 p-6 lg:p-7 h-full">
+                    <h3 class="text-lg font-semibold flex items-center gap-2 mb-6">
+                        <span class="w-1.5 h-6 bg-[#3dd6c0] rounded-full"></span>
+                        3. Matriz de Escenarios
+                    </h3>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <!-- Bullish -->
+                        <div class="relative overflow-hidden rounded-xl bg-gradient-to-b from-emerald-500/10 to-transparent border border-emerald-500/30 p-5">
+                            <div class="absolute top-0 right-0 w-20 h-20 bg-emerald-500/20 rounded-full blur-2xl"></div>
+                            <div class="relative">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="font-bold text-emerald-400 uppercase tracking-wide">Bullish</h4>
+                                    <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold">45%</span>
+                                </div>
+                                <div class="space-y-3 text-xs">
+                                    <div><div class="text-slate-500 uppercase mb-1">Trigger</div><p class="text-slate-200">Aceptación >6946 ORB H (2 cierres 5m). NQ >25730</p></div>
+                                    <div><div class="text-slate-500 uppercase mb-1">Estrategia</div><p class="text-slate-200">Long pullback 6946-6939 (VWAP/onPOC). Añadir sobre 6949.5</p></div>
+                                    <div><div class="text-slate-500 uppercase mb-1">Invalidación</div><p class="text-red-300">Cierre 1m <6935</p></div>
+                                    <div><div class="text-slate-500 uppercase mb-1">Targets</div><p class="font-mono text-white">6961 → 6985 → 7010</p></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Bearish -->
+                        <div class="relative overflow-hidden rounded-xl bg-gradient-to-b from-red-500/10 to-transparent border border-red-500/30 p-5">
+                            <div class="absolute top-0 right-0 w-20 h-20 bg-red-500/20 rounded-full blur-2xl"></div>
+                            <div class="relative">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="font-bold text-red-400 uppercase tracking-wide">Bearish</h4>
+                                    <span class="px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 text-xs font-bold">25%</span>
+                                </div>
+                                <div class="space-y-3 text-xs">
+                                    <div><div class="text-slate-500 uppercase mb-1">Trigger</div><p class="text-slate-200">Rechazo 6949-6962 + pérdida VWAP</p></div>
+                                    <div><div class="text-slate-500 uppercase mb-1">Estrategia</div><p class="text-slate-200">Short momentum bajo 6939 onPOC</p></div>
+                                    <div><div class="text-slate-500 uppercase mb-1">Invalidación</div><p class="text-emerald-300">Reclamo de 6955</p></div>
+                                    <div><div class="text-slate-500 uppercase mb-1">Targets</div><p class="font-mono text-white">6915 → 6885 → 6856</p></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Chop -->
+                        <div class="relative overflow-hidden rounded-xl bg-gradient-to-b from-amber-500/10 to-transparent border border-amber-500/30 p-5">
+                            <div class="absolute top-0 right-0 w-20 h-20 bg-amber-500/20 rounded-full blur-2xl"></div>
+                            <div class="relative">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="font-bold text-amber-400 uppercase tracking-wide">Chop</h4>
+                                    <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold">30%</span>
+                                </div>
+                                <div class="space-y-3 text-xs">
+                                    <div><div class="text-slate-500 uppercase mb-1">Trigger</div><p class="text-slate-200">Rotación 6935-6950 pre-PPI</p></div>
+                                    <div><div class="text-slate-500 uppercase mb-1">Estrategia</div><p class="text-slate-200">Fades extremos, size 50%</p></div>
+                                    <div><div class="text-slate-500 uppercase mb-1">Invalidación</div><p class="text-amber-300">Vol >150% media</p></div>
+                                    <div><div class="text-slate-500 uppercase mb-1">Targets</div><p class="font-mono text-white">Scalps 8-12 pts ES</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5) ESTRATEGIA OPERATIVA -->
+            <section class="xl:col-span-4">
+                <div class="rounded-2xl bg-[#0b1218]/80 backdrop-blur-xl border border-slate-800 p-6 h-full">
+                    <h3 class="text-lg font-semibold flex items-center gap-2 mb-5">
+                        <span class="w-1.5 h-6 bg-[#3dd6c0] rounded-full"></span>
+                        5. Estrategia Operativa &lt;11:30 AM
+                    </h3>
+                    
+                    <div class="p-4 rounded-xl bg-[#3dd6c0]/5 border border-[#3dd6c0]/20 mb-4">
+                        <div class="text-xs uppercase font-bold text-[#3dd6c0] mb-2">Setup Primario</div>
+                        <p class="text-sm font-medium text-white mb-2">Re-Test VWAP / ORB High</p>
+                        <ul class="space-y-1.5 text-xs text-slate-300">
+                            <li class="flex gap-2"><span class="text-[#3dd6c0]">•</span> Esperar pullback a 6940-6946 (confluencia onPOC + ORB)</li>
+                            <li class="flex gap-2"><span class="text-[#3dd6c0]">•</span> Entrada solo con absorción: Delta >+1500 / 5m</li>
+                            <li class="flex gap-2"><span class="text-[#3dd6c0]">•</span> Stop 6-8 pts, T1 1.5R hacia 6961.87</li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="p-3 rounded-lg bg-red-500/5 border border-red-500/20">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="text-red-400"><path d="M12 9v4M12 17h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2"/></svg>
+                                <span class="text-xs font-bold text-red-400 uppercase">Horas Críticas</span>
+                            </div>
+                            <p class="text-xs text-slate-300"><span class="font-mono text-white">12:20 ET</span> Flatten 70% • <span class="font-mono text-white">12:30-12:45</span> NO OPERAR PPI</p>
+                        </div>
+
+                        <div class="p-3 rounded-lg bg-slate-900/60 border border-slate-800">
+                            <div class="text-xs font-semibold text-slate-400 uppercase mb-2">Checklist Apertura</div>
+                            <div class="space-y-1.5 text-xs">
+                                <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 rounded bg-emerald-500/20 flex items-center justify-center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div><span>Precio > VA previo</span></div>
+                                <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 rounded bg-emerald-500/20 flex items-center justify-center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div><span>NQ liderando (+0.81%)</span></div>
+                                <div class="flex items-center gap-2"><div class="w-3.5 h-3.5 rounded bg-amber-500/20 flex items-center justify-center"><span class="text-[9px] text-amber-400">!</span></div><span>Financieros mixtos post-earnings</span></div>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-lg bg-amber-500/5 border border-amber-500/20">
+                            <p class="text-[11px] text-amber-200 leading-snug"><strong>Advertencia:</strong> Evitar chase sobre 6962 sin base. El mercado está extendido +71pts sobre POC previo. Priorizar gestión de riesgo pre-PPI.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="mt-10 pt-6 border-t border-slate-800/60 flex flex-col md:flex-row items-center justify-between gap-3">
+            <p class="text-[11px] text-slate-500">© 2026 EduS Trader • Reporte educativo, no es asesoría financiera. Opera bajo tu propio riesgo.</p>
+            <div class="flex items-center gap-4 text-[11px] text-slate-600">
+                <span>Generado 09:55 ET</span>
+                <span>•</span>
+                <span>Confianza del plan: <span class="text-[#3dd6c0]">Alta</span></span>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function copyLevels() {
+            const text = `ES GAME PLAN 14 ABR\nVAH 6885.75 | VAL 6827.75 | POC 6856.25\nonPOC 6939 | onVAH 6943 | ORB H 6946 | Pre-High 6949.5\nOpen>VA 6961.87 | NQ VA 25664-25682`;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('copyBtn');
+                const original = btn.innerHTML;
+                btn.innerHTML = '¡Copiado!';
+                btn.classList.add('bg-emerald-500/20','border-emerald-500/40','text-emerald-300');
+                setTimeout(() => {
+                    btn.innerHTML = original;
+                    btn.classList.remove('bg-emerald-500/20','border-emerald-500/40','text-emerald-300');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
