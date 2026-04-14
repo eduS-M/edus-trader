@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — Daily Game Plan · 13 Abr 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#0d1117; --bg2:#111827; --bg3:#1a2236;
+  --text:#e2e8f0; --text2:#8892a0; --text3:#4a5568;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.14);
+  --green:#4dba76; --green-bg:rgba(77,186,118,0.10); --green-bd:rgba(77,186,118,0.25);
+  --red:#e05252;   --red-bg:rgba(224,82,82,0.10);   --red-bd:rgba(224,82,82,0.25);
+  --amber:#c9a84c; --amber-bg:rgba(201,168,76,0.10); --amber-bd:rgba(201,168,76,0.25);
+  --teal:#3dd6c0;  --teal-bg:rgba(61,214,192,0.08);  --teal-bd:rgba(61,214,192,0.25);
+  --blue:#4a90d9;  --blue-bg:rgba(74,144,217,0.10);  --blue-bd:rgba(74,144,217,0.25);
+  --r-md:8px; --r-lg:12px;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+body { font-family:var(--font); background:var(--bg); color:var(--text); margin:0; padding:0; }
+
+/* NAV */
+nav { position:sticky; top:0; z-index:100; background:var(--bg); border-bottom:0.5px solid var(--border2); padding:0 1.5rem; display:flex; align-items:center; gap:0; overflow-x:auto; }
+nav .brand { font-size:12px; font-weight:600; color:var(--teal); padding:14px 0; margin-right:20px; white-space:nowrap; letter-spacing:0.05em; }
+nav a { font-size:11px; color:var(--text3); text-decoration:none; padding:15px 12px; border-bottom:2px solid transparent; transition:color .15s; white-space:nowrap; }
+nav a:hover { color:var(--text); }
+nav a.active { color:var(--text); border-bottom-color:var(--teal); font-weight:500; }
+nav .date-badge { margin-left:auto; font-size:10px; background:var(--teal-bg); border:0.5px solid var(--teal-bd); color:var(--teal); padding:3px 10px; border-radius:4px; white-space:nowrap; }
+
+/* LAYOUT */
+.page { max-width:1000px; margin:0 auto; padding:1.5rem 1.5rem 4rem; }
+.section-divider { height:0.5px; background:var(--border2); margin:2.5rem 0 2rem; }
+.section-label { display:inline-flex; align-items:center; gap:8px; font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text3); margin-bottom:1rem; }
+.section-label .num { display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:50%; background:var(--bg3); border:0.5px solid var(--border2); font-size:9px; color:var(--text2); }
+h2 { font-size:18px; font-weight:500; margin-bottom:4px; color:var(--text); }
+.sub { font-size:11px; color:var(--text3); margin-bottom:1.2rem; line-height:1.5; }
+.sub-title { font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--text3); margin:1.4rem 0 0.6rem; }
+
+/* HEADER HERO */
+.hero { background:linear-gradient(135deg, #0d1117 0%, #111827 50%, #0d1820 100%); border:0.5px solid var(--teal-bd); border-radius:14px; padding:28px 32px; margin-bottom:24px; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#e05252,#c9a84c,#3dd6c0); }
+.hero-top { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:18px; }
+.hero-title { font-size:20px; font-weight:700; color:#fff; margin-bottom:4px; }
+.hero-sub   { font-size:12px; color:var(--text2); line-height:1.5; }
+.hero-stats { display:flex; gap:8px; flex-wrap:wrap; }
+.hero-stat { text-align:center; background:rgba(255,255,255,0.04); border:0.5px solid var(--border); border-radius:8px; padding:8px 14px; min-width:80px; }
+.hero-stat-val { font-size:18px; font-weight:700; line-height:1; }
+.hero-stat-lbl { font-size:9px; color:var(--text3); text-transform:uppercase; letter-spacing:0.06em; margin-top:3px; }
+
+/* SENTIMENT BANNER */
+.sentiment-banner { border-radius:10px; padding:14px 18px; margin-bottom:16px; display:flex; align-items:center; gap:14px; }
+.sentiment-banner.risk-off { background:var(--red-bg); border:0.5px solid var(--red-bd); }
+.sentiment-banner .icon { font-size:28px; flex-shrink:0; }
+.sentiment-title { font-size:14px; font-weight:600; margin-bottom:3px; }
+.sentiment-banner.risk-off .sentiment-title { color:var(--red); }
+.sentiment-desc { font-size:12px; color:var(--text2); line-height:1.6; }
+
+/* ALERT */
+.alert { border-radius:var(--r-md); padding:12px 14px; font-size:12px; margin-top:10px; line-height:1.6; }
+.alert.danger  { background:var(--red-bg);   border:0.5px solid var(--red-bd); }
+.alert.warning { background:var(--amber-bg); border:0.5px solid var(--amber-bd); }
+.alert.success { background:var(--green-bg); border:0.5px solid var(--green-bd); }
+.alert.info    { background:var(--teal-bg);  border:0.5px solid var(--teal-bd); }
+.alert-title { font-weight:600; margin-bottom:3px; }
+.alert.danger  .alert-title { color:var(--red); }
+.alert.warning .alert-title { color:var(--amber); }
+.alert.success .alert-title { color:var(--green); }
+.alert.info    .alert-title { color:var(--teal); }
+
+/* KPI */
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:8px; }
+.kpi { background:var(--bg2); border:0.5px solid var(--border); border-radius:var(--r-md); padding:12px 14px; }
+.kpi-label { font-size:10px; color:var(--text3); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em; }
+.kpi-value { font-size:20px; font-weight:700; line-height:1; }
+.kpi-sub   { font-size:10px; color:var(--text3); margin-top:3px; }
+.pos { color:var(--green); } .neg { color:var(--red); } .amb { color:var(--amber); } .teal { color:var(--teal); }
+
+/* EVENTS TABLE */
+.events-table { width:100%; border-collapse:collapse; font-size:12px; }
+.events-table th { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:0.06em; font-weight:500; padding:7px 10px; border-bottom:0.5px solid var(--border2); text-align:left; }
+.events-table td { padding:8px 10px; border-bottom:0.5px solid var(--border); color:var(--text2); }
+.events-table tr:last-child td { border-bottom:none; }
+.events-table tr:hover td { background:rgba(255,255,255,0.02); }
+.imp { display:inline-block; padding:2px 6px; border-radius:3px; font-size:10px; font-weight:600; }
+.imp-h { background:var(--red-bg); color:var(--red); border:0.5px solid var(--red-bd); }
+.imp-m { background:var(--amber-bg); color:var(--amber); border:0.5px solid var(--amber-bd); }
+.imp-l { background:rgba(255,255,255,0.05); color:var(--text3); }
+
+/* ZONES */
+.zones-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.zone-card { background:var(--bg2); border:0.5px solid var(--border); border-radius:var(--r-lg); padding:14px 16px; }
+.zone-card-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin-bottom:12px; display:flex; align-items:center; gap:6px; }
+.zone-card-title.es-title { color:var(--teal); }
+.zone-card-title.nq-title { color:var(--amber); }
+.level-row { display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:0.5px solid var(--border); font-size:12px; }
+.level-row:last-child { border-bottom:none; }
+.level-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.level-name { color:var(--text3); font-size:10px; min-width:90px; }
+.level-price { font-weight:600; color:var(--text); }
+.level-type  { font-size:10px; margin-left:auto; padding:1px 5px; border-radius:3px; }
+.ltype-r { background:var(--red-bg);   color:var(--red);   border:0.5px solid var(--red-bd); }
+.ltype-s { background:var(--green-bg); color:var(--green); border:0.5px solid var(--green-bd); }
+.ltype-p { background:var(--amber-bg); color:var(--amber); border:0.5px solid var(--amber-bd); }
+.ltype-n { background:rgba(255,255,255,0.04); color:var(--text3); }
+
+/* SCENARIOS */
+.scenario { border-radius:var(--r-lg); padding:18px 20px; margin-bottom:12px; border:1px solid; position:relative; overflow:hidden; }
+.scenario::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; }
+.scenario.bull { background:rgba(77,186,118,0.06); border-color:var(--green-bd); }
+.scenario.bull::before { background:var(--green); }
+.scenario.bear { background:rgba(224,82,82,0.06); border-color:var(--red-bd); }
+.scenario.bear::before { background:var(--red); }
+.scenario.chop { background:rgba(201,168,76,0.06); border-color:var(--amber-bd); }
+.scenario.chop::before { background:var(--amber); }
+.scenario-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px; }
+.scenario-label { font-size:13px; font-weight:600; }
+.scenario.bull .scenario-label { color:var(--green); }
+.scenario.bear .scenario-label { color:var(--red); }
+.scenario.chop .scenario-label { color:var(--amber); }
+.prob-badge { font-size:18px; font-weight:700; padding:4px 12px; border-radius:6px; }
+.scenario.bull .prob-badge { background:var(--green-bg); color:var(--green); border:0.5px solid var(--green-bd); }
+.scenario.bear .prob-badge { background:var(--red-bg);   color:var(--red);   border:0.5px solid var(--red-bd); }
+.scenario.chop .prob-badge { background:var(--amber-bg); color:var(--amber); border:0.5px solid var(--amber-bd); }
+.scenario-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; font-size:12px; }
+.scenario-item-title { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+.scenario-item-val { color:var(--text2); line-height:1.5; }
+.scenario-targets { display:flex; gap:6px; flex-wrap:wrap; }
+.target { background:rgba(255,255,255,0.04); border:0.5px solid var(--border2); border-radius:4px; padding:2px 8px; font-size:11px; font-weight:500; }
+
+/* MAG 7 TABLE */
+.mag7-table { width:100%; border-collapse:collapse; font-size:12px; }
+.mag7-table th { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:0.06em; font-weight:500; padding:7px 10px; border-bottom:0.5px solid var(--border2); text-align:left; }
+.mag7-table td { padding:8px 10px; border-bottom:0.5px solid var(--border); }
+.mag7-table tr:last-child td { border-bottom:none; }
+.mag7-table tr:hover td { background:rgba(255,255,255,0.02); }
+.ticker { font-weight:600; font-family:monospace; }
+
+/* ICARD */
+.icard { background:var(--bg2); border-radius:var(--r-md); padding:13px 15px; margin-bottom:8px; border-left:3px solid transparent; }
+.icard.crit { border-left-color:var(--red); }
+.icard.warn { border-left-color:var(--amber); }
+.icard.good { border-left-color:var(--green); }
+.icard.info { border-left-color:var(--teal); }
+.icard-title { font-size:13px; font-weight:500; margin-bottom:5px; color:var(--text); }
+.icard-text  { font-size:12px; color:var(--text2); line-height:1.6; }
+
+/* SETUP CARD */
+.setup-card { background:var(--bg2); border-radius:var(--r-lg); padding:18px 20px; margin-bottom:12px; }
+.setup-card.primary { border:0.5px solid var(--teal-bd); }
+.setup-card.secondary { border:0.5px solid var(--border2); }
+.setup-card.danger   { border:0.5px solid var(--red-bd); }
+.setup-title { font-size:14px; font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.setup-card.primary .setup-title { color:var(--teal); }
+.setup-card.danger .setup-title  { color:var(--red); }
+.setup-body { font-size:12px; color:var(--text2); line-height:1.8; }
+.setup-body strong { color:var(--text); font-weight:500; }
+.setup-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; margin-top:10px; }
+.setup-cell { background:rgba(255,255,255,0.03); border:0.5px solid var(--border); border-radius:6px; padding:8px 10px; }
+.setup-cell-label { font-size:10px; color:var(--text3); margin-bottom:3px; text-transform:uppercase; }
+.setup-cell-val   { font-size:13px; font-weight:600; }
+
+/* CHART */
+.chart-wrap { position:relative; width:100%; }
+
+/* FOOTER */
+footer { text-align:center; font-size:10px; color:var(--text3); padding:2rem 1rem 3rem; border-top:0.5px solid var(--border); margin-top:2rem; line-height:1.8; }
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .page { padding:1rem 1rem 3rem; }
+  .hero { padding:20px 18px; }
+  .hero-title { font-size:16px; }
+  .zones-grid, .scenario-grid { grid-template-columns:1fr; }
+  .hero-stats { gap:6px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">⚔️ EduS GAME PLAN</span>
+  <a class="active" href="#sentimiento">Sentimiento</a>
+  <a href="#estructura">Estructura</a>
+  <a href="#escenarios">Escenarios</a>
+  <a href="#breadth">Market Breadth</a>
+  <a href="#operativa">Operativa</a>
+  <span class="date-badge">13 Abr 2026 · 09:40 ET</span>
+</nav>
+
+<div class="page">
+
+<!-- ══════════════ HERO ══════════════ -->
+<div class="hero">
+  <div class="hero-top">
+    <div>
+      <div class="hero-title">Daily Strategic Game Plan — Lunes 13 Abr 2026</div>
+      <div class="hero-sub">Mesa ES/NQ · Pre-Market 09:40 ET · Analista: EduS Trader · Contexto: Colapso de conversaciones US–Irán + Bloqueo Hormuz</div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val neg">-0.62%</div><div class="hero-stat-lbl">ESM26 Pre-Mkt</div></div>
+      <div class="hero-stat"><div class="hero-stat-val neg">-0.64%</div><div class="hero-stat-lbl">NQM26 Pre-Mkt</div></div>
+      <div class="hero-stat"><div class="hero-stat-val amb">19.34</div><div class="hero-stat-lbl">VIX</div></div>
+      <div class="hero-stat"><div class="hero-stat-val neg">+8.5%</div><div class="hero-stat-lbl">WTI Crude</div></div>
+    </div>
+  </div>
+
+  <div class="sentiment-banner risk-off">
+    <div class="icon">⚠️</div>
+    <div>
+      <div class="sentiment-title">GLOBAL SENTIMENT: RISK-OFF</div>
+      <div class="sentiment-desc">Las conversaciones de paz US–Irán colapsaron en Islamabad tras 21 horas de negociaciones. Trump anunció bloqueo naval del Estrecho de Hormuz. Petróleo WTI +8.5% a $104.73. Equities asiáticos y europeos cayeron. Futuros ES -0.62%, NQ -0.64% en pre-market. Sesión de apertura con alto potencial de volatilidad y trampa de movimientos bruscos.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SECCIÓN 1 — SENTIMIENTO ══════════════ -->
+<div id="sentimiento" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">1</span>Sentimiento & Fundamentales</div>
+  <h2>Análisis Overnight · Eventos de Alto Impacto</h2>
+  <p class="sub">Shocks geopolíticos dominan la sesión · Mercado energético en modo crisis · Datos macro de semana de earnings</p>
+
+  <div class="alert danger">
+    <div class="alert-title">🚨 SHOCK PRINCIPAL: Colapso de las negociaciones US–Irán y bloqueo del Estrecho de Hormuz</div>
+    El VP Vance salió de Islamabad sin acuerdo tras 21 horas de negociaciones. Trump anunció de inmediato que la Marina de EE.UU. bloqueará el Estrecho de Hormuz. El petróleo WTI superó los $104 (+8.5%) y Brent tocó $102 en la apertura de sesión europea. El Estrecho da paso al 20% del suministro global de crudo. Las divisas de riesgo AUD y ZAR cayeron ~1%. Los treasuries y el oro también retroceden. El mercado entra en modo "war premium" de nuevo después de la breve normalización de la semana pasada.
+  </div>
+
+  <div class="sub-title">Tabla de Eventos del Día — 13 Abr 2026</div>
+  <div style="overflow-x:auto">
+    <table class="events-table">
+      <thead>
+        <tr><th>Hora ET</th><th>Dato / Evento</th><th>Impacto</th><th>Consenso</th><th>Nota de Liquidez</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:var(--text)">09:30</td>
+          <td style="color:var(--text)">Apertura RTH — ES/NQ</td>
+          <td><span class="imp imp-h">ALTO</span></td>
+          <td>Gap bajista esperado</td>
+          <td>⚡ Primer movimiento errático — NO operar los primeros 5 min</td>
+        </tr>
+        <tr>
+          <td>10:00</td>
+          <td>Goldman Sachs (GS) earnings Q1</td>
+          <td><span class="imp imp-h">ALTO</span></td>
+          <td>EPS $10.80e · Rev $15.2Be</td>
+          <td>Mover bancario puede afectar sentimiento financiero del día</td>
+        </tr>
+        <tr>
+          <td>10:00</td>
+          <td>JPMorgan (JPM) earnings Q1</td>
+          <td><span class="imp imp-h">ALTO</span></td>
+          <td>EPS $4.65e · Rev $44.1Be</td>
+          <td>Mayor peso en S&P — resultado crítico para tendencia AM</td>
+        </tr>
+        <tr>
+          <td>09:30–10:30</td>
+          <td>Declaraciones Trump / Casa Blanca re: Irán</td>
+          <td><span class="imp imp-h">ALTO</span></td>
+          <td>Imprevisible</td>
+          <td>Cualquier tweet/post puede mover ES ±15 pts en segundos</td>
+        </tr>
+        <tr>
+          <td>~11:00</td>
+          <td>PPI USA (semana: dato de producción)</td>
+          <td><span class="imp imp-m">MEDIO</span></td>
+          <td>Core PPI +0.2% MoM</td>
+          <td>Si supera +0.3% → presión adicional sobre la Fed</td>
+        </tr>
+        <tr>
+          <td>Todo el día</td>
+          <td>Reacción mercados de petróleo / Hormuz news</td>
+          <td><span class="imp imp-h">ALTO</span></td>
+          <td>WTI $100–110 rango</td>
+          <td>Correlación inversa con ES — cada spike del crudo pesa en índices</td>
+        </tr>
+        <tr>
+          <td>15:00–16:00</td>
+          <td>Cierre institucional / Rebalanceo</td>
+          <td><span class="imp imp-m">MEDIO</span></td>
+          <td>—</td>
+          <td>Posibles flujos de fin de semana deshaciendo posiciones largas</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert warning" style="margin-top:12px">
+    <div class="alert-title">⚠️ Semana de Earnings Bancarios — Riesgo de Gapping Intraday</div>
+    Goldman Sachs y JPMorgan reportan hoy. Citigroup (C) y Wells Fargo (WFC) reportan más tarde en la semana. Los earnings bancarios con energy exposure (Goldman tiene posición en commodities) pueden amplificar los movimientos generados por el shock geopolítico. Un miss inesperado puede añadir -0.5% adicional al ES en cuestión de minutos.
+  </div>
+</div>
+
+<!-- ══════════════ SECCIÓN 2 — ESTRUCTURA TÉCNICA ══════════════ -->
+<div class="section-divider"></div>
+<div id="estructura" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">2</span>Análisis Estructural Técnico</div>
+  <h2>Market Profile · Wyckoff · Zonas Clave ES & NQ</h2>
+  <p class="sub">Precio de referencia: ES 6834 / NQ 25,200 · Gráficas 610 Tick (ES) / 377 Tick (NQ) · Pre-RTH 09:40 ET</p>
+
+  <!-- Contexto charts -->
+  <div class="alert info" style="margin-top:0">
+    <div class="alert-title">📊 Lectura de Gráficas — Contexto Estructural</div>
+    <strong>ES (610 Tick):</strong> El chart muestra una estructura de doble caída: gran colapso de ~6882 a ~6760 (zona V-bottom) y recuperación en V hasta el ORB/Pre-High (~6834–6840). El precio está ahora en zona de retest del ORB High 6840. El onPOC 6815 y la yVAH 6870 son las anclas del rango del día anterior. La recuperación de ayer dejó un inventario overnight long que hoy puede ser "unwound" con la noticia del Hormuz.<br><br>
+    <strong>NQ (377 Tick):</strong> Estructura similar — rebote desde mínimos ~24,900 hasta el área 25,200–25,235 (ORB High). El VIX indicador muestra 19.34 con probabilidad de GAP INST del 17% para hoy. Delta acumulado del NQ muestra impulso alcista residual desde el rebote, pero la apertura con noticias negativas puede invalidarlo rápidamente.
+  </div>
+
+  <div class="sub-title">Zonas Clave de Estructura — ES JUN26 y NQ JUN26</div>
+  <div class="zones-grid">
+
+    <!-- ES -->
+    <div class="zone-card">
+      <div class="zone-card-title es-title">🟢 ES JUN26 — 610 Tick · Ref: 6,834</div>
+
+      <div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;margin-bottom:6px">RESISTENCIAS</div>
+      <div class="level-row"><div class="level-dot" style="background:var(--red)"></div><div class="level-name">Y-High</div><div class="level-price">6,882.00</div><div class="level-type ltype-r">R3</div></div>
+      <div class="level-row"><div class="level-dot" style="background:var(--red)"></div><div class="level-name">yVAH</div><div class="level-price">6,870.75</div><div class="level-type ltype-r">R2 HVN</div></div>
+      <div class="level-row"><div class="level-dot" style="background:var(--amber)"></div><div class="level-name">ORB High</div><div class="level-price">6,840.00</div><div class="level-type ltype-p">R1 ORB</div></div>
+      <div class="level-row"><div class="level-dot" style="background:var(--amber)"></div><div class="level-name">Pre-High / Open RTH</div><div class="level-price">6,834.75</div><div class="level-type ltype-p">Open</div></div>
+
+      <div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;margin:10px 0 6px">SOPORTES</div>
+      <div class="level-row"><div class="level-dot" style="background:var(--green)"></div><div class="level-name">Y-Close / onPOC</div><div class="level-price">6,855.50 / 6,815</div><div class="level-type ltype-s">S1 POC</div></div>
+      <div class="level-row"><div class="level-dot" style="background:var(--green)"></div><div class="level-name">onVAH</div><div class="level-price">6,822.00</div><div class="level-type ltype-s">S2 HVN</div></div>
+      <div class="level-row"><div class="level-dot" style="background:var(--green)"></div><div class="level-name">onVAL</div><div class="level-price">6,806.50</div><div class="level-type ltype-s">S3</div></div>
+      <div class="level-row"><div class="level-dot" style="background:var(--red)"></div><div class="level-name">Pre-Low</div><div class="level-price">6,795.25</div><div class="level-type ltype-r">SL área</div></div>
+
+      <div style="margin-top:10px;font-size:11px;color:var(--text2);background:rgba(255,255,255,0.03);border-radius:6px;padding:8px">
+        <strong style="color:var(--teal)">Wyckoff:</strong> El V-bounce desde ~6760 sugiere Selling Climax + Automatic Rally. La zona 6820–6840 es el Secondary Test esperado. Con la noticia del Hormuz, el riesgo es que no sostenga la apertura y vuelva a testear el onVAL 6806 o Pre-Low 6795.
+      </div>
+    </div>
+
+    <!-- NQ -->
+    <div class="zone-card">
+      <div class="zone-card-title nq-title">🟡 NQ JUN26 — 377 Tick · Ref: 25,200</div>
+
+      <div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;margin-bottom:6px">RESISTENCIAS</div>
+      <div class="level-row"><div class="level-dot" style="background:var(--red)"></div><div class="level-name">yVAH</div><div class="level-price">25,265.00</div><div class="level-type ltype-r">R3</div></div>
+      <div class="level-row"><div class="level-dot" style="background:var(--red)"></div><div class="level-name">ORB High</div><div class="level-price">25,235.25</div><div class="level-type ltype-r">R2 ORB</div></div>
+      <div class="level-row"><div class="level-dot" style="background:var(--amber)"></div><div class="level-name">ORB Mid / Open RTH</div><div class="level-price">25,227.50 / 25,216</div><div class="level-type ltype-p">R1</div></div>
+
+      <div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;margin:10px 0 6px">SOPORTES</div>
+      <div class="level-row"><div class="level-dot" style="background:var(--green)"></div><div class="level-name">Y-Close</div><div class="level-price">25,285.00</div><div class="level-type ltype-s">S1</div></div>
+      <div class="level-row"><div class="level-dot" style="background:var(--green)"></div><div class="level-name">onVAH / onPOC</div><div class="level-price">25,166 / 25,112</div><div class="level-type ltype-s">S2 POC</div></div>
+      <div class="level-row"><div class="level-dot" style="background:var(--green)"></div><div class="level-name">onVAL</div><div class="level-price">25,079.50</div><div class="level-type ltype-s">S3</div></div>
+      <div class="level-row"><div class="level-dot" style="background:var(--red)"></div><div class="level-name">Pre-Low</div><div class="level-price">25,044.00</div><div class="level-type ltype-r">SL área</div></div>
+
+      <div style="margin-top:10px;font-size:11px;color:var(--text2);background:rgba(255,255,255,0.03);border-radius:6px;padding:8px">
+        <strong style="color:var(--amber)">GAP INST:</strong> Indicador muestra GAP activo de 328 pts con probabilidad 17% (VIX 19.3). Con la noticia del Hormuz, esa probabilidad puede haberse materializado. Si NQ abre por debajo de 25,100, el gap a 24,870 es objetivo bajista prioritario.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SECCIÓN 3 — ESCENARIOS ══════════════ -->
+<div class="section-divider"></div>
+<div id="escenarios" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">3</span>Matriz de Escenarios</div>
+  <h2>El Plan de Batalla — 3 Escenarios · Suma 100%</h2>
+  <p class="sub">Basado en estructura técnica + contexto Hormuz + inventario overnight · 09:40 ET pre-apertura</p>
+
+  <!-- PROB CHART -->
+  <div class="chart-wrap" style="height:80px;margin-bottom:20px"><canvas id="chartProb"></canvas></div>
+
+  <!-- ESCENARIO A — BAJISTA (alta prob por geopolítica) -->
+  <div class="scenario bear">
+    <div class="scenario-header">
+      <div class="scenario-label">🔴 ESCENARIO A — BAJISTA (Bearish Case)</div>
+      <div class="prob-badge">55%</div>
+    </div>
+    <div class="scenario-grid">
+      <div>
+        <div class="scenario-item-title">Trigger (Condición)</div>
+        <div class="scenario-item-val">ES no sostiene 6,834 en apertura y/o pierde onPOC 6,815. Noticias adicionales sobre Hormuz o declaraciones Trump agresivas.</div>
+      </div>
+      <div>
+        <div class="scenario-item-title">Estrategia</div>
+        <div class="scenario-item-val">Esperar retroceso post-apertura a VWAP. Short en el primer retest de onPOC 6,815 con VWAP bajista. No perseguir el open.</div>
+      </div>
+      <div>
+        <div class="scenario-item-title">Invalidación</div>
+        <div class="scenario-item-val">Recuperación sostenida por encima de 6,840 (ORB High). Noticias de reapertura de diálogo US–Irán.</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px">ES TARGETS BAJISTAS</div>
+        <div class="scenario-targets">
+          <span class="target" style="color:var(--red)">T1: 6,806 (onVAL)</span>
+          <span class="target" style="color:var(--red)">T2: 6,795 (Pre-Low)</span>
+          <span class="target" style="color:var(--red)">T3: 6,760 (mín. semana)</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px">NQ TARGETS BAJISTAS</div>
+        <div class="scenario-targets">
+          <span class="target" style="color:var(--red)">T1: 25,080 (onVAL)</span>
+          <span class="target" style="color:var(--red)">T2: 25,044 (Pre-Low)</span>
+          <span class="target" style="color:var(--red)">T3: 24,900 (gap)</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:12px;color:var(--text2);padding:8px;background:rgba(224,82,82,0.05);border-radius:6px">
+      <strong style="color:var(--red)">Catalizador adicional:</strong> Earnings de JPM o Goldman con guidance débil por exposición energética podrían acelerar el movimiento. El ratio riesgo/reward Short onPOC → Pre-Low es ~1:2 (stop 8 pts, target 20 pts).
+    </div>
+  </div>
+
+  <!-- ESCENARIO B — ALCISTA -->
+  <div class="scenario bull">
+    <div class="scenario-header">
+      <div class="scenario-label">🟢 ESCENARIO B — ALCISTA (Bullish Case)</div>
+      <div class="prob-badge">25%</div>
+    </div>
+    <div class="scenario-grid">
+      <div>
+        <div class="scenario-item-title">Trigger (Condición)</div>
+        <div class="scenario-item-val">ES sostiene Open RTH 6,834 en la primera barra y recupera ORB High 6,840. Noticias de que Trump suaviza el lenguaje sobre Hormuz o earnings bancarios sorprenden positivos.</div>
+      </div>
+      <div>
+        <div class="scenario-item-title">Estrategia</div>
+        <div class="scenario-item-val">Long en pullback a VWAP o Open RTH 6,834 con VWAP UP y SMAs alcistas. Mínimo 3/4 confluencias. Esperar consolidación sobre 6,840 antes de entrar.</div>
+      </div>
+      <div>
+        <div class="scenario-item-title">Invalidación</div>
+        <div class="scenario-item-val">Cierre de barra de 5 min por debajo de Open RTH 6,834. Si pierde este nivel → switch a Escenario A.</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px">ES TARGETS ALCISTAS</div>
+        <div class="scenario-targets">
+          <span class="target" style="color:var(--green)">T1: 6,855 (Y-Close)</span>
+          <span class="target" style="color:var(--green)">T2: 6,870 (yVAH)</span>
+          <span class="target" style="color:var(--green)">T3: 6,882 (Y-High)</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px">NQ TARGETS ALCISTAS</div>
+        <div class="scenario-targets">
+          <span class="target" style="color:var(--green)">T1: 25,235 (ORB H)</span>
+          <span class="target" style="color:var(--green)">T2: 25,265 (yVAH)</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:12px;color:var(--text2);padding:8px;background:rgba(77,186,118,0.05);border-radius:6px">
+      <strong style="color:var(--green)">Nota:</strong> Este escenario requiere noticia de desescalada. El mercado ya estaba sobrecomprado en el intradía del viernes. La recuperación alcista requiere catalizador externo positivo, no solo ausencia de noticias negativas.
+    </div>
+  </div>
+
+  <!-- ESCENARIO C — CHOP -->
+  <div class="scenario chop">
+    <div class="scenario-header">
+      <div class="scenario-label">🟡 ESCENARIO C — LATERAL / RANGO (Chop)</div>
+      <div class="prob-badge">20%</div>
+    </div>
+    <div class="scenario-grid">
+      <div>
+        <div class="scenario-item-title">Condición</div>
+        <div class="scenario-item-val">Precio atrapado entre 6,806 (onVAL) y 6,840 (ORB High). Mercado digiere el shock inicial y espera más información.</div>
+      </div>
+      <div>
+        <div class="scenario-item-title">Estrategia</div>
+        <div class="scenario-item-val">"Fade the extremes." Vender techos en 6,838–6,840, comprar pisos en 6,808–6,810. Tamaño reducido. NO operar rupturas sin confirmación.</div>
+      </div>
+      <div>
+        <div class="scenario-item-title">Invalidación</div>
+        <div class="scenario-item-val">Ruptura con volumen por encima de 6,840 o por debajo de 6,806. Cualquier headline inesperado convierte el chop en tendencia.</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:12px;color:var(--text2);padding:8px;background:rgba(201,168,76,0.05);border-radius:6px">
+      <strong style="color:var(--amber)">Regla crítica en chop:</strong> Con VIX 19.34 y noticia geopolítica activa, el chop puede romperse en cualquier momento. Máximo 2 trades en modo lateral — si ninguno funciona, cerrar la sesión.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SECCIÓN 4 — MARKET BREADTH ══════════════ -->
+<div class="section-divider"></div>
+<div id="breadth" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">4</span>Context Corporativo — Market Breadth</div>
+  <h2>Las 7 Magníficas · Top Movers Pre-Market</h2>
+  <p class="sub">Datos de apertura europea / pre-market 09:40 ET · Fuente: Barchart, TipRanks, Motley Fool</p>
+
+  <!-- Mag 7 -->
+  <div class="sub-title">4.1 — El Tablero de las 7 Magníficas</div>
+  <div style="overflow-x:auto;margin-bottom:12px">
+    <table class="mag7-table">
+      <thead>
+        <tr><th>Ticker</th><th>Nombre</th><th>% Cambio Hoy</th><th>YTD 2026</th><th>Sesgo</th><th>Nota Clave</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="ticker">NVDA</span></td>
+          <td style="color:var(--text2)">NVIDIA</td>
+          <td class="neg">-0.8%</td>
+          <td class="neg">-10.5%</td>
+          <td><span style="background:var(--amber-bg);color:var(--amber);padding:2px 6px;border-radius:3px;font-size:10px">NEUTRO</span></td>
+          <td style="color:var(--text2);font-size:11px">AI spending resiliente. Rev FY26 +65%. Mejor en récovery pero afectado por energy costs del data center.</td>
+        </tr>
+        <tr>
+          <td><span class="ticker">AAPL</span></td>
+          <td style="color:var(--text2)">Apple</td>
+          <td class="neg">-0.5%</td>
+          <td class="neg">-8%</td>
+          <td><span style="background:var(--amber-bg);color:var(--amber);padding:2px 6px;border-radius:3px;font-size:10px">NEUTRO</span></td>
+          <td style="color:var(--text2);font-size:11px">Rev Q1 +16%. Services fuerte. Menor exposición directa a energía. Sin reacción fuerte al Hormuz.</td>
+        </tr>
+        <tr>
+          <td><span class="ticker">MSFT</span></td>
+          <td style="color:var(--text2)">Microsoft</td>
+          <td class="neg">-1.2%</td>
+          <td class="neg">-23.5%</td>
+          <td><span style="background:var(--red-bg);color:var(--red);padding:2px 6px;border-radius:3px;font-size:10px">BAJISTA</span></td>
+          <td style="color:var(--text2);font-size:11px">Peor Mag7 en 2026. AI spending pesa sobre márgenes. Copilot adoption lenta. Riesgo adicional con energy costs.</td>
+        </tr>
+        <tr>
+          <td><span class="ticker">GOOGL</span></td>
+          <td style="color:var(--text2)">Alphabet</td>
+          <td class="neg">-0.3%</td>
+          <td class="pos">+1.5%</td>
+          <td><span style="background:var(--green-bg);color:var(--green);padding:2px 6px;border-radius:3px;font-size:10px">ALCISTA</span></td>
+          <td style="color:var(--text2);font-size:11px">Único Mag7 positivo en 2026. TPU chips ganando share vs NVDA. Gemini AI bien recibido.</td>
+        </tr>
+        <tr>
+          <td><span class="ticker">AMZN</span></td>
+          <td style="color:var(--text2)">Amazon</td>
+          <td class="neg">-0.7%</td>
+          <td class="neg">-5%</td>
+          <td><span style="background:var(--amber-bg);color:var(--amber);padding:2px 6px;border-radius:3px;font-size:10px">NEUTRO</span></td>
+          <td style="color:var(--text2);font-size:11px">AWS creciendo 24%. Warehouse automation. Más resistente que promedio Mag7 en 2026.</td>
+        </tr>
+        <tr>
+          <td><span class="ticker">META</span></td>
+          <td style="color:var(--text2)">Meta Platforms</td>
+          <td class="neg">-0.9%</td>
+          <td class="neg">-12%</td>
+          <td><span style="background:var(--amber-bg);color:var(--amber);padding:2px 6px;border-radius:3px;font-size:10px">NEUTRO</span></td>
+          <td style="color:var(--text2);font-size:11px">AI advertising mostrando ROI. +5% el 8 Abr en rally geopolítico. Forward PE más barato del grupo.</td>
+        </tr>
+        <tr>
+          <td><span class="ticker">TSLA</span></td>
+          <td style="color:var(--text2)">Tesla</td>
+          <td class="neg">-1.5%</td>
+          <td class="neg">-17.4%</td>
+          <td><span style="background:var(--red-bg);color:var(--red);padding:2px 6px;border-radius:3px;font-size:10px">BAJISTA</span></td>
+          <td style="color:var(--text2);font-size:11px">Deliveries en "delivery hollow". Más sensible a sentimiento macro. Bajo peso como conductor del índice hoy.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert warning">
+    <div class="alert-title">Sesgo Direccional Mag 7 — Neutral a Ligeramente Bajista en apertura de hoy</div>
+    El Mag 7 Index (MAGS ETF) lleva -11.6% YTD. Hoy con la noticia del Hormuz, el único líder relativo es GOOGL (+1.5% YTD). MSFT y TSLA son los más débiles. El Mag 7 colectivamente NO será el driver alcista del día — el mercado necesitará otros catalizadores.
+  </div>
+
+  <!-- Top movers -->
+  <div class="sub-title">4.2 — Top Movers S&P 500 Pre-Market</div>
+  <div style="overflow-x:auto">
+    <table class="mag7-table">
+      <thead>
+        <tr><th>Ticker</th><th>% Cambio</th><th>Vol. Relativo</th><th>Causa</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="ticker">XOM / CVX / COP</span></td>
+          <td class="pos">+4–6%</td>
+          <td style="color:var(--teal)">3–5× normal</td>
+          <td style="color:var(--text2);font-size:11px">Petróleo WTI +8.5% — directas beneficiadas por Hormuz y subida del crudo. Flujo defensivo hacia energy.</td>
+        </tr>
+        <tr>
+          <td><span class="ticker">GS</span></td>
+          <td class="amb">±0.5%</td>
+          <td style="color:var(--teal)">2–3× normal</td>
+          <td style="color:var(--text2);font-size:11px">Earnings Q1 hoy pre-market. EPS estimado $10.80. Reacción depende de revenues de commodities y trading desk.</td>
+        </tr>
+        <tr>
+          <td><span class="ticker">JPM</span></td>
+          <td class="amb">-0.4%</td>
+          <td style="color:var(--teal)">2–3× normal</td>
+          <td style="color:var(--text2);font-size:11px">Earnings Q1 hoy pre-market. Guidance sobre préstamos energéticos y exposición a Oriente Medio clave.</td>
+        </tr>
+        <tr>
+          <td><span class="ticker">LNG / UNG</span></td>
+          <td class="pos">+5–8%</td>
+          <td style="color:var(--teal)">5× normal</td>
+          <td style="color:var(--text2);font-size:11px">Gas natural sube con Hormuz. LNG exporters US se benefician de la crisis energética global.</td>
+        </tr>
+        <tr>
+          <td><span class="ticker">AVGO</span></td>
+          <td class="pos">+4.69%</td>
+          <td style="color:var(--teal)">2× normal</td>
+          <td style="color:var(--text2);font-size:11px">Broadcom — momentum AI chips. Una de las pocas Tech con movimiento positivo en un lunes de riesgo-off.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════ SECCIÓN 5 — OPERATIVA ══════════════ -->
+<div class="section-divider"></div>
+<div id="operativa" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">5</span>Estrategia Operativa — Mesa < 11:30 AM</div>
+  <h2>Setups Primarios · Advertencias Críticas · Reglas del Día</h2>
+  <p class="sub">VIX 19.34 · Hormuz activo · Earnings bancarios · Apertura con gap potencial bajista · Máx. 3 trades</p>
+
+  <div class="alert danger">
+    <div class="alert-title">🚨 ADVERTENCIA CRÍTICA — NO operar los primeros 5 minutos de apertura (09:30–09:35 ET)</div>
+    Con la noticia del Hormuz activa y earnings bancarios pendientes, la apertura de hoy puede tener un spike inicial falso en cualquier dirección. El algoritmo de market makers llenará los gaps y ajustará posiciones — ese movimiento inicial casi siempre es un fakeout. Esperar hasta la formación del ORB (09:30–09:40) y la estabilización del primer VWAP antes de considerar cualquier entry.
+  </div>
+
+  <!-- Setup primario -->
+  <div class="sub-title">Setup Primario — Alta Probabilidad</div>
+
+  <div class="setup-card primary">
+    <div class="setup-title">⚡ SETUP #1 — Short en Retest de onPOC 6,815 (ES) / VWAP fallido</div>
+    <div class="setup-body">
+      <strong>Contexto necesario:</strong> ES abre por debajo de 6,834, hace rebote inicial hacia 6,815–6,820, y el VWAP está bajista. Las SMA20 y LR89 deben ser bajistas. Mínimo 3/4 señales del sistema.<br><br>
+      <strong>Lógica de mercado:</strong> El onPOC 6,815 es el punto de mayor volumen overnight. Después de una apertura bajista por Hormuz, el primer rebote hasta ese nivel es el entry institucional para shorts que no alcanzaron el precio de apertura. Wyckoff: es el "Upthrust" hacia la zona de distribución.<br><br>
+      <strong>Gestión:</strong> Stop encima de 6,822 (onVAH). Target T1: 6,806 (onVAL). Target T2: 6,795 (Pre-Low). Ratio: 1:2.3 mínimo ✅
+    </div>
+    <div class="setup-grid">
+      <div class="setup-cell"><div class="setup-cell-label">Entry</div><div class="setup-cell-val" style="color:var(--red)">6,815–6,820</div></div>
+      <div class="setup-cell"><div class="setup-cell-label">Stop</div><div class="setup-cell-val" style="color:var(--amber)">6,823 (+7 pts)</div></div>
+      <div class="setup-cell"><div class="setup-cell-label">Target T1</div><div class="setup-cell-val" style="color:var(--green)">6,806 (-9 pts)</div></div>
+      <div class="setup-cell"><div class="setup-cell-label">Target T2</div><div class="setup-cell-val" style="color:var(--green)">6,795 (-20 pts)</div></div>
+      <div class="setup-cell"><div class="setup-cell-label">Ratio R:R</div><div class="setup-cell-val" style="color:var(--teal)">1:2.3 / 1:3</div></div>
+      <div class="setup-cell"><div class="setup-cell-label">Fondeo</div><div class="setup-cell-val" style="color:var(--amber)">1 MES máx.</div></div>
+    </div>
+  </div>
+
+  <div class="setup-card primary">
+    <div class="setup-title">⚡ SETUP #2 — Long en V-recovery desde onVAL 6,806 (si Escenario B)</div>
+    <div class="setup-body">
+      <strong>Condición:</strong> Solo si ES cae hasta 6,806 y forma vela de reversión (Hammer, Bullish Engulfing) con delta positivo. VWAP debe girar a UP en ese momento. Requiere 4/4 señales.<br><br>
+      <strong>Lógica:</strong> La zona onVAL + Pre-Low (6,795–6,806) es el suelo donde los compradores institucionales tienen órdenes GTC. Si el precio llega ahí y rebota con volumen, el trade Long tiene soporte estructural fuerte.<br><br>
+      <strong>Gestión:</strong> Stop debajo de 6,799. Target T1: Open RTH 6,834. Target T2: Y-Close 6,855. Ratio: 1:2.3 ✅
+    </div>
+    <div class="setup-grid">
+      <div class="setup-cell"><div class="setup-cell-label">Entry</div><div class="setup-cell-val" style="color:var(--green)">6,806–6,810</div></div>
+      <div class="setup-cell"><div class="setup-cell-label">Stop</div><div class="setup-cell-val" style="color:var(--amber)">6,799 (-7 pts)</div></div>
+      <div class="setup-cell"><div class="setup-cell-label">Target T1</div><div class="setup-cell-val" style="color:var(--green)">6,834 (+24 pts)</div></div>
+      <div class="setup-cell"><div class="setup-cell-label">Target T2</div><div class="setup-cell-val" style="color:var(--green)">6,855 (+45 pts)</div></div>
+      <div class="setup-cell"><div class="setup-cell-label">Ratio R:R</div><div class="setup-cell-val" style="color:var(--teal)">1:3.4 / 1:6</div></div>
+      <div class="setup-cell"><div class="setup-cell-label">Prob. hoy</div><div class="setup-cell-val" style="color:var(--amber)">Baja 25%</div></div>
+    </div>
+  </div>
+
+  <!-- Advertencias -->
+  <div class="sub-title">Advertencias de Horarios Críticos</div>
+
+  <div class="icard crit">
+    <div class="icard-title">🔴 09:30–09:40 ET — PROHIBIDO ENTRAR (Open Fakeout Zone)</div>
+    <div class="icard-text">Los primeros 2 barras de 610 tick en apertura son el campo de minas institucional. El mercado maker llena gaps, activa stops y testa ambos lados. Con la noticia del Hormuz esta zona es especialmente peligrosa. Observar, no actuar.</div>
+  </div>
+
+  <div class="icard warn">
+    <div class="icard-title">⚠️ ~10:00 ET — Earnings JPM y Goldman (Zona de alta volatilidad)</div>
+    <div class="icard-text">Si los earnings salen al mismo tiempo que el mercado está ejecutando un setup, el stop puede activarse por el impulso del headline. Reducir tamaño a la mitad o estar en flat 5 minutos antes y después de los earnings.</div>
+  </div>
+
+  <div class="icard warn">
+    <div class="icard-title">⚠️ 10:30–11:00 ET — Zona de reversión habitual (Lunch Fade)</div>
+    <div class="icard-text">Si el mercado subió desde la apertura, 10:30–11:00 es el horario clásico de reversión. Si bajó, puede ser el piso del día. NO abrir nuevas posiciones después de las 11:15 sin señal muy clara.</div>
+  </div>
+
+  <div class="icard info">
+    <div class="icard-title">📋 Checklist de la Sesión — Aplicar antes de cada trade</div>
+    <div class="icard-text">
+      ☐ ¿Pasaron 5 minutos desde la apertura? (Si no → esperar)<br>
+      ☐ ¿El VWAP confirma la dirección del trade?<br>
+      ☐ ¿Hay mínimo 3/4 señales del sistema?<br>
+      ☐ ¿Definí stop Y target antes de entrar, con ratio ≥1:2?<br>
+      ☐ ¿No hay headline activo de Irán / Trump en los últimos 5 min?<br>
+      ☐ ¿Es el trade ≤3 del día? (Si ya hay 3 → sesión cerrada)<br>
+      ☐ Para fondeo: ¿ya ganó el sim el primer trade? (Si no → fondeo cerrado hoy)<br>
+      ☐ Para fondeo: ¿SL configurado a mínimo 3 pts con GTC target?
+    </div>
+  </div>
+
+  <!-- Chart intraday -->
+  <div class="sub-title">Mapa de Probabilidad Intraday — ES (9:30–11:30)</div>
+  <div class="chart-wrap" style="height:160px;margin-bottom:12px"><canvas id="chartIntra"></canvas></div>
+  <div style="font-size:11px;color:var(--text3);text-align:center;margin-top:-4px">Escenario más probable (Bearish 55%): apertura en 6,834 → retroceso a 6,815–6,806 → rebote parcial. Targets T1/T2 bajistas.</div>
+
+  <!-- Resumen final -->
+  <div class="setup-card secondary" style="margin-top:16px">
+    <div class="setup-title" style="color:var(--teal)">📌 Resumen Ejecutivo del Día</div>
+    <div class="setup-body">
+      <strong>Sesgo dominante:</strong> Risk-Off por colapso US–Irán y bloqueo Hormuz. ES -0.62% pre-market.<br>
+      <strong>Escenario más probable (55%):</strong> Bajista — Short en retest onPOC 6,815, target 6,806–6,795.<br>
+      <strong>Setup de más alta probabilidad:</strong> #1 Short 6,815–6,820, stop 6,823, T1 6,806, T2 6,795. Ratio 1:2.3.<br>
+      <strong>Fondeo:</strong> Solo 1 MES contrato. GTC obligatorio. No operar si sim pierde el primer trade.<br>
+      <strong>Límite de operativa:</strong> Máximo 3 setups. Si los 2 primeros pierden → sesión cerrada sin excepción.<br>
+      <strong>Keltner Width:</strong> Resolver el bug antes de la apertura — es necesario para calibrar el contexto de volatilidad con VIX 19.
+    </div>
+  </div>
+
+</div>
+</div><!-- /page -->
+
+<footer>
+  EduS Trader · Daily Strategic Game Plan · 13 Abr 2026 · 09:40 ET<br>
+  ES JUN26 / NQ JUN26 · Ref: ES 6,834 / NQ 25,200 · VIX 19.34 · Brent $102 · WTI $104.73<br>
+  Contenido de uso personal. No constituye asesoramiento financiero ni recomendación de inversión.<br>
+  Fuentes: Bloomberg, Investing.com, Al Jazeera, Barchart, TipRanks · Generado pre-apertura RTH
+</footer>
+
+<script>
+// PROB chart
+const isDark=true;
+const tc='#4a5568'; const gc='rgba(255,255,255,0.06)';
+new Chart(document.getElementById('chartProb'),{
+  type:'bar',
+  data:{
+    labels:['🔴 BAJISTA','🟢 ALCISTA','🟡 LATERAL'],
+    datasets:[{data:[55,25,20],backgroundColor:['rgba(224,82,82,0.75)','rgba(77,186,118,0.75)','rgba(201,168,76,0.75)'],borderRadius:6,borderSkipped:false}]
+  },
+  options:{
+    indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.raw+'%'}}},
+    scales:{
+      x:{max:100,ticks:{color:tc,font:{size:11},callback:v=>v+'%'},grid:{color:gc}},
+      y:{ticks:{color:'#e2e8f0',font:{size:12,weight:'500'}},grid:{display:false}}
+    }
+  }
+});
+
+// Intraday scenario map
+new Chart(document.getElementById('chartIntra'),{
+  type:'line',
+  data:{
+    labels:['9:30','9:40','9:50','10:00','10:15','10:30','10:45','11:00','11:15','11:30'],
+    datasets:[
+      {label:'Escenario Bajista (55%)',data:[6834,6828,6820,6815,6808,6806,6808,6812,6810,6806],
+       borderColor:'rgba(224,82,82,0.9)',backgroundColor:'rgba(224,82,82,0.06)',fill:true,tension:0.3,borderWidth:2,pointRadius:4,
+       pointBackgroundColor:['#e2e8f0','#e2e8f0','#e05252','#c9a84c','#4dba76','#4dba76','#e2e8f0','#e2e8f0','#e2e8f0','#e05252']},
+      {label:'Escenario Alcista (25%)',data:[6834,6840,6848,6850,6858,6860,6855,6862,6858,6855],
+       borderColor:'rgba(77,186,118,0.6)',backgroundColor:'transparent',fill:false,tension:0.3,borderWidth:1.5,borderDash:[4,4],pointRadius:3},
+      {label:'Zonas clave',data:[6815,6815,6815,6815,6815,6815,6815,6815,6815,6815],
+       borderColor:'rgba(61,214,192,0.4)',backgroundColor:'transparent',fill:false,tension:0,borderWidth:1,borderDash:[2,4],pointRadius:0}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'top',labels:{color:'#8892a0',font:{size:10},boxWidth:12,padding:12}},
+      tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.raw}}},
+    scales:{
+      x:{ticks:{color:tc,font:{size:10}},grid:{display:false}},
+      y:{min:6790,max:6875,ticks:{color:tc,font:{size:10},callback:v=>v.toFixed(0)},grid:{color:gc}}
+    }
+  }
+});
+
+// Nav scroll
+const secs=['sentimiento','estructura','escenarios','breadth','operativa'];
+window.addEventListener('scroll',()=>{
+  let cur='sentimiento';
+  secs.forEach(id=>{const el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-60)cur=id;});
+  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+});
+</script>
+</body>
+</html>
