@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Playables SDK -->
+<script>// Playables SDK v1.0.0
+// Game lifecycle bridge: rAF-based game-ready detection + event communication
+(function() {
+  'use strict';
+
+  // Idempotency: skip if already initialized (e.g., server-side injection
+  // followed by client-side inject-javascript via the Bloks webview component).
+  if (window.playablesSDK) return;
+
+  var HANDLER_NAME = 'playablesGameEventHandler';
+  var ANDROID_BRIDGE_NAME = '_MetaPlayablesBridge';
+  var RAF_FRAME_THRESHOLD = 3;
+
+  var gameReadySent = false;
+  var firstInteractionSent = false;
+  var errorSent = false;
+  var frameCount = 0;
+  var originalRAF = window.requestAnimationFrame;
+
+  // --- Transport Layer ---
+
+  function hasIOSBridge() {
+    return !!(window.webkit &&
+              window.webkit.messageHandlers &&
+              window.webkit.messageHandlers[HANDLER_NAME]);
+  }
+
+  function hasAndroidBridge() {
+    return !!(window[ANDROID_BRIDGE_NAME] &&
+              typeof window[ANDROID_BRIDGE_NAME].postEvent === 'function');
+  }
+
+  function isInIframe() {
+    return !!(window.parent && window.parent !== window);
+  }
+
+  function sendEvent(eventName, payload) {
+    var message = {
+      type: eventName,
+      payload: payload || {},
+      timestamp: Date.now()
+    };
+
+    if (hasIOSBridge()) {
+      try {
+        window.webkit.messageHandlers[HANDLER_NAME].postMessage(message);
+      } catch (e) { /* ignore */ }
+      return;
+    }
+
+    if (hasAndroidBridge()) {
+    try {
+      var p = payload || {};
+      p.__secureToken = window.__fbAndroidBridgeAuthToken || '';
+      window[ANDROID_BRIDGE_NAME].postEvent(
+        eventName,
+        JSON.stringify(p)
+      );
+    } catch (e) { /* ignore */ }
+    return;
+  }
+
+    if (isInIframe()) {
+      try {
+        window.parent.postMessage(message, '*');
+      } catch (e) { /* ignore */ }
+      return;
+    }
+  }
+
+  // --- rAF Game-Ready Detection ---
+
+  function onFrame() {
+    if (gameReadySent) return;
+
+    frameCount++;
+    if (frameCount >= RAF_FRAME_THRESHOLD) {
+      gameReadySent = true;
+      sendEvent('game_ready', {
+        frame_count: frameCount,
+        detected_at: Date.now()
+      });
+      return;
+    }
+
+    originalRAF.call(window, onFrame);
+  }
+
+  if (originalRAF) {
+    window.requestAnimationFrame = function(callback) {
+      if (!gameReadySent) {
+        return originalRAF.call(window, function(timestamp) {
+          frameCount++;
+          if (frameCount >= RAF_FRAME_THRESHOLD && !gameReadySent) {
+            gameReadySent = true;
+            sendEvent('game_ready', {
+              frame_count: frameCount,
+              detected_at: Date.now()
+            });
+          }
+          callback(timestamp);
+        });
+      }
+      return originalRAF.call(window, callback);
+    };
+  }
+
+  // --- First User Interaction Detection ---
+
+  function setupFirstInteractionDetection() {
+    var events = ['touchstart', 'mousedown', 'keydown'];
+
+    function onFirstInteraction() {
+      if (firstInteractionSent) return;
+      firstInteractionSent = true;
+      sendEvent('user_interaction_start', null);
+
+      for (var i = 0; i < events.length; i++) {
+        document.removeEventListener(events[i], onFirstInteraction, true);
+      }
+    }
+
+    for (var i = 0; i < events.length; i++) {
+      document.addEventListener(events[i], onFirstInteraction, true);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupFirstInteractionDetection);
+  } else {
+    setupFirstInteractionDetection();
+  }
+
+  // --- Auto Error Capture ---
+
+  window.addEventListener('error', function(event) {
+    if (errorSent) return;
+    errorSent = true;
+    sendEvent('error', {
+      message: event.message || 'Unknown error',
+      source: event.filename || '',
+      lineno: event.lineno || 0,
+      colno: event.colno || 0,
+      auto_captured: true
+    });
+  });
+
+  window.addEventListener('unhandledrejection', function(event) {
+    if (errorSent) return;
+    errorSent = true;
+    var reason = event.reason;
+    sendEvent('error', {
+      message: (reason instanceof Error) ? reason.message : String(reason),
+      type: 'unhandled_promise_rejection',
+      auto_captured: true
+    });
+  });
+
+  // --- Public API ---
+
+  window.playablesSDK = {
+    complete: function(score) {
+      sendEvent('game_ended', {
+        score: score,
+        completed: true
+      });
+    },
+
+    error: function(message) {
+      if (errorSent) return;
+      errorSent = true;
+      sendEvent('error', {
+        message: message || 'Unknown error',
+        auto_captured: false
+      });
+    },
+
+    sendEvent: function(eventName, payload) {
+      if (!eventName || typeof eventName !== 'string') return;
+      sendEvent(eventName, payload);
+    }
+  };
+
+  // Kick off rAF detection in case no game code calls rAF immediately
+  if (originalRAF) {
+    originalRAF.call(window, onFrame);
+  }
+})();</script>
+<script>window.Intl=window.Intl||{};Intl.t=function(s){return(Intl._locale&&Intl._locale[s])||s;};</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repositorio NT8 - EduS Trader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        :root { color-scheme: dark; }
+        body { font-family: 'Inter', sans-serif; background: #070b10; }
+        code, .mono { font-family: 'JetBrains Mono', monospace; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0f16; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+        .glass { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+    </style>
+</head>
+<body class="min-h-screen text-zinc-200 antialiased selection:bg-[#3dd6c0]/30 selection:text-[#3dd6c0]">
+    <div class="fixed inset-0 -z-10">
+        <div class="absolute inset-0 bg-[#070b10]"></div>
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_center,_rgba(61,214,192,0.15),transparent_60%)] blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_center,_rgba(61,214,192,0.08),transparent_70%)] blur-3xl"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 border-b border-white/5 bg-[#0a0f16]/80 glass">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-[68px] flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#3dd6c0] to-[#2aa38f] flex items-center justify-center shadow-lg shadow-[#3dd6c0]/20 ring-1 ring-white/10">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="text-black">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-[17px] font-semibold tracking-tight leading-none text-white">Repositorio NT8</h1>
+                    <p class="text-xs text-zinc-500 font-medium">EduS Trader</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="https://edustrader.pages.dev" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#3dd6c0] animate-pulse"></span>
+                    edustrader.pages.dev
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <!-- Config Warning -->
+        <div id="configAlert" class="mb-8 hidden">
+            <div class="relative overflow-hidden rounded-2xl border border-amber-500/20 bg-amber-500/5 p-5">
+                <div class="flex gap-4">
+                    <div class="shrink-0 w-10 h-10 rounded-xl bg-amber-500/15 flex items-center justify-center ring-1 ring-amber-500/20">
+                        <svg class="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+                        </svg>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <h3 class="text-sm font-semibold text-amber-200">Configuración requerida</h3>
+                        <p class="mt-1.5 text-[13px] leading-relaxed text-amber-100/70">Edita el archivo y reemplaza <code class="mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">GITHUB_USER</code> y <code class="mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">REPO_NAME</code> en el JavaScript (línea 240).</p>
+                        <p class="mt-2 text-xs text-amber-200/60">Ejemplo: const GITHUB_USER = 'edustrader'; const REPO_NAME = 'nt8-indicators';</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero -->
+        <div class="mb-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#3dd6c0]/10 border border-[#3dd6c0]/20 text-xs font-medium text-[#3dd6c0] mb-4">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                NinjaTrader 8 • Código abierto
+            </div>
+            <h2 class="text-3xl sm:text-[40px] font-bold tracking-tight text-white leading-[1.1]">Indicadores personalizados <span class="text-[#3dd6c0]">.CS</span></h2>
+            <p class="mt-4 text-[15px] leading-relaxed text-zinc-400 max-w-2xl">Descarga indicadores para NinjaTrader 8 directamente desde GitHub. Haz clic en cualquier archivo <span class="text-zinc-300">.cs</span> para descargarlo individualmente, o usa el botón para obtenerlos todos en un ZIP.</p>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex flex-col sm:flex-row gap-3 sm:items-center justify-between mb-5">
+            <div class="relative flex-1 sm:max-w-xs">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input id="search" type="text" placeholder="Buscar indicador..." class="w-full h-10 pl-9 pr-3 rounded-xl bg-[#0c121b] border border-white/10 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#3dd6c0]/50 focus:border-[#3dd6c0]/50 transition">
+            </div>
+            <div class="flex items-center gap-2">
+                <button id="refreshBtn" class="h-10 px-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-medium text-zinc-300 hover:text-white transition flex items-center gap-1.5">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    Actualizar
+                </button>
+                <button id="downloadAllBtn" class="h-10 px-4 rounded-xl bg-[#3dd6c0] hover:bg-[#35c2ad] text-black text-sm font-semibold shadow-lg shadow-[#3dd6c0]/20 transition flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    Descargar todo como ZIP
+                </button>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0b1119]/70 glass shadow-2xl shadow-black/40">
+            <div class="border-b border-white/5 px-5 py-3 flex items-center justify-between bg-white/[0.01]">
+                <div class="flex items-center gap-2 text-xs text-zinc-500">
+                    <span id="repoPath" class="mono">github.com/—/—</span>
+                    <span class="opacity-50">•</span>
+                    <span id="fileCount" class="text-zinc-400">0 archivos</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-[11px] text-zinc-600">
+                    <span class="w-1 h-1 rounded-full bg-zinc-700"></span>
+                    API pública de GitHub
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider border-b border-white/5 bg-white/[0.01]">
+                            <th class="text-left px-5 py-3.5 w-[45%]">Nombre</th>
+                            <th class="text-left px-5 py-3.5 hidden sm:table-cell">Tamaño</th>
+                            <th class="text-left px-5 py-3.5 hidden md:table-cell">Última actualización</th>
+                            <th class="text-right px-5 py-3.5">Descargar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="divide-y divide-white/[0.03]">
+                        <!-- rows -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- States -->
+            <div id="loadingState" class="py-20 text-center">
+                <div class="inline-flex flex-col items-center gap-3">
+                    <div class="w-8 h-8 border-2 border-zinc-700 border-t-[#3dd6c0] rounded-full animate-spin"></div>
+                    <p class="text-sm text-zinc-500">Cargando indicadores desde GitHub...</p>
+                </div>
+            </div>
+
+            <div id="emptyState" class="hidden py-20 text-center px-6">
+                <div class="w-12 h-12 mx-auto rounded-2xl bg-white/5 flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                    </svg>
+                </div>
+                <h3 class="text-white font-medium">No se encontraron archivos .cs</h3>
+                <p class="mt-1 text-sm text-zinc-500 max-w-sm mx-auto">Verifica que el repositorio contenga indicadores NinjaTrader 8 en la ruta configurada.</p>
+            </div>
+
+            <div id="errorState" class="hidden py-20 text-center px-6">
+                <div class="w-12 h-12 mx-auto rounded-2xl bg-red-500/10 flex items-center justify-center mb-4 ring-1 ring-red-500/20">
+                    <svg class="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
+                    </svg>
+                </div>
+                <h3 class="text-white font-medium">Error al cargar</h3>
+                <p id="errorMsg" class="mt-1 text-sm text-zinc-500 max-w-sm mx-auto">No se pudo conectar con GitHub. Revisa usuario y repositorio.</p>
+            </div>
+        </div>
+
+        <!-- How to -->
+        <div class="mt-12 grid sm:grid-cols-3 gap-4">
+            <div class="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.02] p-5 hover:border-white/20 transition">
+                <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-[radial-gradient(300px_at_top_left,_rgba(61,214,192,0.15),transparent)]"></div>
+                <div class="relative">
+                    <div class="w-8 h-8 rounded-lg bg-[#3dd6c0]/15 flex items-center justify-center mb-3 ring-1 ring-[#3dd6c0]/20">
+                        <span class="text-sm font-bold text-[#3dd6c0]">1</span>
+                    </div>
+                    <h4 class="font-semibold text-white text-sm">Descarga el .cs</h4>
+                    <p class="mt-1.5 text-[13px] text-zinc-400 leading-relaxed">Haz clic en "Descargar" o descarga todo el paquete ZIP.</p>
+                </div>
+            <div class="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.02] p-5 hover:border-white/20 transition">
+                <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-[radial-gradient(300px_at_top_left,_rgba(61,214,192,0.15),transparent)]"></div>
+                <div class="relative">
+                    <div class="w-8 h-8 rounded-lg bg-[#3dd6c0]/15 flex items-center justify-center mb-3 ring-1 ring-[#3dd6c0]/20">
+                        <span class="text-sm font-bold text-[#3dd6c0]">2</span>
+                    </div>
+                    <h4 class="font-semibold text-white text-sm">Importa en NT8</h4>
+                    <p class="mt-1.5 text-[13px] text-zinc-400 leading-relaxed">NinjaTrader 8 → Herramientas → Importar → Indicador NinjaScript.</p>
+                </div>
+            <div class="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.02] p-5 hover:border-white/20 transition">
+                <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-[radial-gradient(300px_at_top_left,_rgba(61,214,192,0.15),transparent)]"></div>
+                <div class="relative">
+                    <div class="w-8 h-8 rounded-lg bg-[#3dd6c0]/15 flex items-center justify-center mb-3 ring-1 ring-[#3dd6c0]/20">
+                        <span class="text-sm font-bold text-[#3dd6c0]">3</span>
+                    </div>
+                    <h4 class="font-semibold text-white text-sm">Compila y usa</h4>
+                    <p class="mt-1.5 text-[13px] text-zinc-400 leading-relaxed">Compila en el editor y añade el indicador a tu gráfico.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-600">
+            <p>© EduS Trader — Repositorio NT8. Diseñado para traders.</p>
+            <p class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#3dd6c0]"></span> Tema oscuro • Inter • #3dd6c0</p>
+        </div>
+    </main>
+
+    <script>
+        // ==================== CONFIGURACIÓN ====================
+        // 👉 REEMPLAZA ESTOS VALORES CON TU REPOSITORIO DE GITHUB
+        const GITHUB_USER = 'eduS-M';  // Ejemplo: 'edustrader'
+        const REPO_NAME = 'EduS-Traiding-Tools-NT8-enUSO';       // Ejemplo: 'nt8-indicators'
+        const BRANCH = 'main';
+        const FOLDER_PATH = 'Indicators'; // Deja vacío para raíz, o ej: 'indicators'
+        // ========================================================
+
+        const tableBody = document.getElementById('tableBody');
+        const loadingState = document.getElementById('loadingState');
+        const emptyState = document.getElementById('emptyState');
+        const errorState = document.getElementById('errorState');
+        const errorMsg = document.getElementById('errorMsg');
+        const fileCount = document.getElementById('fileCount');
+        const repoPath = document.getElementById('repoPath');
+        const searchInput = document.getElementById('search');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const downloadAllBtn = document.getElementById('downloadAllBtn');
+        const configAlert = document.getElementById('configAlert');
+
+        let allFiles = [];
+
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '—';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+
+        function showState(state) {
+            loadingState.classList.toggle('hidden', state !== 'loading');
+            emptyState.classList.toggle('hidden', state !== 'empty');
+            errorState.classList.toggle('hidden', state !== 'error');
+            tableBody.classList.toggle('hidden', state !== 'ready');
+        }
+
+        async function fetchLastCommit(path) {
+            try {
+                const url = `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/commits?path=${encodeURIComponent(path)}&per_page=1&sha=${BRANCH}`;
+                const res = await fetch(url);
+                if (!res.ok) return null;
+                const commits = await res.json();
+                return commits[0]?.commit?.committer?.date || commits[0]?.commit?.author?.date || null;
+            } catch {
+                return null;
+            }
+        }
+
+        async function loadFiles() {
+            // Check config
+            if (GITHUB_USER === 'TU_USUARIO' || REPO_NAME === 'TU_REPO') {
+                configAlert.classList.remove('hidden');
+                repoPath.textContent = 'github.com/TU_USUARIO/TU_REPO';
+                showState('empty');
+                fileCount.textContent = '0 archivos';
+                return;
+            }
+            configAlert.classList.add('hidden');
+            repoPath.textContent = `github.com/${GITHUB_USER}/${REPO_NAME}${FOLDER_PATH ? '/' + FOLDER_PATH : ''}`;
+
+            showState('loading');
+            tableBody.innerHTML = '';
+            allFiles = [];
+
+            try {
+                const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/${FOLDER_PATH}?ref=${BRANCH}`;
+                const res = await fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+                
+                if (res.status === 404) throw new Error('Repositorio o ruta no encontrada');
+                if (res.status === 403) throw new Error('Límite de API de GitHub alcanzado. Intenta más tarde.');
+                if (!res.ok) throw new Error(`Error ${res.status}`);
+
+                const data = await res.json();
+                const csFiles = Array.isArray(data) 
+                    ? data.filter(f => f.type === 'file' && f.name.toLowerCase().endsWith('.cs'))
+                    : [];
+
+                if (csFiles.length === 0) {
+                    showState('empty');
+                    fileCount.textContent = '0 archivos';
+                    return;
+                }
+
+                // Fetch commit dates (limit to avoid rate limit)
+                const filesWithDates = await Promise.all(
+                    csFiles.slice(0, 50).map(async (file) => {
+                        const date = await fetchLastCommit(file.path);
+                        return { ...file, lastUpdate: date };
+                    })
+                );
+
+                allFiles = filesWithDates.sort((a, b) => a.name.localeCompare(b.name));
+                renderFiles(allFiles);
+                fileCount.textContent = `${allFiles.length} archivo${allFiles.length !== 1 ? 's' : ''}`;
+                showState('ready');
+                downloadAllBtn.disabled = false;
+
+            } catch (err) {
+                console.error(err);
+                errorMsg.textContent = err.message || 'No se pudo conectar con GitHub.';
+                showState('error');
+                fileCount.textContent = '0 archivos';
+                downloadAllBtn.disabled = true;
+            }
+        }
+
+        function renderFiles(files) {
+            tableBody.innerHTML = '';
+            const query = searchInput.value.toLowerCase().trim();
+            const filtered = query ? files.filter(f => f.name.toLowerCase().includes(query)) : files;
+
+            if (filtered.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="px-5 py-12 text-center text-sm text-zinc-500">Sin resultados para "${query}"</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(file => {
+                const tr = document.createElement('tr');
+                tr.className = 'group hover:bg-white/[0.02] transition-colors';
+                tr.innerHTML = `
+                    <td class="px-5 py-4">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-9 h-9 rounded-lg bg-[#3dd6c0]/10 ring-1 ring-[#3dd6c0]/15 flex items-center justify-center shrink-0 group-hover:bg-[#3dd6c0]/15 transition">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="text-[#3dd6c0]">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity="0.15"/>
+                                    <path d="M14 2v6h6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="font-medium text-[14px] text-white truncate group-hover:text-[#3dd6c0] transition">${file.name}</div>
+                                <div class="flex items-center gap-2 mt-0.5">
+                                    <span class="text-[11px] px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-zinc-400 mono">.cs</span>
+                                    <span class="text-[11px] text-zinc-600 sm:hidden">${formatSize(file.size)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-5 py-4 hidden sm:table-cell">
+                        <span class="text-[13px] text-zinc-400">${formatSize(file.size)}</span>
+                    </td>
+                    <td class="px-5 py-4 hidden md:table-cell">
+                        <span class="text-[13px] text-zinc-500">${formatDate(file.lastUpdate)}</span>
+                    </td>
+                    <td class="px-5 py-4 text-right">
+                        <a href="${file.download_url}" download="${file.name}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-[#3dd6c0] hover:text-black border border-white/10 hover:border-[#3dd6c0] text-[13px] font-medium text-zinc-300 transition group/btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="group-hover/btn:scale-110 transition">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                            </svg>
+                            <span class="hidden sm:inline">Descargar</span>
+                        </a>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        async function downloadAllAsZip() {
+            if (allFiles.length === 0) return;
+            
+            downloadAllBtn.disabled = true;
+            const originalHTML = downloadAllBtn.innerHTML;
+            downloadAllBtn.innerHTML = `<svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg>Comprimiendo...`;
+
+            try {
+                const zip = new JSZip();
+                const folder = zip.folder('NT8-Indicadores-EduSTrader');
+
+                await Promise.all(allFiles.map(async (file) => {
+                    const res = await fetch(file.download_url);
+                    const blob = await res.blob();
+                    folder.file(file.name, blob);
+                }));
+
+                const content = await zip.generateAsync({ type: 'blob' });
+                const url = URL.createObjectURL(content);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `NT8-Indicadores-${REPO_NAME}-${new Date().toISOString().slice(0,10)}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+            } catch (e) {
+                alert('Error al crear ZIP: ' + e.message);
+            } finally {
+                downloadAllBtn.disabled = false;
+                downloadAllBtn.innerHTML = originalHTML;
+            }
+        }
+
+        // Events
+        searchInput.addEventListener('input', () => renderFiles(allFiles));
+        refreshBtn.addEventListener('click', loadFiles);
+        downloadAllBtn.addEventListener('click', downloadAllAsZip);
+
+        // Init
+        downloadAllBtn.disabled = true;
+        loadFiles();
+    </script>
+</body>
+</html>
