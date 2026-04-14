@@ -1,80 +1,270 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- Playables SDK -->
+<script>// Playables SDK v1.0.0
+// Game lifecycle bridge: rAF-based game-ready detection + event communication
+(function() {
+  'use strict';
+
+  // Idempotency: skip if already initialized (e.g., server-side injection
+  // followed by client-side inject-javascript via the Bloks webview component).
+  if (window.playablesSDK) return;
+
+  var HANDLER_NAME = 'playablesGameEventHandler';
+  var ANDROID_BRIDGE_NAME = '_MetaPlayablesBridge';
+  var RAF_FRAME_THRESHOLD = 3;
+
+  var gameReadySent = false;
+  var firstInteractionSent = false;
+  var errorSent = false;
+  var frameCount = 0;
+  var originalRAF = window.requestAnimationFrame;
+
+  // --- Transport Layer ---
+
+  function hasIOSBridge() {
+    return !!(window.webkit &&
+              window.webkit.messageHandlers &&
+              window.webkit.messageHandlers[HANDLER_NAME]);
+  }
+
+  function hasAndroidBridge() {
+    return !!(window[ANDROID_BRIDGE_NAME] &&
+              typeof window[ANDROID_BRIDGE_NAME].postEvent === 'function');
+  }
+
+  function isInIframe() {
+    return !!(window.parent && window.parent !== window);
+  }
+
+  function sendEvent(eventName, payload) {
+    var message = {
+      type: eventName,
+      payload: payload || {},
+      timestamp: Date.now()
+    };
+
+    if (hasIOSBridge()) {
+      try {
+        window.webkit.messageHandlers[HANDLER_NAME].postMessage(message);
+      } catch (e) { /* ignore */ }
+      return;
+    }
+
+    if (hasAndroidBridge()) {
+    try {
+      var p = payload || {};
+      p.__secureToken = window.__fbAndroidBridgeAuthToken || '';
+      window[ANDROID_BRIDGE_NAME].postEvent(
+        eventName,
+        JSON.stringify(p)
+      );
+    } catch (e) { /* ignore */ }
+    return;
+  }
+
+    if (isInIframe()) {
+      try {
+        window.parent.postMessage(message, '*');
+      } catch (e) { /* ignore */ }
+      return;
+    }
+  }
+
+  // --- rAF Game-Ready Detection ---
+
+  function onFrame() {
+    if (gameReadySent) return;
+
+    frameCount++;
+    if (frameCount >= RAF_FRAME_THRESHOLD) {
+      gameReadySent = true;
+      sendEvent('game_ready', {
+        frame_count: frameCount,
+        detected_at: Date.now()
+      });
+      return;
+    }
+
+    originalRAF.call(window, onFrame);
+  }
+
+  if (originalRAF) {
+    window.requestAnimationFrame = function(callback) {
+      if (!gameReadySent) {
+        return originalRAF.call(window, function(timestamp) {
+          frameCount++;
+          if (frameCount >= RAF_FRAME_THRESHOLD && !gameReadySent) {
+            gameReadySent = true;
+            sendEvent('game_ready', {
+              frame_count: frameCount,
+              detected_at: Date.now()
+            });
+          }
+          callback(timestamp);
+        });
+      }
+      return originalRAF.call(window, callback);
+    };
+  }
+
+  // --- First User Interaction Detection ---
+
+  function setupFirstInteractionDetection() {
+    var events = ['touchstart', 'mousedown', 'keydown'];
+
+    function onFirstInteraction() {
+      if (firstInteractionSent) return;
+      firstInteractionSent = true;
+      sendEvent('user_interaction_start', null);
+
+      for (var i = 0; i < events.length; i++) {
+        document.removeEventListener(events[i], onFirstInteraction, true);
+      }
+    }
+
+    for (var i = 0; i < events.length; i++) {
+      document.addEventListener(events[i], onFirstInteraction, true);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupFirstInteractionDetection);
+  } else {
+    setupFirstInteractionDetection();
+  }
+
+  // --- Auto Error Capture ---
+
+  window.addEventListener('error', function(event) {
+    if (errorSent) return;
+    errorSent = true;
+    sendEvent('error', {
+      message: event.message || 'Unknown error',
+      source: event.filename || '',
+      lineno: event.lineno || 0,
+      colno: event.colno || 0,
+      auto_captured: true
+    });
+  });
+
+  window.addEventListener('unhandledrejection', function(event) {
+    if (errorSent) return;
+    errorSent = true;
+    var reason = event.reason;
+    sendEvent('error', {
+      message: (reason instanceof Error) ? reason.message : String(reason),
+      type: 'unhandled_promise_rejection',
+      auto_captured: true
+    });
+  });
+
+  // --- Public API ---
+
+  window.playablesSDK = {
+    complete: function(score) {
+      sendEvent('game_ended', {
+        score: score,
+        completed: true
+      });
+    },
+
+    error: function(message) {
+      if (errorSent) return;
+      errorSent = true;
+      sendEvent('error', {
+        message: message || 'Unknown error',
+        auto_captured: false
+      });
+    },
+
+    sendEvent: function(eventName, payload) {
+      if (!eventName || typeof eventName !== 'string') return;
+      sendEvent(eventName, payload);
+    }
+  };
+
+  // Kick off rAF detection in case no game code calls rAF immediately
+  if (originalRAF) {
+    originalRAF.call(window, onFrame);
+  }
+})();</script>
+<script>window.Intl=window.Intl||{};Intl.t=function(s){return(Intl._locale&&Intl._locale[s])||s;};</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EduS Trader — Bitácora de Trading</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* RESET background:#02060e */
+/* RESET background:#ffffff */
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#2b9485;color:#e2e8f0;line-height:1.6}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f7fa;color:#0f172a;line-height:1.6}
 img{max-width:100%;display:block}
 
 /* BANNER */
-.banner{width:100%;background:#02060e;border-bottom:1px solid #1a1f2e}
+.banner{width:100%;background:#ffffff;border-bottom:1px solid #e2e8f0}
 .banner img{width:100%;height:auto;max-height:320px;object-fit:cover}
 
 /* NAVIGATION - from user's gadget */
-#edus-nb{display:block;width:100%;background:#3dd6c0;border-top:1px solid #1a1f2e;border-bottom:2px solid #1a1f2e;position:sticky;top:0;z-index:9999}
+#edus-nb{display:block;width:100%;background:#3dd6c0;border-top:1px solid #e2e8f0;border-bottom:2px solid #e2e8f0;position:sticky;top:0;z-index:9999}
 #edus-nb *{box-sizing:border-box;float:none;font-family:'Montserrat',sans-serif}
 #edus-nb ul{list-style:none;margin:0;padding:0}
 #edus-nb>ul{display:flex;flex-wrap:wrap;max-width:1200px;margin:0 auto}
 #edus-nb>ul>li{position:relative}
-#edus-nb a.et,#edus-nb span.et{display:block;padding:14px 18px;text-decoration:none;color:#1a1f2e;font-size:13px;font-weight:600;text-transform:uppercase;cursor:pointer;white-space:nowrap}
-#edus-nb a.et:hover,#edus-nb span.et:hover,#edus-nb span.et.on{background:#888;color:#fff}
-.edd{display:none;position:absolute;top:100%;left:0;background:#3dd6c0;min-width:220px;box-shadow:0 8px 16px rgba(0,0,0,.25);z-index:10000;border:1px solid #1a1f2e}
+#edus-nb a.et,#edus-nb span.et{display:block;padding:14px 18px;text-decoration:none;color:#0f172a;font-size:13px;font-weight:600;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+#edus-nb a.et:hover,#edus-nb span.et:hover,#edus-nb span.et.on{background:#64748b;color:#fff}
+.edd{display:none;position:absolute;top:100%;left:0;background:#3dd6c0;min-width:220px;box-shadow:0 8px 16px rgba(0,0,0,.25);z-index:10000;border:1px solid #cbd5e1}
 .edd.on{display:block}
 .edd>li{position:relative}  
-.emes{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;color:#1a1f2e;font-size:13px;font-weight:600;border-bottom:1px solid rgba(0,0,0,.1);cursor:pointer;background:#3dd6c0}
-.emes:hover,.emes.on{background:#888;color:#fff}
-.esub{display:none;position:absolute;top:0;left:100%;background:#f1f1f1;min-width:180px;border:1px solid #1a1f2e;box-shadow:4px 4px 12px rgba(0,0,0,.15);z-index:10001}
+.emes{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;color:#0f172a;font-size:13px;font-weight:600;border-bottom:1px solid rgba(0,0,0,.1);cursor:pointer;background:#3dd6c0}
+.emes:hover,.emes.on{background:#64748b;color:#fff}
+.esub{display:none;position:absolute;top:0;left:100%;background:#ffffff;min-width:180px;border:1px solid #cbd5e1;box-shadow:4px 4px 12px rgba(0,0,0,.15);z-index:10001}
 .esub.on{display:block}
-.esub a{display:block;padding:10px 20px;text-decoration:none;color:#1a1f2e;font-size:13px;font-weight:600;border-bottom:1px solid #ddd;background:#f1f1f1}
-.esub a:hover{background:#888;color:#fff}
+.esub a{display:block;padding:10px 20px;text-decoration:none;color:#0f172a;font-size:13px;font-weight:600;border-bottom:1px solid #e2e8f0;background:#ffffff}
+.esub a:hover{background:#64748b;color:#fff}
 
 /* MAIN CONTENT - from user's page */
 .main-wrap{max-width:1200px;margin:0 auto;padding:24px 20px}
 .edus-wrap *{box-sizing:border-box;margin:0;padding:0}
-.edus-wrap{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e2e8f0;width:100%}
+.edus-wrap{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#0f172a;width:100%}
 
 /* All the CSS from user's first code block exactly as provided */
-.edus-hero{background:linear-gradient(135deg,#111827 0%,#1a2236 50%,#111e2a 100%);border:0.5px solid rgba(61,214,192,0.2);border-radius:14px;padding:40px 36px 36px;margin-bottom:28px;position:relative;overflow:hidden}
+.edus-hero{background:linear-gradient(135deg,#ffffff 0%,#f8fafc 50%,#f1f5f9 100%);border:0.5px solid rgba(61,214,192,0.3);border-radius:14px;padding:40px 36px 36px;margin-bottom:28px;position:relative;overflow:hidden}
 .edus-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#3dd6c0 0%,#c9a84c 50%,#3dd6c0 100%)}
 .edus-hero::after{content:'';position:absolute;bottom:-80px;right:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(61,214,192,0.05) 0%,transparent 65%);pointer-events:none}
 .edus-hero-badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;background:rgba(61,214,192,0.1);border:0.5px solid rgba(61,214,192,0.35);color:#3dd6c0;margin-bottom:18px}
 .edus-hero-tagline{font-size:15px;font-style:italic;color:#c9a84c;font-weight:500;letter-spacing:0.01em;margin-bottom:10px;line-height:1.4}
-.edus-hero-sub{font-size:13px;color:#6b7a8d;line-height:1.65;max-width:580px;margin-bottom:28px}
-.edus-hero-sub strong{color:#a0b0c0;font-weight:500}
+.edus-hero-sub{font-size:13px;color:#475569;line-height:1.65;max-width:580px;margin-bottom:28px}
+.edus-hero-sub strong{color:#1e293b;font-weight:500}
 .edus-divider{height:0.5px;background:rgba(61,214,192,0.15);margin:24px 0}
 .edus-pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
-.edus-pillar{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.07);border-radius:8px;padding:10px 12px;display:flex;align-items:flex-start;gap:8px}
+.edus-pillar{background:rgba(0,0,0,0.02);border:0.5px solid rgba(0,0,0,0.08);border-radius:8px;padding:10px 12px;display:flex;align-items:flex-start;gap:8px}
 .edus-pillar-icon{font-size:14px;flex-shrink:0;margin-top:1px}
 .edus-pillar-title{font-size:11px;font-weight:600;color:#3dd6c0;margin-bottom:2px}
-.edus-pillar-text{font-size:10px;color:#4a5568;line-height:1.45}
-.edus-intro{background:#111827;border:0.5px solid rgba(255,255,255,0.07);border-radius:12px;padding:26px 30px;margin-bottom:28px}
-.edus-intro p{font-size:13px;color:#8892a0;line-height:1.8;margin-bottom:12px}
+.edus-pillar-text{font-size:10px;color:#64748b;line-height:1.45}
+.edus-intro{background:#ffffff;border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:26px 30px;margin-bottom:28px}
+.edus-intro p{font-size:13px;color:#475569;line-height:1.8;margin-bottom:12px}
 .edus-intro p:last-child{margin-bottom:0}
-.edus-intro strong{color:#c2ccd8;font-weight:500}
-.edus-journey{background:#111827;border:0.5px solid rgba(255,255,255,0.07);border-radius:12px;padding:20px 24px;margin-bottom:28px}
+.edus-intro strong{color:#0f172a;font-weight:500}
+.edus-journey{background:#ffffff;border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:20px 24px;margin-bottom:28px}
 .edus-journey-label{font-size:10px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#3dd6c0;margin-bottom:14px}
 .edus-journey-track{display:flex;align-items:center;gap:0;overflow-x:auto;padding-bottom:4px}
 .edus-journey-step{display:flex;flex-direction:column;align-items:center;min-width:76px;text-align:center;position:relative}
 .edus-journey-step .dot{width:10px;height:10px;border-radius:50%;background:#3dd6c0;border:2px solid #3dd6c0;margin-bottom:6px}
-.edus-journey-step .dot.inactive{background:transparent;border-color:#2a3545}
+.edus-journey-step .dot.inactive{background:transparent;border-color:#cbd5e1}
 .edus-journey-step .dot.current{background:#c9a84c;border-color:#c9a84c;box-shadow:0 0 0 4px rgba(201,168,76,0.15)}
 .edus-journey-step .step-label{font-size:9px;color:#3dd6c0;font-weight:500;line-height:1.3}
-.edus-journey-step .step-label.inactive{color:#2a3545}
+.edus-journey-step .step-label.inactive{color:#94a3b8}
 .edus-journey-step .step-label.current{color:#c9a84c}
 .edus-journey-connector{flex:1;height:1px;background:#3dd6c0;min-width:16px;margin-bottom:16px}
-.edus-journey-connector.inactive{background:#1e2a38}
-.edus-journey-note{font-size:11px;color:#617587;margin-top:12px;text-align:center;font-style:italic}
+.edus-journey-connector.inactive{background:#e2e8f0}
+.edus-journey-note{font-size:11px;color:#64748b;margin-top:12px;text-align:center;font-style:italic}
 .edus-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px}
-.edus-section-title{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#3a4a58;white-space:nowrap}
-.edus-section-line{flex:1;height:0.5px;background:rgba(255,255,255,0.06);margin:0 14px}
+.edus-section-title{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#64748b;white-space:nowrap}
+.edus-section-line{flex:1;height:0.5px;background:rgba(0,0,0,0.08);margin:0 14px}
 .edus-list{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
-.edus-card{display:flex;align-items:stretch;background:#111827;border:0.5px solid rgba(255,255,255,0.07);border-radius:10px;overflow:hidden;text-decoration:none;transition:border-color .2s,background .2s;width:100%}
-.edus-card:hover{border-color:rgba(61,214,192,0.35);background:#141e2e}
+.edus-card{display:flex;align-items:stretch;background:#ffffff;border:0.5px solid rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;text-decoration:none;transition:border-color .2s,background .2s;width:100%}
+.edus-card:hover{border-color:rgba(61,214,192,0.35);background:#f8fafc}
 .edus-card-accent{width:3px;flex-shrink:0}
 .edus-card-accent.teal{background:#3dd6c0}
 .edus-card-accent.gold{background:#c9a84c}
@@ -82,45 +272,45 @@ img{max-width:100%;display:block}
 .edus-card-body{flex:1;padding:14px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;min-width:0}
 .edus-card-date-block{flex-shrink:0;min-width:44px}
 .edus-card-day{font-size:22px;font-weight:700;color:#c9a84c;line-height:1}
-.edus-card-month{font-size:9px;color:#97afc4;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px}
+.edus-card-month{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px}
 .edus-card-info{flex:1;min-width:0}
-.edus-card-title{font-size:13px;font-weight:500;color:#c2ccd8;margin-bottom:3px;line-height:1.35}
-.edus-card-desc{font-size:11px;color:#6ba19d;line-height:1.4}
+.edus-card-title{font-size:13px;font-weight:500;color:#0f172a;margin-bottom:3px;line-height:1.35}
+.edus-card-desc{font-size:11px;color:#0d7a6c;line-height:1.4}
 .edus-card-meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
 .edus-tag{display:inline-block;padding:2px 6px;border-radius:3px;font-size:10px;font-weight:500;white-space:nowrap}
 .edus-tag.es{background:rgba(61,214,192,0.1);color:#3dd6c0;border:0.5px solid rgba(61,214,192,0.25)}
 .edus-tag.nq{background:rgba(201,168,76,0.1);color:#c9a84c;border:0.5px solid rgba(201,168,76,0.25)}
 .edus-tag.pos{background:rgba(61,214,100,0.1);color:#4dba76;border:0.5px solid rgba(61,214,100,0.2)}
 .edus-tag.neg{background:rgba(224,82,82,0.1);color:#e05252;border:0.5px solid rgba(224,82,82,0.2)}
-.edus-tag.neu{background:rgba(255,255,255,0.04);color:#4a5a6a;border:0.5px solid rgba(255,255,255,0.08)}
+.edus-tag.neu{background:rgba(0,0,0,0.04);color:#64748b;border:0.5px solid rgba(0,0,0,0.1)}
 .edus-card-pnl-block{text-align:right;flex-shrink:0;min-width:76px}
 .edus-card-pnl{font-size:17px;font-weight:600}
 .edus-card-pnl.pos{color:#4dba76}
 .edus-card-pnl.neg{color:#e05252}
-.edus-card-pnl.neu{color:#4a5a6a}
-.edus-card-pnl-sub{font-size:9px;color:#97afc4;margin-top:2px;line-height:1.3}
-.edus-card-arrow{font-size:16px;color:#1e2a38;padding:0 14px 0 4px;align-self:center;transition:color .2s;flex-shrink:0}
+.edus-card-pnl.neu{color:#64748b}
+.edus-card-pnl-sub{font-size:9px;color:#64748b;margin-top:2px;line-height:1.3}
+.edus-card-arrow{font-size:16px;color:#cbd5e1;padding:0 14px 0 4px;align-self:center;transition:color .2s;flex-shrink:0}
 .edus-card:hover .edus-card-arrow{color:#3dd6c0}
-.edus-card-coming{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.015);border:0.5px dashed rgba(255,255,255,0.07);border-radius:10px;padding:16px 20px}
+.edus-card-coming{display:flex;align-items:center;gap:12px;background:rgba(0,0,0,0.02);border:0.5px dashed rgba(0,0,0,0.15);border-radius:10px;padding:16px 20px}
 .edus-coming-dot{width:7px;height:7px;border-radius:50%;background:rgba(201,168,76,0.25);flex-shrink:0}
-.edus-coming-text{font-size:11px;color:#2e3d4e}
-.edus-yt{background:linear-gradient(135deg,#160e0e 0%,#110e0e 100%);border:0.5px solid rgba(224,82,82,0.25);border-radius:12px;padding:22px 26px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:28px}
+.edus-coming-text{font-size:11px;color:#64748b}
+.edus-yt{background:linear-gradient(135deg,#fef2f2 0%,#fee2e2 100%);border:0.5px solid rgba(224,82,82,0.25);border-radius:12px;padding:22px 26px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:28px}
 .edus-yt-icon{width:44px;height:44px;border-radius:50%;background:#c0392b;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .edus-yt-icon svg{width:20px;height:20px;fill:#fff}
 .edus-yt-text{flex:1;min-width:140px}
-.edus-yt-title{font-size:14px;font-weight:500;color:#c2ccd8;margin-bottom:3px}
-.edus-yt-sub{font-size:12px;color:#3a4a58}
+.edus-yt-title{font-size:14px;font-weight:500;color:#0f172a;margin-bottom:3px}
+.edus-yt-sub{font-size:12px;color:#64748b}
 .edus-yt-btn{display:inline-block;background:#c0392b;color:#fff;font-size:12px;font-weight:600;padding:10px 20px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:opacity .2s}
 .edus-yt-btn:hover{opacity:.85}
-.edus-platform{background:#111827;border:0.5px solid rgba(255,255,255,0.07);border-radius:12px;padding:20px 24px;margin-bottom:28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.edus-platform{background:#ffffff;border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:20px 24px;margin-bottom:28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .edus-platform-icon{font-size:28px;flex-shrink:0}
 .edus-platform-text{flex:1;min-width:180px}
 .edus-platform-title{font-size:13px;font-weight:600;color:#3dd6c0;margin-bottom:5px}
-.edus-platform-desc{font-size:12px;color:#4a5a6a;line-height:1.6}
-.edus-platform-desc strong{color:#8892a0;font-weight:500}
+.edus-platform-desc{font-size:12px;color:#64748b;line-height:1.6}
+.edus-platform-desc strong{color:#475569;font-weight:500}
 .edus-platform-link{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;color:#c9a84c;text-decoration:none;border-bottom:0.5px solid rgba(201,168,76,0.3)}
 .edus-platform-link:hover{border-bottom-color:#c9a84c}
-.edus-footer-note{text-align:center;font-size:10px;color:#1e2a38;padding:14px 0 2px;border-top:0.5px solid rgba(255,255,255,0.04);line-height:1.7}
+.edus-footer-note{text-align:center;font-size:10px;color:#cbd5e1;padding:14px 0 2px;border-top:0.5px solid rgba(255,255,255,0.04);line-height:1.7}
 
 @media(max-width:768px){
 #edus-nb a.et,#edus-nb span.et{font-size:11px;padding:12px 10px}
@@ -272,7 +462,7 @@ img{max-width:100%;display:block}
   <div class="edus-section-header">
     <span class="edus-section-title">Registros de sesión (más reciente primero)</span>
     <div class="edus-section-line"></div>
-    <span style="font-size:10px;color:#1e2a38;white-space:nowrap">más reciente primero</span>
+    <span style="font-size:10px;color:#cbd5e1;white-space:nowrap">más reciente primero</span>
   </div>
 
   <div class="edus-list">
