@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual — EduS Dynamic Swing AVWAP</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--bg2:#111827;--bg3:#1a2236;
+  --text:#e2e8f0;--text2:#8892a0;--text3:#4a5568;
+  --teal:#3dd6c0;--teal-bg:rgba(61,214,192,0.08);--teal-bd:rgba(61,214,192,0.25);
+  --green:#4dba76;--green-bg:rgba(77,186,118,0.08);--green-bd:rgba(77,186,118,0.25);
+  --red:#e05252;--red-bg:rgba(224,82,82,0.08);--red-bd:rgba(224,82,82,0.25);
+  --amber:#c9a84c;--amber-bg:rgba(201,168,76,0.08);--amber-bd:rgba(201,168,76,0.25);
+  --blue:#4a90d9;--blue-bg:rgba(74,144,217,0.08);--blue-bd:rgba(74,144,217,0.25);
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6}
+/* HEADER */
+.site-header{background:linear-gradient(135deg,#0d1117,#1a2236);border-bottom:0.5px solid var(--teal-bd);padding:0}
+.header-inner{max-width:1000px;margin:0 auto;padding:24px 24px 0;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.header-logo{width:48px;height:48px;background:var(--teal-bg);border:1.5px solid var(--teal-bd);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.header-text .brand{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);font-weight:600}
+.header-text h1{font-size:22px;font-weight:700;color:#fff;margin-bottom:2px}
+.header-text .version{font-size:11px;color:var(--text3);background:rgba(255,255,255,0.05);border:0.5px solid var(--teal-bd);padding:2px 8px;border-radius:4px}
+/* NAV */
+nav{max-width:1000px;margin:0 auto;padding:0 24px;display:flex;overflow-x:auto;gap:0;margin-top:12px}
+nav a{font-size:11px;color:var(--text3);text-decoration:none;padding:10px 14px;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s}
+nav a:hover{color:var(--text)}
+nav a.active{color:var(--teal);border-bottom-color:var(--teal);font-weight:600}
+/* PAGE */
+.page{max-width:1000px;margin:0 auto;padding:2rem 24px 4rem}
+.section-divider{height:0.5px;background:rgba(255,255,255,0.08);margin:3rem 0 2rem}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:0.8rem}
+.section-label .num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--bg3);border:0.5px solid rgba(255,255,255,0.12);font-size:9px;color:var(--teal)}
+h2{font-size:20px;font-weight:600;margin-bottom:4px;color:#fff}
+h3{font-size:15px;font-weight:600;margin:1.2rem 0 0.6rem;color:var(--teal)}
+.sub{font-size:12px;color:var(--text3);margin-bottom:1.2rem;line-height:1.5}
+p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px}
+p:last-child{margin-bottom:0}
+strong{color:var(--text);font-weight:500}
+/* CARDS */
+.card{background:var(--bg2);border:0.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px 18px;margin-bottom:12px}
+.card-teal{border-color:var(--teal-bd);background:var(--teal-bg)}
+.card-green{border-color:var(--green-bd);background:var(--green-bg)}
+.card-red{border-color:var(--red-bd);background:var(--red-bg)}
+.card-amber{border-color:var(--amber-bd);background:var(--amber-bg)}
+.card-blue{border-color:var(--blue-bd);background:var(--blue-bg)}
+.card-title{font-size:13px;font-weight:600;margin-bottom:6px}
+.card-teal .card-title{color:var(--teal)}
+.card-green .card-title{color:var(--green)}
+.card-red .card-title{color:var(--red)}
+.card-amber .card-title{color:var(--amber)}
+.card-blue .card-title{color:var(--blue)}
+.card p{font-size:12px;color:var(--text2);margin-bottom:6px}
+/* PARAM TABLE */
+.param-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.param-table th{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:8px 10px;border-bottom:0.5px solid rgba(255,255,255,0.1);text-align:left;background:rgba(255,255,255,0.02)}
+.param-table td{padding:9px 10px;border-bottom:0.5px solid rgba(255,255,255,0.05);color:var(--text2);vertical-align:top}
+.param-table tr:hover td{background:rgba(255,255,255,0.02)}
+.param-table tr:last-child td{border-bottom:none}
+.param-name{color:var(--text);font-weight:500;white-space:nowrap}
+.param-default{color:var(--teal);font-weight:600;font-family:monospace;white-space:nowrap}
+.param-range{color:var(--text3);font-size:10px;font-family:monospace}
+/* CONFIG TABLE */
+.config-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.config-table th{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:8px 10px;border-bottom:0.5px solid rgba(255,255,255,0.1);text-align:left;background:rgba(255,255,255,0.02)}
+.config-table td{padding:8px 10px;border-bottom:0.5px solid rgba(255,255,255,0.05);color:var(--text2);vertical-align:top;font-size:11px}
+.config-table tr:hover td{background:rgba(255,255,255,0.02)}
+.config-table tr:last-child td{border-bottom:none}
+.vix-low{background:rgba(77,186,118,0.12);color:var(--green);border:0.5px solid var(--green-bd);padding:2px 6px;border-radius:3px;font-weight:600;white-space:nowrap;font-size:11px}
+.vix-med{background:rgba(201,168,76,0.12);color:var(--amber);border:0.5px solid var(--amber-bd);padding:2px 6px;border-radius:3px;font-weight:600;white-space:nowrap;font-size:11px}
+.vix-high{background:rgba(224,82,82,0.12);color:var(--red);border:0.5px solid var(--red-bd);padding:2px 6px;border-radius:3px;font-weight:600;white-space:nowrap;font-size:11px}
+.vix-ext{background:rgba(224,82,82,0.2);color:#ff9090;border:0.5px solid rgba(224,82,82,0.5);padding:2px 6px;border-radius:3px;font-weight:600;white-space:nowrap;font-size:11px}
+.val-cell{font-family:monospace;font-weight:600;color:var(--teal)}
+/* STEP BOX */
+.steps{counter-reset:step}
+.step{display:flex;gap:14px;margin-bottom:16px}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--teal-bg);border:1.5px solid var(--teal-bd);color:var(--teal);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-body{flex:1}
+.step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.step-desc{font-size:12px;color:var(--text2);line-height:1.6}
+/* CONCEPT BOX */
+.concept{border-radius:10px;padding:16px 18px;margin-bottom:12px}
+.concept.theory{background:rgba(74,144,217,0.07);border:0.5px solid var(--blue-bd)}
+.concept-icon{font-size:20px;margin-bottom:8px}
+.concept-title{font-size:12px;font-weight:600;color:var(--blue);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.07em}
+.concept p{font-size:12px;color:var(--text2)}
+/* COLOR DOT */
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle}
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* ALERT */
+.alert{border-radius:8px;padding:12px 14px;font-size:12px;margin-bottom:12px}
+.alert-warn{background:var(--amber-bg);border:0.5px solid var(--amber-bd);color:#c9a84c}
+.alert-info{background:var(--teal-bg);border:0.5px solid var(--teal-bd);color:var(--teal)}
+.alert-title{font-weight:600;margin-bottom:3px}
+/* BADGE */
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600}
+.badge-up{background:rgba(224,82,82,0.15);color:var(--red);border:0.5px solid var(--red-bd)}
+.badge-dn{background:rgba(77,186,118,0.15);color:var(--green);border:0.5px solid var(--green-bd)}
+/* FOOTER */
+footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3rem;border-top:0.5px solid rgba(255,255,255,0.06);margin-top:2rem;line-height:1.8}
+@media(max-width:640px){
+  .header-inner{padding:16px 16px 0}
+  .page{padding:1.5rem 16px 3rem}
+  .two-col{grid-template-columns:1fr}
+  .param-table,.config-table{font-size:11px}
+  h2{font-size:17px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo">📈</div>
+    <div class="header-text">
+      <div class="brand">EduS Trader · Manual de Indicadores</div>
+      <h1>EduS Dynamic Swing AVWAP</h1>
+      <span class="version">NinjaTrader 8 · Indicador de línea en gráfica · v1.0</span>
+    </div>
+  </div>
+  <nav>
+    <a class="active" href="#que-es">¿Qué es?</a>
+    <a href="#teoria">Teoría</a>
+    <a href="#instalacion">Instalación</a>
+    <a href="#lectura">Cómo leerlo</a>
+    <a href="#parametros">Parámetros</a>
+    <a href="#tabla">Tabla VIX</a>
+  </nav>
+</header>
+
+<div class="page">
+
+<!-- ══ 1. QUÉ ES ══ -->
+<div id="que-es" style="scroll-margin-top:46px;padding-top:0.5rem">
+  <div class="section-label"><span class="num">1</span>¿Qué es?</div>
+  <h2>EduS Dynamic Swing AVWAP</h2>
+  <p class="sub">VWAP anclado en pivotes dinámicos · Se reinicia en cada swing confirmado · Adaptativo a la volatilidad</p>
+
+  <div class="alert alert-info">
+    <div class="alert-title">💡 Definición en una línea</div>
+    El Dynamic Swing AVWAP es una línea de precio promedio ponderado por volumen que se reinicia automáticamente en cada máximo o mínimo importante del mercado, coloreándose según si el precio va al alza (rojo) o a la baja (verde).
+  </div>
+
+  <div class="two-col" style="margin-top:14px">
+    <div class="card card-red">
+      <div class="card-title">🔴 Línea ROJA — VWAP_Up (tramo alcista)</div>
+      <p>Se dibuja cuando el último pivote fue un <strong>mínimo</strong> (swing low). El precio está en un tramo <strong>alcista</strong>. La línea roja actúa como soporte dinámico. Los compradores la defienden.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-title">🟢 Línea VERDE — VWAP_Down (tramo bajista)</div>
+      <p>Se dibuja cuando el último pivote fue un <strong>máximo</strong> (swing high). El precio está en un tramo <strong>bajista</strong>. La línea verde actúa como resistencia dinámica. Los vendedores la controlan.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <div class="card-title" style="color:var(--text)">📝 Etiquetas de pivotes en el gráfico</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">
+      <div style="font-size:12px;color:var(--text2);padding:8px;background:rgba(255,255,255,0.03);border-radius:6px"><span style="color:var(--green);font-weight:700">HH</span> — Higher High: máximo más alto que el anterior. Señal de tendencia alcista fuerte.</div>
+      <div style="font-size:12px;color:var(--text2);padding:8px;background:rgba(255,255,255,0.03);border-radius:6px"><span style="color:var(--green);font-weight:700">HL</span> — Higher Low: mínimo más alto que el anterior. Confirma estructura alcista.</div>
+      <div style="font-size:12px;color:var(--text2);padding:8px;background:rgba(255,255,255,0.03);border-radius:6px"><span style="color:var(--red);font-weight:700">LH</span> — Lower High: máximo más bajo que el anterior. Señal de debilidad/distribución.</div>
+      <div style="font-size:12px;color:var(--text2);padding:8px;background:rgba(255,255,255,0.03);border-radius:6px"><span style="color:var(--red);font-weight:700">LL</span> — Lower Low: mínimo más bajo. Confirma estructura bajista.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 2. TEORÍA ══ -->
+<div class="section-divider"></div>
+<div id="teoria" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">2</span>Fundamento Teórico</div>
+  <h2>¿Por qué funciona? La ciencia detrás del AVWAP</h2>
+  <p class="sub">Teoría de subasta de mercado · Volume Profile · Wyckoff · Concepto de precio justo</p>
+
+  <div class="concept theory">
+    <div class="concept-icon">📚</div>
+    <div class="concept-title">Concepto #1 — VWAP: El precio que el mercado considera "justo"</div>
+    <p>El <strong>VWAP (Volume Weighted Average Price)</strong> es el precio promedio de todas las transacciones del día, ponderado por su volumen. Cuando el precio está <em>por encima</em> del VWAP, los compradores han pagado más que el precio justo → el mercado está en zona de valor para vendedores. Cuando está <em>por debajo</em>, los vendedores han cedido por menos de lo justo → zona de valor para compradores.</p>
+    <p>Instituciones, fondos de cobertura y market makers utilizan el VWAP como referencia central de ejecución. <strong>Donde va el VWAP, va el dinero institucional.</strong></p>
+  </div>
+
+  <div class="concept theory">
+    <div class="concept-icon">⚓</div>
+    <div class="concept-title">Concepto #2 — AVWAP: anclar el VWAP en momentos importantes</div>
+    <p>El VWAP tradicional se reinicia cada día al cierre. El <strong>AVWAP (Anchored VWAP)</strong> se ancla en un punto específico del tiempo — generalmente un pivote clave (máximo/mínimo importante). Esto permite medir el "precio justo" <em>desde</em> ese evento relevante, no solo desde el inicio del día.</p>
+    <p>Cuando una sesión de apertura, un gap, o un cambio de tendencia es significativo, los participantes institucionales reajustan sus órdenes <em>a partir de ese punto</em>. El AVWAP captura exactamente esa lógica.</p>
+  </div>
+
+  <div class="concept theory">
+    <div class="concept-icon">🔄</div>
+    <div class="concept-title">Concepto #3 — Dynamic AVWAP: se reinicia en cada swing confirmado</div>
+    <p>El <strong>Dynamic AVWAP</strong> de EduS va un paso más allá: en lugar de anclarse en un punto fijo, <strong>se reinicia automáticamente en cada máximo o mínimo importante</strong> del mercado (swing high / swing low). Cada vez que el mercado confirma un nuevo pivote estructural, el AVWAP empieza a medir desde cero desde ese punto.</p>
+    <p>¿Por qué? Porque cada tramo del mercado tiene su propio "precio justo" basado en el volumen negociado <em>dentro de ese tramo</em>. Un mínimo de swing marca el inicio de una nueva fase alcista; ese es el punto donde los compradores "tomaron control" — y el AVWAP desde ahí muestra el precio de equilibrio de esa fase.</p>
+  </div>
+
+  <div class="concept theory">
+    <div class="concept-icon">🧠</div>
+    <div class="concept-title">Concepto #4 — APT adaptativo: el VWAP se ajusta a la volatilidad</div>
+    <p>El motor interno usa un <strong>APT (Adaptive Price Tracking)</strong> — un promedio exponencial ponderado que ajusta su velocidad según la volatilidad (ATR). Cuando el mercado es volátil (ATR alto), el AVWAP responde más rápido. Cuando es calmado (ATR bajo), se suaviza. Esto evita el problema del VWAP clásico de reaccionar demasiado lento en días de gran movimiento.</p>
+  </div>
+
+  <div class="concept theory">
+    <div class="concept-icon">📊</div>
+    <div class="concept-title">Concepto #5 — Estructura de mercado Wyckoff: HH/HL/LH/LL</div>
+    <p>El indicador etiqueta cada pivote con la <strong>terminología Wyckoff</strong> de estructura de mercado:</p>
+    <p><strong>HH → HL → HH → HL:</strong> mercado en tendencia alcista saludable. Los compradores están en control.<br>
+    <strong>LH → LL → LH → LL:</strong> mercado en tendencia bajista. Los vendedores dominan.<br>
+    <strong>HH → LL (saltando estructuras):</strong> señal de distribución/acumulación agresiva.<br>
+    <strong>LH → HL convergiendo:</strong> rango de consolidación (compresión).</p>
+  </div>
+</div>
+
+<!-- ══ 3. INSTALACIÓN ══ -->
+<div class="section-divider"></div>
+<div id="instalacion" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">3</span>Instalación</div>
+  <h2>Cómo instalar en NinjaTrader 8</h2>
+  <p class="sub">Proceso de 5 pasos · No requiere conocimientos técnicos</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Obtener el archivo .cs</div>
+        <div class="step-desc">El archivo se llama <code style="background:rgba(255,255,255,0.07);padding:1px 5px;border-radius:3px">EduS_DynamicSwingAVWAP.cs</code>. Guárdalo en cualquier carpeta de tu computadora. No lo abras — solo necesitas tener la ruta.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Abrir NinjaTrader 8 → New → NinjaScript Editor</div>
+        <div class="step-desc">En la barra de menú principal de NT8: <strong>New → NinjaScript Editor</strong>. Se abrirá el editor de código.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Importar el archivo</div>
+        <div class="step-desc">En el NinjaScript Editor: <strong>File → Open</strong> y navega al archivo <code style="background:rgba(255,255,255,0.07);padding:1px 5px;border-radius:3px">EduS_DynamicSwingAVWAP.cs</code>. Al abrirlo verás el código.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Compilar (F5)</div>
+        <div class="step-desc">Presiona <strong>F5</strong> o haz clic en el botón <strong>Compile</strong> (ícono de triángulo azul). Si dice <em>"Compiled successfully"</em> en la barra inferior, el indicador está listo. Si aparecen errores, verifica que el archivo no fue modificado accidentalmente.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Agregar a la gráfica</div>
+        <div class="step-desc">En cualquier gráfica de NT8: clic derecho → <strong>Indicators</strong> → busca <strong>"Dynamic Swing AVWAP"</strong> → selecciona → <strong>Add</strong> → <strong>OK</strong>. El indicador aparecerá como overlay sobre las velas.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-warn">
+    <div class="alert-title">⚠️ Dependencia importante</div>
+    El EduS_MasterPanel_V2 también requiere este indicador instalado. Si usas el panel, instala primero el Dynamic Swing AVWAP.
+  </div>
+</div>
+
+<!-- ══ 4. CÓMO LEERLO ══ -->
+<div class="section-divider"></div>
+<div id="lectura" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">4</span>Cómo se lee</div>
+  <h2>Interpretación visual y operativa</h2>
+  <p class="sub">Reglas de lectura clara · Señales de entrada y salida · Patrones clave</p>
+
+  <h3>Regla de oro: dirección del color</h3>
+  <div class="two-col">
+    <div class="card card-red">
+      <div class="card-title">🔴 Línea ROJA activa = Tramo ALCISTA</div>
+      <p><strong>Qué significa:</strong> El último pivote fue un mínimo (swing low). El mercado está en fase alcista confirmada.</p>
+      <p><strong>Buscar:</strong> <span class="badge badge-up">LONG</span> — compras en retrocesos hacia la línea roja.</p>
+      <p><strong>La línea actúa como:</strong> soporte dinámico. Si el precio regresa a ella y rebota, es señal de continuación alcista.</p>
+      <p><strong>Evitar:</strong> Shorts agresivos mientras la línea roja esté activa y el precio esté por encima de ella.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-title">🟢 Línea VERDE activa = Tramo BAJISTA</div>
+      <p><strong>Qué significa:</strong> El último pivote fue un máximo (swing high). El mercado está en fase bajista confirmada.</p>
+      <p><strong>Buscar:</strong> <span class="badge badge-dn">SHORT</span> — ventas en rebotes hacia la línea verde.</p>
+      <p><strong>La línea actúa como:</strong> resistencia dinámica. Si el precio sube hasta ella y la rechaza, es señal de continuación bajista.</p>
+      <p><strong>Evitar:</strong> Longs agresivos mientras la línea verde esté activa y el precio esté por debajo de ella.</p>
+    </div>
+  </div>
+
+  <h3>Los 4 escenarios operativos</h3>
+
+  <div class="card card-green">
+    <div class="card-title">✅ Escenario 1 — Pullback perfecto (setup de mayor probabilidad)</div>
+    <p>Precio en tendencia alcista (línea roja activa) → price retrocede hacia la línea roja → forma una vela de reversión (pin bar, vela envolvente) → rebota. <strong>Este es el setup de alta probabilidad del sistema.</strong></p>
+    <p>Acción: Long en el rebote. Stop por debajo del mínimo del swing. Target: el siguiente HH o nivel de resistencia.</p>
+  </div>
+
+  <div class="card card-green">
+    <div class="card-title">✅ Escenario 2 — Rechazo en resistencia dinámica (short setup)</div>
+    <p>Precio en tendencia bajista (línea verde activa) → precio sube hacia la línea verde → rechaza con vela bajista. <strong>Short de alta probabilidad.</strong></p>
+    <p>Acción: Short en el rechazo. Stop por encima del máximo. Target: el siguiente LL o soporte.</p>
+  </div>
+
+  <div class="card card-amber">
+    <div class="card-title">⚠️ Escenario 3 — Cruce de línea (flip de dirección)</div>
+    <p>El precio cruza decisivamente la línea activa. Verás cómo la línea anterior se "congela" (tail) y aparece la nueva línea en color opuesto. Este es el momento de <strong>cambiar el sesgo operativo</strong>.</p>
+    <p>Acción: No entrar en el cruce. Esperar que se confirme la nueva dirección con al menos 1 barra de cierre. Luego buscar el primer pullback a la nueva línea.</p>
+  </div>
+
+  <div class="card card-red">
+    <div class="card-title">🚫 Escenario 4 — Las dos líneas visibles simultáneamente (zona de transición)</div>
+    <p>Durante el "TailBars" configurado, puedes ver ambas líneas brevemente. Esto indica que el mercado acaba de cambiar de dirección. <strong>No operar en esta zona — es zona de confusión.</strong></p>
+    <p>Acción: Esperar que solo quede una línea visible y confirmar la nueva dirección con los indicadores de tendencia (SMAs, LinReg).</p>
+  </div>
+
+  <h3>Lectura de etiquetas HH / HL / LH / LL</h3>
+  <div class="card">
+    <p>Las etiquetas aparecen en los pivotes y te dicen en qué tipo de estructura estás:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      <div style="padding:8px;background:rgba(77,186,118,0.08);border:0.5px solid var(--green-bd);border-radius:6px;font-size:12px"><strong style="color:var(--green)">HH → HL → HH:</strong> tendencia alcista limpia. Máxima confianza en Longs.</div>
+      <div style="padding:8px;background:rgba(224,82,82,0.08);border:0.5px solid var(--red-bd);border-radius:6px;font-size:12px"><strong style="color:var(--red)">LH → LL → LH:</strong> tendencia bajista limpia. Máxima confianza en Shorts.</div>
+      <div style="padding:8px;background:rgba(201,168,76,0.08);border:0.5px solid var(--amber-bd);border-radius:6px;font-size:12px"><strong style="color:var(--amber)">HH → LL seguido rápido:</strong> posible distribución. Reducir tamaño, esperar confirmación.</div>
+      <div style="padding:8px;background:rgba(201,168,76,0.08);border:0.5px solid var(--amber-bd);border-radius:6px;font-size:12px"><strong style="color:var(--amber)">LH → HL convergiendo:</strong> compresión / rango. Esperar ruptura, no operar el rango.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 5. PARÁMETROS ══ -->
+<div class="section-divider"></div>
+<div id="parametros" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">5</span>Parámetros de Configuración</div>
+  <h2>Descripción detallada de cada parámetro</h2>
+  <p class="sub">4 grupos de configuración · Con valores por defecto y rango permitido</p>
+
+  <h3>Grupo 1 — Swing Points (Motor principal)</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Por defecto</th><th>Rango</th><th>Descripción y efecto</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="param-name">Swing Period</span></td>
+          <td><span class="param-default">50</span></td>
+          <td><span class="param-range">2 – ∞</span></td>
+          <td>Número de barras utilizadas para detectar un swing high o swing low. <strong>Mayor valor = pivotes más grandes e importantes</strong>, menos frecuentes, cambios de dirección más lentos. <strong>Menor valor = pivotes más pequeños</strong>, más frecuentes, reacciona más rápido al precio pero genera más ruido. Para gráficas de 610 ticks en ES, 40–60 barras captura movimientos de 2–5 pts. Para 377 ticks en NQ, 30–50 es más adecuado.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">Adaptive Price Tracking (APT)</span></td>
+          <td><span class="param-default">20</span></td>
+          <td><span class="param-range">1 – 10,000</span></td>
+          <td>Controla qué tan rápido responde el AVWAP al precio reciente. <strong>Menor valor = más sensible</strong>, la línea sigue el precio de cerca (bueno para alta volatilidad). <strong>Mayor valor = más suave</strong>, la línea tiene más inercia (bueno para tendencias estables). Con UseAdaptAPT activado, este valor es el punto de partida que luego se ajusta automáticamente.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">Adapt APT by ATR ratio</span></td>
+          <td><span class="param-default">true</span></td>
+          <td><span class="param-range">true / false</span></td>
+          <td><strong>Recomendado: siempre activado.</strong> Cuando está en true, el indicador mide la volatilidad actual (ATR) versus la volatilidad promedio (ATR-RMA). Si el mercado está más volátil que lo normal, el AVWAP responde más rápido automáticamente. Si el mercado está calmado, se suaviza. Esto evita que el AVWAP sea "lento" en días de gran movimiento y "nervioso" en días de rango.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">Volatility Bias</span></td>
+          <td><span class="param-default">10.0</span></td>
+          <td><span class="param-range">0.1 – 1,000</span></td>
+          <td>Amplifica o amortigua la respuesta del APT a la volatilidad. <strong>Valores &gt;1</strong> = el AVWAP cambia mucho más rápido cuando hay volatilidad elevada. <strong>Valores &lt;1</strong> = el AVWAP amortigua la respuesta. El valor 10.0 es agresivo — bueno para futuros de alta liquidez como ES/NQ donde los cambios de régimen son rápidos. Para instrumentos más lentos, reducir a 5.0–7.0.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Grupo 2 — Style (Visual de las líneas)</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Por defecto</th><th>Descripción y efecto</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="param-name">VWAP Up Color</span></td>
+          <td><span class="param-default" style="color:var(--red)">Red</span></td>
+          <td>Color de la línea del tramo alcista (anclada en swing lows). La convención EduS Trader usa <strong>Rojo para el tramo Up</strong> — contraintuitivo pero deliberado: rojo significa "el precio está caliente, subiendo con fuerza". Puedes cambiarlo pero mantén consistencia con el sistema.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">VWAP Down Color</span></td>
+          <td><span class="param-default" style="color:var(--green)">Lime</span></td>
+          <td>Color de la línea del tramo bajista (anclada en swing highs). <strong>Verde para el tramo Down</strong> — indica zona de presión vendedora pero "fresca". También puede configurarse para visualización personal.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">VWAP Line Width</span></td>
+          <td><span class="param-default">3</span></td>
+          <td>Grosor de las líneas en píxeles. Con gráficas densas de ticks (610/377), un grosor de 2–3 es ideal para visibilidad sin tapar las velas. En monitores 4K, considera aumentar a 4.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">Tail Bars After Flip</span></td>
+          <td><span class="param-default">1</span></td>
+          <td>Número de barras que la línea anterior continúa dibujándose (congelada en su último valor) después de que el pivote cambia de dirección. Esto evita "gaps" visuales entre el fin de un tramo y el inicio del siguiente. Valor de 1 es suficiente. Aumentar a 2–3 si tu gráfica tiene pocas barras y los pivotes quedan muy separados.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Grupo 3 — Labels (Etiquetas HH/HL/LH/LL)</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Por defecto</th><th>Descripción y efecto</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="param-name">Low-pivot Label Color</span></td>
+          <td><span class="param-default" style="color:var(--green)">Lime</span></td>
+          <td>Color de las etiquetas HL y LL que aparecen en los swing lows. Verde para pisos — fácil de asociar con "suelo = soporte".</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">High-pivot Label Color</span></td>
+          <td><span class="param-default" style="color:var(--red)">Red</span></td>
+          <td>Color de las etiquetas HH y LH que aparecen en los swing highs. Rojo para techos — fácil de asociar con "techo = resistencia".</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">Pivot Label Size</span></td>
+          <td><span class="param-default">15</span></td>
+          <td>Tamaño de fuente de las etiquetas en puntos. En monitores estándar (1080p), 12–15 es legible sin ocupar demasiado espacio. En 4K, aumentar a 18–20.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">Pivot Label Bold</span></td>
+          <td><span class="param-default">true</span></td>
+          <td>Activa el estilo negrita. Recomendado: siempre true para mayor visibilidad en gráficas de trading rápido.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">Label Offset (points)</span></td>
+          <td><span class="param-default">3.0</span></td>
+          <td>Distancia vertical en puntos del instrumento entre el pivote y la etiqueta. Para ES (tick 0.25), un offset de 2–3 puntos mantiene la etiqueta separada de las velas. Para NQ (tick 0.25, movimientos más amplios), puede aumentarse a 4–6 para mayor claridad.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ 6. TABLA VIX ══ -->
+<div class="section-divider"></div>
+<div id="tabla" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">6</span>Tabla de Configuración por VIX</div>
+  <h2>Configuración recomendada por régimen de volatilidad</h2>
+  <p class="sub">ES 610 Ticks · NQ 377 Ticks · Basado en el historial operativo EduS Trader (Mar–Abr 2026)</p>
+
+  <div class="alert alert-info" style="margin-bottom:16px">
+    <div class="alert-title">📌 Lógica de la tabla</div>
+    Con VIX alto (mercado volátil), los swings son más grandes y rápidos → necesitas <strong>Swing Period más grande</strong> para no sobrereaccionar, y <strong>APT más bajo</strong> para que el AVWAP siga el precio rápidamente. Con VIX bajo (mercado tranquilo), los swings son más pequeños → <strong>Swing Period más pequeño</strong> y <strong>APT más alto</strong> para suavizar el ruido.
+  </div>
+
+  <h3>ES JUN26 — Gráfica 610 Ticks</h3>
+  <div style="overflow-x:auto">
+    <table class="config-table">
+      <thead>
+        <tr>
+          <th>Régimen VIX</th>
+          <th>VIX Rango</th>
+          <th>Swing Period</th>
+          <th>BaseAPT</th>
+          <th>Adapt APT</th>
+          <th>Volatility Bias</th>
+          <th>Tail Bars</th>
+          <th>Label Offset</th>
+          <th>Notas operativas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="vix-low">🟢 Bajo</span></td>
+          <td style="color:var(--green);font-weight:600">&lt; 18</td>
+          <td><span class="val-cell">35</span></td>
+          <td><span class="val-cell">30</span></td>
+          <td><span class="val-cell">true</span></td>
+          <td><span class="val-cell">8.0</span></td>
+          <td><span class="val-cell">1</span></td>
+          <td><span class="val-cell">2.0</span></td>
+          <td>Mercado calmado. Swings pequeños. APT alto para suavizar. Sesgo Long si estructura alcista.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-med">🟡 Caution</span></td>
+          <td style="color:var(--amber);font-weight:600">18 – 22</td>
+          <td><span class="val-cell">45</span></td>
+          <td><span class="val-cell">20</span></td>
+          <td><span class="val-cell">true</span></td>
+          <td><span class="val-cell">10.0</span></td>
+          <td><span class="val-cell">1</span></td>
+          <td><span class="val-cell">3.0</span></td>
+          <td>Valores por defecto. Zona de mayor eficiencia del sistema. Buscar 3/4 señales mínimo.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-med">🟡 Elevado</span></td>
+          <td style="color:var(--amber);font-weight:600">22 – 27</td>
+          <td><span class="val-cell">55</span></td>
+          <td><span class="val-cell">15</span></td>
+          <td><span class="val-cell">true</span></td>
+          <td><span class="val-cell">12.0</span></td>
+          <td><span class="val-cell">2</span></td>
+          <td><span class="val-cell">4.0</span></td>
+          <td>Swings más amplios. Reducir tamaño de posición. El AVWAP puede dar señales más tardías — es normal.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-high">🔴 Alto</span></td>
+          <td style="color:var(--red);font-weight:600">27 – 32</td>
+          <td><span class="val-cell">65</span></td>
+          <td><span class="val-cell">12</span></td>
+          <td><span class="val-cell">true</span></td>
+          <td><span class="val-cell">14.0</span></td>
+          <td><span class="val-cell">2</span></td>
+          <td><span class="val-cell">5.0</span></td>
+          <td>Alta volatilidad. Swings muy grandes. Líneas cambian frecuentemente. Solo operar en dirección de tendencia mayor. Requiere 4/4 señales.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-ext">🚨 Extremo</span></td>
+          <td style="color:#ff9090;font-weight:600">&gt; 32</td>
+          <td><span class="val-cell">75</span></td>
+          <td><span class="val-cell">10</span></td>
+          <td><span class="val-cell">true</span></td>
+          <td><span class="val-cell">15.0</span></td>
+          <td><span class="val-cell">3</span></td>
+          <td><span class="val-cell">6.0</span></td>
+          <td>No operar en fondeo. Solo observación en SIM. Las líneas son referencia macro únicamente — no entradas tácticas.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>NQ JUN26 — Gráfica 377 Ticks</h3>
+  <div style="overflow-x:auto">
+    <table class="config-table">
+      <thead>
+        <tr>
+          <th>Régimen VIX</th>
+          <th>VIX Rango</th>
+          <th>Swing Period</th>
+          <th>BaseAPT</th>
+          <th>Adapt APT</th>
+          <th>Volatility Bias</th>
+          <th>Tail Bars</th>
+          <th>Label Offset</th>
+          <th>Notas operativas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="vix-low">🟢 Bajo</span></td>
+          <td style="color:var(--green);font-weight:600">&lt; 18</td>
+          <td><span class="val-cell">28</span></td>
+          <td><span class="val-cell">25</span></td>
+          <td><span class="val-cell">true</span></td>
+          <td><span class="val-cell">8.0</span></td>
+          <td><span class="val-cell">1</span></td>
+          <td><span class="val-cell">4.0</span></td>
+          <td>NQ es más volátil que ES. Offset mayor para que las etiquetas no se superpongan con las velas del NQ.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-med">🟡 Caution</span></td>
+          <td style="color:var(--amber);font-weight:600">18 – 22</td>
+          <td><span class="val-cell">38</span></td>
+          <td><span class="val-cell">18</span></td>
+          <td><span class="val-cell">true</span></td>
+          <td><span class="val-cell">10.0</span></td>
+          <td><span class="val-cell">1</span></td>
+          <td><span class="val-cell">5.0</span></td>
+          <td>Configuración base para NQ. Swing Period menor que ES porque la gráfica de 377 ticks ya tiene más barras por movimiento.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-med">🟡 Elevado</span></td>
+          <td style="color:var(--amber);font-weight:600">22 – 27</td>
+          <td><span class="val-cell">45</span></td>
+          <td><span class="val-cell">14</span></td>
+          <td><span class="val-cell">true</span></td>
+          <td><span class="val-cell">12.0</span></td>
+          <td><span class="val-cell">2</span></td>
+          <td><span class="val-cell">6.0</span></td>
+          <td>NQ con VIX elevado es muy ruidoso. Aumentar Swing Period para filtrar micro-swings y mantener solo los pivotes estructurales.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-high">🔴 Alto</span></td>
+          <td style="color:var(--red);font-weight:600">27 – 32</td>
+          <td><span class="val-cell">55</span></td>
+          <td><span class="val-cell">10</span></td>
+          <td><span class="val-cell">true</span></td>
+          <td><span class="val-cell">14.0</span></td>
+          <td><span class="val-cell">2</span></td>
+          <td><span class="val-cell">8.0</span></td>
+          <td>NQ se mueve 2–3× más que ES en puntos. Con VIX alto, los swings en NQ son masivos. Usar como referencia de dirección macro solamente.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-ext">🚨 Extremo</span></td>
+          <td style="color:#ff9090;font-weight:600">&gt; 32</td>
+          <td><span class="val-cell">65</span></td>
+          <td><span class="val-cell">8</span></td>
+          <td><span class="val-cell">true</span></td>
+          <td><span class="val-cell">15.0</span></td>
+          <td><span class="val-cell">3</span></td>
+          <td><span class="val-cell">10.0</span></td>
+          <td>Entorno extremo. NQ no se opera tácticamente. El AVWAP es útil solo para identificar la tendencia macro del día.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title" style="color:var(--text)">💡 Cómo ajustar en tiempo real durante la sesión</div>
+    <p>Si el VIX cambia significativamente durante la sesión (más de 3 puntos de movimiento), considera actualizar el Swing Period. El cambio más importante es el BaseAPT — un APT más bajo hará que el AVWAP siga el precio más de cerca en días volátiles, lo cual ayuda a identificar el soporte/resistencia real de cada tramo.</p>
+    <p><strong>Regla práctica:</strong> si el AVWAP se ve "plano" y el precio se aleja mucho de él, el APT es muy alto — reducirlo. Si el AVWAP zigzaguea demasiado con el precio, el APT es muy bajo — aumentarlo.</p>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<footer>
+  EduS Trader · Manual de Usuario · EduS Dynamic Swing AVWAP · NinjaTrader 8<br>
+  Uso personal. No constituye asesoramiento financiero. El trading de futuros implica riesgo de pérdida total del capital.<br>
+  Versión del indicador: 1.0 · Documentación generada Abr 2026
+</footer>
+
+<script>
+const secs=['que-es','teoria','instalacion','lectura','parametros','tabla'];
+window.addEventListener('scroll',()=>{
+  let cur='que-es';
+  secs.forEach(id=>{const el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-60)cur=id;});
+  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+});
+</script>
+</body>
+</html>

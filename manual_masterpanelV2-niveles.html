@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual — EduS MasterPanel V2</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--bg2:#111827;--bg3:#1a2236;
+  --text:#e2e8f0;--text2:#8892a0;--text3:#4a5568;
+  --teal:#3dd6c0;--teal-bg:rgba(61,214,192,0.08);--teal-bd:rgba(61,214,192,0.25);
+  --green:#4dba76;--green-bg:rgba(77,186,118,0.08);--green-bd:rgba(77,186,118,0.25);
+  --red:#e05252;--red-bg:rgba(224,82,82,0.08);--red-bd:rgba(224,82,82,0.25);
+  --amber:#c9a84c;--amber-bg:rgba(201,168,76,0.08);--amber-bd:rgba(201,168,76,0.25);
+  --blue:#4a90d9;--blue-bg:rgba(74,144,217,0.08);--blue-bd:rgba(74,144,217,0.25);
+  --purple:#9b59b6;--purple-bg:rgba(155,89,182,0.08);--purple-bd:rgba(155,89,182,0.25);
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6}
+.site-header{background:linear-gradient(135deg,#0d1117,#1a2236);border-bottom:0.5px solid var(--purple-bd);padding:0}
+.header-inner{max-width:1000px;margin:0 auto;padding:24px 24px 0;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.header-logo{width:48px;height:48px;background:var(--purple-bg);border:1.5px solid var(--purple-bd);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.header-text .brand{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--purple);font-weight:600}
+.header-text h1{font-size:22px;font-weight:700;color:#fff;margin-bottom:2px}
+.header-text .version{font-size:11px;color:var(--text3);background:rgba(255,255,255,0.05);border:0.5px solid var(--purple-bd);padding:2px 8px;border-radius:4px}
+nav{max-width:1000px;margin:0 auto;padding:0 24px;display:flex;overflow-x:auto;gap:0;margin-top:12px}
+nav a{font-size:11px;color:var(--text3);text-decoration:none;padding:10px 14px;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s}
+nav a:hover{color:var(--text)}
+nav a.active{color:var(--purple);border-bottom-color:var(--purple);font-weight:600}
+.page{max-width:1000px;margin:0 auto;padding:2rem 24px 4rem}
+.section-divider{height:0.5px;background:rgba(255,255,255,0.08);margin:3rem 0 2rem}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:0.8rem}
+.section-label .num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--bg3);border:0.5px solid rgba(255,255,255,0.12);font-size:9px;color:var(--purple)}
+h2{font-size:20px;font-weight:600;margin-bottom:4px;color:#fff}
+h3{font-size:15px;font-weight:600;margin:1.2rem 0 0.6rem;color:var(--teal)}
+.sub{font-size:12px;color:var(--text3);margin-bottom:1.2rem;line-height:1.5}
+p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px}
+p:last-child{margin-bottom:0}
+strong{color:var(--text);font-weight:500}
+.card{background:var(--bg2);border:0.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px 18px;margin-bottom:12px}
+.card-green{border-color:var(--green-bd);background:var(--green-bg)}
+.card-amber{border-color:var(--amber-bd);background:var(--amber-bg)}
+.card-red{border-color:var(--red-bd);background:var(--red-bg)}
+.card-teal{border-color:var(--teal-bd);background:var(--teal-bg)}
+.card-blue{border-color:var(--blue-bd);background:var(--blue-bg)}
+.card-purple{border-color:var(--purple-bd);background:var(--purple-bg)}
+.card-title{font-size:13px;font-weight:600;margin-bottom:6px}
+.card-green .card-title{color:var(--green)}
+.card-amber .card-title{color:var(--amber)}
+.card-red .card-title{color:var(--red)}
+.card-teal .card-title{color:var(--teal)}
+.card-blue .card-title{color:var(--blue)}
+.card-purple .card-title{color:var(--purple)}
+.card p{font-size:12px;color:var(--text2);margin-bottom:6px}
+.param-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.param-table th{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:8px 10px;border-bottom:0.5px solid rgba(255,255,255,0.1);text-align:left;background:rgba(255,255,255,0.02)}
+.param-table td{padding:9px 10px;border-bottom:0.5px solid rgba(255,255,255,0.05);color:var(--text2);vertical-align:top}
+.param-table tr:hover td{background:rgba(255,255,255,0.02)}
+.param-table tr:last-child td{border-bottom:none}
+.param-name{color:var(--text);font-weight:500;white-space:nowrap}
+.param-default{color:var(--teal);font-weight:600;font-family:monospace;white-space:nowrap}
+.config-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
+.config-table th{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:8px 10px;border-bottom:0.5px solid rgba(255,255,255,0.1);text-align:left;background:rgba(255,255,255,0.02)}
+.config-table td{padding:7px 9px;border-bottom:0.5px solid rgba(255,255,255,0.05);color:var(--text2);vertical-align:top}
+.config-table tr:hover td{background:rgba(255,255,255,0.02)}
+.config-table tr:last-child td{border-bottom:none}
+.vix-low{background:rgba(77,186,118,0.12);color:var(--green);border:0.5px solid var(--green-bd);padding:2px 6px;border-radius:3px;font-weight:600;white-space:nowrap;font-size:11px}
+.vix-med{background:rgba(201,168,76,0.12);color:var(--amber);border:0.5px solid var(--amber-bd);padding:2px 6px;border-radius:3px;font-weight:600;white-space:nowrap;font-size:11px}
+.vix-high{background:rgba(224,82,82,0.12);color:var(--red);border:0.5px solid var(--red-bd);padding:2px 6px;border-radius:3px;font-weight:600;white-space:nowrap;font-size:11px}
+.vix-ext{background:rgba(224,82,82,0.2);color:#ff9090;border:0.5px solid rgba(224,82,82,0.5);padding:2px 6px;border-radius:3px;font-weight:600;white-space:nowrap;font-size:11px}
+.val-cell{font-family:monospace;font-weight:600;color:var(--teal)}
+.steps{counter-reset:step}
+.step{display:flex;gap:14px;margin-bottom:16px}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--purple-bg);border:1.5px solid var(--purple-bd);color:var(--purple);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-body{flex:1}
+.step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.step-desc{font-size:12px;color:var(--text2);line-height:1.6}
+.concept{border-radius:10px;padding:16px 18px;margin-bottom:12px}
+.concept.theory{background:rgba(74,144,217,0.07);border:0.5px solid var(--blue-bd)}
+.concept.theory .concept-title{font-size:12px;font-weight:600;color:var(--blue);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.07em}
+.concept p{font-size:12px;color:var(--text2)}
+/* Semáforo visual */
+.semaforo-demo{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.bola{width:36px;height:36px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.bola-on-green{background:#00c850;box-shadow:0 0 12px rgba(0,200,80,0.6)}
+.bola-off-green{background:#2d2d32;border:1px solid #3a3a42}
+.bola-on-amber{background:#ffd200;box-shadow:0 0 12px rgba(255,210,0,0.6)}
+.bola-off-amber{background:#2d2d32;border:1px solid #3a3a42}
+.bola-on-red{background:#dc3232;box-shadow:0 0 12px rgba(220,50,50,0.6)}
+.bola-off-red{background:#2d2d32;border:1px solid #3a3a42}
+.semaforo-label{font-size:12px;color:var(--text2);line-height:1.5}
+/* Layers */
+.layer{border-radius:10px;padding:14px 16px;margin-bottom:10px;border-left:4px solid}
+.layer-1{background:rgba(74,144,217,0.07);border-color:var(--blue)}
+.layer-2{background:rgba(61,214,192,0.07);border-color:var(--teal)}
+.layer-3{background:rgba(155,89,182,0.07);border-color:var(--purple)}
+.layer-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px}
+.layer-1 .layer-title{color:var(--blue)}
+.layer-2 .layer-title{color:var(--teal)}
+.layer-3 .layer-title{color:var(--purple)}
+.layer p{font-size:12px;color:var(--text2)}
+/* Panel sections */
+.panel-sec{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:8px;padding:12px 14px;margin-bottom:8px}
+.panel-sec-title{font-size:11px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.alert{border-radius:8px;padding:12px 14px;font-size:12px;margin-bottom:12px}
+.alert-warn{background:var(--amber-bg);border:0.5px solid var(--amber-bd);color:var(--amber)}
+.alert-info{background:var(--teal-bg);border:0.5px solid var(--teal-bd);color:var(--teal)}
+.alert-danger{background:var(--red-bg);border:0.5px solid var(--red-bd);color:var(--red)}
+.alert-title{font-weight:600;margin-bottom:3px}
+footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3rem;border-top:0.5px solid rgba(255,255,255,0.06);margin-top:2rem;line-height:1.8}
+@media(max-width:640px){
+  .page{padding:1.5rem 16px 3rem}
+  .two-col,.three-col{grid-template-columns:1fr}
+  .config-table,.param-table{font-size:10px}
+  h2{font-size:17px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo">🎛️</div>
+    <div class="header-text">
+      <div class="brand">EduS Trader · Manual de Indicadores</div>
+      <h1>EduS MasterPanel V2</h1>
+      <span class="version">NinjaTrader 8 · Panel overlay en gráfica · V2 · Semáforo unificado con 3 capas</span>
+    </div>
+  </div>
+  <nav>
+    <a class="active" href="#que-es">¿Qué es?</a>
+    <a href="#teoria">Teoría</a>
+    <a href="#instalacion">Instalación</a>
+    <a href="#semaforo">El Semáforo</a>
+    <a href="#secciones">Secciones</a>
+    <a href="#parametros">Parámetros</a>
+    <a href="#tabla">Tabla VIX</a>
+  </nav>
+</header>
+
+<div class="page">
+
+<!-- ══ 1. QUÉ ES ══ -->
+<div id="que-es" style="scroll-margin-top:46px;padding-top:0.5rem">
+  <div class="section-label"><span class="num">1</span>¿Qué es?</div>
+  <h2>EduS MasterPanel V2</h2>
+  <p class="sub">Panel flotante · 3 capas de análisis · 4 secciones activables · Semáforo de alta probabilidad</p>
+
+  <div class="alert alert-info">
+    <div class="alert-title">💡 Definición en una línea</div>
+    El MasterPanel V2 es un panel de control flotante que aparece sobre tu gráfica y te dice, en tiempo real, si el mercado está en condiciones de <strong>alta probabilidad para entrar</strong> (verde), probabilidad media (amarillo) o si debes esperar (rojo) — analizando 3 capas simultáneamente.
+  </div>
+
+  <div class="three-col" style="margin-top:14px">
+    <div class="card card-blue">
+      <div class="card-title">⬤ Capa 1 — Dirección</div>
+      <p>Evalúa 4 indicadores de tendencia simultáneamente: SMA20, SMA80, LinReg89 y AVWAP. Si los 4 apuntan en la misma dirección, tenemos "4/4" — la señal más fuerte.</p>
+    </div>
+    <div class="card card-teal">
+      <div class="card-title">⬤ Capa 2 — Zona AVWAP</div>
+      <p>Mide qué tan cerca o lejos está el precio del AVWAP activo (en múltiplos de ATR). Zonas A y A+ son las de mayor probabilidad de rebote. Zonas B indican precio extendido.</p>
+    </div>
+    <div class="card card-purple">
+      <div class="card-title">⬤ Capa 3 — Keltner BM [V2]</div>
+      <p>Nueva en V2: confirma si el AVWAP está en la mitad "correcta" del canal Keltner. Alcista: AVWAP sobre la línea media. Bajista: AVWAP bajo la línea media.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 2. TEORÍA ══ -->
+<div class="section-divider"></div>
+<div id="teoria" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">2</span>Fundamento Teórico</div>
+  <h2>Por qué 3 capas y no una sola señal</h2>
+  <p class="sub">Convergencia de señales · Market Profile · Teoría del Canal · Filtros en cascada</p>
+
+  <div class="concept theory">
+    <div class="concept-title">Principio fundamental — La convergencia reduce el ruido</div>
+    <p>Cualquier indicador individual genera falsas señales. La clave para mejorar la tasa de éxito es <strong>requerir que múltiples señales independientes coincidan</strong>. Cuando la tendencia (Capa 1), la zona de precio (Capa 2) y la estructura del canal (Capa 3) dicen lo mismo, la probabilidad de que el trade funcione aumenta exponencialmente.</p>
+  </div>
+
+  <div class="layer layer-1">
+    <div class="layer-title">Capa 1 — Las 4 señales de tendencia: ¿por qué estas 4?</div>
+    <p><strong>SMA 20:</strong> la media rápida. Captura la tendencia inmediata de las últimas ~20 barras. Reacciona rápido pero genera ruido en mercados laterales.</p>
+    <p><strong>SMA 80:</strong> la media lenta. Captura la tendencia estructural de mayor alcance. Es el "fondo" sobre el que el precio se mueve.</p>
+    <p><strong>LinReg 89:</strong> regresión lineal de las últimas 89 barras. Elimina el ruido estadístico y muestra la "dirección real" del precio sin el efecto visual del promedio móvil. Cuando LinReg89 es plana, el mercado es lateral — la señal más confiable de régimen choppy.</p>
+    <p><strong>AVWAP:</strong> el ancla de precio justo del tramo actual. Es la señal institucional por excelencia. Cuando el AVWAP confirma la dirección de las SMAs, el dinero grande está alineado con el movimiento.</p>
+  </div>
+
+  <div class="layer layer-2">
+    <div class="layer-title">Capa 2 — Zona AVWAP: no basta con la dirección, importa DÓNDE estás</div>
+    <p>Incluso cuando la tendencia es alcista, si el precio está demasiado lejos del AVWAP (zona B o fuera de zona), el trade de compra tiene bajo ratio riesgo/recompensa — el stop natural está muy lejos.</p>
+    <p><strong>Zona A:</strong> precio está dentro de 0.5× ATR del AVWAP. El stop natural (AVWAP) está cerca, el potencial de movimiento es grande. Alta probabilidad.</p>
+    <p><strong>Zona A+:</strong> pin bar de rechazo exacto en el AVWAP. La mecha tocó el VWAP y el precio cerró del lado correcto. Es la entrada de mayor precisión — un rechazo institucional confirmado en el precio justo.</p>
+    <p><strong>Zona B:</strong> precio entre 0.5 y 2.0× ATR del AVWAP. Tradeble pero con precaución — el stop está más amplio. Media probabilidad.</p>
+    <p><strong>Zona B+:</strong> undercut o overcut leve — el precio cruzó momentáneamente el AVWAP pero cerró del lado correcto. Posible fakeout antes de la continuación. Media-alta probabilidad.</p>
+  </div>
+
+  <div class="layer layer-3">
+    <div class="layer-title">Capa 3 [V2] — Keltner BM: ¿el precio está en la "mitad fuerte" del canal?</div>
+    <p>El canal Keltner define el rango de volatilidad "normal" del mercado. La <strong>línea media (BM, Band Middle)</strong> divide el canal en dos mitades:</p>
+    <p><strong>Alcista sano:</strong> el AVWAP está por encima del BM → el precio flota en la mitad superior del canal → la estructura es alcista dentro del régimen de volatilidad.</p>
+    <p><strong>Bajista sano:</strong> el AVWAP está por debajo del BM → el precio presiona la mitad inferior del canal → la estructura bajista tiene convicción.</p>
+    <p><strong>Señal degradada:</strong> si el AVWAP cruza al "lado equivocado" del BM, el mercado está en transición o compresión → el verde se convierte en amarillo aunque las otras 4 señales sean perfectas. Esta es la mejora clave de V2 vs V1.</p>
+  </div>
+
+  <div class="concept theory">
+    <div class="concept-title">Resumen del sistema de capas en cascada</div>
+    <p><strong>Verde = </strong> Capa 1 OK (4/4) + Capa 2 OK (zona A/A+) + Capa 3 OK (AVWAP vs BM) → máxima confianza.</p>
+    <p><strong>Amarillo = </strong> Alguna capa falla parcialmente → señal válida pero con precaución y tamaño reducido.</p>
+    <p><strong>Rojo = </strong> Señales contradictorias → no hay estructura clara. No operar.</p>
+  </div>
+</div>
+
+<!-- ══ 3. INSTALACIÓN ══ -->
+<div class="section-divider"></div>
+<div id="instalacion" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">3</span>Instalación</div>
+  <h2>Cómo instalar en NinjaTrader 8</h2>
+  <p class="sub">El MasterPanel V2 requiere el AVWAP instalado primero</p>
+
+  <div class="alert alert-danger">
+    <div class="alert-title">🚨 Prerequisito obligatorio</div>
+    El MasterPanel V2 <strong>depende internamente</strong> del EduS_DynamicSwingAVWAP. Si no está instalado primero, el MasterPanel no compilará. Instala el AVWAP antes de continuar.
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Instalar primero el EduS_DynamicSwingAVWAP</div>
+        <div class="step-desc">Sigue el proceso completo del manual del AVWAP (ver manual separado). Asegúrate de que compile con éxito ("Compiled successfully").</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Obtener el archivo EduSMasterPanelV2.cs</div>
+        <div class="step-desc">Guárdalo en tu computadora. Es un archivo de texto que contiene el código del panel.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">NinjaScript Editor → File → Open</div>
+        <div class="step-desc">En NT8: <strong>New → NinjaScript Editor → File → Open</strong> → navega al archivo <code style="background:rgba(255,255,255,0.07);padding:1px 5px;border-radius:3px">EduSMasterPanelV2.cs</code>.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Compilar con F5</div>
+        <div class="step-desc">Presiona F5. Si aparece "Compiled successfully", está listo. Si aparece error mencionando "EduS_DynamicSwingAVWAP not found", significa que el AVWAP no está instalado — vuelve al paso 1.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Agregar a la gráfica</div>
+        <div class="step-desc">Clic derecho en gráfica → <strong>Indicators</strong> → busca <strong>"EduS_MasterPanel_V2"</strong> → <strong>Add</strong> → <strong>OK</strong>. El panel aparecerá como overlay en la esquina configurada (por defecto: arriba derecha).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 4. EL SEMÁFORO ══ -->
+<div class="section-divider"></div>
+<div id="semaforo" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">4</span>El Semáforo</div>
+  <h2>Cómo interpretar los 3 estados del semáforo</h2>
+  <p class="sub">El corazón del sistema · Guía de acción inmediata</p>
+
+  <!-- Verde -->
+  <div class="card card-green">
+    <div class="card-title">🟢 VERDE — Alta probabilidad · OPERAR</div>
+    <div class="semaforo-demo">
+      <div class="bola bola-on-green">●</div>
+      <div class="bola bola-off-amber">●</div>
+      <div class="bola bola-off-red">●</div>
+      <div class="semaforo-label">
+        <strong style="color:var(--green)">Se activa cuando las 3 capas confirman:</strong><br>
+        ✅ 4/4 indicadores de tendencia alineados (SMA20 + SMA80 + LinReg89 + AVWAP)<br>
+        ✅ Precio en Zona A o A+ (dentro de 0.5 × ATR del AVWAP)<br>
+        ✅ AVWAP activo en el lado correcto del canal Keltner (BM) [nuevo V2]
+      </div>
+    </div>
+    <p><strong>Qué hacer:</strong> Buscar entrada en la dirección indicada. El panel muestra: precio de entrada sugerido, stop sugerido, Target 1 y Target 2 con su R:R.</p>
+    <p><strong>Tamaño de posición:</strong> El establecido en tu plan de trading para señales de alta confianza.</p>
+    <p><strong>Importante:</strong> El verde no garantiza el trade — confirma el contexto más favorable. Siempre verificar la estructura inmediata de velas y el contexto del día (VIX, noticias).</p>
+  </div>
+
+  <!-- Amarillo -->
+  <div class="card card-amber">
+    <div class="card-title">🟡 AMARILLO — Media probabilidad · EVALUAR CON CUIDADO</div>
+    <div class="semaforo-demo">
+      <div class="bola bola-off-green">●</div>
+      <div class="bola bola-on-amber">●</div>
+      <div class="bola bola-off-red">●</div>
+      <div class="semaforo-label">
+        <strong style="color:var(--amber)">Se activa por 4 condiciones posibles:</strong><br>
+        🟡 4/4 señales + Zona B o B+ (precio extendido del AVWAP)<br>
+        🟡 3/4 señales + Zona A o A+ (una señal de tendencia falla)<br>
+        🟡 4/4 señales + Zona A/A+ PERO AVWAP no confirma vs Keltner BM [nuevo V2]<br>
+        🟡 Mezcla de las anteriores
+      </div>
+    </div>
+    <p><strong>Qué hacer:</strong> Operar con tamaño reducido (50% o menos del tamaño habitual). La señal es válida pero tiene menor convicción. Ser más exigente con el precio de entrada.</p>
+    <p><strong>Regla EduS Trader:</strong> En sesiones con datos o contexto de riesgo elevado, ignorar el amarillo y esperar el verde. En sesiones tranquilas con VIX bajo, el amarillo con 3/4 es operable.</p>
+  </div>
+
+  <!-- Rojo -->
+  <div class="card card-red">
+    <div class="card-title">🔴 ROJO — No operar · ESPERAR</div>
+    <div class="semaforo-demo">
+      <div class="bola bola-off-green">●</div>
+      <div class="bola bola-off-amber">●</div>
+      <div class="bola bola-on-red">●</div>
+      <div class="semaforo-label">
+        <strong style="color:var(--red)">Se activa cuando:</strong><br>
+        🔴 Las señales de tendencia son contradictorias (mix alcista/bajista)<br>
+        🔴 El precio está fuera de zona (más de 2× ATR del AVWAP)<br>
+        🔴 Estructura no reconocida o mercado en transición de dirección
+      </div>
+    </div>
+    <p><strong>Qué hacer:</strong> No abrir nuevas posiciones. Si tienes una posición abierta, revisar si el contexto se deterioró. El rojo es la señal más valiosa del sistema — te dice cuándo el mercado no tiene estructura clara, que es cuando la mayoría de los traders pierden dinero.</p>
+    <p><strong>Acción positiva:</strong> El rojo es una oportunidad para revisar el contexto, identificar los niveles del día y preparar el siguiente setup.</p>
+  </div>
+
+  <!-- Tabla de condiciones -->
+  <h3>Tabla de condiciones completa del semáforo</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Capa 1 (4 señales)</th><th>Capa 2 (zona)</th><th>Capa 3 (BM [V2])</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr style="background:rgba(77,186,118,0.05)">
+          <td style="color:var(--green)">✅ 4/4 alineadas</td>
+          <td style="color:var(--green)">✅ Zona A o A+</td>
+          <td style="color:var(--green)">✅ AVWAP confirma BM</td>
+          <td style="color:var(--green);font-weight:700">🟢 VERDE — Alta prob.</td>
+        </tr>
+        <tr style="background:rgba(201,168,76,0.05)">
+          <td style="color:var(--amber)">✅ 4/4 alineadas</td>
+          <td style="color:var(--amber)">✅ Zona A o A+</td>
+          <td style="color:var(--red)">❌ AVWAP NO confirma BM</td>
+          <td style="color:var(--amber);font-weight:700">🟡 AMARILLO [nuevo V2]</td>
+        </tr>
+        <tr style="background:rgba(201,168,76,0.05)">
+          <td style="color:var(--amber)">✅ 4/4 alineadas</td>
+          <td style="color:var(--amber)">⚠️ Zona B o B+</td>
+          <td style="color:var(--text3)">–</td>
+          <td style="color:var(--amber);font-weight:700">🟡 AMARILLO</td>
+        </tr>
+        <tr style="background:rgba(201,168,76,0.05)">
+          <td style="color:var(--amber)">⚠️ 3/4 alineadas</td>
+          <td style="color:var(--amber)">✅ Zona A o A+</td>
+          <td style="color:var(--text3)">–</td>
+          <td style="color:var(--amber);font-weight:700">🟡 AMARILLO</td>
+        </tr>
+        <tr style="background:rgba(224,82,82,0.05)">
+          <td style="color:var(--red)">❌ Mix señales</td>
+          <td style="color:var(--text3)">Cualquiera</td>
+          <td style="color:var(--text3)">–</td>
+          <td style="color:var(--red);font-weight:700">🔴 ROJO</td>
+        </tr>
+        <tr style="background:rgba(224,82,82,0.05)">
+          <td style="color:var(--text3)">Cualquiera</td>
+          <td style="color:var(--red)">❌ Fuera de zona (--)</td>
+          <td style="color:var(--text3)">–</td>
+          <td style="color:var(--red);font-weight:700">🔴 ROJO</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ 5. SECCIONES DEL PANEL ══ -->
+<div class="section-divider"></div>
+<div id="secciones" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">5</span>Secciones del Panel</div>
+  <h2>Qué muestra cada sección del panel flotante</h2>
+  <p class="sub">4 secciones activables independientemente · Cada una aporta información específica</p>
+
+  <div class="panel-sec">
+    <div class="panel-sec-title">Sección 1 — Semáforo (Mostrar_Semaforo)</div>
+    <p style="font-size:12px;color:var(--text2)">La sección principal. Muestra las 3 bolas (rojo/amarillo/verde) con la bola activa iluminada, el estado con texto ("VERDE ALCISTA", "AMARILLO BAJISTA", etc.) y el grado de zona de entrada (A+, A, B+, B, --). Es la primera información que debes mirar al abrir una gráfica.</p>
+  </div>
+
+  <div class="panel-sec">
+    <div class="panel-sec-title">Sección 2 — Señales / 4 Señales (Mostrar_Senales)</div>
+    <p style="font-size:12px;color:var(--text2)">Tabla detallada de las 4 señales de tendencia con sus valores actuales:</p>
+    <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:2">
+      <div>• <strong style="color:var(--text)">SMA 20:</strong> valor actual y pendiente (↑ alcista / ↓ bajista). Si está en verde = alineada con la dirección.</div>
+      <div>• <strong style="color:var(--text)">SMA 80:</strong> valor actual y pendiente. La más lenta — si gira, el cambio es importante.</div>
+      <div>• <strong style="color:var(--text)">LinReg 89:</strong> valor actual y pendiente. Si está casi plana (pendiente ~0), es señal de régimen lateral.</div>
+      <div>• <strong style="color:var(--text)">AVWAP:</strong> valor del AVWAP activo y dirección. Se muestra también la zona (A+/A/B+/B/--).</div>
+      <div>• <strong style="color:var(--purple)">[V2] AVWAP vs BM:</strong> muestra si el AVWAP está en el lado correcto del canal Keltner. ✓ = condición cumplida. ✗ = degrada a amarillo.</div>
+    </div>
+  </div>
+
+  <div class="panel-sec">
+    <div class="panel-sec-title">Sección 3 — Zona de Entrada (Mostrar_Entrada) · Solo visible con semáforo VERDE</div>
+    <p style="font-size:12px;color:var(--text2)">Aparece únicamente cuando el semáforo está en VERDE. Muestra los niveles calculados automáticamente:</p>
+    <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:2">
+      <div>• <strong style="color:var(--text)">Entrada:</strong> Close de la barra actual (entrada conservadora).</div>
+      <div>• <strong style="color:var(--text)">AVWAP ref:</strong> el AVWAP activo — es la referencia estructural del trade.</div>
+      <div>• <strong style="color:var(--text)">Stop:</strong> AVWAP activo ± (ATR × Stop_ATRMult). El stop natural del sistema.</div>
+      <div>• <strong style="color:var(--text)">T1:</strong> banda Keltner opuesta — el objetivo natural del swing (zona de resistencia/soporte dinámica).</div>
+      <div>• <strong style="color:var(--text)">T2:</strong> extensión — proyecta la distancia AVWAP→Keltner desde la banda. El target ambicioso.</div>
+      <div>• <strong style="color:var(--text)">R:R T1 / R:R T2:</strong> ratio riesgo/recompensa para cada target. R:R ≥ 2.0 para T1 es el mínimo recomendado.</div>
+    </div>
+  </div>
+
+  <div class="panel-sec">
+    <div class="panel-sec-title">Sección 4 — Keltner Stop/Target (Mostrar_Keltner)</div>
+    <p style="font-size:12px;color:var(--text2)">Datos del canal Keltner calculados para calibrar el stop y target de posición:</p>
+    <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:2">
+      <div>• <strong style="color:var(--text)">Width:</strong> ancho total del canal Keltner en puntos. Representa el "rango de volatilidad normal".</div>
+      <div>• <strong style="color:var(--text)">Stop pts / tks:</strong> stop en puntos y en ticks (Width × Kelt_StopPct). Útil para calibrar el SL con el ATR real del canal.</div>
+      <div>• <strong style="color:var(--text)">Target pts / tks:</strong> target en puntos y ticks (stop × Kelt_RiskReward).</div>
+      <div>• <strong style="color:var(--text)">Stop $ / Target $:</strong> valor en dólares del stop y target para el número de contratos configurado.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 6. PARÁMETROS ══ -->
+<div class="section-divider"></div>
+<div id="parametros" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">6</span>Parámetros de Configuración</div>
+  <h2>Todos los parámetros explicados</h2>
+  <p class="sub">5 grupos de configuración · De los más importantes a los visuales</p>
+
+  <h3>Grupo 1 — Secciones Visibles</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Por defecto</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">Mostrar_Semaforo</span></td><td><span class="param-default">true</span></td><td>Activa/desactiva la sección de las 3 bolas y el estado del semáforo. Siempre dejarlo en true.</td></tr>
+        <tr><td><span class="param-name">Mostrar_Senales</span></td><td><span class="param-default">true</span></td><td>Activa/desactiva la tabla de las 4 señales con valores. Muy útil para diagnosticar por qué el semáforo está en cierto estado.</td></tr>
+        <tr><td><span class="param-name">Mostrar_Entrada</span></td><td><span class="param-default">true</span></td><td>Activa/desactiva la sección de entrada/stop/target. Solo aparece con semáforo VERDE. Muy útil para traders que quieren los niveles calculados automáticamente.</td></tr>
+        <tr><td><span class="param-name">Mostrar_Keltner</span></td><td><span class="param-default">true</span></td><td>Activa/desactiva la sección de datos Keltner (ancho, stop, target en $ y ticks). Útil para calibrar el tamaño de posición.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Grupo 2 — Indicadores de Tendencia</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Por defecto</th><th>Descripción y efecto</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">Period_SMA20</span></td><td><span class="param-default">20</span></td><td>Período de la media móvil rápida. No cambiar a menos que uses un timeframe muy diferente. En gráficas de ticks (610/377), 20 barras captura bien los movimientos de corto plazo.</td></tr>
+        <tr><td><span class="param-name">Period_SMA80</span></td><td><span class="param-default">80</span></td><td>Período de la media lenta. Captura la estructura de mediano plazo. En 610 ticks, 80 barras equivale a varios "swings" completos.</td></tr>
+        <tr><td><span class="param-name">Period_LR89</span></td><td><span class="param-default">89</span></td><td>Período de la regresión lineal. Número de Fibonacci — captura bien los ciclos de mercado. Su pendiente es el mejor indicador de régimen: pendiente plana = mercado lateral.</td></tr>
+        <tr><td><span class="param-name">SlopeLookback</span></td><td><span class="param-default">3</span></td><td>Número de barras hacia atrás para calcular la pendiente de cada indicador. Si SMA20[0] > SMA20[3], la pendiente es alcista. Valor de 3 captura bien los cambios de dirección recientes sin ser demasiado sensible.</td></tr>
+        <tr><td><span class="param-name">AVWAP_SwingPeriod</span></td><td><span class="param-default">50</span></td><td>Período del AVWAP interno. Equivale al Swing Period del indicador AVWAP independiente. Controla qué tan grandes deben ser los pivotes para que el AVWAP se reinicie. Ver manual del AVWAP para más detalle.</td></tr>
+        <tr><td><span class="param-name">AVWAP_BaseAPT</span></td><td><span class="param-default">20</span></td><td>Velocidad base de respuesta del AVWAP interno. Ver manual del AVWAP para más detalle.</td></tr>
+        <tr><td><span class="param-name">ATR_Period</span></td><td><span class="param-default">14</span></td><td>Período del ATR usado para calcular las zonas AVWAP y el stop sugerido. 14 barras es el período estándar. En gráficas de ticks, 10–14 es el rango adecuado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Grupo 3 — Zonas AVWAP y Stop</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Por defecto</th><th>Descripción y efecto</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="param-name">ZoneVerde</span></td>
+          <td><span class="param-default">0.5</span></td>
+          <td>Multiplica el ATR para definir la "zona A" (alta probabilidad). Si ZoneVerde = 0.5 y ATR = 2 pts, la zona A es todo precio dentro de 1 pt del AVWAP. <strong>Mayor valor = zona más amplia</strong> (más señales verdes pero menos precisas). <strong>Menor valor = zona más estricta</strong> (menos señales pero más precisas). Para ES con VIX bajo (~19), 0.5–0.6 es adecuado. Con VIX alto, aumentar a 0.7–0.8 para compensar el mayor ATR.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">ZoneAmarilla</span></td>
+          <td><span class="param-default">2.0</span></td>
+          <td>Define el límite de la zona B. Precio entre ZoneVerde × ATR y ZoneAmarilla × ATR del AVWAP es zona B. Más allá de ZoneAmarilla × ATR = fuera de zona (semáforo rojo). No suele necesitar ajuste frecuente.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">Stop_ATRMult</span></td>
+          <td><span class="param-default">0.5</span></td>
+          <td>Multiplica el ATR para calcular el buffer del stop sugerido respecto al AVWAP. Stop = AVWAP ± (ATR × 0.5). Con ATR de 2 pts, el stop sugerido queda 1 pt más allá del AVWAP. <strong>Importante:</strong> este es el stop SUGERIDO del panel — siempre verificar con las reglas de stop mínimo (3 pts para VIX 20–27).</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Grupo 4 — Keltner</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Por defecto</th><th>Descripción y efecto</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">Kelt_Period</span></td><td><span class="param-default">52</span></td><td>Período de la EMA base del canal Keltner. 52 barras captura bien la volatilidad de mediano plazo en gráficas de 610/377 ticks. Equivale aproximadamente a 2–3 horas de sesión.</td></tr>
+        <tr><td><span class="param-name">Kelt_Multiplier</span></td><td><span class="param-default">3.5</span></td><td>Amplitud del canal Keltner (en múltiplos del rango alto-bajo). Con 3.5, el canal captura el ~90% de los movimientos de precio normales. Mayor valor = canal más ancho pero Target 1 más lejano. Menor valor = canal más estrecho, T1 más cercano.</td></tr>
+        <tr><td><span class="param-name">Kelt_StopPct</span></td><td><span class="param-default">0.30</span></td><td>Fracción del ancho del canal que se usa como stop reference. Con canal de 10 pts y 0.30, el stop de referencia es 3 pts. Ajustar para que el stop Keltner sea consistente con las reglas de stop por VIX.</td></tr>
+        <tr><td><span class="param-name">Kelt_RiskReward</span></td><td><span class="param-default">2.0</span></td><td>Ratio riesgo/recompensa para calcular el target Keltner. Con stop de 3 pts y R:R 2.0, el target es 6 pts. El sistema EduS busca mínimo 1:2 — este valor garantiza ese mínimo en la sección Keltner.</td></tr>
+        <tr><td><span class="param-name">Kelt_Contracts</span></td><td><span class="param-default">1</span></td><td>Número de contratos para calcular el valor en dólares del stop y target. Cambiar a 2 si operas 2 MES. Recuerda: MES tiene PointValue $5, ES tiene PointValue $50.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Grupo 5 — Visual</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Por defecto</th><th>Descripción y efecto</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">Tamano_Bolas</span></td><td><span class="param-default">20</span></td><td>Diámetro en píxeles de las bolas del semáforo. En monitores 1080p: 18–22 es ideal. En 4K: 28–32 para mejor visibilidad.</td></tr>
+        <tr><td><span class="param-name">Fondo_Opacidad %</span></td><td><span class="param-default">40</span></td><td>Transparencia del fondo del panel (0 = transparente, 100 = opaco). Con 40%, el panel es visible pero no tapa completamente las velas detrás. Aumentar a 60–70 si tienes dificultad para leer el texto.</td></tr>
+        <tr><td><span class="param-name">Panel_Posicion</span></td><td><span class="param-default">1 (TopRight)</span></td><td>0 = Arriba Izquierda · 1 = Arriba Derecha · 2 = Abajo Izquierda · 3 = Abajo Derecha. Para gráficas de ES/NQ, TopRight (1) deja espacio libre en la zona de price action central.</td></tr>
+        <tr><td><span class="param-name">Margen_Escala (px)</span></td><td><span class="param-default">70</span></td><td>Píxeles de margen izquierdo extra cuando el panel está en posición derecha, para evitar que se superponga con la escala de precios de NT8. Ajustar según resolución. En monitores anchos con escala de precio visible, 70–100 es adecuado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ 7. TABLA VIX ══ -->
+<div class="section-divider"></div>
+<div id="tabla" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">7</span>Tabla de Configuración por VIX</div>
+  <h2>Configuración recomendada por régimen de volatilidad</h2>
+  <p class="sub">ES 610 Ticks · NQ 377 Ticks · Basado en el historial operativo EduS Trader (Mar–Abr 2026)</p>
+
+  <div class="alert alert-info" style="margin-bottom:16px">
+    <div class="alert-title">📌 Lógica de ajuste por VIX</div>
+    Con VIX alto, el ATR sube → las zonas AVWAP son más amplias en pts absolutos → para mantener la misma "exigencia" de zona, aumentar ZoneVerde y ampliar el canal Keltner (aumentar Kelt_Period o Kelt_Multiplier). Con VIX bajo, el ATR cae → la zona A puede ser más estricta y el canal Keltner más ajustado para tener targets más precisos.
+  </div>
+
+  <h3>ES JUN26 — Gráfica 610 Ticks</h3>
+  <div style="overflow-x:auto">
+    <table class="config-table">
+      <thead>
+        <tr>
+          <th>VIX</th>
+          <th>AVWAP Swing</th>
+          <th>AVWAP APT</th>
+          <th>ATR Period</th>
+          <th>Slope Look</th>
+          <th>ZoneVerde</th>
+          <th>ZoneAmari.</th>
+          <th>Stop ATR×</th>
+          <th>Kelt Period</th>
+          <th>Kelt Mult</th>
+          <th>Stop %</th>
+          <th>R:R</th>
+          <th>Notas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="vix-low">🟢 &lt;18</span></td>
+          <td><span class="val-cell">35</span></td>
+          <td><span class="val-cell">30</span></td>
+          <td><span class="val-cell">14</span></td>
+          <td><span class="val-cell">3</span></td>
+          <td><span class="val-cell">0.45</span></td>
+          <td><span class="val-cell">1.8</span></td>
+          <td><span class="val-cell">0.4</span></td>
+          <td><span class="val-cell">45</span></td>
+          <td><span class="val-cell">3.0</span></td>
+          <td><span class="val-cell">0.25</span></td>
+          <td><span class="val-cell">2.5</span></td>
+          <td style="color:var(--text2)">Mercado calmado. Zona A más estrecha. Canal Keltner más ajustado → targets precisos. Buscar LongS en pullbacks limpios.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-med">🟡 18-22</span></td>
+          <td><span class="val-cell">45</span></td>
+          <td><span class="val-cell">20</span></td>
+          <td><span class="val-cell">14</span></td>
+          <td><span class="val-cell">3</span></td>
+          <td><span class="val-cell">0.5</span></td>
+          <td><span class="val-cell">2.0</span></td>
+          <td><span class="val-cell">0.5</span></td>
+          <td><span class="val-cell">52</span></td>
+          <td><span class="val-cell">3.5</span></td>
+          <td><span class="val-cell">0.30</span></td>
+          <td><span class="val-cell">2.0</span></td>
+          <td style="color:var(--text2)">Valores por defecto. Zona óptima del sistema. Mayor frecuencia de señales verdes confiables.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-med">🟡 22-27</span></td>
+          <td><span class="val-cell">55</span></td>
+          <td><span class="val-cell">15</span></td>
+          <td><span class="val-cell">14</span></td>
+          <td><span class="val-cell">4</span></td>
+          <td><span class="val-cell">0.6</span></td>
+          <td><span class="val-cell">2.5</span></td>
+          <td><span class="val-cell">0.5</span></td>
+          <td><span class="val-cell">52</span></td>
+          <td><span class="val-cell">4.0</span></td>
+          <td><span class="val-cell">0.30</span></td>
+          <td><span class="val-cell">2.0</span></td>
+          <td style="color:var(--text2)">VIX elevado. Canal más ancho. SlopeLookback a 4 para filtrar pendientes de ruido. Reducir tamaño de posición 50%.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-high">🔴 27-32</span></td>
+          <td><span class="val-cell">65</span></td>
+          <td><span class="val-cell">12</span></td>
+          <td><span class="val-cell">14</span></td>
+          <td><span class="val-cell">5</span></td>
+          <td><span class="val-cell">0.7</span></td>
+          <td><span class="val-cell">3.0</span></td>
+          <td><span class="val-cell">0.6</span></td>
+          <td><span class="val-cell">60</span></td>
+          <td><span class="val-cell">4.5</span></td>
+          <td><span class="val-cell">0.35</span></td>
+          <td><span class="val-cell">2.0</span></td>
+          <td style="color:var(--text2)">Alta volatilidad. Solo operar señales VERDES 4/4. Zona más amplia para compensar movimientos bruscos. Fondeo solo MES 1c.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-ext">🚨 &gt;32</span></td>
+          <td><span class="val-cell">75</span></td>
+          <td><span class="val-cell">10</span></td>
+          <td><span class="val-cell">14</span></td>
+          <td><span class="val-cell">5</span></td>
+          <td><span class="val-cell">0.8</span></td>
+          <td><span class="val-cell">3.5</span></td>
+          <td><span class="val-cell">0.7</span></td>
+          <td><span class="val-cell">65</span></td>
+          <td><span class="val-cell">5.0</span></td>
+          <td><span class="val-cell">0.40</span></td>
+          <td><span class="val-cell">2.0</span></td>
+          <td style="color:var(--text2)">Entorno extremo. No operar en fondeo. Usar el panel solo como guía de dirección macro. Máx 3 setups/día en SIM.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>NQ JUN26 — Gráfica 377 Ticks</h3>
+  <div style="overflow-x:auto">
+    <table class="config-table">
+      <thead>
+        <tr>
+          <th>VIX</th>
+          <th>AVWAP Swing</th>
+          <th>AVWAP APT</th>
+          <th>ATR Period</th>
+          <th>Slope Look</th>
+          <th>ZoneVerde</th>
+          <th>ZoneAmari.</th>
+          <th>Stop ATR×</th>
+          <th>Kelt Period</th>
+          <th>Kelt Mult</th>
+          <th>Stop %</th>
+          <th>R:R</th>
+          <th>Notas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="vix-low">🟢 &lt;18</span></td>
+          <td><span class="val-cell">28</span></td>
+          <td><span class="val-cell">25</span></td>
+          <td><span class="val-cell">14</span></td>
+          <td><span class="val-cell">3</span></td>
+          <td><span class="val-cell">0.40</span></td>
+          <td><span class="val-cell">1.8</span></td>
+          <td><span class="val-cell">0.4</span></td>
+          <td><span class="val-cell">40</span></td>
+          <td><span class="val-cell">3.0</span></td>
+          <td><span class="val-cell">0.25</span></td>
+          <td><span class="val-cell">2.5</span></td>
+          <td style="color:var(--text2)">NQ con VIX bajo = tendencias limpias y prolongadas. Zona A más estricta para mayor precisión de entrada.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-med">🟡 18-22</span></td>
+          <td><span class="val-cell">38</span></td>
+          <td><span class="val-cell">18</span></td>
+          <td><span class="val-cell">14</span></td>
+          <td><span class="val-cell">3</span></td>
+          <td><span class="val-cell">0.5</span></td>
+          <td><span class="val-cell">2.0</span></td>
+          <td><span class="val-cell">0.5</span></td>
+          <td><span class="val-cell">48</span></td>
+          <td><span class="val-cell">3.5</span></td>
+          <td><span class="val-cell">0.28</span></td>
+          <td><span class="val-cell">2.0</span></td>
+          <td style="color:var(--text2)">Configuración base para NQ. Kelt_Period algo menor que ES porque la gráfica de 377 ticks tiene más granularidad.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-med">🟡 22-27</span></td>
+          <td><span class="val-cell">45</span></td>
+          <td><span class="val-cell">14</span></td>
+          <td><span class="val-cell">14</span></td>
+          <td><span class="val-cell">4</span></td>
+          <td><span class="val-cell">0.6</span></td>
+          <td><span class="val-cell">2.5</span></td>
+          <td><span class="val-cell">0.55</span></td>
+          <td><span class="val-cell">52</span></td>
+          <td><span class="val-cell">4.0</span></td>
+          <td><span class="val-cell">0.30</span></td>
+          <td><span class="val-cell">2.0</span></td>
+          <td style="color:var(--text2)">NQ con VIX elevado es extremadamente ruidoso. Zona más amplia, SwingPeriod mayor. Muy selectivo con las señales.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-high">🔴 27-32</span></td>
+          <td><span class="val-cell">55</span></td>
+          <td><span class="val-cell">10</span></td>
+          <td><span class="val-cell">14</span></td>
+          <td><span class="val-cell">5</span></td>
+          <td><span class="val-cell">0.7</span></td>
+          <td><span class="val-cell">3.0</span></td>
+          <td><span class="val-cell">0.6</span></td>
+          <td><span class="val-cell">58</span></td>
+          <td><span class="val-cell">4.5</span></td>
+          <td><span class="val-cell">0.35</span></td>
+          <td><span class="val-cell">2.0</span></td>
+          <td style="color:var(--text2)">NQ con VIX alto: solo usar el semáforo como dirección macro. No operar NQ en fondeo. Señales demasiado tardías para intraday táctico.</td>
+        </tr>
+        <tr>
+          <td><span class="vix-ext">🚨 &gt;32</span></td>
+          <td><span class="val-cell">65</span></td>
+          <td><span class="val-cell">8</span></td>
+          <td><span class="val-cell">14</span></td>
+          <td><span class="val-cell">5</span></td>
+          <td><span class="val-cell">0.8</span></td>
+          <td><span class="val-cell">3.5</span></td>
+          <td><span class="val-cell">0.7</span></td>
+          <td><span class="val-cell">65</span></td>
+          <td><span class="val-cell">5.0</span></td>
+          <td><span class="val-cell">0.40</span></td>
+          <td><span class="val-cell">2.0</span></td>
+          <td style="color:var(--text2)">Entorno extremo. NQ no se opera tácticamente. El semáforo en modo observación únicamente.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title" style="color:var(--text)">🔑 Reglas operativas del sistema EduS Trader + MasterPanel V2</div>
+    <div style="font-size:12px;color:var(--text2);line-height:2;margin-top:6px">
+      <div>🟢 <strong style="color:var(--text)">Regla 1:</strong> Solo entrar con semáforo VERDE (4/4 + zona A/A+ + AVWAP vs BM confirmado).</div>
+      <div>🟡 <strong style="color:var(--text)">Regla 2:</strong> Con semáforo AMARILLO (3/4), operar con 50% del tamaño habitual como máximo.</div>
+      <div>🔴 <strong style="color:var(--text)">Regla 3:</strong> Semáforo ROJO = no abrir posiciones. Cerrar sesión si el rojo persiste más de 30 minutos.</div>
+      <div>📏 <strong style="color:var(--text)">Regla 4:</strong> El stop sugerido por el panel es referencia. Siempre verificar que cumpla el mínimo por VIX (3 pts para VIX 20–27).</div>
+      <div>🎯 <strong style="color:var(--text)">Regla 5:</strong> El target T1 mostrado en el panel (banda Keltner opuesta) es el objetivo primario. R:R ≥ 2.0 para T1 — si no se cumple, no entrar.</div>
+      <div>📊 <strong style="color:var(--text)">Regla 6:</strong> La sección Keltner muestra el stop/target en $ para el número de contratos configurado. Actualizar Kelt_Contracts si cambias el tamaño.</div>
+      <div>⏰ <strong style="color:var(--text)">Regla 7:</strong> Máximo 5 setups por sesión (3 si el VIX supera 27). Si los 2 primeros pierden: cerrar sesión, el régimen no es favorable.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<footer>
+  EduS Trader · Manual de Usuario · EduS MasterPanel V2 · NinjaTrader 8<br>
+  Requiere: EduS_DynamicSwingAVWAP instalado previamente · Uso personal.<br>
+  No constituye asesoramiento financiero. El trading de futuros implica riesgo de pérdida total del capital.<br>
+  Versión V2 · Documentación generada Abr 2026
+</footer>
+
+<script>
+const secs=['que-es','teoria','instalacion','semaforo','secciones','parametros','tabla'];
+window.addEventListener('scroll',()=>{
+  let cur='que-es';
+  secs.forEach(id=>{const el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-60)cur=id;});
+  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+});
+</script>
+</body>
+</html>
