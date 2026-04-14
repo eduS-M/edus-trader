@@ -25,10 +25,7 @@ img{max-width:100%;display:block}
 #edus-nb a.et:hover,#edus-nb span.et:hover,#edus-nb span.et.on{background:#888;color:#fff}
 .edd{display:none;position:absolute;top:100%;left:0;background:#3dd6c0;min-width:220px;box-shadow:0 8px 16px rgba(0,0,0,.25);z-index:10000;border:1px solid #1a1f2e}
 .edd.on{display:block}
-.edd>li{position:relative}
-.edd2{display:none;position:absolute;top:100%;left:0;background:#3dd6c0;min-width:220px;box-shadow:0 8px 16px rgba(0,0,0,.25);z-index:10000;border:1px solid #1a1f2e}
-.edd2.on{display:block}
-.edd2>li{position:relative}  
+.edd>li{position:relative}  
 .emes{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;color:#1a1f2e;font-size:13px;font-weight:600;border-bottom:1px solid rgba(0,0,0,.1);cursor:pointer;background:#3dd6c0}
 .emes:hover,.emes.on{background:#888;color:#fff}
 .esub{display:none;position:absolute;top:0;left:100%;background:#f1f1f1;min-width:180px;border:1px solid #1a1f2e;box-shadow:4px 4px 12px rgba(0,0,0,.15);z-index:10001}
@@ -402,16 +399,60 @@ img{max-width:100%;display:block}
 <script>
 (function(){
   function init(){
-    var btn=document.getElementById('edus-btn');
-    var dd=document.getElementById('edus-dd');
-    var grupos=document.querySelectorAll('#edus-dd .eg');
-    if(!btn||!dd)return;
-    btn.addEventListener('click',function(e){e.stopPropagation();var ab=dd.classList.contains('on');cerrar();if(!ab){dd.classList.add('on');btn.classList.add('on');}});
-    grupos.forEach(function(g){var mes=g.querySelector('.emes');var sub=g.querySelector('.esub');mes.addEventListener('click',function(e){e.stopPropagation();var ab=sub.classList.contains('on');grupos.forEach(function(x){x.querySelector('.esub').classList.remove('on');x.querySelector('.emes').classList.remove('on');});if(!ab){sub.classList.add('on');mes.classList.add('on');}});});
-    document.addEventListener('click',cerrar);
+    var btns = document.querySelectorAll('.dropdown-toggle');
+    if(!btns.length) return;
+
+    btns.forEach(function(btn){
+      var dd = document.getElementById(btn.dataset.target);
+      if(!dd) return;
+
+      // click en el botón principal
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var abierto = dd.classList.contains('on');
+        cerrarTodo();
+        if(!abierto){
+          dd.classList.add('on');
+          btn.classList.add('on');
+        }
+      });
+
+      // submenús de meses
+      var grupos = dd.querySelectorAll('.eg');
+      grupos.forEach(function(g){
+        var mes = g.querySelector('.emes');
+        var sub = g.querySelector('.esub');
+        if(!mes || !sub) return;
+        
+        mes.addEventListener('click', function(e){
+          e.stopPropagation();
+          var abierto = sub.classList.contains('on');
+          // cierra otros meses del mismo dropdown
+          dd.querySelectorAll('.esub').forEach(function(s){ s.classList.remove('on'); });
+          dd.querySelectorAll('.emes').forEach(function(m){ m.classList.remove('on'); });
+          if(!abierto){
+            sub.classList.add('on');
+            mes.classList.add('on');
+          }
+        });
+      });
+    });
+
+    document.addEventListener('click', cerrarTodo);
   }
-  function cerrar(){var dd=document.getElementById('edus-dd');var btn=document.getElementById('edus-btn');if(dd)dd.classList.remove('on');if(btn)btn.classList.remove('on');document.querySelectorAll('#edus-dd .esub').forEach(function(s){s.classList.remove('on');});document.querySelectorAll('#edus-dd .emes').forEach(function(m){m.classList.remove('on');});}
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
+
+  function cerrarTodo(){
+    document.querySelectorAll('.edd').forEach(function(dd){ dd.classList.remove('on'); });
+    document.querySelectorAll('.dropdown-toggle').forEach(function(b){ b.classList.remove('on'); });
+    document.querySelectorAll('.esub').forEach(function(s){ s.classList.remove('on'); });
+    document.querySelectorAll('.emes').forEach(function(m){ m.classList.remove('on'); });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
 </script>
 </body>
