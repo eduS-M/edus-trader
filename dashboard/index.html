@@ -294,8 +294,12 @@
 
   <!-- VIX -->
   <section class="card vix-card">
-    <div class="card-head">
+    <!-- <div class="card-head">
       <h2>📊 VIX Intradía</h2>
+      <span class="sub" id="vix-ts"><span class="spin"></span>Conectando...</span>
+    </div> -->
+    <div class="card-head">
+      <h2>📊 VIX Intradía <span id="vix-source" style="font-size:11px;font-weight:600;margin-left:6px;opacity:.8"></span></h2>
       <span class="sub" id="vix-ts"><span class="spin"></span>Conectando...</span>
     </div>
     <div class="vix-metrics">
@@ -465,6 +469,19 @@ async function loadVIX(){
     chgEl2.className='val '+(up2?'up':'dn');
     // Color actual basado en variación vs cierre anterior
     cur.className='val '+(up1?'up':'dn');
+    // ←── PEGA AQUÍ EL INDICADOR
+    const src=document.getElementById('vix-source');
+    if(src){
+      if(d.source==='finnhub'){
+        src.textContent='● LIVE';
+        src.style.color='#00c8a0';
+        src.title='Datos casi en tiempo real via Finnhub';
+      }else{
+        src.textContent='○ 15m';
+        src.style.color='#888';
+        src.title='Datos con delay de Yahoo Finance';
+      }
+    }
     document.getElementById('vix-ts').textContent='Act. '+new Date().toLocaleTimeString('es-ES');
   }catch(e){
     document.getElementById('vix-ts').innerHTML='<span class="err">⚠ '+e.message+'</span>';
