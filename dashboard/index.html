@@ -417,7 +417,30 @@
 <script>
 /* const API = 'http://localhost:5000/api'; */
 const API = location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api';  
-
+// --- CONTADORES DE REFRESCO ---
+const REFRESH = {
+  vix: 300, // era 60s → ahora 5 min
+  idx: 60, // era 30s → ahora 1 min
+  heat: 180, // era 120s → ahora 3 min
+  cal: 600, // era 300s → ahora 10 min
+  news: 300, // era 120s → ahora 5 min
+  gex: 600 // era 300s → ahora 10 min
+};
+const timers = {};
+function startTimer(key, elId){
+  timers[key] = { el: elId, end: Date.now() + REFRESH[key]*1000 };
+}
+// actualiza cada segundo
+setInterval(()=>{
+  Object.entries(timers).forEach(([k,t])=>{
+    const el = document.getElementById(t.el);
+    if(!el) return;
+    const s = Math.max(0, Math.round((t.end - Date.now())/1000));
+    const base = el.dataset.base || el.textContent.split('·')[0].trim();
+    el.dataset.base = base;
+    el.innerHTML = `${base} · <span style="color:var(--accent)">${s}s</span>`;
+  });
+}, 1000);
 /* ── CLOCK ── */
 function tick(){
   const t=new Date().toLocaleTimeString('es-ES',{timeZone:'America/New_York',hour12:false});
@@ -484,7 +507,10 @@ async function loadVIX(){
         src.title='Datos con delay de Yahoo Finance';
       }
     }
-    document.getElementById('vix-ts').textContent='Act. '+new Date().toLocaleTimeString('es-ES');
+    /* document.getElementById('vix-ts').textContent='Act. '+new Date().toLocaleTimeString('es-ES'); */
+    const vt = document.getElementById('vix-ts');
+    vt.dataset.base = 'Act. '+new Date().toLocaleTimeString('es-ES');
+    startTimer('vix','vix-ts');
   }catch(e){
     document.getElementById('vix-ts').innerHTML='<span class="err">⚠ '+e.message+'</span>';
   }
@@ -505,7 +531,10 @@ async function loadIndices(){
       vel.className='ib-val '+(v.change_pct>=0?'up':'dn');
       cel.className='ib-chg '+(v.change_pct>=0?'up':'dn');
     });
-    document.getElementById('idx-ts').textContent='Act. '+new Date().toLocaleTimeString('es-ES');
+    /* document.getElementById('idx-ts').textContent='Act. '+new Date().toLocaleTimeString('es-ES'); */
+    const it = document.getElementById('idx-ts');
+    it.dataset.base = 'Act. '+new Date().toLocaleTimeString('es-ES');
+    startTimer('idx','idx-ts');
   }catch(e){document.getElementById('idx-ts').innerHTML='<span class="err">⚠ Servidor apagado</span>'}
 }
 
@@ -522,7 +551,10 @@ async function loadHeat(group){
     const d=await(await fetch(API+'/heatmap/'+group)).json();
     if(!Array.isArray(d))throw new Error();
     renderHeat(d);
-    document.getElementById('heat-ts').textContent='Act. '+new Date().toLocaleTimeString('es-ES');
+    /* document.getElementById('heat-ts').textContent='Act. '+new Date().toLocaleTimeString('es-ES'); */
+    const ht = document.getElementById('heat-ts');
+    ht.dataset.base = 'Act. '+new Date().toLocaleTimeString('es-ES');
+    startTimer('heat','heat-ts');
   }catch(e){
     document.getElementById('heatmap').innerHTML='<div style="color:var(--red);font-size:11px;grid-column:1/-1;padding:10px">⚠ Error de datos</div>';
   }
@@ -805,8 +837,10 @@ function renderGex(){
       : `ETF: ${d.etf} · mult. $100/contrato`;
     gexSrcEl.textContent = srcLabel;
   }
-  document.getElementById('gex-ts').textContent =
-    `yFinance · Act. ${new Date().toLocaleTimeString('es-ES')}`;
+  /* document.getElementById('gex-ts').textContent =`yFinance · Act. ${new Date().toLocaleTimeString('es-ES')}`; */
+  const gt = document.getElementById('gex-ts');
+  gt.dataset.base = `yFinance · Act. ${new Date().toLocaleTimeString('es-ES')}`;
+  startTimer('gex','gex-ts');
 }
 
 async function loadGex(sym){
@@ -851,12 +885,19 @@ async function init(){
   initGexChart();
   await Promise.all([loadVIX(), loadIndices(), loadHeat('sp500'), loadCalendar(), loadNews(), loadGex('SPX')]);
 }
-setInterval(loadVIX,         60_000);
+/*setInterval(loadVIX,         60_000);
 setInterval(loadIndices,     30_000);
 setInterval(()=>loadHeat(currentHeat), 120_000);
 setInterval(loadCalendar,    300_000);
 setInterval(loadNews,        120_000);
 setInterval(()=>loadGex(gexIdx), 300_000);   // GEX cada 10 min (cadena de opciones es pesada)
+*/
+setInterval(loadVIX, REFRESH.vix*1000);
+setInterval(loadIndices, REFRESH.idx*1000);
+setInterval(()=>loadHeat(currentHeat), REFRESH.heat*1000);
+setInterval(loadCalendar, REFRESH.cal*1000);
+setInterval(loadNews, REFRESH.news*1000);
+setInterval(()=>loadGex(gexIdx), REFRESH.gex*1000);  
 
 init();
 </script>
