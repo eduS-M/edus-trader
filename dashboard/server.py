@@ -35,15 +35,32 @@ CACHE_TTL = {
     'gex_NDX': 600,
 }
 
-def get_cached(key, ttl, fn):
+# def get_cached(key, ttl, fn):
+#    with _cache_lock:
+#        entry = _cache.get(key)
+#        if entry and (time.time() - entry['ts']) < ttl:
+#            return entry['data']
+#    data = fn()
+#    with _cache_lock:
+#        _cache[key] = {'data': data, 'ts': time.time()}
+#    return data
+ def get_cached(key, ttl, fn):
     with _cache_lock:
         entry = _cache.get(key)
         if entry and (time.time() - entry['ts']) < ttl:
             return entry['data']
     data = fn()
     with _cache_lock:
-        _cache[key] = {'data': data, 'ts': time.time()}
-    return data
+        # Si Yahoo falló, NO guardes el error, devuelve lo último bueno
+        if isinstance(data, dict) and data.get('error'):
+            if entry:
+                print(f'[CACHE] {key} falló, devolviendo dato anterior')
+                return entry['data']
+            # si no hay nada anterior, guarda el error 30s para no spamear
+            _cache[key] = {'data': data, 'ts': time.time() - ttl + 30}
+        else:
+            _cache[key] = {'data': data, 'ts': time.time()}
+    return data   
 
 # ─── PÁGINA PRINCIPAL ───
 @app.route('/')
@@ -514,9 +531,18 @@ def compute_gex_yfinance(etf_symbol, futures_symbol=None, multiplier=50):
     if etf_price <= 0:
         return {'error': f'Precio invalido para {etf_symbol}'}
 
-    exps = ticker.options
+    # exps = ticker.options
+    # if not exps:
+    #   return {'error': 'Sin fechas de vencimiento — mercado cerrado?'}
+    try:
+        exps = ticker.options
+    except Exception as e:
+        print(f'[GEX] {etf_symbol} options error: {e}')
+        exps = []
     if not exps:
-        return {'error': 'Sin fechas de vencimiento — mercado cerrado?'}
+        print(f'[GEX] {etf_symbol} sin expiraciones, Yahoo bloqueó')
+        return {'error': 'Yahoo no responde — usando último dato'}
+    
     exps = list(exps[:6])
 
     # ── 3. Ratio de escala ETF → Futuro
