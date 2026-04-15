@@ -44,7 +44,8 @@ CACHE_TTL = {
 #    with _cache_lock:
 #        _cache[key] = {'data': data, 'ts': time.time()}
 #    return data
- def get_cached(key, ttl, fn):
+
+def get_cached(key, ttl, fn):
     with _cache_lock:
         entry = _cache.get(key)
         if entry and (time.time() - entry['ts']) < ttl:
