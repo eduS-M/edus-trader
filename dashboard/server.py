@@ -254,151 +254,123 @@ def api_heatmap(group):
 #   - Memoria de fecha Y hora entre filas (como tu CSV)
 #   - Clases reales de FF: icon--ff-impact-red / icon--ff-impact-ora / icon--ff-impact-yel
 #   - Hora convertida a HH:MM 24h ET para countdown preciso
+# ─── CALENDARIO FOREX FACTORY ───
 @app.route('/api/calendar')
 def api_calendar():
     def fetch():
         try:
-            # ── FECHA EN ET (no local Chile) ──────────────────────────────────
-            # Si son las 22:00 en Chile (UTC-3), en ET son las 18:00 del MISMO día.
-            # date.today() daría la fecha de Chile que puede ser "mañana" para ET.
-            # Usamos datetime.utcnow() - 5h (ET offset) para obtener la fecha ET real.
-            from datetime import timezone
-            utc_now = datetime.utcnow()
-            et_offset = timedelta(hours=-4)  # EDT (verano) — cambiar a -5 en invierno (EST)
-            et_now    = utc_now + et_offset
-            today_et  = et_now.date()
-            year_str  = str(today_et.year)
+            import pytz
+            et = pytz.timezone('US/Eastern')
+            now_et = datetime.now(et)
+            today_et = now_et.date()
 
-            url = f"https://www.forexfactory.com/calendar?day={today_et.strftime('%m%d')}.{today_et.year}"
-            print(f'[Calendar] Conectando a: {url}')
+            print(f'[Calendar] Ahora ET: {now_et.strftime("%Y-%m-%d %H:%M")}')
 
-            # Usar cloudscraper igual que EduS_News_Sync.py — bypasea Cloudflare
-            try:
-                import cloudscraper
-                scraper = cloudscraper.create_scraper(
-                    browser={'browser': 'chrome', 'platform': 'windows', 'mobile': False}
-                )
-                r = scraper.get(url, timeout=20)
-            except ImportError:
-                # fallback si no está instalado
-                print('[Calendar] cloudscraper no disponible, usando requests')
-                headers = {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124',
-                    'Accept': 'text/html,application/xhtml+xml,*/*',
-                    'Accept-Language': 'en-US,en;q=0.9',
-                    'Referer': 'https://www.forexfactory.com/',
-                    'Cache-Control': 'no-cache',
-                }
-                r = requests.get(url, headers=headers, timeout=15)
+            events = []
+            KEEP = {'USD','EUR','GBP','JPY','CAD','AUD','CHF','NZD'}
 
-            print(f'[Calendar] HTTP {r.status_code} — {len(r.content)} bytes')
-            if r.status_code != 200:
-                raise Exception(f'HTTP {r.status_code}')
-
-            soup  = BeautifulSoup(r.text, 'html.parser')
-            # FF puede tener la tabla o las filas directo
-            table = soup.find('table', class_='calendar__table')
-            rows  = table.find_all('tr') if table else soup.select('tr.calendar__row')
-
-            events    = []
-            last_date = ''    # memoria de fecha (igual que tu CSV)
-            last_time = ''    # memoria de hora (igual que tu CSV)
-            KEEP      = {'USD','EUR','GBP','JPY','CAD','AUD','CHF','NZD'}
-
-            for row in rows:
-                cls = row.get('class', [])
-                if 'calendar__row' not in cls:
+            # Pedimos hoy + los próximos 4 días hábiles
+            for offset in range(0, 6):
+                target = today_et + timedelta(days=offset)
+                if target.weekday() >= 5: # sábado=5 domingo=6
                     continue
+
+                url = f"https://www.forexfactory.com/calendar?day={target.strftime('%m%d')}.{target.year}"
+                print(f'[Calendar] Fetch {target} -> {url}')
+
                 try:
-                    # ── FECHA con memoria ──
-                    dc = row.find('td', class_='calendar__date')
-                    if dc:
-                        txt = dc.get_text().strip()
-                        if txt:
-                            last_date = f"{txt} {year_str}"
-                            last_time = ''   # reinicia hora al cambiar día
+                    import cloudscraper
+                    scraper = cloudscraper.create_scraper(browser={'browser':'chrome','platform':'windows','mobile':False})
+                    r = scraper.get(url, timeout=15)
+                except:
+                    headers = {'User-Agent':'Mozilla/5.0','Referer':'https://www.forexfactory.com/'}
+                    r = requests.get(url, headers=headers, timeout=15)
 
-                    # ── HORA con memoria (lógica de tu código) ──
-                    tc = row.find('td', class_='calendar__time')
-                    t  = tc.get_text(strip=True) if tc else ''
-                    # Limpiar prefijo "▶" (Up Next) y otros caracteres especiales de FF
-                    t  = t.replace('▶','').replace('►','').replace('▶','').strip()
-                    if t and 'Day' not in t and 'Tentative' not in t and t != '':
-                        last_time = t
-                    if not last_time:
-                        continue
-
-                    # ── DIVISA ──
-                    cc  = row.find('td', class_='calendar__currency')
-                    ccy = cc.get_text(strip=True) if cc else ''
-                    if ccy not in KEEP:
-                        continue
-
-                    # ── IMPACTO — clases reales de FF ──
-                    # Tu código: if 'icon--ff-impact-red' in className
-                    # El bug anterior: impact_class[0] solo tomaba la 1ra clase
-                    ic     = row.find('td', class_='calendar__impact')
-                    impact = 'Low'
-                    if ic:
-                        sp       = ic.find('span')
-                        cls_list = sp.get('class', []) if sp else []
-                        cls_str  = ' '.join(cls_list)
-                        if 'icon--ff-impact-red' in cls_str:
-                            impact = 'High'
-                        elif 'icon--ff-impact-ora' in cls_str:
-                            impact = 'Medium'
-                        elif 'icon--ff-impact-yel' in cls_str:
-                            impact = 'Low'
-                        else:
-                            continue   # sin impacto definido, saltar (igual que tu código)
-
-                    # ── EVENTO ──
-                    ee  = row.find('td', class_='calendar__event')
-                    evt = ee.get_text(strip=True) if ee else ''
-                    if not evt:
-                        continue
-
-                    # ── CONVERTIR HORA a HH:MM 24h (ET) ──
-                    # Tu CSV guarda la hora ya en ET; nosotros la pasamos al front igual
-                    time_24 = _ff_time_to_24h(last_time)
-
-                    ac = row.find('td', class_='calendar__actual')
-                    fc = row.find('td', class_='calendar__forecast')
-                    pr = row.find('td', class_='calendar__previous')
-
-                    events.append({
-                        'time':     time_24,      # "HH:MM" 24h ET
-                        'time_raw': last_time,    # original FF ("8:30am")
-                        'currency': ccy,
-                        'impact':   impact,
-                        'event':    evt,
-                        'actual':   ac.get_text(strip=True) if ac else '',
-                        'forecast': fc.get_text(strip=True) if fc else '',
-                        'previous': pr.get_text(strip=True) if pr else '',
-                    })
-                except Exception as ex:
+                if r.status_code!= 200:
                     continue
 
-            print(f'[Calendar] {len(events)} eventos para {today_et}')
-            if not events:
-                # Imprimir fragmento del HTML para diagnosticar
-                html_snippet = r.text[:500] if hasattr(r,'text') else ''
-                print(f'[Calendar] HTML snippet: {html_snippet}')
+                soup = BeautifulSoup(r.text, 'html.parser')
+                table = soup.find('table', class_='calendar__table')
+                rows = table.find_all('tr') if table else soup.select('tr.calendar__row')
+
+                last_time = ''
+                for row in rows:
+                    if 'calendar__row' not in row.get('class', []):
+                        continue
+                    try:
+                        # HORA
+                        tc = row.find('td', class_='calendar__time')
+                        t = tc.get_text(strip=True).replace('▶','').replace('►','').strip() if tc else ''
+                        if t and 'Day' not in t and 'Tentative' not in t:
+                            last_time = t
+                        if not last_time:
+                            continue
+
+                        # DIVISA
+                        cc = row.find('td', class_='calendar__currency')
+                        ccy = cc.get_text(strip=True) if cc else ''
+                        if ccy not in KEEP:
+                            continue
+
+                        # IMPACTO
+                        ic = row.find('td', class_='calendar__impact')
+                        impact = 'Low'
+                        if ic and ic.find('span'):
+                            cls = ' '.join(ic.find('span').get('class', []))
+                            if 'icon--ff-impact-red' in cls: impact = 'High'
+                            elif 'icon--ff-impact-ora' in cls: impact = 'Medium'
+                            elif 'icon--ff-impact-yel' in cls: impact = 'Low'
+                            else: continue
+
+                        # EVENTO
+                        ee = row.find('td', class_='calendar__event')
+                        evt = ee.get_text(strip=True) if ee else ''
+                        if not evt:
+                            continue
+
+                        time_24 = _ff_time_to_24h(last_time)
+                        # Crear datetime ET para filtrar
+                        try:
+                            dt_et = et.localize(datetime.combine(target, datetime.strptime(time_24, '%H:%M').time()))
+                        except:
+                            dt_et = None
+
+                        # Filtrar: solo eventos de hoy en adelante, y no muy antiguos
+                        if dt_et and dt_et < now_et - timedelta(hours=1):
+                            continue
+
+                        ac = row.find('td', class_='calendar__actual')
+                        fc = row.find('td', class_='calendar__forecast')
+                        pr = row.find('td', class_='calendar__previous')
+
+                        events.append({
+                            'date': target.isoformat(),
+                            'time': time_24,
+                            'time_raw': last_time,
+                            'currency': ccy,
+                            'impact': impact,
+                            'event': evt,
+                            'actual': ac.get_text(strip=True) if ac else '',
+                            'forecast': fc.get_text(strip=True) if fc else '',
+                            'previous': pr.get_text(strip=True) if pr else '',
+                            'timestamp_et': dt_et.isoformat() if dt_et else ''
+                        })
+                    except:
+                        continue
+
+            # Ordenar por fecha/hora
+            events.sort(key=lambda x: x['timestamp_et'])
+            print(f'[Calendar] Total eventos hoy en adelante: {len(events)}')
             return events if events else _fallback_calendar()
 
         except Exception as e:
             print(f'Calendar error: {e}')
             return _fallback_calendar()
 
-    # Si el caché tiene datos de fallback (Initial Jobless Claims), forzar refresh
+    # Limpiar caché si tiene fallback viejo
     with _cache_lock:
-        cached_entry = _cache.get('calendar')
-        if cached_entry:
-            d = cached_entry['data']
-            if d and isinstance(d, list) and len(d) > 0:
-                if d[0].get('event') == 'Initial Jobless Claims' and d[0].get('forecast') == '225K':
-                    print('[Calendar] Detectados datos de fallback en caché — limpiando')
-                    del _cache['calendar']
+        if 'calendar' in _cache:
+            del _cache['calendar']
 
     data = get_cached('calendar', CACHE_TTL['calendar'], fetch)
     return jsonify(data)
