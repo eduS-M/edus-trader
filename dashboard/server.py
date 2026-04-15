@@ -264,39 +264,37 @@ def api_calendar():
             now_et = datetime.now(et)
             today_et = now_et.date()
 
-            print(f'[Calendar] Ahora ET: {now_et.strftime("%Y-%m-%d %H:%M")}')
+            print(f'[Calendar] Ahora ET: {now_et.strftime("%a %H:%M")}')
 
             events = []
             KEEP = {'USD','EUR','GBP','JPY','CAD','AUD','CHF','NZD'}
 
-            # Pedimos hoy + los próximos 4 días hábiles
-            for offset in range(0, 6):
+            # Pedimos hoy + próximos 4 días hábiles (lunes-viernes)
+            for offset in range(0, 7):
                 target = today_et + timedelta(days=offset)
-                if target.weekday() >= 5: # sábado=5 domingo=6
+                if target.weekday() >= 5: # salta sábado/domingo
                     continue
 
-                url = f"https://www.forexfactory.com/calendar?day={target.strftime('%m%d')}.{target.year}"
-                print(f'[Calendar] Fetch {target} -> {url}')
+                # FORMATO CORRECTO: apr15.2025 (no 0415.2025)
+                day_str = target.strftime('%b%d').lower() # apr15
+                url = f"https://www.forexfactory.com/calendar?day={day_str}.{target.year}"
+                print(f'[Calendar] → {target} {url}')
 
                 try:
                     import cloudscraper
                     scraper = cloudscraper.create_scraper(browser={'browser':'chrome','platform':'windows','mobile':False})
                     r = scraper.get(url, timeout=15)
                 except:
-                    headers = {'User-Agent':'Mozilla/5.0','Referer':'https://www.forexfactory.com/'}
-                    r = requests.get(url, headers=headers, timeout=15)
+                    r = requests.get(url, headers={'User-Agent':'Mozilla/5.0','Referer':'https://www.forexfactory.com/'}, timeout=15)
 
                 if r.status_code!= 200:
                     continue
 
                 soup = BeautifulSoup(r.text, 'html.parser')
-                table = soup.find('table', class_='calendar__table')
-                rows = table.find_all('tr') if table else soup.select('tr.calendar__row')
-
+                rows = soup.select('tr.calendar__row')
                 last_time = ''
+
                 for row in rows:
-                    if 'calendar__row' not in row.get('class', []):
-                        continue
                     try:
                         # HORA
                         tc = row.find('td', class_='calendar__time')
@@ -329,14 +327,13 @@ def api_calendar():
                             continue
 
                         time_24 = _ff_time_to_24h(last_time)
-                        # Crear datetime ET para filtrar
                         try:
                             dt_et = et.localize(datetime.combine(target, datetime.strptime(time_24, '%H:%M').time()))
                         except:
-                            dt_et = None
+                            continue
 
-                        # Filtrar: solo eventos de hoy en adelante, y no muy antiguos
-                        if dt_et and dt_et < now_et - timedelta(hours=1):
+                        # SOLO HOY EN ADELANTE (permite 30 min de gracia para eventos recién pasados)
+                        if dt_et < now_et - timedelta(minutes=30):
                             continue
 
                         ac = row.find('td', class_='calendar__actual')
@@ -353,28 +350,26 @@ def api_calendar():
                             'actual': ac.get_text(strip=True) if ac else '',
                             'forecast': fc.get_text(strip=True) if fc else '',
                             'previous': pr.get_text(strip=True) if pr else '',
-                            'timestamp_et': dt_et.isoformat() if dt_et else ''
+                            'timestamp_et': dt_et.isoformat()
                         })
                     except:
                         continue
 
-            # Ordenar por fecha/hora
             events.sort(key=lambda x: x['timestamp_et'])
-            print(f'[Calendar] Total eventos hoy en adelante: {len(events)}')
+            print(f'[Calendar] Eventos filtrados: {len(events)} (desde hoy)')
             return events if events else _fallback_calendar()
 
         except Exception as e:
             print(f'Calendar error: {e}')
             return _fallback_calendar()
 
-    # Limpiar caché si tiene fallback viejo
+    # Fuerza limpiar caché viejo
     with _cache_lock:
-        if 'calendar' in _cache:
-            del _cache['calendar']
+        _cache.pop('calendar', None)
 
     data = get_cached('calendar', CACHE_TTL['calendar'], fetch)
     return jsonify(data)
-
+    
 def _ff_time_to_24h(time_str):
     """Convierte '8:30am' / '2:00pm' → '08:30' / '14:00' (24h)"""
     try:
