@@ -26,7 +26,7 @@ CORS(app)
 _cache = {}
 _cache_lock = threading.Lock()
 CACHE_TTL = {
-    'vix': 60,
+    'vix': 55,
     'quotes': 30,
     'heatmap': 120,
     'calendar': 300,
@@ -114,34 +114,36 @@ def debug_calendar():
 def api_vix():
     def fetch():
         try:
-            # 1) Intentar Finnhub si hay key (más rápido y casi live)
             current = None
             prev_close = None
             open_today = None
             source = 'yfinance'
             
+            # 1) Intentar Finnhub (símbolo correcto es ^VIX)
             if FINNHUB_KEY:
                 try:
-                    r = requests.get(f'https://finnhub.io/api/v1/quote?symbol=CBOE:VIX&token={FINNHUB_KEY}', timeout=8)
+                    url = f'https://finnhub.io/api/v1/quote?symbol=^VIX&token={FINNHUB_KEY}'
+                    r = requests.get(url, timeout=8)
+                    # Si Finnhub responde 429, NO lo guardamos, vamos directo a yfinance
                     if r.status_code == 200:
                         q = r.json()
-                        # c=current, pc=prev close, o=open
-                        if q.get('c'):
+                        if q.get('c') and q.get('c') > 0:
                             current = round(float(q['c']), 2)
                             prev_close = round(float(q.get('pc', 0)), 2)
                             open_today = round(float(q.get('o', 0)), 2)
                             source = 'finnhub'
-                except:
-                    pass
+                except Exception as e:
+                    print(f'[VIX] Finnhub error: {e}')
             
-            # 2) Fallback yfinance para historial intradía
+            # 2) Fallback yfinance (siempre funciona)
             ticker = yf.Ticker('^VIX')
             daily = ticker.history(period='5d', interval='1d')
             if daily.empty:
                 return {'error': 'Sin datos VIX'}
-            if prev_close is None:
+            
+            if prev_close is None or prev_close == 0:
                 prev_close = round(float(daily['Close'].iloc[-2]), 2) if len(daily) >= 2 else round(float(daily['Close'].iloc[-1]), 2)
-            if open_today is None:
+            if open_today is None or open_today == 0:
                 open_today = round(float(daily['Open'].iloc[-1]), 2)
             
             intra = ticker.history(period='1d', interval='5m')
@@ -171,6 +173,7 @@ def api_vix():
             }
         except Exception as e:
             return {'error': str(e)}
+    
     data = get_cached('vix', CACHE_TTL['vix'], fetch)
     return jsonify(data)
 
