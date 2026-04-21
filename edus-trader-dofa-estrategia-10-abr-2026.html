@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — DOFA & Estrategia 10 Abr 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#ffffff; --bg2:#f5f4f0; --bg3:#eeecea;
+  --text:#1a1a18; --text2:#5f5e5a; --text3:#888780;
+  --border:rgba(0,0,0,0.10); --border2:rgba(0,0,0,0.20);
+  --green:#3b6d11; --green-bg:#eaf3de;
+  --red:#a32d2d; --red-bg:#fcebeb;
+  --amber:#854f0b; --amber-bg:#faeeda;
+  --blue:#185fa5; --blue-bg:#e6f1fb;
+  --r-md:8px; --r-lg:12px;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#1e1e1c; --bg2:#272724; --bg3:#2e2e2b;
+    --text:#e8e6e0; --text2:#9c9a92; --text3:#6e6d67;
+    --border:rgba(255,255,255,0.09); --border2:rgba(255,255,255,0.18);
+    --green:#8fb85a; --green-bg:rgba(99,153,34,0.14);
+    --red:#e87878; --red-bg:rgba(226,75,74,0.14);
+    --amber:#f0b060; --amber-bg:rgba(239,159,39,0.14);
+    --blue:#6aaee8; --blue-bg:rgba(55,138,221,0.14);
+  }
+}
+body { font-family:var(--font); background:var(--bg); color:var(--text); margin:0; padding:0; }
+nav { position:sticky; top:0; z-index:100; background:var(--bg); border-bottom:0.5px solid var(--border2); padding:0 2rem; display:flex; align-items:center; overflow-x:auto; }
+nav .brand { font-size:13px; font-weight:500; color:var(--text); padding:14px 0; margin-right:24px; white-space:nowrap; }
+nav a { font-size:12px; color:var(--text3); text-decoration:none; padding:16px 14px; border-bottom:2px solid transparent; transition:color .15s; white-space:nowrap; }
+nav a:hover { color:var(--text); }
+nav a.active { color:var(--text); border-bottom-color:var(--text); font-weight:500; }
+.page { max-width:980px; margin:0 auto; padding:2rem 2rem 4rem; }
+.section-divider { height:0.5px; background:var(--border2); margin:3rem 0 2rem; }
+.section-label { display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:500; letter-spacing:0.09em; text-transform:uppercase; color:var(--text3); margin-bottom:1rem; }
+.section-label .num { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:var(--bg2); border:0.5px solid var(--border2); font-size:10px; font-weight:500; color:var(--text2); }
+h2 { font-size:20px; font-weight:500; margin-bottom:4px; }
+.sub { font-size:12px; color:var(--text3); margin-bottom:1.5rem; }
+.sub-title { font-size:11px; font-weight:500; letter-spacing:0.07em; text-transform:uppercase; color:var(--text3); margin:1.5rem 0 0.7rem; }
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:8px; }
+.kpi { background:var(--bg2); border-radius:var(--r-md); padding:12px 14px; }
+.kpi-label { font-size:11px; color:var(--text3); margin-bottom:4px; }
+.kpi-value { font-size:22px; font-weight:500; }
+.kpi-sub { font-size:11px; color:var(--text3); margin-top:2px; }
+.pos { color:var(--green); } .neg { color:var(--red); }
+.pnl-pos { color:var(--green); font-weight:500; } .pnl-neg { color:var(--red); font-weight:500; }
+.chart-wrap { position:relative; width:100%; }
+.alert { border-radius:var(--r-md); padding:12px 14px; font-size:12px; margin-top:10px; }
+.alert.success { background:var(--green-bg); border:0.5px solid rgba(99,153,34,0.35); }
+.alert.danger  { background:var(--red-bg);   border:0.5px solid rgba(226,75,74,0.35); }
+.alert.warning { background:var(--amber-bg); border:0.5px solid rgba(239,159,39,0.35); }
+.alert.info    { background:var(--blue-bg);  border:0.5px solid rgba(55,138,221,0.35); }
+.alert-title { font-weight:500; margin-bottom:3px; }
+.alert.success .alert-title { color:var(--green); }
+.alert.danger  .alert-title { color:var(--red); }
+.alert.warning .alert-title { color:var(--amber); }
+.alert.info    .alert-title { color:var(--blue); }
+.icard { background:var(--bg2); border-radius:var(--r-md); padding:13px 15px; margin-bottom:8px; border-left:3px solid transparent; }
+.icard.crit { border-left-color:#E24B4A; }
+.icard.warn { border-left-color:#EF9F27; }
+.icard.good { border-left-color:#639922; }
+.icard.info { border-left-color:#378ADD; }
+.icard-title { font-size:13px; font-weight:500; margin-bottom:5px; }
+.icard-text  { font-size:12px; color:var(--text2); line-height:1.6; }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+.trend-row { display:grid; grid-template-columns:90px 1fr 1fr 1fr; gap:8px; padding:7px 12px; font-size:12px; border-bottom:0.5px solid var(--border); align-items:center; }
+.trend-row.hdr { font-size:11px; color:var(--text3); font-weight:500; }
+.trend-row:last-child { border-bottom:none; }
+.finding { background:var(--bg2); border:0.5px solid var(--border2); border-radius:var(--r-lg); padding:24px 28px; position:relative; overflow:hidden; margin-bottom:12px; }
+.finding::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; }
+.finding.red::before  { background:linear-gradient(180deg,#E24B4A,#EF9F27); }
+.finding.green::before { background:linear-gradient(180deg,#639922,#185fa5); }
+.finding.blue::before  { background:#185fa5; }
+.finding-label { font-size:10px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; }
+.finding.red .finding-label   { color:var(--red); }
+.finding.green .finding-label { color:var(--green); }
+.finding.blue .finding-label  { color:var(--blue); }
+.finding h3  { font-size:16px; font-weight:500; margin-bottom:10px; line-height:1.4; }
+.finding p   { font-size:12px; color:var(--text2); line-height:1.7; margin-bottom:8px; }
+.finding p:last-child { margin-bottom:0; }
+.finding strong { color:var(--text); font-weight:500; }
+.dofa-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.dofa-quad { border-radius:var(--r-lg); padding:16px 18px; }
+.dofa-quad.fortaleza { background:var(--green-bg); border:0.5px solid rgba(99,153,34,0.3); }
+.dofa-quad.debilidad { background:var(--red-bg);   border:0.5px solid rgba(226,75,74,0.3); }
+.dofa-quad.oportunidad { background:var(--blue-bg);  border:0.5px solid rgba(55,138,221,0.3); }
+.dofa-quad.amenaza    { background:var(--amber-bg); border:0.5px solid rgba(239,159,39,0.3); }
+.dofa-title { font-size:12px; font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.dofa-quad.fortaleza .dofa-title   { color:var(--green); }
+.dofa-quad.debilidad .dofa-title   { color:var(--red); }
+.dofa-quad.oportunidad .dofa-title { color:var(--blue); }
+.dofa-quad.amenaza .dofa-title     { color:var(--amber); }
+.dofa-item { font-size:11px; color:var(--text2); padding:4px 0; border-bottom:0.5px solid rgba(0,0,0,0.06); line-height:1.5; display:flex; gap:8px; }
+@media(prefers-color-scheme:dark){ .dofa-item { border-bottom-color:rgba(255,255,255,0.06); } }
+.dofa-item:last-child { border-bottom:none; }
+.dofa-bullet { flex-shrink:0; font-size:12px; margin-top:1px; }
+.stat-box { background:var(--bg); border:0.5px solid var(--border2); border-radius:var(--r-md); padding:12px 14px; text-align:center; }
+.stat-val { font-size:24px; font-weight:500; }
+.stat-lbl { font-size:11px; color:var(--text3); margin-top:2px; }
+.rules-box { background:var(--bg); border:0.5px solid var(--border2); border-radius:var(--r-md); padding:14px 16px; margin-top:12px; }
+.rules-box-title { font-size:12px; font-weight:600; margin-bottom:10px; color:var(--text); }
+.rule-item { font-size:12px; color:var(--text2); padding:6px 0; border-bottom:0.5px solid var(--border); line-height:1.5; }
+.rule-item:last-child { border-bottom:none; }
+.strategy-card { border-radius:var(--r-lg); padding:18px 20px; margin-bottom:10px; border:1px solid; }
+.strategy-card.primary   { background:rgba(99,153,34,0.06); border-color:rgba(99,153,34,0.4); }
+.strategy-card.secondary { background:var(--bg2); border-color:var(--border2); }
+.strategy-card.warning   { background:var(--amber-bg); border-color:rgba(239,159,39,0.4); }
+.strategy-title { font-size:14px; font-weight:500; margin-bottom:8px; }
+.strategy-card.primary .strategy-title   { color:var(--green); }
+.strategy-card.secondary .strategy-title { color:var(--text); }
+.strategy-card.warning .strategy-title   { color:var(--amber); }
+.strategy-body { font-size:12px; color:var(--text2); line-height:1.7; }
+.badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:500; }
+.badge-green { background:var(--green-bg); color:var(--green); }
+.badge-red   { background:var(--red-bg);   color:var(--red); }
+.badge-amber { background:var(--amber-bg); color:var(--amber); }
+.badge-blue  { background:var(--blue-bg);  color:var(--blue); }
+.level-row { display:flex; align-items:center; gap:10px; padding:6px 0; border-bottom:0.5px solid var(--border); font-size:12px; }
+.level-row:last-child { border-bottom:none; }
+.level-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.level-name { color:var(--text3); font-size:11px; min-width:110px; }
+.level-price { font-weight:500; }
+.level-note { color:var(--text3); font-size:11px; flex:1; text-align:right; }
+footer { text-align:center; font-size:11px; color:var(--text3); padding:2rem 1rem 3rem; border-top:0.5px solid var(--border); margin-top:2rem; }
+@media(max-width:600px){
+  .page { padding:1rem 1rem 3rem; }
+  .two-col, .dofa-grid, .three-col { grid-template-columns:1fr; }
+  .trend-row { grid-template-columns:72px 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">📊 EduS Trader</span>
+  <a class="active" href="#resumen">Resumen</a>
+  <a href="#estadisticas">Estadísticas</a>
+  <a href="#dofa">DOFA</a>
+  <a href="#hoy">Hoy 10 Abr</a>
+  <a href="#semana">Próx. Semana</a>
+  <a href="#estrategia">Estrategia</a>
+</nav>
+
+<div class="page">
+
+<!-- ══════════════════════ HEADER ══════════════════════ -->
+<div id="resumen" style="scroll-margin-top:52px; padding-top:0.5rem">
+  <div class="section-label"><span class="num">0</span>Análisis Integral — 10 Abr 2026</div>
+  <h2>DOFA · Diagnóstico · Estrategia para hoy y la próxima semana</h2>
+  <p class="sub">101 setups · 15 días de operativa · Sim -$6,872 · Fondeo -$1,856.50 desde $50,000 · VIX hoy: 19 🟢 · Cambio de régimen confirmado</p>
+
+  <div class="alert info" style="margin-top:0">
+    <div class="alert-title">Contexto hoy — 10 Abr 2026: VIX 19 = el mayor cambio de régimen del registro</div>
+    <div style="color:var(--text2)">Todo el historial de operativa fue con VIX entre 24 y 31. Hoy el VIX está en 19 — un entorno radicalmente diferente: ATR más bajo, movimientos más lentos, mercado potencialmente en impulso alcista post-aranceles. El gráfico muestra precio cerca del Pre-High 6879.50 con delta acumulado bullish. <strong style="color:var(--text)">Las reglas y el contexto histórico deben reinterpretarse para este nuevo régimen.</strong></div>
+  </div>
+
+  <!-- KPIs globales -->
+  <div class="kpi-grid" style="margin-top:14px">
+    <div class="kpi"><div class="kpi-label">Total setups sim</div><div class="kpi-value">101</div><div class="kpi-sub">15 días · Mar–Abr 2026</div></div>
+    <div class="kpi"><div class="kpi-label">WR global sim</div><div class="kpi-value neg">39.6%</div><div class="kpi-sub">40W / 61L</div></div>
+    <div class="kpi"><div class="kpi-label">P&L total sim</div><div class="kpi-value neg">-$6,872</div><div class="kpi-sub">Profit Factor 0.50</div></div>
+    <div class="kpi"><div class="kpi-label">P&L fondeo neto</div><div class="kpi-value neg">-$1,856.50</div><div class="kpi-sub">Desde $50,000 inicio</div></div>
+    <div class="kpi"><div class="kpi-label">Saldo fondeo</div><div class="kpi-value" style="font-size:18px;color:var(--amber)">$48,143.50</div><div class="kpi-sub">Margen: solo $143.50</div></div>
+    <div class="kpi"><div class="kpi-label">VIX hoy</div><div class="kpi-value pos">19</div><div class="kpi-sub">Mínimo del período ✅</div></div>
+    <div class="kpi"><div class="kpi-label">Mejor fase</div><div class="kpi-value pos">23–27 Mar</div><div class="kpi-sub">WR 53% · $+1,108 neto</div></div>
+    <div class="kpi"><div class="kpi-label">Peor racha</div><div class="kpi-value neg">30 Mar–9 Abr</div><div class="kpi-sub">WR 32% · -$5,902 sim</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ ESTADÍSTICAS ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="estadisticas" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">1</span>Lo que funciona y lo que no</div>
+  <h2>Análisis estadístico completo — 101 setups</h2>
+  <p class="sub">Dos fases claramente distintas · El sistema funcionó 23–27 Mar · Algo cambió el 30 Mar</p>
+
+  <!-- Dos fases -->
+  <div class="sub-title">Las dos fases del sistema</div>
+  <div class="two-col">
+    <div class="kpi" style="border-top:3px solid #639922">
+      <div style="color:var(--green);font-size:11px;font-weight:600;margin-bottom:8px">FASE 1 — 11 al 27 Mar · Sistema funcionando</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.9">
+        Trades: 38 · <span class="pnl-pos">WR 53%</span><br>
+        AvgWin: +$345 · AvgLoss: -$437<br>
+        4/4 WR: 55% ✅<br>
+        Mejores días: 3–5 trades<br>
+        <strong style="color:var(--green)">P&L acumulado fase 1: +$1,108*</strong>
+      </div>
+    </div>
+    <div class="kpi" style="border-top:3px solid #E24B4A">
+      <div style="color:var(--red);font-size:11px;font-weight:600;margin-bottom:8px">FASE 2 — 30 Mar al 9 Abr · Sistema bajo presión</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.9">
+        Trades: 63 · <span class="pnl-neg">WR 32%</span><br>
+        AvgWin: +$199 · AvgLoss: -$230<br>
+        4/4 WR: <span class="pnl-neg">25% ⚠️</span><br>
+        Días malos: 8–14 trades<br>
+        <strong style="color:var(--red)">P&L fase 2: -$5,902</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hallazgos críticos -->
+  <div class="sub-title">Hallazgos críticos del análisis</div>
+
+  <div class="icard crit">
+    <div class="icard-title">🔴 #1 — El hallazgo más alarmante: 4/4 confluencias tiene WR de 25% en Fase 2 (-$3,912)</div>
+    <div class="icard-text">En Fase 1, los trades con 4/4 tenían WR 55%. En Fase 2 cayó a 25%. Esto significa que la señal más fuerte del sistema — el que debería ser el setup de mayor probabilidad — es ahora el que más pierde. <strong>Causa probable: el VIX elevado (25–31) y el mercado bajista alteraron el contexto en que los indicadores funcionaban.</strong> Los SMA20, SMA80 y LR89 son indicadores rezagados — en mercados con reversiones rápidas y alta volatilidad, señalan tarde. El cambio de régimen (VIX 19 hoy) puede reactivar la efectividad de 4/4.</div>
+  </div>
+
+  <div class="icard crit">
+    <div class="icard-title">🔴 #2 — Más trades = más pérdidas: la correlación perfecta negativa</div>
+    <div class="icard-text">Días con ≤5 trades promediaron <strong>+$490 de P&L</strong>. Días con ≥8 trades promediaron <strong>-$1,049 de P&L</strong>. Esta es la correlación más clara de todo el dataset. Cuando la sesión no funciona, el comportamiento natural es buscar más setups para "recuperar" — y eso exactamente convierte una pérdida pequeña en una grande. La regla de máximo 5 setups/día no es opcional: es la diferencia entre +$490 y -$1,049.</div>
+  </div>
+
+  <div class="icard warn">
+    <div class="icard-title">⚠️ #3 — VWAP alignment NO da ventaja estadística: WR idéntico alineado vs contra</div>
+    <div class="icard-text">Con VWAP alineado: WR 40%, P&L -$5,059. Contra VWAP: WR 39%, P&L -$1,813. Estadísticamente idéntico — operar contra el VWAP en términos de WR no es peor que seguirlo. <strong>Sin embargo, el daño en $ sí es mayor cuando se opera VWAP alineado</strong> porque se toman más trades (68 vs 33) y los perdedores son más grandes. El VWAP Direction como único filtro de entrada no tiene edge demostrado en el período analizado.</div>
+  </div>
+
+  <div class="icard warn">
+    <div class="icard-title">⚠️ #4 — Asimetría negativa de riesgo/reward: ganadores 2–3 pts, perdedores 5–7.5 pts</div>
+    <div class="icard-text">El stop máximo es -7.5 pts ($375) y se toca frecuentemente. Los targets de salida promedian 2–3 pts. Con esta asimetría, necesitas WR ≥72% solo para empatar. Con WR real de 39%, el resultado matemático garantizado es pérdida. La solución no es cambiar el stop — es no salir antes de que el trade llegue al target mínimo de 2×stop (≥4 pts). <strong>Este es el cambio de mayor impacto disponible.</strong></div>
+  </div>
+
+  <div class="icard good">
+    <div class="icard-title">✅ #5 — Lo que funciona: días de 3–5 trades, tendencia clara, sin sobreoperar</div>
+    <div class="icard-text">24 Mar (+$503), 25 Mar (+$906), 26 Mar (+$554), 27 Mar (+$488), 2 Abr (+$500). Todos tienen en común: ≤5 trades, mercado con tendencia, WR ≥60%. El sistema SÍ funciona en estas condiciones. El problema no es el sistema — es cuándo se usa y por cuánto tiempo. VIX 19 con mercado alcista post-corrección puede recrear exactamente estas condiciones esta semana.</div>
+  </div>
+
+  <div class="icard good">
+    <div class="icard-title">✅ #6 — El fondeo MES protegió bien: -$1,856 vs sim acumulado -$6,872 (ratio 1:3.7)</div>
+    <div class="icard-text">A pesar de todos los problemas del sim, el fondeo perdió significativamente menos. Los SLs ajustados en fondeo salvaron capitales en días como el 7 Abr (fondeo +$9.50 vs sim -$1,187). <strong>El MES como instrumento de aprendizaje está cumpliendo su función.</strong> El peligro crítico actual: saldo $48,143 con solo $143 de margen sobre el límite de drawdown. Un día de 2–3 pérdidas normales puede liquidar la cuenta.</div>
+  </div>
+
+  <!-- Charts -->
+  <div class="sub-title">P&L acumulado diario — sim</div>
+  <div class="chart-wrap" style="height:150px"><canvas id="chartDaily"></canvas></div>
+
+  <div class="sub-title">Performance por nivel de confluencias (1/4 → 4/4)</div>
+  <div class="chart-wrap" style="height:130px"><canvas id="chartConf"></canvas></div>
+
+  <div class="sub-title">WR por fase y rendimiento por número de trades por día</div>
+  <div class="two-col" style="margin-top:8px">
+    <div class="chart-wrap" style="height:140px"><canvas id="chartPhase"></canvas></div>
+    <div class="chart-wrap" style="height:140px"><canvas id="chartTrades"></canvas></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ DOFA ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="dofa" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">2</span>DOFA</div>
+  <h2>Análisis DOFA — EduS Trader · Abril 2026</h2>
+  <p class="sub">Basado en 101 setups, datos del broker y contexto de mercado actual</p>
+
+  <div class="dofa-grid">
+    <div class="dofa-quad fortaleza">
+      <div class="dofa-title">💪 FORTALEZAS</div>
+      <div class="dofa-item"><span class="dofa-bullet">✓</span><span>Sistema con lógica sólida: VWAP + SMA20/80 + LR89 + Keltner es marco válido para identificar régimen</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">✓</span><span>Fase 1 (23–27 Mar) demostró WR 53% con 4/4 → la estructura funciona en régimen de baja volatilidad</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">✓</span><span>Fondeo MES protege capital: -$1,856 vs sim -$6,872 — ratio 1:3.7 de protección</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">✓</span><span>Registro y análisis diario de altísima calidad: captura de señales en tiempo real permite diagnosticar con precisión</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">✓</span><span>Días de 3–5 trades con tendencia clara son consistentemente positivos — el modelo sí escala</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">✓</span><span>Disciplina post-error mejorando: semáforo MIXTO empezó a respetarse en fondeo los últimos días</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">✓</span><span>GTC en fondeo demostrado como ventaja táctica (7 Abr: +$25 vs sim -$175 en mismo trade)</span></div>
+    </div>
+
+    <div class="dofa-quad debilidad">
+      <div class="dofa-title">⚠️ DEBILIDADES</div>
+      <div class="dofa-item"><span class="dofa-bullet">✗</span><span>Asimetría negativa de R:R — salidas prematuras (2–3 pts) vs stops que se activan (-7.5 pts)</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">✗</span><span>Sobreoperación: días de 10–14 trades tienen -$1,100 promedio; los de 3–5 tienen +$490</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">✗</span><span>Keltner Width inválido (= 0) desde hace 6+ sesiones — sistema operando sin un indicador clave</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">✗</span><span>4/4 confluencias en Fase 2 tiene WR 25% — la señal "más fuerte" se volvió la más fallida</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">✗</span><span>Margen fondeo crítico: solo $143.50 sobre drawdown máximo — riesgo de liquidación con 1–2 días malos</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">✗</span><span>Reglas de sesión (máx. trades, semáforo MIXTO) enunciadas pero no aplicadas consistentemente en sim</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">✗</span><span>Revenge trading documentado: T2 del 6 Abr (0/4) directamente después de T1 perdedor</span></div>
+    </div>
+
+    <div class="dofa-quad oportunidad">
+      <div class="dofa-title">🚀 OPORTUNIDADES</div>
+      <div class="dofa-item"><span class="dofa-bullet">→</span><span>VIX 19 hoy = régimen de baja volatilidad donde el sistema funcionó mejor históricamente (Fase 1)</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">→</span><span>Post-resolución de aranceles: tendencias más limpias y prolongadas, menos choppy que Mar 30–Abr 7</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">→</span><span>Precio en zona alcista (cerca Pre-High 6879) con delta acumulado bullish — Long con tendencia</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">→</span><span>Implementar target mínimo 4 pts (2×ATR) como regla hard puede revertir la asimetría negativa</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">→</span><span>Reducir a 3 trades máximos/día esta semana mientras se adapta al nuevo régimen de VIX</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">→</span><span>Arreglar Keltner Width: recuperar un indicador clave puede mejorar la calidad de señal inmediatamente</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">→</span><span>Con VIX bajo, SMA20/80 y LR89 son más confiables — menos reversiones bruscas que distorsionen señales</span></div>
+    </div>
+
+    <div class="dofa-quad amenaza">
+      <div class="dofa-title">⚡ AMENAZAS</div>
+      <div class="dofa-item"><span class="dofa-bullet">!</span><span>Saldo fondeo a $143.50 del límite — cualquier pérdida moderada liquida la cuenta</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">!</span><span>VIX 19 con mercado alcista puede atrapar en Shorts: las señales del sistema tienden a Short en pullbacks que en días alcistas son micro-correcciones</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">!</span><span>Noticias macro imprevistas pueden reactivar volatilidad — el mercado post-aranceles sigue frágil</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">!</span><span>ATR más bajo con VIX 19 (~1.5 pts) — los stops de 3 pts son ahora 2× ATR, más amplios relativamente</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">!</span><span>Efecto del fin de semana en el estado mental — reiniciar con la guardia baja después de racha negativa</span></div>
+      <div class="dofa-item"><span class="dofa-bullet">!</span><span>Posibilidad de retroceso desde Pre-High 6879 — primera sesión post-crisis puede tener trampa alcista</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ HOY 10 ABR ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="hoy" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">3</span>Estrategia — Hoy 10 Abr 2026</div>
+  <h2>Contexto del día · Niveles clave · Plan de acción</h2>
+  <p class="sub">VIX 19 🟢 · Pre-High 6879.50 · Open RTH 6874.75 · Y-Close 6862.50 · Sesgo: alcista moderado · Régimen: nueva fase</p>
+
+  <div class="alert success" style="margin-top:0">
+    <div class="alert-title">Cambio de régimen confirmado — VIX 19 es un entorno completamente diferente al de las últimas 2 semanas</div>
+    <div style="color:var(--text2)">Con VIX 19, el ATR esperado es ~1.5–2 pts (vs 2.5–3.5 con VIX 25–31). Los movimientos serán más lentos y deliberados. Los SMA y LR89 señalan con más fidelidad porque hay menos ruido. <strong style="color:var(--text)">Históricamente tu sistema tuvo WR 53% con VIX ~26 en Fase 1 — con VIX 19 las condiciones son aún más favorables para señales limpias.</strong></div>
+  </div>
+
+  <!-- Niveles del día -->
+  <div class="sub-title">Niveles clave para hoy</div>
+  <div class="two-col">
+    <div class="kpi" style="padding:14px 16px">
+      <div style="font-size:11px;color:var(--text3);font-weight:600;margin-bottom:10px">RESISTENCIAS</div>
+      <div class="level-row"><div class="level-dot" style="background:#E24B4A"></div><div class="level-name">Pre-High</div><div class="level-price">6,879.50</div><div class="level-note">Primer objetivo Short / Stop área</div></div>
+      <div class="level-row"><div class="level-dot" style="background:#E24B4A"></div><div class="level-name">Pre-High Alt</div><div class="level-price">6,888.00</div><div class="level-note">Breakout objetivo si rompe 6879</div></div>
+      <div class="level-row"><div class="level-dot" style="background:#EF9F27"></div><div class="level-name">ORB High</div><div class="level-price">6,879.50</div><div class="level-note">Apertura rangebreak alcista</div></div>
+      <div class="level-row"><div class="level-dot" style="background:#EF9F27"></div><div class="level-name">ORB Mid</div><div class="level-price">6,877.00</div><div class="level-note">Zona equilibrio apertura</div></div>
+    </div>
+    <div class="kpi" style="padding:14px 16px">
+      <div style="font-size:11px;color:var(--text3);font-weight:600;margin-bottom:10px">SOPORTES</div>
+      <div class="level-row"><div class="level-dot" style="background:#639922"></div><div class="level-name">Open RTH</div><div class="level-price">6,874.75</div><div class="level-note">Soporte inmediato intraday</div></div>
+      <div class="level-row"><div class="level-dot" style="background:#639922"></div><div class="level-name">Y-Close</div><div class="level-price">6,862.50</div><div class="level-note">Soporte fuerte — volver a Long</div></div>
+      <div class="level-row"><div class="level-dot" style="background:#639922"></div><div class="level-name">yPOC</div><div class="level-price">6,863.25</div><div class="level-note">Zona de mayor volumen ayer</div></div>
+      <div class="level-row"><div class="level-dot" style="background:#639922"></div><div class="level-name">yVAH</div><div class="level-price">6,860.50</div><div class="level-note">Value Area High ayer</div></div>
+      <div class="level-row"><div class="level-dot" style="background:#185fa5"></div><div class="level-name">yVAL</div><div class="level-price">6,824.00</div><div class="level-note">Soporte macro del día</div></div>
+    </div>
+  </div>
+
+  <!-- Plan de hoy -->
+  <div class="sub-title">Plan de acción — hoy 10 Abr</div>
+
+  <div class="strategy-card primary">
+    <div class="strategy-title">🎯 SETUP ALPHA — Long en pullback a Y-Close / yPOC (zona 6862–6863)</div>
+    <div class="strategy-body">
+      <strong>Condición de entrada:</strong> Precio retrocede desde Pre-High hacia la zona 6862–6863 (Y-Close + yPOC). VWAP debe estar UP. SMA20 alcista. LR89 alcista. Mínimo 3/4 señales.<br><br>
+      <strong>Entry:</strong> Límite en 6862–6864 en el primer rebote desde esa zona con vela de confirmación alcista.<br>
+      <strong>Stop:</strong> Por debajo de 6858 (~4–5 pts). Con ATR ~1.5–2 pts = 2–3× ATR ✓ proporcionado.<br>
+      <strong>Target T1:</strong> 6874.75 (Open RTH) = +10–12 pts → ratio 1:2.5 a 1:3 ✅<br>
+      <strong>Target T2:</strong> 6879.50 (Pre-High) = +16–17 pts → ratio 1:4 ✅<br><br>
+      <strong>Fondeo:</strong> 1 MES (no 2c — margen crítico). SL en 6858.50. GTC target T1 en 6874.
+    </div>
+  </div>
+
+  <div class="strategy-card primary">
+    <div class="strategy-title">🎯 SETUP BETA — Long en breakout de Pre-High 6879.50 con consolidación</div>
+    <div class="strategy-body">
+      <strong>Condición de entrada:</strong> Precio rompe 6879.50 y consolida por encima 2–3 barras. VWAP UP, todas las SMAs alcistas. Este es el setup de momentum — no entrar en la ruptura sino en la consolidación posterior.<br><br>
+      <strong>Entry:</strong> Pullback a 6879–6880 zona tras la ruptura.<br>
+      <strong>Stop:</strong> Por debajo de 6875 (~4–5 pts debajo).<br>
+      <strong>Target T1:</strong> 6888 (Pre-High Alt) = +8–9 pts → ratio 1:2 ✅<br>
+      <strong>Target T2:</strong> 6895–6900 → ratio 1:3–4 ✅<br><br>
+      <strong>Fondeo:</strong> NO ejecutar hasta ver consolidación clara. El trap alcista post-breakout es la amenaza principal.
+    </div>
+  </div>
+
+  <div class="strategy-card secondary">
+    <div class="strategy-title">⚡ SETUP GAMMA — Short en rechazo del Pre-High 6879.50 (setup de baja probabilidad hoy)</div>
+    <div class="strategy-body">
+      <strong>Solo si:</strong> Precio toca 6879–6880, no puede cerrar por encima, y el VWAP gira a DOWN con LR89 negativa. Requiere 4/4 señales Short.<br><br>
+      <strong>Entry:</strong> Límite en 6878–6880 con signal de reversión.<br>
+      <strong>Stop:</strong> Por encima de 6884 (~4–5 pts).<br>
+      <strong>Target:</strong> 6863 (Y-Close/yPOC) = 15–17 pts → ratio 1:3–4 ✅<br><br>
+      <strong>Probabilidad hoy: baja</strong> — el contexto macro es alcista post-aranceles. Solo ejecutar con señales perfectas 4/4.<br>
+      <strong>Fondeo: NO ejecutar este setup hoy.</strong>
+    </div>
+  </div>
+
+  <div class="strategy-card warning">
+    <div class="strategy-title">🚫 LO QUE NO HACER HOY — reglas de la sesión</div>
+    <div class="strategy-body">
+      1. <strong>Máximo 3 setups en sim, máximo 2 en fondeo.</strong> Si los 2 primeros pierden → sesión terminada.<br>
+      2. <strong>No operar en la primera barra (9:30–9:35).</strong> Dejar que el ORB se forme. Con VIX 19 el rango inicial puede ser estrecho y engañoso.<br>
+      3. <strong>No entrar en Short sin 4/4 señales.</strong> El sesgo alcista del día es fuerte. Los Shorts requieren confirmación perfecta.<br>
+      4. <strong>Si el precio se mantiene por encima de Open RTH 6874.75 → sesgo Long todo el día.</strong><br>
+      5. <strong>Fondeo: no más de 1 MES contrato dado el margen crítico ($143.50).</strong><br>
+      6. <strong>No sobregestionar los GTC.</strong> Si configuraste un target, déjalo trabajar.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ PRÓXIMA SEMANA ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="semana" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">4</span>Próxima Semana — 13–17 Abr</div>
+  <h2>Plan semanal · Enfoque en recuperación y adaptación al nuevo régimen</h2>
+  <p class="sub">Objetivo: recuperar $200–400 en fondeo · Restablecer el sistema con VIX bajo · Máx. 3 trades/día en fondeo</p>
+
+  <div class="alert warning">
+    <div class="alert-title">Prioridad #1 de la semana: proteger el saldo del fondeo — solo $143.50 de margen</div>
+    <div style="color:var(--text2)">Con el saldo en $48,143.50 y el límite en $48,000, un solo día negativo moderado (-$150 neto) liquida la cuenta. Cada trade en fondeo debe ser tratado como si fuera el último. La prioridad no es ganar — es sobrevivir esta semana mientras se recalibra el sistema al nuevo régimen de VIX.</div>
+  </div>
+
+  <div class="sub-title">Estructura de la semana (sim y fondeo por separado)</div>
+  <div class="icard good">
+    <div class="icard-title">Lunes 13 Abr — Sesión de calibración (solo sim)</div>
+    <div class="icard-text">Primera sesión con VIX ~19. <strong>NO operar en fondeo el lunes.</strong> Usar la sesión exclusivamente para calibrar cómo se comportan las señales con VIX bajo. ¿Es el ATR ~1.5 pts? ¿La SMA20 es más confiable? Observar y registrar. Máximo 3 setups en sim. Objetivo: entender el nuevo régimen antes de arriesgar en fondeo.</div>
+  </div>
+  <div class="icard good">
+    <div class="icard-title">Martes 14 Abr — Primera sesión fondeo con nuevas reglas</div>
+    <div class="icard-text">Si el lunes confirmó señales más limpias: activar fondeo con reglas más estrictas. <strong>Máximo 2 trades en fondeo, 1 MES contrato, GTC obligatorio.</strong> Target mínimo 4 pts (2× ATR estimado 2 pts con VIX 19). Stop máximo 4 pts. Si el primer trade pierde: cerrar fondeo por el día.</div>
+  </div>
+  <div class="icard info">
+    <div class="icard-title">Miércoles–Viernes 15–17 Abr — Consolidar el patrón</div>
+    <div class="icard-text">Objetivo semanal: 3 días positivos en sim y 2 en fondeo. Con VIX ~19 y mercado tendencial alcista, buscar setups Long en pullbacks. El modelo de éxito es simple: <strong>3 trades/día máximo, dirección de la tendencia, target 2× stop, cerrar la sesión después de 2 ganancias.</strong></div>
+  </div>
+
+  <div class="sub-title">Pendientes técnicos URGENTES esta semana</div>
+  <div class="rules-box">
+    <div class="rules-box-title">⚙️ Acciones técnicas antes del primer trade</div>
+    <div class="rule-item">🔴 <strong>URGENTE: Keltner Width bug — 7ª sesión con dato = 0.</strong> Revisar el indicador EduSKeltnerStopTarget en NT8 antes del lunes. Sin este dato, el sistema opera con información incompleta.</div>
+    <div class="rule-item">🔴 <strong>Recalibrar stops para VIX 19:</strong> Con ATR ~1.5–2 pts, el stop de 3 pts (VIX 20–27) sigue siendo válido como mínimo. No reducirlo — pero ahora representa 1.5–2× ATR, lo que puede ser más adecuado.</div>
+    <div class="rule-item">🟡 <strong>Implementar regla hard de target:</strong> Configurar en el sim un GTC target = 2× el stop en cada trade. No moverlo manualmente. Dejar que el mercado llegue al target o active el stop.</div>
+    <div class="rule-item">🟡 <strong>Límite de trades codificado:</strong> Configurar una alerta en NT8 que avise cuando se llega al trade #4 del día. El límite de 5 trades/día debe ser técnico, no de voluntad.</div>
+    <div class="rule-item">🟢 <strong>Registrar VIX de apertura:</strong> Añadir el VIX al template de captura de trades. Con VIX 19 las reglas de stop y tamaño cambian — documentar ayuda a correlacionar.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════ ESTRATEGIA SÍNTESIS ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="estrategia" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">5</span>Síntesis estratégica</div>
+  <h2>El sistema simplificado de alta probabilidad — VIX ≤20</h2>
+  <p class="sub">Basado en los datos reales del período. Solo lo que tiene evidencia estadística positiva.</p>
+
+  <div class="finding green">
+    <div class="finding-label">Estrategia de alta probabilidad — aplicar desde hoy</div>
+    <h3>5 reglas que, aplicadas juntas, convierten el sistema en positivo según los datos históricos</h3>
+    <p><strong>Regla 1 — Máximo 3 setups por sesión.</strong> Los días de 3–5 trades promediaron +$490. Los días de 8+ trades promediaron -$1,049. Esta sola regla divide el P&L esperado por un factor 2. Si los primeros 2 trades pierden → cerrar la sesión sin excepción.</p>
+    <p><strong>Regla 2 — Target mínimo = 2× el stop.</strong> Si el stop es 3 pts, el target mínimo es 6 pts. Si el stop es 4 pts, el target es 8 pts. Con VIX 19 y tendencias más limpias, los movimientos de 6–15 pts son alcanzables. Los ganadores de 2–3 pts no compensan los perdedores de 7.5 pts matemáticamente — y los datos lo confirman.</p>
+    <p><strong>Regla 3 — Solo Long si VIX &lt;22 y mercado sobre Y-Close.</strong> El contexto alcista (VIX bajo + precio sobre Y-Close/yPOC) es el único en que el sistema tuvo WR positivo consistentemente. Fuera de este contexto, la probabilidad de éxito cae dramáticamente.</p>
+    <p><strong>Regla 4 — VWAP como filtro de dirección, no como señal de entrada.</strong> Los datos muestran que operar VWAP alineado vs contra tiene WR casi idéntico (40% vs 39%). El VWAP NO es la señal de entrada — es el filtro de dirección macro. La señal de entrada es el pullback a SMA20 con LR89 confirmando. <strong>Si el VWAP está en contra: no entrar, punto.</strong></p>
+    <p><strong>Regla 5 — Fondeo solo después de 1 trade ganador en sim.</strong> Con solo $143.50 de margen, cada trade en fondeo debe ser el setup más claro del día. La regla: el primer trade del día es exclusivamente en sim. Si gana y las señales son ≥3/4 → replicar en fondeo el segundo trade. Si el sim pierde el primer trade → fondeo cerrado ese día.</p>
+  </div>
+
+  <div class="finding blue" style="margin-top:12px">
+    <div class="finding-label">Setup de altísima probabilidad — el modelo específico</div>
+    <h3>Long en pullback a zona SMA20 + yPOC/Y-Close con VIX ≤22 y mercado en tendencia alcista</h3>
+    <p>Este es el único setup con evidencia estadística positiva consistente en el período. Se da cuando: (1) el mercado tiene una tendencia alcista clara del día (precio sobre Y-Close, VIX bajando), (2) el precio hace un pullback hacia la SMA20 o la zona de yPOC/Y-Close, (3) en ese pullback hay una vela de reversión con VWAP UP + SMA80 positiva + LR89 positiva.</p>
+    <p><strong>Por qué funciona:</strong> en tendencia alcista con VIX bajo, los pullbacks son compras de institucionales. La convergencia de SMA20 + zona de volumen (yPOC) crea un área de soporte natural. La LR89 positiva confirma que la tendencia mayor es alcista. El riesgo está definido por debajo de la zona (stop 3–4 pts) y el target es el nivel superior de estructura (6–15 pts).</p>
+    <p><strong>Para hoy específicamente:</strong> la zona 6862–6865 (Y-Close + yPOC + yVAH) es el pullback ideal. Si el precio llega ahí en las primeras 2 horas de sesión con VWAP UP y las SMAs alcistas, es el trade de mayor probabilidad del día.</p>
+  </div>
+
+  <!-- Resumen de reglas en card limpia -->
+  <div class="rules-box" style="margin-top:16px">
+    <div class="rules-box-title">📋 Checklist antes de cada trade — aplicar hoy y la semana</div>
+    <div class="rule-item">☐ ¿Es el trade ≤3 del día? Si es el 4º → no entrar</div>
+    <div class="rule-item">☐ ¿El VWAP está en la dirección del trade? Si está en contra → no entrar</div>
+    <div class="rule-item">☐ ¿Hay mínimo 3/4 señales confirmadas? Si son 2/4 o menos → no entrar</div>
+    <div class="rule-item">☐ ¿Tengo definido el stop Y el target antes de entrar? Si no → no entrar</div>
+    <div class="rule-item">☐ ¿El target es ≥2× el stop? (Si stop = 3 pts, target ≥ 6 pts) Si no → no entrar</div>
+    <div class="rule-item">☐ ¿El contexto del día favorece la dirección? (VIX, Y-Close, sesgo) Si es ambiguo → esperar</div>
+    <div class="rule-item">☐ Para fondeo: ¿el sim ya tuvo un trade ganador hoy? Si no → fondeo cerrado</div>
+    <div class="rule-item">☐ Para fondeo: ¿el GTC está configurado? Si no → configurar antes de confirmar la orden</div>
+  </div>
+</div>
+
+</div><!-- /page -->
+<footer>EduS Trader · Análisis integral 10 Abr 2026 · 101 setups analizados · ES/MES JUN26 · Uso personal — no constituye asesoramiento financiero</footer>
+
+<script>
+const isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+const tc = isDark?'#9c9a92':'#73726c';
+const gc = isDark?'rgba(255,255,255,0.06)':'rgba(0,0,0,0.06)';
+
+// P&L diario acumulado
+const dailyLabels=['11Mar','12Mar','23Mar','24Mar','25Mar','26Mar','27Mar','30Mar','31Mar','1Abr','2Abr','6Abr','7Abr','8Abr','9Abr'];
+const dailyPnL=[-2578,-1024,181,503,906,554,488,-1189,-862,-925,500,-1175,-1062,-1250,62];
+let cum=0; const cumArr=dailyPnL.map(v=>{cum+=v;return cum;});
+new Chart(document.getElementById('chartDaily'),{
+  type:'line',
+  data:{labels:dailyLabels,datasets:[{data:cumArr,borderColor:'#E24B4A',backgroundColor:'rgba(226,75,74,0.07)',fill:true,tension:0.3,pointBackgroundColor:cumArr.map(v=>v>=0?'#639922':'#E24B4A'),pointRadius:4,borderWidth:2}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'Acum: $'+ctx.raw.toFixed(0)}}},scales:{x:{ticks:{color:tc,font:{size:9}},grid:{display:false}},y:{ticks:{color:tc,font:{size:10},callback:v=>'$'+v},grid:{color:gc}}}}
+});
+
+// Confluences chart
+new Chart(document.getElementById('chartConf'),{
+  type:'bar',
+  data:{
+    labels:['0/4','1/4','2/4','3/4','4/4'],
+    datasets:[
+      {label:'WR %',data:[100,18,44,45,38],backgroundColor:['#639922','#E24B4A','#EF9F27','#639922','#EF9F27'].map(c=>c+'cc'),yAxisID:'y'},
+      {label:'P&L $',data:[562.5,-1867.5,-1099,324.5,-4792.5],backgroundColor:d=>d.raw>=0?'rgba(99,153,34,0.3)':'rgba(226,75,74,0.3)',yAxisID:'y2'}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{color:tc,font:{size:10},boxWidth:10}}},scales:{
+    x:{ticks:{color:tc,font:{size:11}},grid:{color:gc}},
+    y:{position:'left',ticks:{color:tc,font:{size:10},callback:v=>v+'%'},grid:{color:gc},min:0,max:110},
+    y2:{position:'right',ticks:{color:tc,font:{size:10},callback:v=>'$'+v},grid:{display:false}}
+  }}
+});
+
+// Phase WR
+new Chart(document.getElementById('chartPhase'),{
+  type:'bar',
+  data:{labels:['Fase 1\n11-27 Mar','Fase 2\n30Mar-9Abr','Últimos 4 días'],
+    datasets:[{data:[53,32,28],backgroundColor:['#639922cc','#E24B4Acc','#E24B4Acc'],borderRadius:6}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.raw+'% WR'}}},
+    scales:{x:{ticks:{color:tc,font:{size:10}},grid:{display:false}},y:{ticks:{color:tc,font:{size:10},callback:v=>v+'%'},grid:{color:gc},max:80}}}
+});
+
+// Trades per day vs PnL
+new Chart(document.getElementById('chartTrades'),{
+  type:'bar',
+  data:{labels:['3–5 trades','6–7 trades','8–14 trades'],
+    datasets:[{data:[490,-800,-1049],backgroundColor:['#639922cc','#EF9F27cc','#E24B4Acc'],borderRadius:6}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'Avg P&L: $'+ctx.raw}}},
+    scales:{x:{ticks:{color:tc,font:{size:10}},grid:{display:false}},y:{ticks:{color:tc,font:{size:10},callback:v=>'$'+v},grid:{color:gc}}}}
+});
+
+// Nav scroll
+const sections=['resumen','estadisticas','dofa','hoy','semana','estrategia'];
+window.addEventListener('scroll',()=>{
+  let cur='resumen';
+  sections.forEach(id=>{const el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-80)cur=id;});
+  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+});
+</script>
+</body>
+</html>
