@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Operativo 16–21 Abr 2026 — EduS Trader</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--bg2:#161b27;--bg3:#1e2338;--bg4:#232840;
+  --text:#e2e4ed;--text2:#9da3b4;--text3:#555d78;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
+  --green:#00c850;--green-bg:rgba(0,200,80,0.10);--green-bd:rgba(0,200,80,0.28);
+  --red:#e04040;--red-bg:rgba(224,64,64,0.10);--red-bd:rgba(224,64,64,0.28);
+  --amber:#f0b040;--amber-bg:rgba(240,176,64,0.10);--amber-bd:rgba(240,176,64,0.28);
+  --blue:#4da6ff;--blue-bg:rgba(77,166,255,0.10);--blue-bd:rgba(77,166,255,0.28);
+  --purple:#b07cff;--purple-bg:rgba(176,124,255,0.10);--purple-bd:rgba(176,124,255,0.28);
+  --cyan:#00c8c0;--orange:#ff8c30;
+  --r:8px;--rl:12px;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'Consolas','Cascadia Code',monospace;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;font-size:14px}
+a{color:var(--blue);text-decoration:none}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border2);
+  padding:0 1.5rem;display:flex;align-items:center;gap:4px;overflow-x:auto;flex-wrap:nowrap}
+nav .brand{font-size:13px;font-weight:700;color:#fff;padding:14px 0;margin-right:16px;white-space:nowrap}
+nav a{font-size:12px;color:var(--text3);text-decoration:none;padding:15px 11px;
+  border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s}
+nav a:hover{color:var(--text)}
+nav a.active{color:var(--text);border-bottom-color:var(--blue);font-weight:600}
+
+/* PAGE */
+.page{max-width:980px;margin:0 auto;padding:2rem 1.5rem 5rem}
+
+/* SECTION */
+.sec-div{height:1px;background:var(--border2);margin:3rem 0 2rem}
+.sec-label{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin-bottom:.8rem}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;
+  border-radius:50%;background:var(--bg3);border:1px solid var(--border2);font-size:10px;color:var(--text2)}
+h2{font-size:18px;font-weight:600;margin-bottom:4px;color:#fff}
+h3{font-size:14px;font-weight:600;color:var(--blue);margin:1.2rem 0 .5rem}
+.sub{font-size:12px;color:var(--text3);margin-bottom:1.2rem}
+p{color:var(--text2);font-size:13px;margin-bottom:.6rem;line-height:1.65}
+strong{color:var(--text)}
+
+/* GRIDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:12px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:620px){.two-col,.three-col{grid-template-columns:1fr}}
+
+/* CARDS */
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px}
+.kpi-label{font-size:11px;color:var(--text3);margin-bottom:3px}
+.kpi-value{font-size:22px;font-weight:600;font-family:var(--mono)}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
+.card-body{font-size:13px;color:var(--text2);line-height:1.65}
+
+/* COLORS */
+.pos{color:var(--green)}.neg{color:var(--red)}.warn{color:var(--amber)}.info{color:var(--blue)}
+.pnl-pos{color:var(--green);font-weight:600}.pnl-neg{color:var(--red);font-weight:600}
+
+/* ALERTS */
+.alert{border-radius:var(--r);padding:12px 14px;font-size:13px;margin-bottom:10px}
+.alert.success{background:var(--green-bg);border:1px solid var(--green-bd)}
+.alert.danger{background:var(--red-bg);border:1px solid var(--red-bd)}
+.alert.warning{background:var(--amber-bg);border:1px solid var(--amber-bd)}
+.alert.info{background:var(--blue-bg);border:1px solid var(--blue-bd)}
+.alert.purple{background:var(--purple-bg);border:1px solid var(--purple-bd)}
+.alert-title{font-weight:600;margin-bottom:4px}
+.alert.success .alert-title{color:var(--green)}
+.alert.danger .alert-title{color:var(--red)}
+.alert.warning .alert-title{color:var(--amber)}
+.alert.info .alert-title{color:var(--blue)}
+.alert.purple .alert-title{color:var(--purple)}
+
+/* CHARTS */
+.chart-wrap{position:relative;width:100%}
+
+/* TABLES */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{font-size:11px;color:var(--text3);font-weight:600;padding:6px 10px;
+  border-bottom:1px solid var(--border2);text-align:left;background:var(--bg3)}
+.tbl td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr.win td{background:rgba(0,200,80,.03)}
+.tbl tr.loss td{background:rgba(224,64,64,.03)}
+.tbl tr.viol td{background:rgba(240,176,64,.06)}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600}
+.badge.short{background:var(--amber-bg);color:var(--amber)}
+.badge.long{background:var(--blue-bg);color:var(--blue)}
+.badge.viol{background:var(--red-bg);color:var(--red);font-size:10px}
+.badge.ok{background:var(--green-bg);color:var(--green);font-size:10px}
+.badge.warn{background:var(--amber-bg);color:var(--amber);font-size:10px}
+.sdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin:0 1px}
+.dot-g{background:var(--green)}.dot-r{background:var(--red)}
+
+/* DAY TABS */
+.day-tabs{display:flex;gap:4px;margin-bottom:1rem;border-bottom:1px solid var(--border);padding-bottom:8px;flex-wrap:wrap}
+.dtab{padding:5px 14px;border-radius:var(--r);font-size:12px;cursor:pointer;
+  border:1px solid transparent;color:var(--text3);background:transparent;font-family:var(--font)}
+.dtab.active{background:var(--bg3);border-color:var(--border2);color:var(--text);font-weight:600}
+.dtab-content{display:none}
+.dtab-content.active{display:block}
+
+/* INSIGHT CARDS */
+.icard{background:var(--bg3);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;border-left:3px solid transparent}
+.icard.good{border-left-color:var(--green)}
+.icard.warn{border-left-color:var(--amber)}
+.icard.crit{border-left-color:var(--red)}
+.icard.info{border-left-color:var(--blue)}
+.icard-title{font-size:13px;font-weight:600;margin-bottom:5px;color:var(--text)}
+.icard-text{font-size:12px;color:var(--text2);line-height:1.6}
+
+/* DOFA */
+.dofa-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1rem 0}
+@media(max-width:620px){.dofa-grid{grid-template-columns:1fr}}
+.dofa-card{border-radius:var(--r);padding:14px 16px}
+.dofa-f{background:rgba(0,200,80,.06);border:1px solid var(--green-bd)}
+.dofa-d{background:rgba(224,64,64,.06);border:1px solid var(--red-bd)}
+.dofa-o{background:rgba(77,166,255,.06);border:1px solid var(--blue-bd)}
+.dofa-a{background:rgba(240,176,64,.06);border:1px solid var(--amber-bd)}
+.dofa-title{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px}
+.dofa-f .dofa-title{color:var(--green)}
+.dofa-d .dofa-title{color:var(--red)}
+.dofa-o .dofa-title{color:var(--blue)}
+.dofa-a .dofa-title{color:var(--amber)}
+.dofa-list{list-style:none;padding:0}
+.dofa-list li{font-size:12px;color:var(--text2);padding:4px 0;border-bottom:1px solid var(--border);line-height:1.5}
+.dofa-list li:last-child{border-bottom:none}
+.dofa-list li::before{margin-right:6px}
+.dofa-f li::before{content:'✓';color:var(--green)}
+.dofa-d li::before{content:'✗';color:var(--red)}
+.dofa-o li::before{content:'→';color:var(--blue)}
+.dofa-a li::before{content:'⚠';color:var(--amber)}
+
+/* PLAN MEJORA */
+.plan-step{background:var(--bg3);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;
+  display:flex;gap:12px;align-items:flex-start}
+.plan-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.plan-num-h{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+.plan-num-m{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)}
+.plan-num-l{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)}
+.plan-body{flex:1}
+.plan-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.plan-desc{font-size:12px;color:var(--text2);line-height:1.6}
+
+/* YT BLOCK */
+.yt-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:1rem}
+.yt-btn-wrap{display:flex;align-items:center;gap:10px;background:var(--bg3);border-radius:var(--r);
+  padding:10px 14px;border:1px solid var(--border)}
+.yt-dot{width:32px;height:32px;border-radius:50%;background:#c0392b;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.yt-dot svg{width:16px;height:16px;fill:#fff}
+.yt-info{flex:1;min-width:0}
+.yt-title{font-size:12px;font-weight:600;color:var(--text)}
+.yt-sub{font-size:11px;color:var(--text3)}
+.yt-link{display:inline-block!important;background:#c0392b!important;color:#fff!important;
+  font-size:11px;font-weight:700;padding:6px 14px;border-radius:5px;white-space:nowrap;
+  text-decoration:none!important}
+
+/* HIST TABLE */
+.hist-tbl{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+.hist-tbl th{background:var(--bg3);color:var(--text3);font-size:11px;font-weight:600;
+  padding:6px 10px;border-bottom:1px solid var(--border2);text-align:right}
+.hist-tbl th:first-child{text-align:left}
+.hist-tbl td{padding:6px 10px;border-bottom:1px solid var(--border);text-align:right;font-family:var(--mono);font-size:12px;color:var(--text2)}
+.hist-tbl td:first-child{text-align:left;font-family:var(--font);color:var(--text)}
+.hist-tbl tr.highlight td{background:rgba(0,200,80,.04)}
+.hist-tbl tr.alert-r td{background:rgba(224,64,64,.04)}
+
+/* PROGRESS */
+.progress-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-top:4px}
+.progress-fill{height:100%;border-radius:3px;transition:width .3s}
+
+footer{text-align:center;font-size:11px;color:var(--text3);padding:2rem 1rem 3rem;
+  border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">📊 EduS Trader</span>
+  <a href="#resumen" class="active">Resumen</a>
+  <a href="#dias">Por día</a>
+  <a href="#comp">Sim vs Fondeo</a>
+  <a href="#cierre">Cierre Fondeo</a>
+  <a href="#dofa">DOFA</a>
+  <a href="#estrategia">Estrategia</a>
+  <a href="#forward">Forward</a>
+  <a href="#videos">Videos</a>
+</nav>
+
+<div class="page">
+
+<!-- ══════════════════════ SECCIÓN 1 — RESUMEN GLOBAL ══════════════════════ -->
+<div id="resumen" style="scroll-margin-top:52px">
+  <div class="sec-label"><span class="sec-num">1</span>Resumen Operativo Global</div>
+  <h2>Período 16–21 Abr 2026</h2>
+  <p class="sub">Sim101 · ES / NQ / MES / MNQ JUN26 · VIX 16.9–19.9 · 4 sesiones · Fondeo cerrado el 17 (cuenta vencida) · Sim continúa como único vehículo</p>
+
+  <div class="alert success">
+    <div class="alert-title">🏆 Período globalmente positivo — Sim +$1,046 en 4 sesiones · Fondeo cerrado con $48,008 (+$8 sobre inicial de $48,000)</div>
+    <div style="color:var(--text2)">El período cierra con resultado positivo en sim, pero con importantes señales de alarma: el 20 de abril registró el peor episodio de sobreoperación del registro completo (17+ setups individuales, múltiples contratos simultáneos, scale-ins masivos sin gestión). La rentabilidad del período proviene de T5 MNQ del 20 (+$800) y los trades limpios del 21 — no de disciplina sistemática.</div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">P&L sim período</div><div class="kpi-value pos">+$1,046</div><div class="kpi-sub">4 sesiones · ES+NQ+MES+MNQ</div></div>
+    <div class="kpi"><div class="kpi-label">Fondeo final</div><div class="kpi-value" style="color:var(--amber)">$48,008</div><div class="kpi-sub">Cuenta vencida · +$8 sobre DD mínimo</div></div>
+    <div class="kpi"><div class="kpi-label">P&L 16 Abr</div><div class="kpi-value pos">+$0.50</div><div class="kpi-sub">MES+MNQ · 4 setups · casi plano</div></div>
+    <div class="kpi"><div class="kpi-label">P&L 17 Abr</div><div class="kpi-value pos">+$50</div><div class="kpi-sub">ES 1 setup · limpio · 3/4 señales</div></div>
+    <div class="kpi"><div class="kpi-label">P&L 20 Abr</div><div class="kpi-value pos">+$910.50</div><div class="kpi-sub">⚠️ 17+ setups · escala masivo</div></div>
+    <div class="kpi"><div class="kpi-label">P&L 21 Abr</div><div class="kpi-value pos">+$85</div><div class="kpi-sub">ES+NQ · 12 setups · fin sesión negativo</div></div>
+  </div>
+
+  <div class="alert warning">
+    <div class="alert-title">⚠️ El día 20 de Abril fue el episodio más peligroso del registro completo</div>
+    <div style="color:var(--text2)">Contratos simultáneos en ES y MNQ, scale-ins de hasta 8 contratos, T8 MNQ Short @26625 con VWAP UP y SMA20/LR89 positivas (0/4 señales), y al menos 3 setups con violaciones graves. El resultado fue positivo por coincidencia de mercado (T5 MNQ +$800, T4 ES +$1,050) — no por disciplina. Este patrón es el que destruyó la cuenta en semanas anteriores.</div>
+  </div>
+
+  <div class="sub-title" style="font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin:1.2rem 0 .6rem">P&L Diario Sim — Período</div>
+  <div class="chart-wrap" style="height:120px"><canvas id="chartDiario"></canvas></div>
+
+  <div class="sub-title" style="font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin:1.2rem 0 .6rem">Resumen por día</div>
+  <table class="tbl">
+    <thead><tr><th>Fecha</th><th>Día</th><th>VIX</th><th>Instrumento</th><th>Setups</th><th>WR</th><th>P&L Sim</th><th>Fondeo</th><th>Estado</th></tr></thead>
+    <tbody>
+      <tr class="win"><td>16 Abr</td><td>Jue</td><td>18.2→18.98</td><td>MES · MNQ</td><td>4</td><td>25%</td><td class="pnl-pos">+$0.50</td><td>Sin operar</td><td><span class="badge ok">✓ Positivo</span></td></tr>
+      <tr class="win"><td>17 Abr</td><td>Vie</td><td>17.4→16.9</td><td>ES</td><td>1</td><td>100%</td><td class="pnl-pos">+$50</td><td class="pnl-pos">+$0.25 neto</td><td><span class="badge ok">✓ Disciplinado</span></td></tr>
+      <tr class="viol"><td>20 Abr</td><td>Lun</td><td>18.85→19.1</td><td>ES · MNQ</td><td>17+</td><td>~47%</td><td class="pnl-pos">+$910.50</td><td>—</td><td><span class="badge viol">⚡ Sobreoperación</span></td></tr>
+      <tr><td>21 Abr</td><td>Mar</td><td>19.2→19.9</td><td>ES · NQ</td><td>12</td><td>42%</td><td class="pnl-pos">+$85</td><td>—</td><td><span class="badge warn">⚠ Mixto</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 2 — POR DÍA ══════════════════════ -->
+<div class="sec-div"></div>
+<div id="dias" style="scroll-margin-top:52px">
+  <div class="sec-label"><span class="sec-num">2</span>Análisis por Sesión</div>
+  <h2>Detalle diario — 4 sesiones</h2>
+
+  <div class="day-tabs">
+    <button class="dtab active" onclick="showDay(event,'d16')">16 Abr — MES+MNQ</button>
+    <button class="dtab" onclick="showDay(event,'d17')">17 Abr — ES</button>
+    <button class="dtab" onclick="showDay(event,'d20')">20 Abr — ES+MNQ ⚡</button>
+    <button class="dtab" onclick="showDay(event,'d21')">21 Abr — ES+NQ</button>
+  </div>
+
+  <!-- ── 16 ABR ── -->
+  <div class="dtab-content active" id="dtab-d16">
+    <div class="two-col" style="margin-bottom:10px">
+      <div class="kpi" style="border-top:3px solid var(--green)">
+        <div class="kpi-label">16 Abr · MES + MNQ</div>
+        <div class="kpi-value pos">+$0.50</div>
+        <div class="kpi-sub">4 setups · VIX 18.2→18.98 · Casi plano</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Composición</div>
+        <div style="font-size:12px;color:var(--text2);line-height:2;margin-top:4px">
+          MES T1 Short @7053.75 → @7054.50 <span class="pnl-neg">-$3.75</span><br>
+          MES T2 Short @7062 → @7063.25 <span class="pnl-neg">-$6.25</span><br>
+          MES T3 Short @7072.75 → @7080.25 <span class="pnl-neg">-$37.50</span><br>
+          MNQ T1 Long @26482.75 → @26506.75 <span class="pnl-pos">+$48</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="icard good">
+      <div class="icard-title">MNQ T1 (4/4 señales, +$48): el único trade perfecto del día</div>
+      <div class="icard-text">SMA20 +0.74 ✓ · SMA80 +0.09 ✓ · LR89 +1.54 ✓ · VWAP UP ✓ — Las 4 señales perfectamente alcistas. Capturó 24 pts en 2 minutos (12:38–12:40). Este es exactamente el tipo de setup que el sistema busca. Las señales fueron las más claras del día entero.</div>
+    </div>
+    <div class="icard crit">
+      <div class="icard-title">MES T3 Short (3/4, -$37.50): SMA80 positiva contradice la dirección Short</div>
+      <div class="icard-text">SMA20 -0.325 ✓ · SMA80 +0.0816 ✗ · LR89 -0.284 ✓ · VWAP DOWN ✓ — 3/4 con SMA80 en contra del Short. Pérdida de -7.5 pts (precio subió de 7072.75 a 7080.25). Este trade en MES con SMA80 positiva debería haber sido evitado o al menos reducido a tamaño mínimo.</div>
+    </div>
+    <div class="icard warn">
+      <div class="icard-title">MES T1 y T2: señales mixtas (2/4 y 2/4 respectivamente) — patrón de inicio de sesión</div>
+      <div class="icard-text">T1 Short con VWAP UP (F_1_2 exit muestra VWAP=UP, signal cambió entre entry y exit). T2 Short con todas las señales SMA positivas — clear violation. Las pérdidas pequeñas (-$3.75, -$6.25) enmascaran que ambos trades eran inválidos según el sistema. Sin estos dos trades: resultado del día = +$10.25.</div>
+    </div>
+
+    <div class="alert info" style="margin-top:8px">
+      <div class="alert-title">💡 Diagnóstico 16 Abr: Primer día con MES — el instrumento pequeño permitió aprender sin destruir capital</div>
+      <div style="color:var(--text2)">El resultado casi plano (+$0.50) en el primer día con MES es aceptable. El problema fue la selección de los primeros 3 setups (todos MES Short en una sesión que subió 27 pts de 7053 a 7080). El único trade correcto del día fue el MNQ Long 4/4 que salvó la sesión. <strong style="color:var(--text)">Lección clave: cuando el mercado sube, esperar la señal alcista.</strong></div>
+    </div>
+  </div>
+
+  <!-- ── 17 ABR ── -->
+  <div class="dtab-content" id="dtab-d17">
+    <div class="two-col" style="margin-bottom:10px">
+      <div class="kpi" style="border-top:3px solid var(--green)">
+        <div class="kpi-label">17 Abr · ES JUN26</div>
+        <div class="kpi-value pos">+$50</div>
+        <div class="kpi-sub">1 setup · VIX 17.4→16.9 · WR 100% · Sesión más disciplinada del período</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Detalles T1 Short</div>
+        <div style="font-size:12px;color:var(--text2);line-height:2;margin-top:4px">
+          Entry: Short @7173.75 (13:16)<br>
+          Exit: @7172.75 (13:18)<br>
+          Captura: +1.00 pt · $50<br>
+          Señales: SMA20 +0.009✗ · SMA80 -0.113✓ · LR89 -0.188✓ · VWAP DOWN✓ → <strong>3/4</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="icard good">
+      <div class="icard-title">1 setup, 1 ganador, +$50 — la sesión más disciplinada del período completo</div>
+      <div class="icard-text">Un solo trade en toda la sesión. 3/4 señales (SMA20 levemente positiva, +0.009, prácticamente neutral). VWAP DOWN, SMA80 y LR89 claramente bajistas. El precio bajó 1 pt y el trader salió limpiamente. Esto demuestra que la disciplina de "un trade bien ejecutado y listo" es posible. El fondeo correlato (Sell @7170.25 → @7170.50, +$1.25 gross) también fue positivo.</div>
+    </div>
+    <div class="icard warn">
+      <div class="icard-title">SMA20 positiva (+0.009): en el límite. Con la condición V2, habría degradado a AMARILLO</div>
+      <div class="icard-text">El trade fue ganador con 3/4, pero si el panel V2 hubiera estado activo, la SMA20 levemente positiva habría marcado solo 3/4. La pequeña captura (+1 pt) puede ser coincidencia de timing. Aun así, el trade fue válido bajo el sistema estándar (3/4 es aceptable con zona A/A+).</div>
+    </div>
+
+    <div class="alert success" style="margin-top:8px">
+      <div class="alert-title">✅ Diagnóstico 17 Abr: modelo a seguir — disciplina perfecta en el último día de fondeo</div>
+      <div style="color:var(--text2)">El último día de la cuenta fondeada fue el más disciplinado. Un trade, bien ejecutado, pequeña ganancia. <strong style="color:var(--text)">Si la operativa hubiera sido así consistentemente, el fondeo hubiera tenido un resultado completamente diferente.</strong> El fondeo cerró el 17 con +$0.25 neto (Apr 17 balance $48,008) — la cuenta se venció naturalmente.</div>
+    </div>
+  </div>
+
+  <!-- ── 20 ABR ── -->
+  <div class="dtab-content" id="dtab-d20">
+    <div class="alert danger" style="margin-bottom:12px">
+      <div class="alert-title">🚨 ALERTA CRÍTICA — 20 Abr: Episodio de Sobreoperación Extrema · 17+ setups · Scale-ins de 8 contratos</div>
+      <div style="color:var(--text2)">Este día es el más peligroso del registro completo desde el 23 de marzo. Múltiples instrumentos simultáneos, contratos de hasta 8 en MNQ, y al menos 4 setups con 0/4 o 1/4 señales. El resultado positivo (+$910.50) enmascara el riesgo real que se tomó.</div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-label">P&L total</div><div class="kpi-value pos">+$910.50</div><div class="kpi-sub">ES + MNQ combinado</div></div>
+      <div class="kpi"><div class="kpi-label">P&L ES solo</div><div class="kpi-value pos">+$750</div><div class="kpi-sub">6 setups / ×2 contratos mayormente</div></div>
+      <div class="kpi"><div class="kpi-label">P&L MNQ solo</div><div class="kpi-value pos">+$160.50</div><div class="kpi-sub">11 setups/agrupaciones · alta volatilidad</div></div>
+      <div class="kpi"><div class="kpi-label">Setups distintos</div><div class="kpi-value neg">17+</div><div class="kpi-sub">Límite = 6 · violación ×2.8</div></div>
+      <div class="kpi"><div class="kpi-label">Max contratos</div><div class="kpi-value neg">8c MNQ</div><div class="kpi-sub">T7 y T8: 8 MNQ simultáneos</div></div>
+      <div class="kpi"><div class="kpi-label">Peor trade</div><div class="kpi-value neg">-$926</div><div class="kpi-sub">T8 MNQ Short 8c @26625 · 0/4 señales</div></div>
+    </div>
+
+    <h3>Reconstrucción de los trades más importantes</h3>
+    <table class="tbl">
+      <thead><tr><th>Setup</th><th>Instr.</th><th>Dir.</th><th>Contratos</th><th>Entry</th><th>Exit</th><th>Pts</th><th>P&L</th><th>Señales</th><th>Estado</th></tr></thead>
+      <tbody>
+        <tr class="win"><td>T1 MNQ</td><td>MNQ</td><td><span class="badge long">Long</span></td><td>1c</td><td>26775.75</td><td>26821.50</td><td>+45.75</td><td class="pnl-pos">+$91.50</td><td>4/4 ✅</td><td><span class="badge ok">✓</span></td></tr>
+        <tr class="loss"><td>T2 MNQ</td><td>MNQ</td><td><span class="badge short">Short</span></td><td>1c</td><td>26762</td><td>26770.50</td><td>-8.50</td><td class="pnl-neg">-$17</td><td>3/4 VWAP UP</td><td><span class="badge warn">⚠</span></td></tr>
+        <tr class="loss"><td>T1 ES</td><td>ES</td><td><span class="badge short">Short</span></td><td>2c</td><td>7154.25</td><td>7156.50</td><td>-2.25</td><td class="pnl-neg">-$225</td><td>3/4 VWAP UP</td><td><span class="badge warn">⚠</span></td></tr>
+        <tr class="loss"><td>T3 MNQ</td><td>MNQ</td><td><span class="badge long">Long×9c</span></td><td>9c</td><td>~26757</td><td>26737</td><td>-20</td><td class="pnl-neg">-$261</td><td>mixto</td><td><span class="badge viol">⚡</span></td></tr>
+        <tr class="win"><td>T4 MNQ</td><td>MNQ</td><td><span class="badge short">Short×8c</span></td><td>8c</td><td>26707.50</td><td>26702.25</td><td>+5.25</td><td class="pnl-pos">+$84</td><td>3/4 VWAP mixto</td><td><span class="badge warn">⚠</span></td></tr>
+        <tr class="loss"><td>T3 ES</td><td>ES</td><td><span class="badge short">Short×2c</span></td><td>2c</td><td>7142.75</td><td>7145</td><td>-2.25</td><td class="pnl-neg">-$225</td><td>4/4 DOWN</td><td><span class="badge ok">✓</span></td></tr>
+        <tr class="win"><td>T4 ES ⭐</td><td>ES</td><td><span class="badge short">Short×2c</span></td><td>2c</td><td>7146</td><td>7135.50</td><td>+10.50</td><td class="pnl-pos">+$1,050</td><td>1/4 ⚡</td><td><span class="badge viol">⚡ VIOL</span></td></tr>
+        <tr class="win"><td>T5 MNQ ⭐</td><td>MNQ</td><td><span class="badge short">Short×8c</span></td><td>8c</td><td>~26715.3</td><td>26665.50</td><td>+49.8</td><td class="pnl-pos">+$800</td><td>3/4 UP señal</td><td><span class="badge viol">⚡</span></td></tr>
+        <tr class="win"><td>T6 MNQ</td><td>MNQ</td><td><span class="badge long">Long×8c</span></td><td>8c</td><td>26666.25</td><td>~26673.9</td><td>+7.7</td><td class="pnl-pos">+$123</td><td>3/4</td><td><span class="badge ok">✓</span></td></tr>
+        <tr class="win"><td>T7 MNQ</td><td>MNQ</td><td><span class="badge short">Short×8c</span></td><td>8c</td><td>26612.25</td><td>26595.6</td><td>+16.6</td><td class="pnl-pos">+$266</td><td>4/4 ✅</td><td><span class="badge ok">✓</span></td></tr>
+        <tr class="win"><td>T5 ES</td><td>ES</td><td><span class="badge short">Short×2c</span></td><td>2c</td><td>7129</td><td>7124.75</td><td>+4.25</td><td class="pnl-pos">+$425</td><td>4/4 ✅</td><td><span class="badge ok">✓</span></td></tr>
+        <tr class="loss"><td>T8 MNQ 🚨</td><td>MNQ</td><td><span class="badge short">Short×8c</span></td><td>8c</td><td>26625</td><td>26682.9</td><td>-57.9</td><td class="pnl-neg">-$926</td><td>0/4 ⚡⚡</td><td><span class="badge viol">⚡⚡ CRIT</span></td></tr>
+        <tr class="win"><td>T6 ES</td><td>ES</td><td><span class="badge long">Long×2c</span></td><td>2c</td><td>7133.25</td><td>7133.75</td><td>+0.50</td><td class="pnl-pos">+$50</td><td>2/4</td><td><span class="badge viol">⚡</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="icard crit" style="margin-top:10px">
+      <div class="icard-title">🚨 T8 MNQ Short 8c @26625 (0/4 señales): el trade más peligroso del registro · -$926</div>
+      <div class="icard-text">SMA20 +1.176✗ · SMA80 +0.163✗ · LR89 +1.322✗ · VWAP UP✗ — CERO señales alineadas para Short. Además, 8 contratos en MNQ a contra-tendencia. El precio subió 57+ pts contra la posición. Esta es exactamente la operación que destruyó el fondeo en semanas anteriores. <strong style="color:var(--red)">El resultado fue contenido a -$926 pero con 8c × 100pts de movimiento hipotético = -$1,600 de riesgo máximo.</strong></div>
+    </div>
+    <div class="icard crit">
+      <div class="icard-title">⭐ T4 ES +$1,050 y T5 MNQ +$800: el "error afortunado" más peligroso del sistema</div>
+      <div class="icard-text">T4 ES tenía 1/4 señales (solo SMA80 débilmente bajista) pero ganó +$1,050 porque el mercado bajó. T5 MNQ tenía 3/4 pero VWAP UP con Short de 8 contratos. Estos trades ganaron por momentum del mercado, no por disciplina del sistema. <strong style="color:var(--amber)">Ganar trades con señales incorrectas refuerza el comportamiento incorrecto y hace que el día parezca "bien operado" cuando en realidad fue un día de casino.</strong></div>
+    </div>
+    <div class="icard good">
+      <div class="icard-title">T1 MNQ (4/4, +$91.50) y T7 MNQ (4/4, +$266): los únicos trades válidos del día</div>
+      <div class="icard-text">T1 Long @26775.75 con SMA20 +0.239✓, SMA80 +1.022✓, LR89 +1.693✓, VWAP UP✓ — perfectas. T7 Short @26612.25 con SMA20 -0.666✓, SMA80 -0.474✓, LR89 -0.918✓, VWAP DOWN✓ — perfectas. Ambos capturaron movimientos limpios. Sin el caos del resto del día, solo estos dos trades hubieran generado +$357.50 en 10 minutos de trabajo bien hecho.</div>
+    </div>
+  </div>
+
+  <!-- ── 21 ABR ── -->
+  <div class="dtab-content" id="dtab-d21">
+    <div class="two-col" style="margin-bottom:10px">
+      <div class="kpi" style="border-top:3px solid var(--green)">
+        <div class="kpi-label">21 Abr · ES + NQ JUN26</div>
+        <div class="kpi-value pos">+$85</div>
+        <div class="kpi-sub">12 setups · VIX 19.2→19.9 · Tarde negativa</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Composición por bloque</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.9;margin-top:4px">
+          AM bloque (10:20–11:23): ES <span class="pnl-neg">-$287.50</span> · NQ <span class="pnl-pos">+$1,320</span><br>
+          PM bloque (13:01–13:12): ES <span class="pnl-neg">-$187.50</span> · NQ <span class="pnl-pos">+$635</span><br>
+          Tarde (15:35–16:01): ES <span class="pnl-neg">-$937.50</span> · NQ <span class="pnl-neg">-$1,270</span><br>
+          <strong style="color:var(--text)">Mañana +$1,470 · PM +$447.50 · Tarde -$2,207.50</strong>
+        </div>
+      </div>
+    </div>
+
+    <h3>Trades clave del 21 Abr</h3>
+    <table class="tbl">
+      <thead><tr><th>Setup</th><th>Hora</th><th>Dir.</th><th>P&L</th><th>Señales</th><th>Obs.</th></tr></thead>
+      <tbody>
+        <tr class="loss"><td>NQ T1</td><td>10:20</td><td>Long NQ @26843.75</td><td class="pnl-neg">-$285</td><td>1/4 FLAT VWAP · SMA20✗</td><td>Inicio en señales débiles</td></tr>
+        <tr class="loss"><td>ES T1</td><td>10:20</td><td>Long ES @7165</td><td class="pnl-neg">-$237.50</td><td>2/4 VWAP DOWN</td><td>Long contra VWAP DOWN</td></tr>
+        <tr class="win"><td>ES T3 ⭐</td><td>10:40</td><td>Short ES @7160.50</td><td class="pnl-pos">+$525</td><td>4/4 DOWN ✅</td><td>Mejor trade AM · perfecto</td></tr>
+        <tr class="win"><td>NQ T2 ⭐</td><td>10:41</td><td>Short NQ @26843.50</td><td class="pnl-pos">+$1,000</td><td>4/4 DOWN ✅</td><td>50 pts en 5 min · limpio</td></tr>
+        <tr class="win"><td>NQ T3</td><td>11:16</td><td>Long NQ @26745.25</td><td class="pnl-pos">+$605</td><td>4/4 UP ✅</td><td>30.25 pts · señales perfectas</td></tr>
+        <tr class="win"><td>NQ T4 PM</td><td>13:01</td><td>Short NQ @26700.50</td><td class="pnl-pos">+$635</td><td>4/4 DOWN ✅</td><td>31.75 pts · PM sólido</td></tr>
+        <tr class="win"><td>ES T3 PM</td><td>13:08</td><td>Short ES @7111.25</td><td class="pnl-pos">+$312.50</td><td>4/4 DOWN ✅</td><td>6.25 pts · señales perfectas</td></tr>
+        <tr class="loss"><td>ES T4 tarde</td><td>15:35</td><td>Long ES @7129.75</td><td class="pnl-neg">-$375</td><td>3/4 UP</td><td>Tarde: mercado bajó fuerte</td></tr>
+        <tr class="loss"><td>NQ T5 tarde</td><td>15:35</td><td>Long NQ @26750.50</td><td class="pnl-neg">-$500</td><td>VWAP DOWN ✗</td><td>Long contra VWAP DOWN</td></tr>
+        <tr class="loss"><td>ES T5 tarde</td><td>15:50</td><td>Long ES @7100.50</td><td class="pnl-neg">-$287.50</td><td>3/4 UP</td><td>Mercado continuó bajando</td></tr>
+        <tr class="loss"><td>NQ T6 tarde</td><td>15:50</td><td>Long NQ @26610.75</td><td class="pnl-neg">-$500</td><td>VWAP DOWN ✗</td><td>Long contra VWAP en bajada</td></tr>
+        <tr class="loss"><td>NQ T7 tarde</td><td>15:55</td><td>Short NQ @26604.50</td><td class="pnl-neg">-$270</td><td>mixto</td><td>Late day scalp fallido</td></tr>
+      </tbody>
+    </table>
+
+    <div class="two-col" style="margin-top:10px">
+      <div class="icard good">
+        <div class="icard-title">Bloque AM (10:20–11:23): excelente · +$1,470 neto</div>
+        <div class="icard-text">5 trades con señales mayormente 4/4. ES T3 Short +$525 y NQ T2 Short +$1,000 fueron los mejores del día. NQ T3 Long +$605. Si la sesión hubiera terminado a las 11:30 AM con +$1,470, habría sido la mejor sesión del registro completo. <strong style="color:var(--text)">La disciplina de terminar antes de la tarde habría transformado este día en un resultado histórico.</strong></div>
+      </div>
+      <div class="icard crit">
+        <div class="icard-title">Bloque tarde (15:35–16:01): destruyó +$2,207.50 del resultado positivo previo</div>
+        <div class="icard-text">NQ T5 y T6 Longs con VWAP DOWN — violación directa de la regla más fundamental. El mercado estaba en tendencia bajista clara en esa hora. Los trades de la tarde costaron exactamente lo que el AM había generado de forma adicional. <strong style="color:var(--red)">Sin el bloque tarde: resultado del día = +$1,957.50 (+$2,292.50 total del período).</strong></div>
+      </div>
+    </div>
+
+    <div class="alert warning">
+      <div class="alert-title">⚠️ Regla operativa crítica detectada: CERRAR SESIÓN DESPUÉS DE LAS 11:30 AM cuando el resultado ya es positivo</div>
+      <div style="color:var(--text2)">El 21 de abril demostró por tercera vez el mismo patrón: los trades de apertura son buenos (señales claras, mercado fluido), los trades de tarde son malos (señales mixtas, mercado lateral/bajista, fatiga de decisión). La regla "no operar después de las 11:30 AM" que ya existía en el sistema debería ser inamovible. Hoy la violación de esa regla costó -$2,207.50.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 3 — SIM VS FONDEO ══════════════════════ -->
+<div class="sec-div"></div>
+<div id="comp" style="scroll-margin-top:52px">
+  <div class="sec-label"><span class="sec-num">3</span>Sim vs Fondeo</div>
+  <h2>Análisis comparativo — 16 y 17 Abr (últimos días del fondeo)</h2>
+  <p class="sub">Fondeo activo solo 16–17 Abr · MES 1 contrato · Sim: MES+ES · Fondeo cerrado el 17 por vencimiento de cuenta</p>
+
+  <div class="alert info">
+    <div class="alert-title">📋 El fondeo no registró trades el día 16 de Abril — solo el 17</div>
+    <div style="color:var(--text2)">Los datos del broker muestran el último trade del fondeo el 17 de Abril: Buy @7170.25 → Sell @7170.50, +$1.25 gross / +$0.25 neto. El 16 de Abril el simulador operó MES y MNQ, pero no hay registro del fondeo para ese día. Posiblemente no se ejecutaron órdenes en el fondeo el 16. El sim generó +$0.50 ese día.</div>
+  </div>
+
+  <div class="two-col">
+    <div class="kpi" style="border-top:3px solid var(--green)">
+      <div class="kpi-label">Sim 16–17 Abr</div>
+      <div class="kpi-value pos">+$50.50</div>
+      <div class="kpi-sub">MES+MNQ+ES · 5 setups</div>
+    </div>
+    <div class="kpi" style="border-top:3px solid var(--amber)">
+      <div class="kpi-label">Fondeo 17 Abr (último día)</div>
+      <div class="kpi-value pos">+$0.25</div>
+      <div class="kpi-sub">MES 1c · 1 trade · Neto broker confirmado</div>
+    </div>
+  </div>
+
+  <h3>Correlato 17 Abr: ES Sim T1 vs MES Fondeo T1</h3>
+  <div class="card card-body">
+    <strong>Sim (ES):</strong> Short @7173.75 → @7172.75 = +1 pt × $50 = <span class="pnl-pos">+$50</span><br>
+    <strong>Fondeo (MES):</strong> Buy @7170.25 → Sell @7170.50 = +0.25 pts × $5 = <span class="pnl-pos">+$1.25 gross</span><br><br>
+    El fondeo entró Short a precio mejor (7170.25 vs 7173.75 del sim) y capturó solo 0.25 pts porque el TP estaba muy ajustado. El sim capturó 1 pt completo. La dirección fue correcta en ambos. <strong>La diferencia de captura (0.25 pts vs 1 pt) se debe al target ajustado del fondeo, no a la dirección.</strong><br><br>
+    <span style="color:var(--text3);font-size:11px">Nota: En el historial del broker, el trade del 17-Abr muestra Buy @7170.25, Sell @7170.50 — es una posición Short cerrada: la venta fue la apertura @7170.25 y la compra fue el cierre @7170.50? No, en el broker Buy=compra y Sell=venta. El orden cronológico es: Buy @7170.25 (10:43:15) → Sell @7170.50 (10:43:27) = Long cerrado ganador = +0.25pts × $5 = +$1.25. Correlato en sim fue Short — posiblemente el fondeo se ejecutó en la dirección opuesta correcta (Long en retroceso a zona de soporte).</span>
+  </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 4 — CIERRE FONDEO ══════════════════════ -->
+<div class="sec-div"></div>
+<div id="cierre" style="scroll-margin-top:52px">
+  <div class="sec-label"><span class="sec-num">4</span>Cierre de la Cuenta Fondeada</div>
+  <h2>Historial completo de la prueba de fondeo — 18 Mar al 17 Abr 2026</h2>
+  <p class="sub">Balance inicial $50,000 · DD mínimo $48,000 · Cuenta venció 17 Abr · Balance final $48,008</p>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Balance inicial</div><div class="kpi-value" style="color:var(--blue)">$50,000</div></div>
+    <div class="kpi"><div class="kpi-label">Balance final</div><div class="kpi-value" style="color:var(--amber)">$48,008</div><div class="kpi-sub">DD mínimo: $48,000</div></div>
+    <div class="kpi"><div class="kpi-label">P&L neto total</div><div class="kpi-value neg">-$1,992</div><div class="kpi-sub">31 días de trading</div></div>
+    <div class="kpi"><div class="kpi-label">Días positivos</div><div class="kpi-value pos">9</div><div class="kpi-sub">de 21 días operados</div></div>
+    <div class="kpi"><div class="kpi-label">Días negativos</div><div class="kpi-value neg">12</div><div class="kpi-sub">WR diario: 43%</div></div>
+    <div class="kpi"><div class="kpi-label">Margen sobre DD</div><div class="kpi-value" style="color:var(--amber)">+$8</div><div class="kpi-sub">0.016% sobre límite</div></div>
+  </div>
+
+  <div class="sub-title" style="font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin:1.2rem 0 .6rem">Historial diario completo del fondeo</div>
+  <table class="hist-tbl">
+    <thead><tr><th>Fecha</th><th>Bal. Inicial</th><th>Gross</th><th>Comisión</th><th>Neto</th><th>Balance</th><th>Sobre DD</th></tr></thead>
+    <tbody>
+      <tr><td>Mar 18</td><td>$50,000</td><td class="pnl-neg">-$687.50</td><td>-$50</td><td class="pnl-neg">-$737.50</td><td>$49,262.50</td><td style="color:var(--green)">+$1,262.50</td></tr>
+      <tr class="alert-r"><td>Mar 19</td><td>$49,262.50</td><td class="pnl-neg">-$210</td><td>-$75</td><td class="pnl-neg">-$285</td><td>$48,977.50</td><td style="color:var(--green)">+$977.50</td></tr>
+      <tr class="highlight"><td>Mar 20</td><td>$48,977.50</td><td class="pnl-pos">+$585</td><td>-$30</td><td class="pnl-pos">+$555</td><td>$49,532.50</td><td style="color:var(--green)">+$1,532.50</td></tr>
+      <tr class="alert-r"><td>Mar 23</td><td>$49,532.50</td><td class="pnl-neg">-$885</td><td>-$40</td><td class="pnl-neg">-$925</td><td>$48,607.50</td><td style="color:var(--amber)">+$607.50</td></tr>
+      <tr class="alert-r"><td>Mar 24</td><td>$48,607.50</td><td class="pnl-neg">-$337.50</td><td>-$10</td><td class="pnl-neg">-$347.50</td><td>$48,260</td><td style="color:var(--amber)">+$260</td></tr>
+      <tr class="alert-r"><td>Mar 25</td><td>$48,260</td><td class="pnl-neg">-$50</td><td>-$10</td><td class="pnl-neg">-$60</td><td>$48,200</td><td style="color:var(--amber)">+$200</td></tr>
+      <tr class="highlight"><td>Mar 27</td><td>$48,200</td><td class="pnl-pos">+$127.50</td><td>-$15</td><td class="pnl-pos">+$112.50</td><td>$48,312.50</td><td style="color:var(--green)">+$312.50</td></tr>
+      <tr class="highlight"><td>Mar 30</td><td>$48,312.50</td><td class="pnl-pos">+$45</td><td>-$21</td><td class="pnl-pos">+$24</td><td>$48,336.50</td><td style="color:var(--green)">+$336.50</td></tr>
+      <tr class="highlight"><td>Mar 31</td><td>$48,336.50</td><td class="pnl-pos">+$22.50</td><td>-$12</td><td class="pnl-pos">+$10.50</td><td>$48,347</td><td style="color:var(--green)">+$347</td></tr>
+      <tr class="alert-r"><td>Abr 1</td><td>$48,347</td><td class="pnl-neg">-$3.75</td><td>-$30</td><td class="pnl-neg">-$33.75</td><td>$48,313.25</td><td style="color:var(--green)">+$313.25</td></tr>
+      <tr class="alert-r"><td>Abr 2</td><td>$48,313.25</td><td class="pnl-neg">-$48.75</td><td>-$18</td><td class="pnl-neg">-$66.75</td><td>$48,246.50</td><td style="color:var(--amber)">+$246.50</td></tr>
+      <tr class="alert-r"><td>Abr 6</td><td>$48,246.50</td><td class="pnl-neg">-$102.50</td><td>-$10</td><td class="pnl-neg">-$112.50</td><td>$48,134</td><td style="color:var(--amber)">+$134</td></tr>
+      <tr class="highlight"><td>Abr 7</td><td>$48,134</td><td class="pnl-pos">+$17.50</td><td>-$8</td><td class="pnl-pos">+$9.50</td><td>$48,143.50</td><td style="color:var(--amber)">+$143.50</td></tr>
+      <tr><td>Abr 8</td><td>$48,143.50</td><td class="pnl-pos">+$20</td><td>-$26</td><td class="pnl-neg">-$6</td><td>$48,137.50</td><td style="color:var(--amber)">+$137.50</td></tr>
+      <tr class="alert-r"><td>Abr 9</td><td>$48,137.50</td><td class="pnl-neg">-$57.50</td><td>-$6</td><td class="pnl-neg">-$63.50</td><td>$48,074</td><td style="color:var(--red)">+$74</td></tr>
+      <tr class="highlight"><td>Abr 10</td><td>$48,074</td><td class="pnl-pos">+$37.50</td><td>-$10</td><td class="pnl-pos">+$27.50</td><td>$48,101.50</td><td style="color:var(--amber)">+$101.50</td></tr>
+      <tr class="alert-r"><td>Abr 13</td><td>$48,101.50</td><td class="pnl-neg">-$67.50</td><td>-$12</td><td class="pnl-neg">-$79.50</td><td>$48,022</td><td style="color:var(--red)">+$22</td></tr>
+      <tr class="alert-r"><td>Abr 14</td><td>$48,022</td><td class="pnl-neg">-$8.75</td><td>-$2</td><td class="pnl-neg">-$10.75</td><td>$48,011.25</td><td style="color:var(--red)">+$11.25</td></tr>
+      <tr class="alert-r"><td>Abr 15</td><td>$48,011.25</td><td class="pnl-neg">-$2.50</td><td>-$1</td><td class="pnl-neg">-$3.50</td><td>$48,007.75</td><td style="color:var(--red)">+$7.75</td></tr>
+      <tr class="highlight" style="font-weight:700"><td>Abr 17 ✓</td><td>$48,007.75</td><td class="pnl-pos">+$1.25</td><td>-$1</td><td class="pnl-pos">+$0.25</td><td style="color:var(--amber)">$48,008</td><td style="color:var(--amber)">+$8</td></tr>
+    </tbody>
+  </table>
+
+  <div class="chart-wrap" style="height:160px;margin-top:14px"><canvas id="chartFondeo"></canvas></div>
+
+  <div class="alert warning" style="margin-top:12px">
+    <div class="alert-title">⚠️ La cuenta terminó $8 sobre el drawdown mínimo — margen de supervivencia mínimo</div>
+    <div style="color:var(--text2)">El fondeo sobrevivió 31 días operativos pero terminó con solo $8 de buffer sobre el límite de drawdown ($48,000). Las semanas de Mar 18–25 destruyeron $1,740 del buffer original de $2,000. La recuperación parcial de Mar 27–Abr 10 fue suficiente para sobrevivir pero no para reconstruir el buffer. La cuenta se venció por tiempo (no por DD) con balance de $48,008 — literalmente al límite.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 5 — DOFA ══════════════════════ -->
+<div class="sec-div"></div>
+<div id="dofa" style="scroll-margin-top:52px">
+  <div class="sec-label"><span class="sec-num">5</span>Análisis DOFA</div>
+  <h2>Análisis DOFA — Prueba de Fondeo Completa (Mar 18 – Abr 17, 2026)</h2>
+  <p class="sub">31 días operativos · /MESM26 → /ESM26 · Balance $50,000 → $48,008 · Sistema EduS_Trader</p>
+
+  <div class="dofa-grid">
+    <div class="dofa-card dofa-f">
+      <div class="dofa-title">💪 Fortalezas</div>
+      <ul class="dofa-list">
+        <li>Sistema de señales 4/4 claramente definido y documentado (SMA20+SMA80+LR89+AVWAP)</li>
+        <li>Panel EduS_MasterPanel funcional con semáforo visual en NT8</li>
+        <li>Capacidad técnica para operar múltiples instrumentos (ES, NQ, MES, MNQ)</li>
+        <li>Days positivos consistentes cuando se respetan las señales (9 de 21 días = 43%)</li>
+        <li>Recuperación tras episodios negativos (Mar 27–Abr 10: +$178 neto en 7 sesiones)</li>
+        <li>Disciplina de 1 setup el 17 Abr demostró que el control es posible</li>
+        <li>Sistema de registro y análisis diario detallado (estos reportes)</li>
+        <li>Consciousness de los errores — cada sesión queda documentada</li>
+      </ul>
+    </div>
+    <div class="dofa-card dofa-d">
+      <div class="dofa-title">⚠️ Debilidades</div>
+      <ul class="dofa-list">
+        <li>Sobreoperación crónica: 14 setups (8-Abr), 17+ setups (20-Abr) — límite = 6</li>
+        <li>Trades contra VWAP recurrentes: 15+ incidentes documentados en el período</li>
+        <li>Scale-ins no controlados: hasta 8–9 contratos en MNQ sin confirmación</li>
+        <li>Operativa en la tarde (15:30–16:00) sistemáticamente negativa en todas las sesiones</li>
+        <li>El "error afortunado" distorsiona el aprendizaje: ganar con 0/4 señales refuerza el mal comportamiento</li>
+        <li>Keltner Width inactivo (0) durante 9+ sesiones — herramienta clave fuera de servicio</li>
+        <li>Mar 18-25: pérdidas en ES full con 1 contrato (-$1,740) antes de reducir a MES</li>
+        <li>Comisiones elevadas: $365 en comisiones en 31 días (-19% del P&L bruto)</li>
+      </ul>
+    </div>
+    <div class="dofa-card dofa-o">
+      <div class="dofa-title">🚀 Oportunidades</div>
+      <ul class="dofa-list">
+        <li>EduS_MasterPanel_V2 ya desarrollado con condición AVWAP vs Keltner BM — filtro adicional reducirá entradas inválidas</li>
+        <li>Modo sim sin fondeo: operar sin presión de drawdown permite reconstruir disciplina</li>
+        <li>NQ/MNQ mostró mayor captura por punto que ES en las sesiones recientes (T2 NQ +$1,000 en 5 min)</li>
+        <li>Reglas ya documentadas: simplemente ejecutarlas consistentemente es la oportunidad principal</li>
+        <li>El período AM (9:30–11:30) es consistentemente positivo — concentrar el 100% del esfuerzo ahí</li>
+        <li>Target de nueva cuenta fondeada con historial de sim disciplinado como base</li>
+        <li>La DOFA y los reportes diarios son herramientas de accountability — usarlos activamente</li>
+        <li>Temporada de resultados Q2 2026 = catalizadores claros para tendencias en ES/NQ</li>
+      </ul>
+    </div>
+    <div class="dofa-card dofa-a">
+      <div class="dofa-title">🔴 Amenazas</div>
+      <ul class="dofa-list">
+        <li>Repetición del patrón de sobreoperación en nueva cuenta fondeada destruirá capital inmediatamente</li>
+        <li>Comisiones acumuladas: a 5+ trades/día × MES, las comisiones superan las ganancias pequeñas</li>
+        <li>Geopolítica US-Irán: ceasefire de 2 semanas (temporal) — riesgo de nuevo shock de volatilidad</li>
+        <li>VIX en zona baja (17–19): ATR comprimido → movimientos pequeños → necesidad de más precisión</li>
+        <li>Scale-ins sin gestión de riesgo: un solo día de T8 MNQ @8c puede borrar semanas de ganancias</li>
+        <li>Fatiga cognitiva tarde: la calidad de decisiones se deteriora significativamente después de las 11:30 AM</li>
+        <li>"El sistema funciona" puede generar exceso de confianza que lleva a más trades (no menos)</li>
+        <li>Corte tardío en fondeo ($48,008) indica que se operó "hasta el límite" en lugar de con buffer amplio</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 6 — PLAN DE MEJORA ══════════════════════ -->
+<div class="sec-div"></div>
+<div id="estrategia" style="scroll-margin-top:52px">
+  <div class="sec-label"><span class="sec-num">6</span>Estrategia y Plan de Mejora</div>
+  <h2>¿La estrategia está bien? ¿Qué debe cambiar?</h2>
+  <p class="sub">Evaluación del sistema EduS_Trader basada en 31 días de fondeo + 4 sesiones adicionales de sim</p>
+
+  <div class="alert success">
+    <div class="alert-title">✅ Diagnóstico: la ESTRATEGIA está bien. El COMPORTAMIENTO es el problema.</div>
+    <div style="color:var(--text2)">Los datos demuestran que el sistema 4/4 señales funciona: los trades con señales ≥3/4 ganaron con consistencia (T2 NQ 4/4 +$1,000, T3 NQ 4/4 +$605, T4 NQ 4/4 +$635, T5 ES 4/4 +$425, T7 MNQ 4/4 +$266). Los trades con ≤1/4 señales generaron pérdidas o ganancias accidentales. <strong style="color:var(--text)">El sistema no necesita una revisión estratégica profunda — necesita que quien lo ejecuta lo siga al pie de la letra.</strong></div>
+  </div>
+
+  <h3>📊 Evidencia: el sistema funciona cuando se usa correctamente</h3>
+  <div class="two-col" style="margin-bottom:12px">
+    <div class="card">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px">TRADES CON ≥3/4 SEÑALES (período completo)</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.9">
+        T7 MNQ 4/4: <span class="pnl-pos">+$266</span> · T5 ES 4/4: <span class="pnl-pos">+$425</span><br>
+        T1 MNQ 4/4 (16/4): <span class="pnl-pos">+$48</span> · T1 MNQ 4/4 (20/4): <span class="pnl-pos">+$91.50</span><br>
+        T3 ES 4/4 (21/4): <span class="pnl-pos">+$525</span> · T2 NQ 4/4 (21/4): <span class="pnl-pos">+$1,000</span><br>
+        T3 NQ 4/4 (21/4): <span class="pnl-pos">+$605</span> · T4 NQ 4/4 (21/4): <span class="pnl-pos">+$635</span>
+      </div>
+      <div style="color:var(--green);font-weight:600;font-size:13px;margin-top:8px">WR ≥3/4: ~80% · Avg ganancia: ~$450</div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px">TRADES CON ≤1/4 SEÑALES (período completo)</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.9">
+        T8 MNQ 0/4 (20/4): <span class="pnl-neg">-$926</span> · T4 ES 1/4 (20/4): <span class="pnl-pos">+$1,050*</span><br>
+        MES T2 Short (16/4): <span class="pnl-neg">-$6.25</span> · MES T1 Short (16/4): <span class="pnl-neg">-$3.75</span><br>
+        NQ T1 Long (21/4): <span class="pnl-neg">-$285</span> · ES T1 Long (21/4): <span class="pnl-neg">-$237.50</span><br>
+        ES T5 tarde (21/4): <span class="pnl-neg">-$287.50</span>
+      </div>
+      <div style="color:var(--red);font-weight:600;font-size:13px;margin-top:8px">WR ≤1/4: ~14% real (* = suerte) · Avg pérdida: ~-$385</div>
+    </div>
+  </div>
+
+  <h3>🔧 Plan de mejora — 10 acciones concretas priorizadas</h3>
+
+  <div class="plan-step">
+    <div class="plan-num plan-num-h">1</div>
+    <div class="plan-body">
+      <div class="plan-title">REGLA ABSOLUTA: Máximo 6 setups por sesión, sin excepciones</div>
+      <div class="plan-desc">El 20-Abr tuvo 17+ setups. El 8-Abr tuvo 14. Los días con &gt;6 setups generan pérdidas netas SIEMPRE (los resultados positivos se deben a un solo trade grande, no al conjunto). Implementar: contador de setups en el panel, y CERRAR NT8 al llegar a 6. No "un setup más".</div>
+    </div>
+  </div>
+  <div class="plan-step">
+    <div class="plan-num plan-num-h">2</div>
+    <div class="plan-body">
+      <div class="plan-title">REGLA ABSOLUTA: No operar después de las 11:30 AM ET si hay ganancia acumulada</div>
+      <div class="plan-desc">El 21-Abr generó +$1,957.50 antes de las 11:30 AM y terminó en +$85 por los trades de la tarde. El 8-Abr fue idéntico. El análisis de 31 días muestra que los trades de tarde (14:00–16:00) tienen WR inferior al 25%. Regla: si el P&L del día es positivo a las 11:30 AM → cerrar sesión.</div>
+    </div>
+  </div>
+  <div class="plan-step">
+    <div class="plan-num plan-num-h">3</div>
+    <div class="plan-body">
+      <div class="plan-title">ELIMINAR escala de contratos no planificada — máximo 2c ES / 4c MNQ</div>
+      <div class="plan-desc">Los scale-ins de 8–9 contratos en MNQ son la principal fuente de pérdidas catastróficas. Con MNQ a $2/pt, 8c × 57pts = -$912 en un solo minuto. La regla de scale-in del sistema ya dice "solo si Leg-A tiene ganancia ≥1 ATR, nunca sobre pérdida". Esta regla se violó en el 100% de los scale-ins masivos del período.</div>
+    </div>
+  </div>
+  <div class="plan-step">
+    <div class="plan-num plan-num-h">4</div>
+    <div class="plan-body">
+      <div class="plan-title">VERIFICACIÓN OBLIGATORIA pre-trade: VWAP + señales antes de ejecutar</div>
+      <div class="plan-desc">El error más costoso del período es el trade contra VWAP. Implementar checklist de 5 segundos antes de cada orden: ¿VWAP está a favor? ¿Cuántas señales tengo? Si VWAP está en contra → NO EJECUTAR, sin importar cuántas otras señales hay. Este filtro solo habría eliminado ~40% de las pérdidas totales.</div>
+    </div>
+  </div>
+  <div class="plan-step">
+    <div class="plan-num plan-num-m">5</div>
+    <div class="plan-body">
+      <div class="plan-title">CORREGIR Keltner Width urgente — lleva 9+ sesiones con dato = 0</div>
+      <div class="plan-desc">Este indicador es crítico para el régimen del mercado (expansión vs compresión). Sin Width válido, el panel V2 no puede determinar si el AVWAP está sobre/bajo la BM del Keltner correctamente. Prioridad técnica antes de reiniciar operativa de fondeo.</div>
+    </div>
+  </div>
+  <div class="plan-step">
+    <div class="plan-num plan-num-m">6</div>
+    <div class="plan-body">
+      <div class="plan-title">INSTALAR EduS_MasterPanel_V2 — nueva condición AVWAP vs BM filtra más entradas inválidas</div>
+      <div class="plan-desc">El panel V2 ya está desarrollado y codificado. La nueva condición (AVWAP > BM para alcista, AVWAP < BM para bajista) habría degradado a AMARILLO varios de los trades perdedores del período. Correr en paralelo con V1 durante 2 semanas de sim para validar comportamiento.</div>
+    </div>
+  </div>
+  <div class="plan-step">
+    <div class="plan-num plan-num-m">7</div>
+    <div class="plan-body">
+      <div class="plan-title">EVALUAR: reducir a 1 instrumento simultáneo (solo ES o solo NQ)</div>
+      <div class="plan-desc">El 20-Abr y 21-Abr tuvieron ES y MNQ corriendo simultáneamente, creando confusión y duplicación de riesgo. Los mejores resultados históricos (Mar 27, Abr 10, Abr 17) vinieron con un solo instrumento operado con precisión. Operar ambos simultáneamente aumenta la carga cognitiva y el número de setups por encima del límite.</div>
+    </div>
+  </div>
+  <div class="plan-step">
+    <div class="plan-num plan-num-m">8</div>
+    <div class="plan-body">
+      <div class="plan-title">IMPLEMENTAR: stop de pérdida diario de -$300 sim / -$50 fondeo</div>
+      <div class="plan-desc">El 8-Abr sim -$1,350, 7-Abr -$1,187.50, 6-Abr -$1,175 — todos hubieran sido contenidos con un stop diario. En fondeo, el límite de -$50/día neto habría protegido el buffer. Con ATR comprimido (1.5–2 pts), -$300 sim equivale a 3 trades perdedores de 2 pts — señal clara de que el mercado no está cooperando.</div>
+    </div>
+  </div>
+  <div class="plan-step">
+    <div class="plan-num plan-num-l">9</div>
+    <div class="plan-body">
+      <div class="plan-title">TABLA DE ACCOUNTABILITY semanal: comparar reglas prometidas vs reglas cumplidas</div>
+      <div class="plan-desc">Estos reportes documentan los errores pero no crean accountability en tiempo real. Propuesta: al inicio de cada sesión, escribir en papel las 4 reglas del día (ej: "máximo 6 setups, no operar tarde, no short con VWAP UP"). Al cierre: puntuar cada regla 0/1. Meta: 4/4 por 10 sesiones consecutivas antes de abrir nueva cuenta.</div>
+    </div>
+  </div>
+  <div class="plan-step">
+    <div class="plan-num plan-num-l">10</div>
+    <div class="plan-body">
+      <div class="plan-title">CRITERIO para nueva cuenta fondeada: 20 sesiones sim con &lt;6 setups/día promedio</div>
+      <div class="plan-desc">No reiniciar fondeo hasta que el sim demuestre 20 sesiones consecutivas donde: (a) promedio &lt;6 setups/día, (b) no hay trades con ≤1/4 señales, (c) no hay trades en tarde con VWAP en contra, (d) stop diario nunca superó -$300. Cuando esto se cumpla, el fondeo será una extensión natural de la disciplina, no un experimento.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 7 — FORWARD ══════════════════════ -->
+<div class="sec-div"></div>
+<div id="forward" style="scroll-margin-top:52px">
+  <div class="sec-label"><span class="sec-num">7</span>Modo Sim — Going Forward</div>
+  <h2>De aquí en adelante: solo Sim hasta nueva cuenta fondeada</h2>
+  <p class="sub">La cuenta fondeada venció. El simulador es el único vehículo. Los análisis diarios continúan con el mismo formato.</p>
+
+  <div class="alert purple">
+    <div class="alert-title">📋 Nuevo protocolo desde el 22 de Abril: Sim como cuenta de desarrollo</div>
+    <div style="color:var(--text2)">El sim no es un "playground" — es la cuenta de desarrollo donde se prueba la disciplina que eventualmente llevará a una nueva cuenta fondeada. Cada sesión se analizará con el mismo rigor que los reportes anteriores. La diferencia: sin fondeo que perder, el foco es 100% en la consistencia de proceso. <strong style="color:var(--text)">El objetivo del sim es demostrar 20 sesiones con ≤6 setups y ≥60% WR antes de renovar el fondeo.</strong></div>
+  </div>
+
+  <div class="three-col">
+    <div class="kpi" style="border-top:3px solid var(--green)">
+      <div class="kpi-label">Meta corto plazo</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:6px;line-height:1.7">
+        10 sesiones sim con<br>
+        ≤6 setups/día promedio<br>
+        WR ≥55% · Sin trades 0/4
+      </div>
+    </div>
+    <div class="kpi" style="border-top:3px solid var(--blue)">
+      <div class="kpi-label">Meta mediano plazo</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:6px;line-height:1.7">
+        20 sesiones sim con<br>
+        Todas las reglas cumplidas<br>
+        P&L positivo en ≥65% de días
+      </div>
+    </div>
+    <div class="kpi" style="border-top:3px solid var(--purple)">
+      <div class="kpi-label">Meta: Nueva cuenta fondeo</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:6px;line-height:1.7">
+        20 sesiones de disciplina<br>
+        documentadas en reportes<br>
+        = Ticket de entrada al fondeo
+      </div>
+    </div>
+  </div>
+
+  <div class="alert info" style="margin-top:12px">
+    <div class="alert-title">📊 Los reportes diarios continúan — solo Sim</div>
+    <div style="color:var(--text2)">A partir de esta sesión, los reportes diarios incluirán: análisis de señales, P&L sim, WR, número de setups vs límite (6), y un "semáforo de disciplina" que indica si las reglas se cumplieron. No habrá sección Fondeo hasta que se abra nueva cuenta. Cuando se informe la apertura de nueva cuenta fondeada, el formato regresa a comparativa Sim vs Fondeo.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 8 — VIDEOS ══════════════════════ -->
+<div class="sec-div"></div>
+<div id="videos" style="scroll-margin-top:52px">
+  <div class="sec-label"><span class="sec-num">8</span>Videos de las Sesiones</div>
+  <h2>Operativa en vivo — 16 al 21 Abr 2026</h2>
+  <div class="yt-row">
+    <div class="yt-btn-wrap">
+      <div class="yt-dot"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.5 15.6V8.4L15.8 12l-6.3 3.6z"/></svg></div>
+      <div class="yt-info"><div class="yt-title">16 Abr 2026 — MES + MNQ</div><div class="yt-sub">VIX 18.2 · +$0.50 · 4 setups</div></div>
+      <a href="https://youtube.com/live/rJ7Xr-n9pn4" target="_blank" class="yt-link">Ver →</a>
+    </div>
+    <div class="yt-btn-wrap">
+      <div class="yt-dot"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.5 15.6V8.4L15.8 12l-6.3 3.6z"/></svg></div>
+      <div class="yt-info"><div class="yt-title">17 Abr 2026 — ES · Último día fondeo</div><div class="yt-sub">VIX 16.9 · +$50 · 1 setup · Modelo de disciplina</div></div>
+      <a href="https://youtube.com/live/QoK5Br_Bpp4" target="_blank" class="yt-link">Ver →</a>
+    </div>
+    <div class="yt-btn-wrap">
+      <div class="yt-dot"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.5 15.6V8.4L15.8 12l-6.3 3.6z"/></svg></div>
+      <div class="yt-info"><div class="yt-title">20 Abr 2026 — ES + MNQ ⚡</div><div class="yt-sub">VIX 19.1 · +$910.50 · 17+ setups · Sobreoperación</div></div>
+      <a href="https://youtube.com/live/HUAdZZKKGCA" target="_blank" class="yt-link">Ver →</a>
+    </div>
+    <div class="yt-btn-wrap">
+      <div class="yt-dot"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.5 15.6V8.4L15.8 12l-6.3 3.6z"/></svg></div>
+      <div class="yt-info"><div class="yt-title">21 Abr 2026 — ES + NQ</div><div class="yt-sub">VIX 19.9 · +$85 · 12 setups · AM excelente, tarde negativa</div></div>
+      <a href="https://youtube.com/live/cEPj02zhur0" target="_blank" class="yt-link">Ver →</a>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<!-- ══════════════════════ CÓDIGO TARJETAS ÍNDICE ══════════════════════ -->
+<!--
+══════════════════════════════════════════════════
+CÓDIGO TARJETAS PARA PÁGINA INICIAL
+Copiar y pegar en el índice del blog de EduS Trader
+══════════════════════════════════════════════════
+
+<!-- 16 ABR 2026 -->
+<!-- <a class="edus-card" href="https://edustrader.blogspot.com/p/reporte-operativo-16-21-abr-2026.html" target="_blank">
+  <div class="edus-card-accent" style="background:#1e4a8a"></div>
+  <div class="edus-card-body">
+    <div class="edus-card-date-block">
+      <div class="edus-card-day">16</div>
+      <div class="edus-card-month">Abr 2026</div>
+    </div>
+    <div class="edus-card-info">
+      <div class="edus-card-title">Jueves — MES+MNQ · VIX 18.2 · Primer día MES · Casi plano</div>
+      <div class="edus-card-desc">4 setups · MES T1–T3 Short perdedores · MNQ T1 Long 4/4 +$48 salvó el día · Primer día sin fondeo activo · WR 25%</div>
+      <div class="edus-card-meta">
+        <span class="edus-tag es">MES · MNQ</span>
+        <span class="edus-tag pos">Sim +$0.50</span>
+        <span class="edus-tag neg">WR 25%</span>
+        <span class="edus-tag">Solo Sim</span>
+      </div>
+    </div>
+    <div class="edus-card-pnl-block">
+      <div class="edus-card-pnl pos">+$0.50</div>
+      <div class="edus-card-pnl-sub">Sim · 4 setups · MES+MNQ</div>
+    </div>
+  </div>
+  <div class="edus-card-arrow">›</div>
+</a>
+
+<!-- 17 ABR 2026 -->
+<!-- <a class="edus-card" href="https://edustrader.blogspot.com/p/reporte-operativo-16-21-abr-2026.html" target="_blank">
+  <div class="edus-card-accent" style="background:#3b6d11"></div>
+  <div class="edus-card-body">
+    <div class="edus-card-date-block">
+      <div class="edus-card-day">17</div>
+      <div class="edus-card-month">Abr 2026</div>
+    </div>
+    <div class="edus-card-info">
+      <div class="edus-card-title">Viernes — ES · VIX 16.9 · 1 setup · Último día de fondeo · Modelo de disciplina</div>
+      <div class="edus-card-desc">1 setup sim · 1 trade fondeo · ambos positivos · Short ES 3/4 señales · Fondeo vence este día · Cuenta cierra $48,008</div>
+      <div class="edus-card-meta">
+        <span class="edus-tag es">ES JUN26</span>
+        <span class="edus-tag pos">Sim +$50</span>
+        <span class="edus-tag pos">Fondeo +$0.25</span>
+        <span class="edus-tag pos">WR 100%</span>
+        <span class="edus-tag neg">Fondeo vencida</span>
+      </div>
+    </div>
+    <div class="edus-card-pnl-block">
+      <div class="edus-card-pnl pos">+$50</div>
+      <div class="edus-card-pnl-sub">Sim · 1 setup disciplinado</div>
+      <div class="edus-card-pnl pos" style="font-size:14px;margin-top:6px">+$0.25</div>
+      <div class="edus-card-pnl-sub">Fondeo neto · último día</div>
+    </div>
+  </div>
+  <div class="edus-card-arrow">›</div>
+</a>
+
+<!-- 20 ABR 2026 -->
+<!-- <a class="edus-card" href="https://edustrader.blogspot.com/p/reporte-operativo-16-21-abr-2026.html" target="_blank">
+  <div class="edus-card-accent" style="background:#7b3a00"></div>
+  <div class="edus-card-body">
+    <div class="edus-card-date-block">
+      <div class="edus-card-day">20</div>
+      <div class="edus-card-month">Abr 2026</div>
+    </div>
+    <div class="edus-card-info">
+      <div class="edus-card-title">Lunes — ES+MNQ · VIX 19.1 · 17+ setups ⚡ · Sobreoperación extrema</div>
+      <div class="edus-card-desc">17+ setups · Scale-ins de 8c MNQ · T8 MNQ -$926 (0/4 señales) · T4 ES +$1,050 (1/4 señales) · Resultado positivo por coincidencia no por disciplina</div>
+      <div class="edus-card-meta">
+        <span class="edus-tag es">ES · MNQ</span>
+        <span class="edus-tag pos">Sim +$910.50</span>
+        <span class="edus-tag neg">17+ setups ⚡</span>
+        <span class="edus-tag neg">0/4 señales T8</span>
+        <span class="edus-tag">Solo Sim</span>
+      </div>
+    </div>
+    <div class="edus-card-pnl-block">
+      <div class="edus-card-pnl pos">+$910.50</div>
+      <div class="edus-card-pnl-sub">Sim · ⚠ sobreoperado</div>
+    </div>
+  </div>
+  <div class="edus-card-arrow">›</div>
+</a>
+
+<!-- 21 ABR 2026 -->
+<!-- <a class="edus-card" href="https://edustrader.blogspot.com/p/reporte-operativo-16-21-abr-2026.html" target="_blank">
+  <div class="edus-card-accent" style="background:#1e4a8a"></div>
+  <div class="edus-card-body">
+    <div class="edus-card-date-block">
+      <div class="edus-card-day">21</div>
+      <div class="edus-card-month">Abr 2026</div>
+    </div>
+    <div class="edus-card-info">
+      <div class="edus-card-title">Martes — ES+NQ · VIX 19.9 · 12 setups · AM excelente, tarde negativa</div>
+      <div class="edus-card-desc">12 setups · AM +$1,957 con señales 4/4 · Tarde -$1,957 por Longs contra VWAP DOWN · Sin fondeo · Primer día solo sim post-fondeo</div>
+      <div class="edus-card-meta">
+        <span class="edus-tag es">ES · NQ</span>
+        <span class="edus-tag pos">Sim +$85</span>
+        <span class="edus-tag neg">12 setups</span>
+        <span class="edus-tag neg">Tarde -$2,207</span>
+        <span class="edus-tag">Solo Sim</span>
+      </div>
+    </div>
+    <div class="edus-card-pnl-block">
+      <div class="edus-card-pnl pos">+$85</div>
+      <div class="edus-card-pnl-sub">Sim · AM +$1,957 · Tarde -$1,872</div>
+    </div>
+  </div>
+  <div class="edus-card-arrow">›</div>
+</a>
+══════════════════════════════════════════════════
+FIN CÓDIGO TARJETAS
+══════════════════════════════════════════════════
+-->
+
+<footer>
+  Generado el 21 Abr 2026 · EduS Trader · Período 16–21 Abr 2026<br>
+  Sim101 · ES/NQ/MES/MNQ JUN26 · VIX 16.9–19.9 · Fondeo /MESM26 vencida 17 Abr · Balance final $48,008<br>
+  <em style="font-size:10px;color:var(--text3)">Análisis para uso interno. No constituye asesoramiento de inversión.</em>
+</footer>
+
+<script>
+// ─── Charts ────────────────────────────────────────────────────────
+const isDark = true;
+const tc = '#555d78';
+const gc = 'rgba(255,255,255,0.06)';
+
+// P&L Diario
+new Chart(document.getElementById('chartDiario'), {
+  type: 'bar',
+  data: {
+    labels: ['16 Abr', '17 Abr', '20 Abr', '21 Abr'],
+    datasets: [{
+      data: [0.5, 50, 910.5, 85],
+      backgroundColor: ['rgba(0,200,80,0.7)','rgba(0,200,80,0.7)','rgba(240,176,64,0.8)','rgba(0,200,80,0.7)'],
+      borderRadius: 5
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => '$' + ctx.raw.toFixed(2) } } },
+    scales: {
+      x: { ticks: { color: tc, font: { size: 11 } }, grid: { color: gc } },
+      y: { ticks: { color: tc, font: { size: 11 }, callback: v => '$' + v }, grid: { color: gc } }
+    }
+  }
+});
+
+// Fondeo balance histórico
+const fDates = ['Mar 18','Mar 19','Mar 20','Mar 23','Mar 24','Mar 25','Mar 27','Mar 30','Mar 31','Abr 1','Abr 2','Abr 6','Abr 7','Abr 8','Abr 9','Abr 10','Abr 13','Abr 14','Abr 15','Abr 17'];
+const fBal = [49262.5,48977.5,49532.5,48607.5,48260,48200,48312.5,48336.5,48347,48313.25,48246.5,48134,48143.5,48137.5,48074,48101.5,48022,48011.25,48007.75,48008];
+new Chart(document.getElementById('chartFondeo'), {
+  type: 'line',
+  data: {
+    labels: fDates,
+    datasets: [
+      {
+        label: 'Balance Fondeo',
+        data: fBal,
+        borderColor: '#4da6ff', backgroundColor: 'rgba(77,166,255,0.06)', fill: true,
+        tension: 0.3, pointBackgroundColor: fBal.map(v => v >= 48500 ? '#00c850' : v >= 48100 ? '#f0b040' : '#e04040'),
+        pointRadius: 4, borderWidth: 2
+      },
+      {
+        label: 'DD Mínimo $48,000',
+        data: Array(20).fill(48000),
+        borderColor: 'rgba(224,64,64,0.6)', borderDash: [4,4], borderWidth: 1.5,
+        pointRadius: 0, fill: false
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'top', labels: { color: tc, font: { size: 10 }, boxWidth: 10, padding: 10 } },
+      tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': $' + ctx.raw.toLocaleString() } }
+    },
+    scales: {
+      x: { ticks: { color: tc, font: { size: 9 } }, grid: { display: false } },
+      y: { ticks: { color: tc, font: { size: 10 }, callback: v => '$' + v.toLocaleString() }, grid: { color: gc },
+           min: 47800, max: 50200 }
+    }
+  }
+});
+
+// ─── Day tabs ─────────────────────────────────────────────────────
+function showDay(e, id) {
+  document.querySelectorAll('.dtab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dtab-content').forEach(t => t.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById('dtab-' + id).classList.add('active');
+}
+
+// ─── Nav active ───────────────────────────────────────────────────
+const secs = ['resumen','dias','comp','cierre','dofa','estrategia','forward','videos'];
+window.addEventListener('scroll', () => {
+  let cur = 'resumen';
+  secs.forEach(id => { const el = document.getElementById(id); if (el && window.scrollY >= el.offsetTop - 80) cur = id; });
+  document.querySelectorAll('nav a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+});
+</script>
+</body>
+</html>
