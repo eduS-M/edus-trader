@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Operativo — 01 Abr 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#ffffff; --bg2:#f5f4f0; --bg3:#eeecea;
+    --text:#1a1a18; --text2:#5f5e5a; --text3:#888780;
+    --border:rgba(0,0,0,0.10); --border2:rgba(0,0,0,0.20);
+    --green:#3b6d11; --green-bg:#eaf3de;
+    --red:#a32d2d; --red-bg:#fcebeb;
+    --amber:#854f0b; --amber-bg:#faeeda;
+    --blue:#185fa5; --blue-bg:#e6f1fb;
+    --r-md:8px; --r-lg:12px;
+    --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#1e1e1c; --bg2:#272724; --bg3:#2e2e2b;
+      --text:#e8e6e0; --text2:#9c9a92; --text3:#6e6d67;
+      --border:rgba(255,255,255,0.09); --border2:rgba(255,255,255,0.18);
+      --green:#8fb85a; --green-bg:rgba(99,153,34,0.14);
+      --red:#e87878; --red-bg:rgba(226,75,74,0.14);
+      --amber:#f0b060; --amber-bg:rgba(239,159,39,0.14);
+      --blue:#6aaee8; --blue-bg:rgba(55,138,221,0.14);
+    }
+  }
+  body{font-family:var(--font);background:var(--bg);color:var(--text);margin:0;padding:0;}
+  nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:0.5px solid var(--border2);padding:0 2rem;display:flex;align-items:center;overflow-x:auto;}
+  nav .brand{font-size:13px;font-weight:500;color:var(--text);padding:14px 0;margin-right:24px;white-space:nowrap;}
+  nav a{font-size:12px;color:var(--text3);text-decoration:none;padding:16px 14px;border-bottom:2px solid transparent;transition:color .15s;white-space:nowrap;}
+  nav a:hover{color:var(--text);}
+  nav a.active{color:var(--text);border-bottom-color:var(--text);font-weight:500;}
+  .page{max-width:960px;margin:0 auto;padding:2rem 2rem 4rem;}
+  .section-divider{height:0.5px;background:var(--border2);margin:3rem 0 2rem;}
+  .section-label{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:500;letter-spacing:0.09em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;}
+  .section-label .num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--bg2);border:0.5px solid var(--border2);font-size:10px;font-weight:500;color:var(--text2);}
+  h2{font-size:20px;font-weight:500;margin-bottom:4px;}
+  .sub{font-size:12px;color:var(--text3);margin-bottom:1.5rem;}
+  .sub-title{font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);margin:1.5rem 0 0.7rem;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;}
+  .kpi{background:var(--bg2);border-radius:var(--r-md);padding:12px 14px;}
+  .kpi-label{font-size:11px;color:var(--text3);margin-bottom:4px;}
+  .kpi-value{font-size:22px;font-weight:500;}
+  .kpi-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+  .pos{color:var(--green);} .neg{color:var(--red);}
+  .pnl-pos{color:var(--green);font-weight:500;} .pnl-neg{color:var(--red);font-weight:500;}
+  .chart-wrap{position:relative;width:100%;}
+  .alert{border-radius:var(--r-md);padding:12px 14px;font-size:12px;margin-top:10px;}
+  .alert.success{background:var(--green-bg);border:0.5px solid rgba(99,153,34,0.35);}
+  .alert.danger{background:var(--red-bg);border:0.5px solid rgba(226,75,74,0.35);}
+  .alert.warning{background:var(--amber-bg);border:0.5px solid rgba(239,159,39,0.35);}
+  .alert.info{background:var(--blue-bg);border:0.5px solid rgba(55,138,221,0.35);}
+  .alert-title{font-weight:500;margin-bottom:3px;}
+  .alert.success .alert-title{color:var(--green);}
+  .alert.danger .alert-title{color:var(--red);}
+  .alert.warning .alert-title{color:var(--amber);}
+  .alert.info .alert-title{color:var(--blue);}
+  .regime-alert{background:linear-gradient(135deg,rgba(163,45,45,0.09),rgba(163,45,45,0.03));border:1px solid rgba(163,45,45,0.35);border-radius:var(--r-lg);padding:16px 20px;margin-bottom:16px;display:flex;align-items:flex-start;gap:14px;}
+  .regime-icon{font-size:26px;flex-shrink:0;margin-top:2px;}
+  .regime-title{font-size:14px;font-weight:500;color:var(--red);margin-bottom:4px;}
+  .regime-sub{font-size:12px;color:var(--text2);line-height:1.6;}
+  .vix-badge{display:inline-flex;align-items:center;gap:8px;background:var(--amber-bg);border:0.5px solid rgba(133,79,11,0.4);border-radius:var(--r-md);padding:8px 14px;font-size:12px;color:var(--amber);font-weight:500;margin-bottom:14px;}
+  .trade-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .trade-table th{font-size:11px;color:var(--text3);font-weight:500;padding:6px 10px;border-bottom:0.5px solid var(--border2);text-align:left;}
+  .trade-table td{padding:7px 10px;border-bottom:0.5px solid var(--border);}
+  .trade-table tr:last-child td{border-bottom:none;}
+  .trade-table tr.win td{background:rgba(99,153,34,0.03);}
+  .trade-table tr.loss td{background:rgba(226,75,74,0.03);}
+  .trade-table tr.viol td{background:rgba(239,159,39,0.06);}
+  .badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:500;}
+  .badge.short{background:var(--amber-bg);color:var(--amber);}
+  .badge.long{background:var(--blue-bg);color:var(--blue);}
+  .badge.viol{background:var(--red-bg);color:var(--red);font-size:10px;}
+  .badge.ok{background:var(--green-bg);color:var(--green);font-size:10px;}
+  .sdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin:0 1px;}
+  .dot-g{background:#639922;} .dot-r{background:#E24B4A;}
+  .sig-inline{display:flex;gap:3px;align-items:center;}
+  .tab-row{display:flex;gap:4px;margin-bottom:1rem;border-bottom:0.5px solid var(--border);padding-bottom:8px;flex-wrap:wrap;}
+  .tab{padding:5px 14px;border-radius:var(--r-md);font-size:12px;cursor:pointer;border:0.5px solid transparent;color:var(--text3);background:transparent;font-family:var(--font);}
+  .tab.active{background:var(--bg2);border-color:var(--border2);color:var(--text);font-weight:500;}
+  .tab-content{display:none;}
+  .tab-content.active{display:block;}
+  .icard{background:var(--bg2);border-radius:var(--r-md);padding:13px 15px;margin-bottom:8px;border-left:3px solid transparent;}
+  .icard.crit{border-left-color:#E24B4A;}
+  .icard.warn{border-left-color:#EF9F27;}
+  .icard.good{border-left-color:#639922;}
+  .icard.info{border-left-color:#378ADD;}
+  .icard-title{font-size:13px;font-weight:500;margin-bottom:5px;}
+  .icard-text{font-size:12px;color:var(--text2);line-height:1.6;}
+  .comp-block{background:var(--bg2);border-radius:var(--r-md);padding:12px 14px;margin-bottom:10px;font-size:12px;}
+  .comp-block-title{font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .comp-block-body{color:var(--text2);line-height:1.6;}
+  .tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500;}
+  .tag-win{background:var(--green-bg);color:var(--green);}
+  .tag-loss{background:var(--red-bg);color:var(--red);}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .met-row{display:grid;grid-template-columns:120px 1fr 1fr 1fr 1fr;gap:8px;padding:6px 12px;font-size:12px;border-bottom:0.5px solid var(--border);align-items:center;}
+  .met-row.hdr{font-size:11px;color:var(--text3);font-weight:500;}
+  .met-row:last-child{border-bottom:none;}
+  .trend-row{display:grid;grid-template-columns:90px 1fr 1fr 1fr;gap:8px;padding:7px 12px;font-size:12px;border-bottom:0.5px solid var(--border);align-items:center;}
+  .trend-row.hdr{font-size:11px;color:var(--text3);font-weight:500;}
+  .trend-row:last-child{border-bottom:none;}
+  .finding{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r-lg);padding:24px 28px;position:relative;overflow:hidden;}
+  .finding::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,#a32d2d 0%,#185fa5 100%);}
+  .finding-label{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+  .finding h3{font-size:17px;font-weight:500;margin-bottom:12px;line-height:1.4;}
+  .finding p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px;}
+  .finding p:last-child{margin-bottom:0;}
+  .finding strong{color:var(--text);font-weight:500;}
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0;}
+  .stat-box{background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--r-md);padding:12px 14px;text-align:center;}
+  .stat-val{font-size:22px;font-weight:500;}
+  .stat-lbl{font-size:11px;color:var(--text3);margin-top:2px;}
+  .rules-box{background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--r-md);padding:14px 16px;margin-top:16px;}
+  .rules-box-title{font-size:12px;font-weight:500;margin-bottom:10px;}
+  .rule-item{font-size:12px;color:var(--text2);padding:5px 0;border-bottom:0.5px solid var(--border);line-height:1.5;}
+  .rule-item:last-child{border-bottom:none;}
+  .yt-block{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r-lg);padding:18px 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:2rem;}
+  .yt-icon{width:44px;height:44px;border-radius:50%;background:#c0392b;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .yt-icon svg{width:20px;height:20px;fill:#fff;}
+  .yt-text{flex:1;min-width:180px;}
+  .yt-title{font-size:14px;font-weight:500;margin-bottom:3px;}
+  .yt-sub{font-size:12px;color:var(--text3);}
+  .yt-btn{display:inline-block!important;background:#c0392b!important;color:#fff!important;font-size:12px;font-weight:600;padding:10px 20px;border-radius:var(--r-md);text-decoration:none!important;white-space:nowrap;border:none!important;transition:opacity .2s;}
+  .yt-btn:hover{opacity:.85;}
+  footer{text-align:center;font-size:11px;color:var(--text3);padding:2rem 1rem 3rem;border-top:0.5px solid var(--border);margin-top:2rem;}
+  .scale-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(163,45,45,0.1);border:0.5px solid rgba(163,45,45,0.3);border-radius:4px;padding:1px 5px;font-size:10px;color:var(--red);font-weight:500;margin-left:4px;}
+</style>
+</head>
+<body>
+<nav>
+  <span class="brand">📊 Diario Operativo</span>
+  <a href="#sim" class="active">Sim 01 Abr</a>
+  <a href="#critico">Análisis crítico</a>
+  <a href="#comp">Sim vs Fondeo</a>
+  <a href="#hallazgo">Diagnóstico</a>
+  <a href="#video">Video</a>
+</nav>
+
+<div class="page">
+
+<!-- ══ SECCIÓN 1 — SIM ══ -->
+<div id="sim" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">1</span>Resumen operativo — Simulador</div>
+  <h2>Dashboard 01 Abr 2026</h2>
+  <p class="sub">Sim101 · ES JUN26 · VIX 25.27→24.54 · 9:45 – 14:15 · 10 setups en 4.5h · Rango sin tendencia · Scale-in erróneo en T1</p>
+
+  <div class="regime-alert">
+    <div class="regime-icon">🚨</div>
+    <div>
+      <div class="regime-title">VIX 25 — El nivel más bajo en 4 sesiones · Pero 10 setups en 4.5h y 7/10 sin confluencia mínima</div>
+      <div class="regime-sub">El VIX cayó a 25.27→24.54, señal de que el régimen extremo está cediendo. El mercado operó en un rango de ~26 pts (6607→6633) sin tendencia clara. La sesión registró 10 setups — el mayor número en todo el historial — con una violación de confluencia en 7 de ellos. El VIX ya no es el factor limitante: la frecuencia y selección de entradas es el problema estructural que persiste independientemente del régimen.</div>
+    </div>
+  </div>
+
+  <div class="vix-badge">🟡 VIX 25.27→24.54 · ATR 2.62 pts (mañana) → 1.55 pts (tarde) · Keltner Width: inválido (0) · Rango sesión: ~26 pts · Record: 10 setups / 4.5h</div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">P&L neto</div><div class="kpi-value neg">-$1,250.00</div><div class="kpi-sub">10 setups · 3W / 7L</div></div>
+    <div class="kpi"><div class="kpi-label">Win rate</div><div class="kpi-value" style="color:var(--amber)">30%</div><div class="kpi-sub">3 ganadoras / 7 perdedoras</div></div>
+    <div class="kpi"><div class="kpi-label">Profit factor</div><div class="kpi-value neg">0.40</div><div class="kpi-sub">$525 gan / $1,775 perd</div></div>
+    <div class="kpi"><div class="kpi-label">Avg ganancia</div><div class="kpi-value pos">+$175</div><div class="kpi-sub">T2 · T4 · T10</div></div>
+    <div class="kpi"><div class="kpi-label">Avg pérdida</div><div class="kpi-value neg">-$253.57</div><div class="kpi-sub">por setup perdedor</div></div>
+    <div class="kpi"><div class="kpi-value" style="font-size:18px;color:var(--red)">7/10</div><div class="kpi-label">Violaciones</div><div class="kpi-sub">setups con &lt;3/4</div></div>
+  </div>
+
+  <div class="alert danger">
+    <div class="alert-title">Tercer día negativo consecutivo — acumulado sim 8 sesiones ahora en -$761.00</div>
+    <div style="color:var(--text2)">30 Mar: -$2,201.50 · 31 Mar: -$862.50 · 01 Abr: -$1,250.00. La racha de 3 días suma <strong style="color:var(--text)">-$4,314.00</strong>, borrando las ganancias acumuladas de las 5 sesiones iniciales (+$3,553.00). El acumulado total pasa a <strong style="color:var(--text)">-$761.00</strong>. El VIX bajó — el problema persiste. Esto confirma que el error es estructural: frecuencia de operación y ausencia de stops explícitos en el sim.</div>
+  </div>
+
+  <div class="alert warning" style="margin-top:8px">
+    <div class="alert-title">T1 scale-in con señales invertidas — el error más costoso del día (-$512.50 combinado)</div>
+    <div style="color:var(--text2)">T1 abrió la sesión con Short @6612.75 (señales aceptables: 3/4 para el Short de F_1_1). La segunda entry Short @6609 (F_1_2) ya tenía <strong style="color:var(--text)">VWAP UP y LR89 positivo</strong> — señales directamente en contra del Short. Agregar una segunda posición cuando las señales se invierten quintuplicó la pérdida del trade de apertura.</div>
+  </div>
+
+  <div class="sub-title">P&L por setup</div>
+  <div class="chart-wrap" style="height:155px"><canvas id="chartBar"></canvas></div>
+
+  <div class="sub-title">Curva de capital acumulada (sesión)</div>
+  <div class="chart-wrap" style="height:130px"><canvas id="chartCurve"></canvas></div>
+
+  <div class="sub-title">Detalle de operaciones</div>
+  <div class="tab-row">
+    <button class="tab active" onclick="showTab(event,'all')">Todas (10)</button>
+    <button class="tab" onclick="showTab(event,'win')">Ganadoras (3)</button>
+    <button class="tab" onclick="showTab(event,'loss')">Perdedoras (7)</button>
+    <button class="tab" onclick="showTab(event,'viol')">Violaciones ⚡ (7)</button>
+  </div>
+  <div id="tab-all" class="tab-content active"><table class="trade-table" id="table-all"></table></div>
+  <div id="tab-win" class="tab-content"><table class="trade-table" id="table-win"></table></div>
+  <div id="tab-loss" class="tab-content"><table class="trade-table" id="table-loss"></table></div>
+  <div id="tab-viol" class="tab-content"><table class="trade-table" id="table-viol"></table></div>
+
+  <div class="sub-title">Escenario alternativo: solo los 3 setups de mayor confluencia</div>
+  <div class="kpi" style="padding:14px 16px">
+    <div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:12px">
+      El mercado ofreció setups rentables hoy — el problema fue no detenerse en ellos. Si solo se hubieran tomado T4 y T10 (los dos de mayor confluencia y resultado positivo):
+    </div>
+    <div class="two-col">
+      <div class="kpi" style="background:var(--bg);border:0.5px solid rgba(99,153,34,0.3)">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">Resultado con solo T4 + T10</div>
+        <div style="font-size:13px;color:var(--text2)">T4 Long @6613 → @6616.75: <span class="pnl-pos">+$187.50</span></div>
+        <div style="font-size:13px;color:var(--text2)">T10 Short @6631.50 → @6626.25: <span class="pnl-pos">+$262.50</span></div>
+        <div style="font-size:12px;color:var(--green);font-weight:500;margin-top:6px">Total ideal: +$450.00</div>
+      </div>
+      <div class="kpi" style="background:var(--bg);border:0.5px solid rgba(226,75,74,0.3)">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">Costo de los 8 setups extras</div>
+        <div style="font-size:13px;color:var(--text2)">T1 scale-in: <span class="pnl-neg">-$512.50</span></div>
+        <div style="font-size:13px;color:var(--text2)">T2+T3 (Longs seguidos): <span class="pnl-neg">-$300.00</span></div>
+        <div style="font-size:13px;color:var(--text2)">T5+T6+T7+T8+T9: <span class="pnl-neg">-$887.50</span></div>
+        <div style="font-size:12px;color:var(--red);font-weight:500;margin-top:6px">Costo sobreoperación: -$1,700.00</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-title">Niveles de referencia activos</div>
+  <div class="kpi" style="padding:14px 16px;font-size:12px;line-height:2">
+    <div><span style="color:var(--text3)">Window POC (apertura):</span> <strong>6609.25</strong> &nbsp;·&nbsp; <span style="color:var(--text3)">AP High:</span> <strong>6627.75</strong> &nbsp;·&nbsp; <span style="color:var(--text3)">AP Low:</span> <strong>6595.25</strong></div>
+    <div><span style="color:var(--text3)">LVNs apertura:</span> <strong>6607.00 · 6613.25</strong></div>
+    <div><span style="color:var(--text3)">Window POC (tarde):</span> <strong>6651.75</strong> &nbsp;·&nbsp; <span style="color:var(--text3)">AP High tarde:</span> <strong>6653.50</strong> &nbsp;·&nbsp; <span style="color:var(--text3)">AP Low tarde:</span> <strong>6630.75</strong></div>
+    <div><span style="color:var(--text3)">LVNs tarde:</span> <strong>6634.75 · 6645.75 · 6650.00</strong></div>
+    <div style="font-size:11px;color:var(--amber);border-top:0.5px solid var(--border);padding-top:8px;margin-top:4px">⚠️ Keltner Width = 0 en todos los fills — inválido por 3ª sesión consecutiva. ATR: 2.62 pts (mañana) comprimiéndose a 1.55 pts (tarde) — señal de que el mercado perdió energía direccional en la tarde.</div>
+  </div>
+
+  <div class="sub-title">Comparativa acumulada 8 sesiones</div>
+  <div class="kpi" style="padding:0;overflow:hidden">
+    <div class="met-row hdr"><span>Métrica</span><span>23–27 Mar</span><span>30 Mar ⚠️</span><span>31 Mar ⚠️</span><span>01 Abr ⚠️</span></div>
+    <div class="met-row"><span style="color:var(--text2)">P&L sim</span><span class="pnl-pos">+$3,553</span><span class="pnl-neg">-$2,201.50</span><span class="pnl-neg">-$862.50</span><span class="pnl-neg">-$1,250.00</span></div>
+    <div class="met-row"><span style="color:var(--text2)">WR sim</span><span>68% prom.</span><span class="neg">33%</span><span class="neg">25%</span><span class="neg">30%</span></div>
+    <div class="met-row"><span style="color:var(--text2)">Setups/sesión</span><span>3–4</span><span style="color:var(--red)">9</span><span style="color:var(--red)">4</span><span style="color:var(--red);font-weight:600">10 ⚠️</span></div>
+    <div class="met-row"><span style="color:var(--text2)">VIX</span><span>26–27</span><span style="color:var(--red)">31 🔴</span><span style="color:var(--amber)">29→27 🟡</span><span style="color:var(--amber)">25→24 🟡</span></div>
+    <div class="met-row" style="font-weight:500;border-top:0.5px solid var(--border2)"><span>Acum. sim</span><span class="pnl-pos">+$3,553</span><span class="pnl-pos">+$1,352</span><span class="pnl-pos">+$489.50</span><span class="pnl-neg">-$761.00</span></div>
+  </div>
+</div>
+
+<!-- ══ SECCIÓN 2 — CRÍTICO ══ -->
+<div class="section-divider"></div>
+<div id="critico" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">2</span>Análisis crítico</div>
+  <h2>Diagnóstico de la sesión — Sim</h2>
+  <p class="sub">VIX 25 · 10 setups en 4.5h · 7/10 violaciones · Tercer día negativo · El problema ya no es el régimen — es la ejecución</p>
+  <div id="insights-sim"></div>
+</div>
+
+<!-- ══ SECCIÓN 3 — SIM VS FONDEO ══ -->
+<div class="section-divider"></div>
+<div id="comp" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">3</span>Sim vs Fondeo</div>
+  <h2>Análisis comparativo — 01 Abr 2026</h2>
+  <p class="sub">Fondeo: /MESM26 (3c · $5/pt neto) · Sim: /ESM26 (1c · $50/pt) · Fondeo casi flat (-$3.75) · Sim -$1,250.00</p>
+
+  <div class="alert warning">
+    <div class="alert-title">Tercer día consecutivo donde el fondeo supera al sim — pero hoy el fondeo también operó con pérdidas acumuladas</div>
+    <div style="color:var(--text2)">El fondeo terminó en <strong style="color:var(--text)">-$3.75</strong> prácticamente flat. El trade FJ (Sell @6631.25 → SL activado como winner @6621, +$153.75) salvó completamente la sesión del fondeo. Sin FJ, el fondeo habría perdido -$157.50. El GTC trailing protegió en el único movimiento grande del día — pero el sistema de fondeo también sobreoperó con 10 trades en un mercado de rango.</div>
+  </div>
+
+  <div class="two-col" style="margin-top:10px">
+    <div class="kpi" style="border-top:3px solid #E24B4A">
+      <div class="kpi-label">Simulador (Sim101)</div>
+      <div class="kpi-value neg">-$1,250.00</div>
+      <div class="kpi-sub">10 setups · WR 30% · Sin SL fijo</div>
+    </div>
+    <div class="kpi" style="border-top:3px solid #EF9F27">
+      <div class="kpi-label">Cuenta fondeo</div>
+      <div class="kpi-value" style="color:var(--amber)">-$3.75</div>
+      <div class="kpi-sub">10 trades · WR 30% · SL ajustado ~2 pts</div>
+    </div>
+  </div>
+
+  <div class="alert info" style="margin-top:10px">
+    <div class="alert-title">P&L fondeo — datos confirmados por broker (columna Profit)</div>
+    <div style="color:var(--text2)">
+      Buy @6608.25 <span class="pnl-pos">+$30</span> · Sell @6614.75 <span class="pnl-pos">+$15</span> · Sell @6610.75 <span class="pnl-neg">-$30</span> · Sell @6611.25 <span class="pnl-neg">-$18.75</span> · Buy @6621 <span class="pnl-neg">-$45</span> · Buy @6616 <span class="pnl-neg">-$41.25</span> · Buy @6622.25 <span class="pnl-neg">-$22.50</span> · Buy @6638 <span class="pnl-neg">-$18.75</span> · Buy @6630.75 <span class="pnl-neg">-$26.25</span> · Buy @6621 <span class="pnl-pos">+$153.75</span> = <strong>Total: -$3.75</strong>
+    </div>
+  </div>
+
+  <div class="sub-title">Reconstrucción trades fondeo — correlato con sim</div>
+
+  <div class="comp-block" style="border-left:3px solid var(--green)">
+    <div class="comp-block-title"><span class="tag tag-win">FA — Ganadora</span> 09:51–09:52 · Sell @6610.25 → SL Buy @6608.25 (sin espejo en sim)</div>
+    <div class="comp-block-body">
+      Sin correlato en sim. Correlato contextual con T1 del sim (Short apertura). Fondeo vendió @6610.25 con SL @6608.25 y TP @6590.50. El SL @6608.25 se activó capturando 2 pts bajada. El TP @6590.50 fue cancelado. Primer trade del día sin espejo — patrón que se repite por tercera sesión.<br>
+      <strong>P&L fondeo: <span class="pnl-pos">+$30.00</span></strong> (2 pts × $5 × 3c)
+    </div>
+  </div>
+
+  <div class="comp-block" style="border-left:3px solid var(--green)">
+    <div class="comp-block-title"><span class="tag tag-win">FB — Ganadora</span> 10:04 · Buy @6613.75 → GTC Sell @6614.75</div>
+    <div class="comp-block-body">
+      Correlato exacto sim T2 (Long @6613.75 → @6615.25, +$75). Mismo precio de entrada al centavo. Fondeo capturó 1 pt con GTC @6614.75 vs sim que capturó 1.5 pts @6615.25. SL @6614.75 y TP @6629.75 cancelados. El GTC de 1 pt fue muy conservador — el precio llegó a 6615.25.<br>
+      <strong>P&L fondeo: <span class="pnl-pos">+$15.00</span></strong> (1 pt × $5 × 3c)
+    </div>
+  </div>
+
+  <div class="comp-block" style="border-left:3px solid var(--red)">
+    <div class="comp-block-title"><span class="tag tag-loss">FC — Pérdida</span> 10:06 · Buy @6612.75 → SL Sell @6610.75</div>
+    <div class="comp-block-body">
+      Correlato sim T3 (Long @6615.25 → @6607.75, -$375). El fondeo entró 2.5 pts más abajo que el sim, y el SL @6610.75 limitó la pérdida a solo 2 pts. El sim no tuvo SL ajustado y aguantó 7.5 pts en contra. El SL del fondeo contuvo una pérdida de $375 a $30 — factor 12.5× de diferencia.<br>
+      <strong>P&L fondeo: <span class="pnl-neg">-$30.00</span></strong> (2 pts × $5 × 3c)
+    </div>
+  </div>
+
+  <div class="comp-block" style="border-left:3px solid var(--red)">
+    <div class="comp-block-title"><span class="tag tag-loss">FD — Pérdida</span> 10:10 · Buy @6612.50 → SL Sell @6611.25</div>
+    <div class="comp-block-body">
+      Correlato sim T4 (Long @6613 → @6616.75, +$187.50). El sim ganó este trade — el fondeo activó el SL @6611.25 prematuramente. Diferencia de 0.50 pts en entrada (6612.50 vs 6613). El precio finalmente subió a 6616.75 como el sim capturó, pero el SL del fondeo era más ajustado y saltó en el movimiento inicial adverso.<br>
+      <strong>P&L fondeo: <span class="pnl-neg">-$18.75</span></strong> (1.25 pts × $5 × 3c)
+    </div>
+  </div>
+
+  <div class="comp-block" style="border-left:3px solid var(--red)">
+    <div class="comp-block-title"><span class="tag tag-loss">FE — Pérdida</span> 10:29 · Sell @6618 → SL Buy @6621</div>
+    <div class="comp-block-body">
+      Correlato exacto sim T5 (Short @6618 → @6621.50, -$175). Mismo precio de entrada. Fondeo SL @6621 (3 pts pérdida), sim aguantó hasta 6621.50 (3.5 pts). Resultado idéntico en dirección — el SL del fondeo fue marginalmente más protector (3 vs 3.5 pts).<br>
+      <strong>P&L fondeo: <span class="pnl-neg">-$45.00</span></strong> (3 pts × $5 × 3c)
+    </div>
+  </div>
+
+  <div class="comp-block" style="border-left:3px solid var(--red)">
+    <div class="comp-block-title"><span class="tag tag-loss">FF — Pérdida</span> 10:38 · Sell @6613.25 → SL Buy @6616</div>
+    <div class="comp-block-body">
+      Correlato sim T6 (Short @6615.75 → @6617.75, -$100). El fondeo vendió 2.5 pts más abajo pero el SL @6616 (2.75 pts de pérdida) se activó igualmente. El TP @6603 y el SL GTC @6616 fueron colocados — el precio subió y el SL activó.<br>
+      <strong>P&L fondeo: <span class="pnl-neg">-$41.25</span></strong> (2.75 pts × $5 × 3c)
+    </div>
+  </div>
+
+  <div class="comp-block" style="border-left:3px solid var(--red)">
+    <div class="comp-block-title"><span class="tag tag-loss">FG — Pérdida</span> 10:39 · Sell @6620.75 → SL Buy @6622.25</div>
+    <div class="comp-block-body">
+      Correlato sim T7 (Short @6620.25 → @6627.75, -$375). Mismo trade, misma dirección. Fondeo: SL @6622.25 = 1.5 pts pérdida = -$22.50. Sim: aguantó hasta 6627.75 = 7.5 pts pérdida = -$375. <strong style="color:var(--text)">Esta diferencia de $352.50 en un solo trade explica casi toda la brecha entre ambas cuentas hoy.</strong> El SL ajustado del fondeo es la única diferencia de ejecución relevante.<br>
+      <strong>P&L fondeo: <span class="pnl-neg">-$22.50</span></strong> (1.5 pts × $5 × 3c) vs sim <span class="pnl-neg">-$375</span>
+    </div>
+  </div>
+
+  <div class="comp-block" style="border-left:3px solid var(--red)">
+    <div class="comp-block-title"><span class="tag tag-loss">FH — Pérdida</span> 11:35 · Sell @6636.75 → SL Buy @6638</div>
+    <div class="comp-block-body">
+      Correlato sim T8 (Short @6634.25 → @6636.25, -$100). El fondeo entró más alto @6636.75 con SL @6638 (1.25 pts). Ambos perdedores, el fondeo con pérdida menor en dólares por el SL ajustado.<br>
+      <strong>P&L fondeo: <span class="pnl-neg">-$18.75</span></strong> (1.25 pts × $5 × 3c)
+    </div>
+  </div>
+
+  <div class="comp-block" style="border-left:3px solid var(--red)">
+    <div class="comp-block-title"><span class="tag tag-loss">FI — Pérdida</span> 14:05 · Sell @6629 → SL Buy @6630.75</div>
+    <div class="comp-block-body">
+      Correlato sim T9 (Short @6628.75 → @6631.50, -$137.50). Fondeo: SL @6630.75 = 1.75 pts = -$26.25. Sim aguantó hasta 6631.50 = 2.75 pts = -$137.50. El TP @6615 no fue alcanzado.<br>
+      <strong>P&L fondeo: <span class="pnl-neg">-$26.25</span></strong> (1.75 pts × $5 × 3c)
+    </div>
+  </div>
+
+  <div class="comp-block" style="border-left:3px solid var(--green)">
+    <div class="comp-block-title"><span class="tag tag-win">FJ — Ganadora clave</span> 14:11 · Sell @6631.25 → SL @6621 activado como TP</div>
+    <div class="comp-block-body">
+      Correlato sim T10 (Short @6631.50 → @6626.25, +$262.50). El fondeo vendió @6631.25, SL GTC @6621. El precio cayó fuerte y el SL @6621 se activó como captura de ganancia (10.25 pts). El sim capturó solo 5.25 pts @6626.25. <strong style="color:var(--text)">FJ fue el trade que salvó la sesión del fondeo: +$153.75 vs pérdidas acumuladas de -$157.50 en los otros 9 trades.</strong><br>
+      <strong>P&L fondeo: <span class="pnl-pos">+$153.75</span></strong> (10.25 pts × $5 × 3c) — el fondeo capturó casi el doble de pts que el sim
+    </div>
+  </div>
+
+  <div class="sub-title">Resumen P&L fondeo — datos broker</div>
+  <div class="kpi" style="padding:14px 16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">Ganadores (3 trades)</div>
+        <div style="font-size:13px">FJ Sell @6631.25: <span class="pnl-pos">+$153.75</span></div>
+        <div style="font-size:13px">FA Buy SL @6608.25: <span class="pnl-pos">+$30.00</span></div>
+        <div style="font-size:13px">FB GTC @6614.75: <span class="pnl-pos">+$15.00</span></div>
+        <div style="font-size:12px;color:var(--green);font-weight:500;margin-top:4px">Subtotal: +$198.75</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">Perdedores (7 trades)</div>
+        <div style="font-size:13px">FE SL @6621: <span class="pnl-neg">-$45.00</span></div>
+        <div style="font-size:13px">FF SL @6616: <span class="pnl-neg">-$41.25</span></div>
+        <div style="font-size:13px">FC SL @6610.75: <span class="pnl-neg">-$30.00</span></div>
+        <div style="font-size:13px">FI SL @6630.75: <span class="pnl-neg">-$26.25</span></div>
+        <div style="font-size:13px">FG SL @6622.25: <span class="pnl-neg">-$22.50</span></div>
+        <div style="font-size:13px">FD SL @6611.25: <span class="pnl-neg">-$18.75</span></div>
+        <div style="font-size:13px">FH SL @6638: <span class="pnl-neg">-$18.75</span></div>
+        <div style="font-size:12px;color:var(--red);font-weight:500;margin-top:4px">Subtotal: -$202.50</div>
+      </div>
+    </div>
+    <div style="border-top:0.5px solid var(--border);padding-top:10px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:0.5px solid var(--border)"><span style="color:var(--text2)">Ganadores (3)</span><span class="pnl-pos">+$198.75</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:0.5px solid var(--border)"><span style="color:var(--text2)">Perdedores (7)</span><span class="pnl-neg">-$202.50</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;font-weight:600;border-top:0.5px solid var(--border2)"><span>P&L NETO (broker)</span><span style="color:var(--amber)">-$3.75</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">Win Rate</span><span style="color:var(--amber)">3/10 = 30%</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">Profit Factor</span><span style="color:var(--amber)">0.98</span></div>
+    </div>
+  </div>
+
+  <div class="sub-title">¿Por qué el fondeo limitó mejor el daño?</div>
+  <div id="insights-comp"></div>
+
+  <div class="sub-title">Tendencia acumulada — 8 sesiones</div>
+  <div class="kpi" style="padding:0;overflow:hidden">
+    <div class="trend-row hdr"><span>Sesión</span><span>Sim</span><span>Fondeo</span><span>VIX</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">23 Mar</span><span class="pnl-pos">+$643</span><span class="pnl-neg">-$885</span><span>26</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">24 Mar</span><span class="pnl-pos">+$500</span><span class="pnl-neg">-$337</span><span>26</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">25 Mar</span><span class="pnl-pos">+$1,093</span><span class="pnl-neg">-$50</span><span>26</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">26 Mar</span><span class="pnl-pos">+$554.50</span><span style="color:var(--text3)">$0</span><span>27</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">27 Mar</span><span class="pnl-pos">+$762.50</span><span class="pnl-pos">+$63.75</span><span>27</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">30 Mar</span><span class="pnl-neg">-$2,201.50</span><span class="pnl-pos">+$45.00</span><span style="color:var(--red)">31 🔴</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">31 Mar</span><span class="pnl-neg">-$862.50</span><span class="pnl-pos">+$22.50</span><span style="color:var(--amber)">29→27 🟡</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">01 Abr</span><span class="pnl-neg" style="font-weight:600">-$1,250.00</span><span style="color:var(--amber);font-weight:600">-$3.75</span><span style="color:var(--amber)">25→24 🟡</span></div>
+    <div class="trend-row" style="font-weight:500;border-top:0.5px solid var(--border2)"><span>Acumulado</span><span class="pnl-neg">-$761.00</span><span class="pnl-neg">~-$1,189.50</span><span></span></div>
+  </div>
+  <div class="chart-wrap" style="height:150px;margin-top:12px"><canvas id="chartTrend"></canvas></div>
+</div>
+
+<!-- ══ SECCIÓN 4 — DIAGNÓSTICO ══ -->
+<div class="section-divider"></div>
+<div id="hallazgo" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">4</span>Diagnóstico del 01 Abr</div>
+  <h2>Tercer día negativo consecutivo: el VIX ya no es la excusa</h2>
+  <p class="sub">VIX 25 · 10 setups · 7/10 violaciones · Sobreoperación + ausencia de SL = patrón estructural</p>
+
+  <div class="stat-grid">
+    <div class="stat-box"><div class="stat-val neg">-$1,250</div><div class="stat-lbl">Sim · 10 setups</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--amber)">-$3.75</div><div class="stat-lbl">Fondeo · casi flat</div></div>
+    <div class="stat-box"><div class="stat-val neg">-$761</div><div class="stat-lbl">Acum. sim 8 días</div></div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-label">Diagnóstico cualitativo — sesión 01 Abr</div>
+    <h3>El mercado ofreció 2 setups rentables — el sistema los encontró y los tomó, pero no se detuvo en ellos</h3>
+
+    <p>Hoy el VIX estaba en 25 — el nivel más favorable en 4 sesiones. El sistema de tendencia debería operar mejor en este régimen. Y en efecto, T4 (+$187.50) y T10 (+$262.50) funcionaron exactamente como esperado: buena confluencia, precio respetó la dirección, resultado positivo. <strong>El problema no fue que el sistema no funcione — fue que se tomaron 8 setups más junto a esos 2.</strong></p>
+
+    <p>El análisis más revelador del día: si solo se hubieran tomado T4 y T10 (los de mayor confluencia y resultado), el P&L de la sesión sería +$450. En cambio, la sesión registró -$1,250. La diferencia de -$1,700 es exactamente el costo de los 8 setups no válidos o de menor calidad. <strong>Este es el tercer día consecutivo donde el exceso de frecuencia convierte una sesión potencialmente positiva en negativa.</strong></p>
+
+    <p>El trade T1 con scale-in merece análisis especial. La primera entry (F_1_1, Short @6612.75) tenía señales razonables: SMA20 bajista, SMA80 bajista, LR89 bajista, y VWAP DOWN — 3/4 o incluso 4/4 dependiendo de cómo se evalúe. Era un setup aceptable. La segunda entry (F_1_2, Short @6609) ya tenía VWAP UP y LR89 positivo — señales directamente en contra del Short. <strong>El scale-in se ejecutó cuando las señales ya estaban invirtiendo. Esto no es scale-in con convicción — es promediar a la baja en un trade que el mercado ya estaba rechazando.</strong></p>
+
+    <p>La comparativa fondeo vs sim en el trade FG/T7 es el dato más concreto del día: mismo Short @6620-6620.75, mismo momento. El fondeo tenía SL @6622.25 (1.5 pts) = -$22.50. El sim no tenía SL definido y aguantó hasta 6627.75 (7.5 pts) = -$375. <strong>Una diferencia de $352.50 en un solo trade, causada exclusivamente por la presencia o ausencia del stop loss.</strong> Si el sim tuviera SL de 2 pts en todos los trades, el P&L de la sesión habría sido radicalmente diferente.</p>
+
+    <div class="rules-box">
+      <div class="rules-box-title">Reglas de implementación inmediata — desde el 02 Abr</div>
+      <div class="rule-item">🔴 <strong>Stop Loss explícito en el sim — antes de cada entry:</strong> definir el SL en el momento de planear el trade, no después de entrar. SL máximo = 2 pts (1 ATR aprox.) para trades de 1 contrato ES. Sin SL definido = sin trade.</div>
+      <div class="rule-item">🔴 <strong>Máximo 4 setups por sesión — regla absoluta:</strong> 10 setups hoy es el máximo histórico y el resultado fue -$1,250. Los 4 setups deben ser los de mayor confluencia disponible. Si después de 4 el P&L es positivo, la sesión terminó con éxito. Si es negativo, también terminó.</div>
+      <div class="rule-item">🔴 <strong>El scale-in tiene condiciones necesarias que hoy no se cumplieron:</strong> (1) primer trade en ganancia mínima de 1 ATR, (2) señales 4/4 aún activas al momento de agregar, (3) tiempo mínimo de 5 minutos desde la primera entry. En T1, la segunda entry se ejecutó con señales invertidas a los pocos minutos de la primera.</div>
+      <div class="rule-item">🟡 <strong>T4 y T10 son el modelo de sesión correcta — esperar confirmación y operar 2 setups selectivos:</strong> T4 esperó después del chop de T2/T3. T10 esperó hasta la tarde. Ambos rentables. La paciencia entre setups es la diferencia entre +$450 y -$1,250.</div>
+      <div class="rule-item">🟡 <strong>La tarde (14h) ofreció el mejor trade del día — considerar operar solo la tarde en días de rango:</strong> el precio comprimió en la mañana (6607–6622) y dio movimiento en la tarde (6628–6634 con reversal a 6621). Mañana choppy + tarde con estructura = sesión solo en tarde es una táctica válida.</div>
+      <div class="rule-item">🟢 <strong>El SL de 2 pts del fondeo transformó -$375 (T7 sim) en -$22.50 (FG fondeo) — adoptar este SL en el sim:</strong> la diferencia no es el análisis, no es la entrada, no es la dirección — es únicamente el stop loss. Implementar SL de 2 pts como práctica estándar del sim desde ya.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ YOUTUBE ══ -->
+<div id="video" style="scroll-margin-top:52px">
+  <div class="yt-block">
+    <div class="yt-icon">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </div>
+    <div class="yt-text">
+      <div class="yt-title">Operativa en vivo — 01 Abr 2026</div>
+      <div class="yt-sub">Mira el análisis y la ejecución de esta sesión en tiempo real en YouTube</div>
+  
+    </div>
+  
+    <a href="https://youtube.com/live/aB-U10BsQy8" target="_blank" rel="noopener noreferrer" class="yt-btn">Ver en YouTube (am) →</a>
+    <a href="https://youtube.com/live/Qovb8Uv3CXY" target="_blank" rel="noopener noreferrer" class="yt-btn">Ver en YouTube (pm) →</a>
+  
+  </div>
+</div>
+
+</div>
+<footer>Generado el 01 Abr 2026 · ES JUN26 · Sim101 vs Cuenta Fondeo (MES) · VIX 25.27→24.54 · Reporte de uso personal</footer>
+
+<!--
+═══════════════════════════════════════════════════════════════
+CÓDIGO PARA COPIAR EN LA PÁGINA INICIAL — 01 ABR 2026:
+═══════════════════════════════════════════════════════════════
+
+<!-- 01 ABR 2026 -->
+<!--<a class="edus-card" href="https://edustrader.blogspot.com/p/analisis-operativa-del-01-abril-2026.html" target="_blank">
+  <div class="edus-card-accent" style="background:#854f0b"></div>
+  <div class="edus-card-body">
+    <div class="edus-card-date-block">
+      <div class="edus-card-day">01</div>
+      <div class="edus-card-month">Abr 2026</div>
+    </div>
+    <div class="edus-card-info">
+      <div class="edus-card-title">Miércoles — ES · VIX 25 · Rango sin tendencia</div>
+      <div class="edus-card-desc">10 setups sim (récord) · 7/10 violaciones confluencia · Fondeo casi flat · Scale-in erróneo T1 · SL ausente amplificó pérdidas</div>
+      <div class="edus-card-meta">
+        <span class="edus-tag es">ES JUN26</span>
+        <span class="edus-tag neg">Sim -$1,250.00</span>
+        <span class="edus-tag neg">Fondeo -$3.75</span>
+        <span class="edus-tag neg">WR sim 30%</span>
+        <span class="edus-tag neg">WR fondeo 30%</span>
+      </div>
+    </div>
+    <div class="edus-card-pnl-block">
+      <div class="edus-card-pnl neg">-$1,250.00</div>
+      <div class="edus-card-pnl-sub">Sim · 10 setups</div>
+      <div class="edus-card-pnl" style="font-size:14px;margin-top:6px;color:#854f0b">-$3.75</div>
+      <div class="edus-card-pnl-sub">Fondeo · 10 trades</div>
+    </div>
+  </div>
+  <div class="edus-card-arrow">›</div>
+</a>
+
+═══════════════════════════════════════════════════════════════
+-->
+
+<script>
+const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+const tc = isDark ? '#9c9a92' : '#73726c';
+const gc = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+// Setups 01 Abr 2026
+// T1 scale-in: Entry1 @6612.75 Exit @6615.50 → -(2.75×50)=-137.50 / Entry2 @6609 Exit @6616.50 → -(7.5×50)=-375 → total -512.50
+// T2: Long @6613.75 → @6615.25 = +1.5×50 = +75
+// T3: Long @6615.25 → @6607.75 = -7.5×50 = -375
+// T4: Long @6613 → @6616.75 = +3.75×50 = +187.50
+// T5: Short @6618 → @6621.50 = -3.5×50 = -175
+// T6: Short @6615.75 → @6617.75 = -2×50 = -100
+// T7: Short @6620.25 → @6627.75 = -7.5×50 = -375
+// T8: Short @6634.25 → @6636.25 = -2×50 = -100
+// T9: Short @6628.75 → @6631.50 = -2.75×50 = -137.50
+// T10: Short @6631.50 → @6626.25 = +5.25×50 = +262.50
+// Total: -512.50+75-375+187.50-175-100-375-100-137.50+262.50 = -1250
+var setups = [
+  { id:'T1*', hora:'9:45',  dir:'Short', qty:'1+1', entry:6612.75, exit:6615.5,  pnl:-512.5,  sma20:-0.3475, sma80:-0.1534, lr89:-0.5237, vwap:'DOWN', si:true  },
+  { id:'T2',  hora:'10:04', dir:'Long',  qty:1,     entry:6613.75, exit:6615.25, pnl:75,      sma20:0.22,    sma80:0.2038,  lr89:0.1384,  vwap:'DOWN', si:false },
+  { id:'T3',  hora:'10:05', dir:'Long',  qty:1,     entry:6615.25, exit:6607.75, pnl:-375,    sma20:0.1288,  sma80:0.1647,  lr89:0.055,   vwap:'UP',   si:false },
+  { id:'T4',  hora:'10:10', dir:'Long',  qty:1,     entry:6613,    exit:6616.75, pnl:187.5,   sma20:0.12,    sma80:0.0897,  lr89:0.1365,  vwap:'DOWN', si:false },
+  { id:'T5',  hora:'10:28', dir:'Short', qty:1,     entry:6618,    exit:6621.5,  pnl:-175,    sma20:-0.2575, sma80:0.0216,  lr89:0.0631,  vwap:'UP',   si:false },
+  { id:'T6',  hora:'10:38', dir:'Short', qty:1,     entry:6615.75, exit:6617.75, pnl:-100,    sma20:-0.1325, sma80:-0.0794, lr89:-0.2488, vwap:'DOWN', si:false },
+  { id:'T7',  hora:'10:39', dir:'Short', qty:1,     entry:6620.25, exit:6627.75, pnl:-375,    sma20:0.2137,  sma80:-0.0516, lr89:-0.0027, vwap:'UP',   si:false },
+  { id:'T8',  hora:'11:31', dir:'Short', qty:1,     entry:6634.25, exit:6636.25, pnl:-100,    sma20:-0.2137, sma80:-0.0725, lr89:-0.1943, vwap:'DOWN', si:false },
+  { id:'T9',  hora:'14:05', dir:'Short', qty:1,     entry:6628.75, exit:6631.5,  pnl:-137.5,  sma20:-0.2988, sma80:-0.2641, lr89:-0.3937, vwap:'DOWN', si:false },
+  { id:'T10', hora:'14:11', dir:'Short', qty:1,     entry:6631.5,  exit:6626.25, pnl:262.5,   sma20:-0.0262, sma80:-0.1862, lr89:0.0557,  vwap:'UP',   si:false }
+];
+
+function sigScore(t){
+  var up=(t.dir==='Long');
+  var v=up?(t.vwap==='UP'):(t.vwap==='DOWN');
+  var s=up?(t.sma20>0):(t.sma20<0);
+  var e=up?(t.sma80>0):(t.sma80<0);
+  var l=up?(t.lr89>0):(t.lr89<0);
+  return {v:v,s:s,e:e,l:l,score:[v,s,e,l].filter(Boolean).length};
+}
+function dot(ok){return '<span class="sdot '+(ok?'dot-g':'dot-r')+'"></span>';}
+function sigCell(t){
+  var sig=sigScore(t);
+  var color=sig.score>=3?(sig.score===4?'#639922':'#888780'):'#EF9F27';
+  return '<div class="sig-inline">'+dot(sig.v)+dot(sig.s)+dot(sig.e)+dot(sig.l)+'<span style="font-size:10px;color:'+color+';font-weight:'+(sig.score<3?'500':'400')+';margin-left:3px">'+sig.score+'/4</span></div>';
+}
+function hdr(){return '<thead><tr><th>#</th><th>Hora</th><th>Dir.</th><th>Qty</th><th>Entry</th><th>Exit</th><th>P&L</th><th>Señales</th><th>Válido</th></tr></thead>';}
+function rows(list){
+  return '<tbody>'+list.map(function(t){
+    var win=t.pnl>0;
+    var sig=sigScore(t);
+    var viol=sig.score<3;
+    var cls=viol?'viol':(win?'win':'loss');
+    var pnl=(t.pnl>=0?'+':'')+'$'+Math.abs(t.pnl).toFixed(2);
+    var badge=viol?'<span class="badge viol">⚡ Viol.</span>':'<span class="badge ok">✓ OK</span>';
+    var scTag=t.si?'<span class="scale-badge">scale-in</span>':'';
+    return '<tr class="'+cls+'"><td><strong>'+t.id+'</strong>'+scTag+'</td><td style="color:var(--text3);font-size:11px">'+t.hora+'</td><td><span class="badge '+t.dir.toLowerCase()+'">'+t.dir+'</span></td><td style="color:var(--text3)">×'+t.qty+'</td><td style="font-size:11px">'+t.entry+'</td><td style="font-size:11px">'+t.exit+'</td><td class="'+(win?'pnl-pos':'pnl-neg')+'">'+pnl+'</td><td>'+sigCell(t)+'</td><td>'+badge+'</td></tr>';
+  }).join('')+'</tbody>';
+}
+function build(id,list){var el=document.getElementById(id);if(el)el.innerHTML=hdr()+rows(list);}
+build('table-all', setups);
+build('table-win', setups.filter(function(t){return t.pnl>0;}));
+build('table-loss',setups.filter(function(t){return t.pnl<=0;}));
+build('table-viol',setups.filter(function(t){return sigScore(t).score<3;}));
+
+function showTab(e,n){
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
+  e.target.classList.add('active');
+  document.getElementById('tab-'+n).classList.add('active');
+}
+
+// Insights sim
+var simInsights=[
+  {type:'crit',title:'T1 scale-in: la segunda entry con VWAP invertida convirtió -$137.50 en -$512.50',text:'La primera entry Short @6612.75 (F_1_1) tenía SMA20↓, SMA80↓, LR89↓ y VWAP DOWN — hasta 4/4 señales alineadas. Era válida. La segunda entry Short @6609 (F_1_2) ya registraba VWAP UP y LR89 positivo (0.0377) — señales directamente opuestas al Short. Al agregar 1 contrato adicional cuando el mercado estaba invirtiendo, la pérdida combinada fue -$512.50 en lugar de -$137.50. El scale-in triplicó el daño. La regla es clara: el scale-in solo es válido cuando las señales del primer trade siguen activas.'},
+  {type:'crit',title:'T7: -$375 por ausencia de SL — el mismo trade le costó $22.50 al fondeo',text:'T7 Short @6620.25 → @6627.75 en 1 minuto = -$375. Las señales eran mixtas (SMA20 positivo = en contra del Short, VWAP UP = en contra). El fondeo tomó el mismo trade Short @6620.75 con SL @6622.25 y perdió solo -$22.50. La diferencia de $352.50 entre ambas cuentas en un solo trade se explica únicamente por el stop loss. Con un SL de 2 pts en el sim, T7 habría sido -$100 en lugar de -$375.'},
+  {type:'crit',title:'T2 y T3 — dos Longs consecutivos: el segundo revirtió todo lo ganado y más',text:'T2 (Long @6613.75 → @6615.25, +$75) y T3 (Long @6615.25 → @6607.75, -$375) se ejecutaron con 1 minuto de diferencia en la misma dirección. T3 entró al precio exacto de salida de T2. El mercado cayó 7.5 pts desde ese precio. T3 tenía VWAP ya en UP (señal contra el Long) — una diferencia fundamental con T2. Tomar T3 en las mismas condiciones que T2 cuando la VWAP ya cambió es el error de no reevaluar el mercado entre setups consecutivos.'},
+  {type:'warn',title:'10 setups en 4.5h = 1 setup cada 27 minutos — la frecuencia más alta del registro',text:'Este es el mayor número de setups en una sesión del historial. La distribución: 7 setups en la mañana (9:45–11:35) y 2 en la tarde (14:05–14:15). De los 10, solo 3 fueron rentables. La mañana concentró el daño (-$1,375 de los primeros 8 setups) mientras que la tarde fue casi neutral (T9 -$137.50, T10 +$262.50 = +$125 neto). Paradójicamente, la tarde con menor actividad fue más rentable que la mañana con mayor actividad.'},
+  {type:'info',title:'T4 y T10 son el modelo — esperar setups de SMA alineadas y precio con recorrido',text:'T4 (Long @6613, SMA20↑ 0.12, SMA80↑ 0.0897, LR89↑ 0.1365) tenía las 3 medias alineadas para Long. Duró 11 minutos y capturó 3.75 pts. T10 (Short @6631.50, SMA20↓, SMA80↓) tenía las 2 medias principales bajistas. Capturó 5.25 pts. Ambos buscaron zonas de máximo/mínimo del rango del día (6613 = zona de soporte, 6631 = zona de resistencia). Este es el patrón de selección correcto: zonas extremas del rango + SMA alineadas + esperar.'}
+];
+document.getElementById('insights-sim').innerHTML=simInsights.map(function(i){
+  return '<div class="icard '+i.type+'"><div class="icard-title">'+i.title+'</div><div class="icard-text">'+i.text+'</div></div>';
+}).join('');
+
+// Insights comp
+var compInsights=[
+  {type:'good',title:'FJ (+$153.75) salvó la sesión del fondeo — el GTC trailing capturó el único movimiento grande del día',text:'El fondeo tuvo 9 trades con resultado entre -$45 y +$30 cada uno (pérdidas acumuladas -$157.50). El único trade que marcó la diferencia fue FJ: Short @6631.25, SL GTC @6621. Cuando el precio finalmente cayó fuerte hacia 6620, el SL @6621 se activó como ganancia de 10.25 pts = +$153.75. Sin este trade, el fondeo hubiera perdido -$157.50. Esto confirma el patrón: el GTC trailing captura los movimientos grandes que el mercado ofrece esporádicamente.'},
+  {type:'good',title:'FC vs T3: mismo movimiento, -$30 vs -$375 — el SL del fondeo como modelo para el sim',text:'FC (Long @6612.75, SL @6610.75) perdió 2 pts = -$30 en el movimiento bajista. T3 del sim (Long @6615.25, sin SL) aguantó 7.5 pts = -$375. Diferencia: $345 en el mismo movimiento de mercado, causada solo por el SL. El fondeo no fue más inteligente en el análisis — fue más disciplinado en la gestión de riesgo. Adoptar el SL de 2 pts como estándar del sim eliminaría las pérdidas de -$375 como T3 y T7.'},
+  {type:'warn',title:'El fondeo también sobreoperó — 10 trades en un mercado de rango que solo ofreció 1 movimiento grande',text:'Con VIX 25 y rango estrecho (6607–6633), el mercado ofreció 1 movimiento rentable significativo (el bajista de la tarde de ~10 pts). El fondeo capturó ese movimiento con FJ (+$153.75). Los otros 9 trades fueron ruido — acumularon -$157.50 de pérdidas por SL activados. Si el fondeo hubiera tomado solo 3–4 trades selectivos y uno de ellos fuera FJ, el resultado habría sido mejor con menos riesgo. La regla de máximo setups aplica al fondeo también.'},
+  {type:'info',title:'FD vs T4: el SL demasiado ajustado del fondeo saltó prematuramente en el mejor trade del día',text:'T4 del sim (Long @6613 → @6616.75, +$187.50) fue el mejor trade de la mañana. FD del fondeo entró casi al mismo precio (6612.50) pero el SL @6611.25 fue activado antes de que el precio subiera a 6616.75. El fondeo perdió -$18.75 en un trade que el sim ganó +$187.50. Esto muestra que SL muy ajustados (1.25 pts) pueden ser contraproducentes en setups válidos con recorrido. El SL óptimo debe ser de 2 pts mínimo para dar espacio al trade de desarrollarse.'}
+];
+document.getElementById('insights-comp').innerHTML=compInsights.map(function(i){
+  return '<div class="icard '+i.type+'"><div class="icard-title">'+i.title+'</div><div class="icard-text">'+i.text+'</div></div>';
+}).join('');
+
+// Bar chart
+var labels=setups.map(function(s){return s.id;});
+var pnls=setups.map(function(s){return s.pnl;});
+new Chart(document.getElementById('chartBar'),{
+  type:'bar',
+  data:{labels:labels,datasets:[{data:pnls,backgroundColor:pnls.map(function(v){return v>=0?'rgba(99,153,34,0.75)':'rgba(226,75,74,0.75)';}),borderRadius:4,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return (ctx.raw>=0?'+':'')+'$'+Math.abs(ctx.raw).toFixed(2);}}}},scales:{x:{ticks:{color:tc,font:{size:11}},grid:{color:gc}},y:{ticks:{color:tc,font:{size:11},callback:function(v){return '$'+v;}},grid:{color:gc}}}}
+});
+
+// Curve chart
+var cum=0;
+var cumData=setups.map(function(s){cum+=s.pnl;return Math.round(cum*100)/100;});
+new Chart(document.getElementById('chartCurve'),{
+  type:'line',
+  data:{labels:labels,datasets:[{data:cumData,borderColor:'#E24B4A',backgroundColor:'rgba(226,75,74,0.07)',fill:true,tension:0.35,pointBackgroundColor:cumData.map(function(v){return v>=0?'#639922':'#E24B4A';}),pointRadius:5,borderWidth:2}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return 'Acum.: $'+ctx.raw.toFixed(2);}}}},scales:{x:{ticks:{color:tc,font:{size:11}},grid:{display:false}},y:{ticks:{color:tc,font:{size:11},callback:function(v){return '$'+v;}},grid:{color:gc}}}}
+});
+
+// Trend chart 8 sessions
+new Chart(document.getElementById('chartTrend'),{
+  type:'line',
+  data:{
+    labels:['23 Mar','24 Mar','25 Mar','26 Mar','27 Mar','30 Mar','31 Mar','01 Abr'],
+    datasets:[
+      {label:'Fondeo',data:[-885,-337,-50,0,63.75,45,22.5,-3.75],borderColor:'#EF9F27',backgroundColor:'rgba(239,159,39,0.07)',fill:true,tension:0.3,pointBackgroundColor:['#E24B4A','#E24B4A','#EF9F27','#888780','#639922','#639922','#639922','#EF9F27'],pointRadius:5,borderWidth:2},
+      {label:'Sim',data:[643,500,1093,554.5,762.5,-2201.5,-862.5,-1250],borderColor:'#639922',backgroundColor:'rgba(99,153,34,0.06)',fill:true,tension:0.3,pointBackgroundColor:['#639922','#639922','#639922','#639922','#639922','#E24B4A','#E24B4A','#E24B4A'],pointRadius:4,borderWidth:1.5}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{color:tc,font:{size:11},boxWidth:10,padding:10}},tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': $'+ctx.raw;}}}},scales:{x:{ticks:{color:tc,font:{size:11}},grid:{display:false}},y:{ticks:{color:tc,font:{size:10},callback:function(v){return '$'+v;}},grid:{color:gc}}}}
+});
+
+// Nav scroll
+var sections=['sim','critico','comp','hallazgo','video'];
+window.addEventListener('scroll',function(){
+  var cur='sim';
+  sections.forEach(function(id){var el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-80)cur=id;});
+  document.querySelectorAll('nav a').forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+});
+</script>
+</body>
+</html>
