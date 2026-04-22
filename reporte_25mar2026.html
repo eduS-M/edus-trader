@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Operativo — 25 Mar 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:       #ffffff; --bg2: #f5f4f0; --bg3: #eeecea;
+    --text:     #1a1a18; --text2: #5f5e5a; --text3: #888780;
+    --border:   rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.20);
+    --green:    #3b6d11; --green-bg: #eaf3de;
+    --red:      #a32d2d; --red-bg:   #fcebeb;
+    --amber:    #854f0b; --amber-bg: #faeeda;
+    --blue:     #185fa5; --blue-bg:  #e6f1fb;
+    --r-md: 8px; --r-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1c; --bg2: #272724; --bg3: #2e2e2b;
+      --text: #e8e6e0; --text2: #9c9a92; --text3: #6e6d67;
+      --border: rgba(255,255,255,0.09); --border2: rgba(255,255,255,0.18);
+      --green: #8fb85a; --green-bg: rgba(99,153,34,0.14);
+      --red: #e87878;   --red-bg:   rgba(226,75,74,0.14);
+      --amber: #f0b060; --amber-bg: rgba(239,159,39,0.14);
+      --blue: #6aaee8;  --blue-bg:  rgba(55,138,221,0.14);
+    }
+  }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+
+  /* NAV */
+  nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 0.5px solid var(--border2); padding: 0 2rem; display: flex; align-items: center; overflow-x: auto; }
+  nav .brand { font-size: 13px; font-weight: 500; color: var(--text); padding: 14px 0; margin-right: 24px; white-space: nowrap; }
+  nav a { font-size: 12px; color: var(--text3); text-decoration: none; padding: 16px 14px; border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; white-space: nowrap; }
+  nav a:hover { color: var(--text); }
+  nav a.active { color: var(--text); border-bottom-color: var(--text); font-weight: 500; }
+
+  /* LAYOUT */
+  .page { max-width: 960px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+  .section-divider { height: 0.5px; background: var(--border2); margin: 3rem 0 2rem; }
+  .section-label { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text3); margin-bottom: 1rem; }
+  .section-label .num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--bg2); border: 0.5px solid var(--border2); font-size: 10px; font-weight: 500; color: var(--text2); }
+  h2 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
+  .sub { font-size: 12px; color: var(--text3); margin-bottom: 1.5rem; }
+  .sub-title { font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text3); margin: 1.5rem 0 0.7rem; }
+
+  /* KPI */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+  .kpi { background: var(--bg2); border-radius: var(--r-md); padding: 12px 14px; }
+  .kpi-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .kpi-value { font-size: 22px; font-weight: 500; }
+  .kpi-sub   { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .pos { color: var(--green); } .neg { color: var(--red); } .neu { color: var(--text); }
+  .pnl-pos { color: var(--green); font-weight: 500; }
+  .pnl-neg { color: var(--red);   font-weight: 500; }
+
+  /* CHARTS */
+  .chart-wrap { position: relative; width: 100%; }
+
+  /* ALERTS */
+  .alert { border-radius: var(--r-md); padding: 12px 14px; font-size: 12px; margin-top: 10px; }
+  .alert.success { background: var(--green-bg); border: 0.5px solid rgba(99,153,34,0.35); }
+  .alert.danger  { background: var(--red-bg);   border: 0.5px solid rgba(226,75,74,0.35); }
+  .alert.warning { background: var(--amber-bg); border: 0.5px solid rgba(239,159,39,0.35); }
+  .alert.info    { background: var(--blue-bg);  border: 0.5px solid rgba(55,138,221,0.35); }
+  .alert-title { font-weight: 500; margin-bottom: 3px; }
+  .alert.success .alert-title { color: var(--green); }
+  .alert.danger  .alert-title { color: var(--red); }
+  .alert.warning .alert-title { color: var(--amber); }
+  .alert.info    .alert-title { color: var(--blue); }
+
+  /* TRADE TABLE */
+  .trade-row { display: grid; grid-template-columns: 58px 70px 1fr 80px 80px 110px; gap: 8px; align-items: center; padding: 9px 12px; font-size: 12px; border-bottom: 0.5px solid var(--border); }
+  .trade-row:last-child { border-bottom: none; }
+  .trade-row.hdr { font-size: 11px; color: var(--text3); font-weight: 500; padding-bottom: 6px; }
+  .badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+  .badge.long  { background: var(--blue-bg);  color: var(--blue); }
+  .badge.short { background: var(--amber-bg); color: var(--amber); }
+
+  /* TABS */
+  .tab-row { display: flex; gap: 4px; margin-bottom: 1rem; border-bottom: 0.5px solid var(--border); padding-bottom: 8px; }
+  .tab { padding: 5px 14px; border-radius: var(--r-md); font-size: 12px; cursor: pointer; border: 0.5px solid transparent; color: var(--text3); background: transparent; font-family: var(--font); }
+  .tab.active { background: var(--bg2); border-color: var(--border2); color: var(--text); font-weight: 500; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* SIGNALS */
+  .sdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .dot-g { background: #639922; } .dot-r { background: #E24B4A; }
+  .sig-row { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+  .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mini-bar-wrap { background: var(--border); border-radius: 2px; height: 6px; overflow: hidden; margin-top: 4px; }
+  .mini-bar { height: 6px; border-radius: 2px; }
+
+  /* INSIGHT CARDS */
+  .icard { background: var(--bg2); border-radius: var(--r-md); padding: 13px 15px; margin-bottom: 8px; border-left: 3px solid transparent; }
+  .icard.crit { border-left-color: #E24B4A; } .icard.warn { border-left-color: #EF9F27; }
+  .icard.good { border-left-color: #639922; } .icard.info { border-left-color: #378ADD; }
+  .icard-title { font-size: 13px; font-weight: 500; margin-bottom: 5px; }
+  .icard-text  { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+  /* VIX BADGE */
+  .vix-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--amber-bg); border: 0.5px solid rgba(239,159,39,0.4); border-radius: var(--r-md); padding: 8px 14px; font-size: 12px; color: var(--amber); font-weight: 500; margin-bottom: 14px; }
+
+  /* COMP TABLE */
+  .comp-row { display: grid; grid-template-columns: 58px 1fr 1fr 1fr; gap: 8px; align-items: start; padding: 10px 12px; font-size: 12px; border-bottom: 0.5px solid var(--border); }
+  .comp-row:last-child { border-bottom: none; }
+  .comp-row.hdr { font-size: 11px; color: var(--text3); font-weight: 500; padding-bottom: 6px; }
+  .comp-row.missed  { background: rgba(239,159,39,0.07); border-radius: var(--r-md); }
+  .comp-row.partial { background: rgba(55,138,221,0.06); border-radius: var(--r-md); }
+  .comp-row.lost    { background: rgba(226,75,74,0.06);  border-radius: var(--r-md); }
+  .comp-row.saved   { background: rgba(99,153,34,0.06);  border-radius: var(--r-md); }
+  .tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 500; }
+  .tag-exec   { background: var(--blue-bg);  color: var(--blue); }
+  .tag-missed { background: var(--amber-bg); color: var(--amber); }
+  .tag-saved  { background: var(--green-bg); color: var(--green); }
+  .entry-info { font-size: 10px; color: var(--text3); margin-top: 3px; }
+  .dur { display: inline-block; padding: 1px 5px; border-radius: 3px; font-size: 10px; background: var(--bg2); color: var(--text3); border: 0.5px solid var(--border); margin-left: 4px; }
+
+  /* ORDER LOG */
+  .order-row { display: grid; grid-template-columns: 72px 50px 50px 70px 40px 1fr; gap: 6px; align-items: center; padding: 7px 10px; font-size: 11px; border-bottom: 0.5px solid var(--border); }
+  .order-row:last-child { border-bottom: none; }
+  .order-row.hdr { font-size: 10px; color: var(--text3); font-weight: 500; }
+  .filled    { color: var(--green); font-weight: 500; }
+  .cancelled { color: var(--text3); }
+  .key-fill  { color: var(--red);   font-weight: 500; }
+
+  /* MET TABLE */
+  .met-row { display: grid; grid-template-columns: 110px 1fr 1fr 1fr; gap: 8px; padding: 6px 12px; font-size: 12px; border-bottom: 0.5px solid var(--border); align-items: center; }
+  .met-row.hdr { font-size: 11px; color: var(--text3); font-weight: 500; }
+  .met-row:last-child { border-bottom: none; }
+  .delta-pos { color: var(--green); font-size: 11px; }
+  .delta-neg { color: var(--red);   font-size: 11px; }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* FINDING */
+  .finding { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: var(--r-lg); padding: 24px 28px; position: relative; overflow: hidden; }
+  .finding::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(180deg, #EF9F27 0%, #639922 100%); }
+  .finding-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); margin-bottom: 8px; }
+  .finding h3 { font-size: 17px; font-weight: 500; margin-bottom: 12px; line-height: 1.4; }
+  .finding p  { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 10px; }
+  .finding p:last-child { margin-bottom: 0; }
+  .finding strong { color: var(--text); font-weight: 500; }
+  .stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 16px 0; }
+  .stat-box  { background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--r-md); padding: 12px 14px; text-align: center; }
+  .stat-val  { font-size: 22px; font-weight: 500; }
+  .stat-lbl  { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .rules-box { background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--r-md); padding: 14px 16px; margin-top: 16px; }
+  .rules-box-title { font-size: 12px; font-weight: 500; margin-bottom: 10px; }
+  .rule-item { font-size: 12px; color: var(--text2); padding: 5px 0; border-bottom: 0.5px solid var(--border); line-height: 1.5; }
+  .rule-item:last-child { border-bottom: none; }
+
+  /* TREND TABLE */
+  .trend-row { display: grid; grid-template-columns: 90px 1fr 1fr 1fr; gap: 8px; padding: 7px 12px; font-size: 12px; border-bottom: 0.5px solid var(--border); align-items: center; }
+  .trend-row.hdr { font-size: 11px; color: var(--text3); font-weight: 500; }
+  .trend-row:last-child { border-bottom: none; }
+  .improve { color: var(--green); font-size: 11px; }
+
+  /* YOUTUBE */
+  .yt-block { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: var(--r-lg); padding: 18px 22px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 2rem; }
+  .yt-icon  { width: 44px; height: 44px; border-radius: 50%; background: #c0392b; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .yt-icon svg { width: 20px; height: 20px; fill: #fff; }
+  .yt-text  { flex: 1; min-width: 180px; }
+  .yt-title { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+  .yt-sub   { font-size: 12px; color: var(--text3); }
+  .yt-btn   { display: inline-block !important; background: #c0392b !important; color: #ffffff !important; font-size: 12px; font-weight: 600; padding: 10px 20px; border-radius: var(--r-md); text-decoration: none !important; white-space: nowrap; transition: opacity .2s; border: none !important; }
+  .yt-btn:hover { opacity: .85; color: #ffffff !important; }
+
+  footer { text-align: center; font-size: 11px; color: var(--text3); padding: 2rem 1rem 3rem; border-top: 0.5px solid var(--border); margin-top: 2rem; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <!-- <span class="brand">📊 Diario Operativo</span> -->
+  <a href="https://edustrader.blogspot.com/" class="brand" >📊 Diario Operativo</a>
+  <a href="#sim"      class="active">Sim 25 Mar</a>
+  <a href="#critico">Análisis crítico</a>
+  <a href="#comp">Sim vs Fondeo</a>
+  <a href="#hallazgo">Diagnóstico</a>
+  <a href="#video">Video</a>
+</nav>
+
+<div class="page">
+
+  <!-- ══════════════════════════════════════
+       SECCIÓN 1 — RESUMEN OPERATIVO SIM
+  ══════════════════════════════════════ -->
+  <div id="sim" style="scroll-margin-top:52px">
+    <div class="section-label"><span class="num">1</span>Resumen operativo — Simulador</div>
+    <h2>Dashboard 25 Mar 2026</h2>
+    <p class="sub">Sim101 · ES JUN26 + MNQ JUN26 · VIX 26 · Sesión: 10:19 – 10:59</p>
+
+    <div class="vix-badge">⚠️ VIX 26 — Volatilidad elevada · Mercado en modo cautela · ATR intradía reducido (~2 pts)</div>
+
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-label">P&L neto</div><div class="kpi-value pos">+$1,093</div><div class="kpi-sub">5 trades</div></div>
+      <div class="kpi"><div class="kpi-label">Win rate</div><div class="kpi-value pos">75%</div><div class="kpi-sub">3W / 1L (ES) · MNQ aparte</div></div>
+      <div class="kpi"><div class="kpi-label">Profit factor</div><div class="kpi-value pos">5.86</div><div class="kpi-sub">$1,318 ganado / $225 perdido</div></div>
+      <div class="kpi"><div class="kpi-label">Avg ganancia</div><div class="kpi-value pos">+$439</div><div class="kpi-sub">por trade ganador</div></div>
+      <div class="kpi"><div class="kpi-label">Avg pérdida</div><div class="kpi-value neg">-$225</div><div class="kpi-sub">por trade perdedor</div></div>
+      <div class="kpi"><div class="kpi-label">Duración sesión</div><div class="kpi-value neu" style="font-size:18px">40 min</div><div class="kpi-sub">10:19 → 10:59</div></div>
+    </div>
+
+    <div class="alert success">
+      <div class="alert-title">Mejor sesión de las 3 registradas</div>
+      <div style="color:var(--text2)">WR 75%, PF 5.86, señales promedio 3.75/4. Sesión corta y limpia. ES con 4/4 señales en cada entrada. Tendencia de mejora confirmada: WR 40% → 50% → 75%.</div>
+    </div>
+
+    <div class="sub-title">Curva de capital acumulada</div>
+    <div class="chart-wrap" style="height:140px"><canvas id="chartCurve"></canvas></div>
+
+    <div class="sub-title">P&L por operación</div>
+    <div class="chart-wrap" style="height:150px"><canvas id="chartBar"></canvas></div>
+
+    <div class="sub-title">Detalle de operaciones</div>
+    <div class="tab-row">
+      <button class="tab active" onclick="showTab(event,'all')">Todas</button>
+      <button class="tab" onclick="showTab(event,'es')">ES JUN26</button>
+      <button class="tab" onclick="showTab(event,'mnq')">MNQ JUN26</button>
+    </div>
+    <div class="trade-row hdr"><span>#</span><span>Hora</span><span>Instr.</span><span>Dir.</span><span>P&L</span><span>Señales</span></div>
+    <div id="tab-all" class="tab-content active"></div>
+    <div id="tab-es"  class="tab-content"></div>
+    <div id="tab-mnq" class="tab-content"></div>
+
+    <div class="sub-title">Alineación de señales por operación</div>
+    <div class="sig-grid" id="signal-grid"></div>
+
+    <div class="sub-title">Contexto VIX 26 — Impacto en la operativa</div>
+    <div class="kpi">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:3px">ATR promedio sesión</div>
+          <div style="font-size:18px;font-weight:500;color:var(--amber)">~2.0 pts</div>
+          <div style="font-size:10px;color:var(--text3)">vs 3.2 pts el 23 Mar</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:3px">Recorrido máximo ES</div>
+          <div style="font-size:18px;font-weight:500;color:var(--green)">+5.75 pts</div>
+          <div style="font-size:10px;color:var(--text3)">Trade ES-2 · capturado en 1 min</div>
+        </div>
+      </div>
+      <div style="padding-top:10px;border-top:0.5px solid var(--border);font-size:12px;color:var(--text2);line-height:1.55">
+        VIX en 26 indica miedo elevado en opciones. El ATR intradía fue menor que en sesiones anteriores (~2 pts), lo que significa impulsos más cortos pero con reversiones rápidas. Las salidas de ES-1 y ES-2 antes del minuto dos fueron la respuesta correcta a ese entorno. <strong style="color:var(--text)">Nota: el dato de Keltner Width se registró con error en esta sesión y no se considera en el análisis.</strong>
+      </div>
+    </div>
+
+    <div class="sub-title">Comparativa 3 sesiones</div>
+    <div class="kpi" style="padding:0;overflow:hidden">
+      <div class="met-row hdr"><span>Métrica</span><span>23 Mar</span><span>24 Mar</span><span>25 Mar</span></div>
+      <div class="met-row"><span style="color:var(--text2)">P&L neto</span><span class="pnl-pos">+$643</span><span class="pnl-pos">+$500</span><span class="pnl-pos" style="font-weight:600">+$1,093 🏆</span></div>
+      <div class="met-row"><span style="color:var(--text2)">Win rate</span><span>40%</span><span>50%</span><span class="pos" style="font-weight:500">75% <span class="delta-pos">▲</span></span></div>
+      <div class="met-row"><span style="color:var(--text2)">Profit factor</span><span>1.36</span><span>1.33</span><span class="pos" style="font-weight:500">5.86 <span class="delta-pos">▲▲</span></span></div>
+      <div class="met-row"><span style="color:var(--text2)">Señales avg</span><span>2.8/4</span><span>3.5/4</span><span class="pos">3.75/4 <span class="delta-pos">▲</span></span></div>
+      <div class="met-row"><span style="color:var(--text2)">Nº trades</span><span>10</span><span>4</span><span>5</span></div>
+      <div class="met-row"><span style="color:var(--text2)">Duración</span><span>~1.5h</span><span>&lt;1h</span><span class="pos">40 min <span class="delta-pos">▲</span></span></div>
+      <div class="met-row" style="font-weight:500;border-top:0.5px solid var(--border2)"><span style="color:var(--text2)">Acumulado sim</span><span></span><span></span><span class="pnl-pos">+$2,236.50</span></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SECCIÓN 2 — ANÁLISIS CRÍTICO SIM
+  ══════════════════════════════════════ -->
+  <div class="section-divider"></div>
+  <div id="critico" style="scroll-margin-top:52px">
+    <div class="section-label"><span class="num">2</span>Análisis crítico</div>
+    <h2>Diagnóstico de la sesión — Sim</h2>
+    <p class="sub">Oportunidades de mejora en la operativa del 25 Mar</p>
+    <div id="insights-sim"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SECCIÓN 3 — SIM VS FONDEO
+  ══════════════════════════════════════ -->
+  <div class="section-divider"></div>
+  <div id="comp" style="scroll-margin-top:52px">
+    <div class="section-label"><span class="num">3</span>Sim vs Fondeo</div>
+    <h2>Análisis comparativo — 25 Mar 2026</h2>
+    <p class="sub">Cruce de órdenes reales del fondeo contra la operativa del simulador · VIX 26</p>
+
+    <div class="two-col">
+      <div class="kpi" style="border-top:3px solid #639922">
+        <div class="kpi-label">Simulador (Sim101)</div>
+        <div class="kpi-value pos">+$1,093</div>
+        <div class="kpi-sub">5 trades · WR 75% · PF 5.86</div>
+      </div>
+      <div class="kpi" style="border-top:3px solid #EF9F27">
+        <div class="kpi-label">Cuenta fondeo</div>
+        <div class="kpi-value neg">-$50.00</div>
+        <div class="kpi-sub">2 trades ejecutados · WR 0%</div>
+      </div>
+    </div>
+
+    <div class="alert warning" style="margin-top:10px">
+      <div class="alert-title">Divergencia hoy: -$1,143 · Pero la pérdida del fondeo es la menor en 3 días</div>
+      <div style="color:var(--text2)">Tendencia positiva: -$885 → -$337 → -$50. El fondeo ejecutó los 2 primeros trades pero con stops demasiado ajustados para el entorno VIX 26. ES-3 perdido por limit mal calibrado. ES-4 evitado (pérdida del sim de -$225 esquivada).</div>
+    </div>
+
+    <div class="sub-title">Correlación trade por trade</div>
+    <div class="comp-row hdr"><span>Hora</span><span>Sim</span><span>Fondeo</span><span>Divergencia</span></div>
+
+    <div class="comp-row partial">
+      <div><div style="font-size:12px;font-weight:500">10:19</div><div style="margin-top:3px"><span class="tag tag-exec">Ejecutado</span></div></div>
+      <div><span class="pnl-pos">+$375</span><span class="dur">2m</span><div class="entry-info">Long 2c @6650.75 → @6654.5</div></div>
+      <div><span class="pnl-pos">+$87.50</span><span class="dur">24s</span><div class="entry-info">Long 1c @6650 → SL @6651.75</div><div style="font-size:10px;color:var(--amber);margin-top:2px">Stop breakeven 1.75 pts</div></div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.45">Fondeo capturó solo 1.75 pts (+$87.50) vs sim 3.75 pts (+$375 equiv). Con VIX 26 y ATR de 1.8 pts, un stop de 1.75 pts es menos de 1 ATR de margen — insuficiente.</div>
+    </div>
+
+    <div class="comp-row lost">
+      <div><div style="font-size:12px;font-weight:500">10:24</div><div style="margin-top:3px"><span class="tag tag-exec">Ejecutado</span></div></div>
+      <div><span class="pnl-pos">+$575</span><span class="dur">1m</span><div class="entry-info">Long 2c @6653 → @6658.75</div></div>
+      <div><span class="pnl-neg">-$137.50</span><span class="dur" style="border-color:#E24B4A;color:var(--red)">17s</span><div class="entry-info">Long 1c @6651.75 → SL @6649</div><div style="font-size:10px;color:var(--red);margin-top:2px">Stop en 17 segundos</div></div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.45">Entró 1.25 pts más bajo que el sim buscando mejor precio. Ese nivel atrapó el dip a 6649 que el sim nunca vio. Buscar precio más barato en VIX elevado aumenta el riesgo de atrapar el ruido.</div>
+    </div>
+
+    <div class="comp-row missed">
+      <div><div style="font-size:12px;font-weight:500">10:36</div><div style="margin-top:3px"><span class="tag tag-missed">No ejecutado</span></div></div>
+      <div><span class="pnl-pos">+$350</span><span class="dur">9m</span><div class="entry-info">Long 2c @6658 → @6661.5</div></div>
+      <div style="font-size:11px;color:var(--text3)">Buy limit @6655.75 cancelada<div style="font-size:10px;margin-top:2px">Precio abrió en 6658 sin retroceder</div></div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.45">Limit 2.25 pts por debajo del entry del sim. El precio nunca bajó a 6655.75. Ganador de +$175 equiv. perdido por intentar entrar más barato en lugar de confirmar el setup.</div>
+    </div>
+
+    <div class="comp-row saved">
+      <div><div style="font-size:12px;font-weight:500">10:54</div><div style="margin-top:3px"><span class="tag tag-saved">Evitado ✓</span></div></div>
+      <div><span class="pnl-neg">-$225</span><span class="dur">&lt;5m</span><div class="entry-info">Long 2c @6662.25 → @6660</div></div>
+      <div style="color:var(--green);font-size:11px">2 órdenes canceladas<div style="font-size:10px;color:var(--text3);margin-top:2px">Buy @6661 y @6661.25</div></div>
+      <div style="font-size:11px;color:var(--green);line-height:1.45">El sim perdió -$225 equiv. en este trade. Al cancelar, fondeo evitó -$112.50. Primera vez en 3 días que no ejecutar un trade fue la decisión correcta. El VWAP_Dir girando a DOWN era la señal.</div>
+    </div>
+
+    <div class="sub-title">Registro completo de órdenes del fondeo</div>
+    <div class="kpi" style="padding:0;overflow:hidden">
+      <div class="order-row hdr"><span>Hora</span><span>Lado</span><span>Tipo</span><span>Precio</span><span>Qty</span><span>Estado</span></div>
+      <div class="order-row"><span style="color:var(--text2)">10:19:48</span><span>Buy</span><span>Limit</span><span>6650</span><span>1</span><span class="filled">Ejecutada — entry ES-1 long</span></div>
+      <div class="order-row"><span style="color:var(--text2)">10:20:12</span><span>Sell</span><span>SL</span><span style="color:var(--amber)">6651.75</span><span>1</span><span class="key-fill">Ejecutada — SL breakeven en 24s (+$87.50)</span></div>
+      <div class="order-row"><span style="color:var(--text2)">10:20:12</span><span>Sell</span><span>TP</span><span>6666.75</span><span>1</span><span class="cancelled">Cancelada — cerró con SL antes</span></div>
+      <div class="order-row"><span style="color:var(--text2)">10:24:26</span><span>Buy</span><span>Limit</span><span>6651.75</span><span>1</span><span class="filled">Ejecutada — entry ES-2 long</span></div>
+      <div class="order-row"><span style="color:var(--text2)">10:24:43</span><span>Sell</span><span>SL</span><span style="color:var(--red)">6649</span><span>1</span><span class="key-fill">Ejecutada — SL en 17s (-$137.50)</span></div>
+      <div class="order-row"><span style="color:var(--text2)">10:24:43</span><span>Sell</span><span>TP</span><span>6668.75</span><span>1</span><span class="cancelled">Cancelada — cerró con SL antes</span></div>
+      <div class="order-row"><span style="color:var(--text2)">10:31:20</span><span>Buy</span><span>Limit</span><span>6648.25</span><span>1</span><span class="cancelled">Cancelada — sin correlato en sim</span></div>
+      <div class="order-row"><span style="color:var(--text2)">10:36:50</span><span>Buy</span><span>Limit</span><span>6655.75</span><span>1</span><span class="cancelled">Cancelada — ES-3 limit demasiado bajo</span></div>
+      <div class="order-row"><span style="color:var(--text2)">10:54:34</span><span>Buy</span><span>Limit</span><span>6661</span><span>1</span><span class="cancelled">Cancelada — ES-4 1er intento</span></div>
+      <div class="order-row"><span style="color:var(--text2)">10:56:31</span><span>Buy</span><span>Limit</span><span>6661.25</span><span>1</span><span class="cancelled">Cancelada — ES-4 2do intento</span></div>
+    </div>
+
+    <div class="sub-title">P&L comparativo (equiv. 1 contrato ES)</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:6px">Barras grises = orden no ejecutada (P&L $0 en fondeo)</div>
+    <div class="chart-wrap" style="height:165px"><canvas id="chartComp"></canvas></div>
+
+    <div class="sub-title">Simulación: si fondeo replicara ejecución del sim</div>
+    <div class="kpi">
+      <div class="two-col" style="margin-bottom:14px">
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">ES-1: stop 3 pts en lugar de 1.75</div><div class="pnl-pos" style="font-size:13px">+$187.50 → +$100 adicional</div></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">ES-2: entrada en 6653 no 6651.75</div><div class="pnl-pos" style="font-size:13px">+$287.50 → +$425 adicional</div></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">ES-3: limit en precio sim (6658)</div><div class="pnl-pos" style="font-size:13px">+$175 → ganador recuperado</div></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">ES-4: cancelado (correcto aquí ✓)</div><div style="font-size:13px;color:var(--text2)">-$112.50 pérdida evitada</div></div>
+      </div>
+      <div style="border-top:0.5px solid var(--border);padding-top:10px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:0.5px solid var(--border)"><span style="color:var(--text2)">Resultado real fondeo</span><span class="pnl-neg">-$50.00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:0.5px solid var(--border)"><span style="color:var(--text2)">Resultado si ejecutara como sim (1c)</span><span class="pnl-pos">+$537.50</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;font-weight:500"><span style="color:var(--text2)">Costo del día (stops + cancelaciones)</span><span class="pnl-neg">-$587.50</span></div>
+      </div>
+    </div>
+
+    <div class="sub-title">Análisis crítico — Sim vs Fondeo</div>
+    <div id="insights-comp"></div>
+
+    <div class="sub-title">Tendencia acumulada fondeo — 3 días</div>
+    <div class="kpi" style="padding:0;overflow:hidden">
+      <div class="trend-row hdr"><span>Sesión</span><span>Sim</span><span>Fondeo</span><span>Divergencia</span></div>
+      <div class="trend-row"><span style="color:var(--text2)">23 Mar</span><span class="pnl-pos">+$643</span><span class="pnl-neg">-$885</span><span class="pnl-neg">-$1,528</span></div>
+      <div class="trend-row"><span style="color:var(--text2)">24 Mar</span><span class="pnl-pos">+$500</span><span class="pnl-neg">-$337</span><span class="pnl-neg">-$837</span></div>
+      <div class="trend-row"><span style="color:var(--text2)">25 Mar</span><span class="pnl-pos">+$1,093</span><span class="pnl-neg" style="opacity:0.75">-$50</span><span class="pnl-neg">-$1,143 <span class="improve">▲ mejor</span></span></div>
+      <div class="trend-row" style="font-weight:500;border-top:0.5px solid var(--border2)"><span style="color:var(--text2)">Acumulado</span><span class="pnl-pos">+$2,236</span><span class="pnl-neg">-$1,272</span><span class="pnl-neg">-$3,509</span></div>
+    </div>
+    <div class="chart-wrap" style="height:130px;margin-top:12px"><canvas id="chartTrend"></canvas></div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SECCIÓN 4 — DIAGNÓSTICO DEL DÍA
+  ══════════════════════════════════════ -->
+  <div class="section-divider"></div>
+  <div id="hallazgo" style="scroll-margin-top:52px">
+    <div class="section-label"><span class="num">4</span>Diagnóstico del 25 Mar</div>
+    <h2>Lo que muestran los números</h2>
+    <p class="sub">Análisis cualitativo de la sesión y su contexto en la evolución de 3 días</p>
+
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-val pos">+$1,093</div><div class="stat-lbl">Sim · mejor sesión</div></div>
+      <div class="stat-box"><div class="stat-val neg">-$50</div><div class="stat-lbl">Fondeo · menor pérdida</div></div>
+      <div class="stat-box"><div class="stat-val" style="color:var(--amber)">3.75/4</div><div class="stat-lbl">Señales promedio</div></div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">Diagnóstico cualitativo — sesión 25 Mar</div>
+      <h3>La calidad de las señales y el resultado están directamente correlacionados</h3>
+
+      <p>Esta es la mejor sesión de las tres y la más instructiva porque confirma algo que los dos días anteriores solo insinuaban: <strong>cuantas más señales alineadas, mejor el resultado</strong>. 23 Mar con 2.8/4 promedio — resultado modesto y caótico. 24 Mar con 3.5/4 — mejor pero inconsistente. Hoy con 3.75/4 — la sesión más limpia y rentable de las tres.</p>
+
+      <p><strong>El contexto VIX 26 merece atención especial.</strong> VIX en 26 significa miedo elevado en el mercado de opciones, pero el rango intradía fue el más estrecho de las tres sesiones (ATR ~2 pts vs 3.2 del lunes). Esto es típico en mercados de compresión con miedo — mucha incertidumbre pero poca dirección clara, con impulsos cortos y reversiones rápidas. Las salidas en ES-1 y ES-2 antes del minuto dos fueron la respuesta correcta a ese entorno.</p>
+
+      <p><strong>En el fondeo, la tendencia es positiva pero el problema central persiste.</strong> -$885 → -$337 → -$50 en tres días. Algo está mejorando. Pero los dos trades ejecutados se cerraron con stops ajustados que no respetan el ATR del día, y el ganador más grande (ES-3, +$350) se perdió por colocar el límite 2.25 pts por debajo del precio del sim. La búsqueda del mejor precio sigue siendo el hábito que más daño hace.</p>
+
+      <p><strong>ES-4 cancelado fue correcto</strong> — aunque probablemente fue por miedo y no por análisis. El sim perdió -$112.50 equiv. en ese trade. Conviene registrar esto: a veces no entrar es la decisión correcta, pero necesita venir del análisis (VWAP_Dir girando a DOWN en el entry) y no del miedo. La próxima vez que el VWAP gire, reconocerlo conscientemente como la razón de no entrar.</p>
+
+      <p><strong>El acumulado del simulador en 3 sesiones es +$2,236.50.</strong> Eso con 4-5 trades por día, sesiones de menos de una hora, sin MNQ en las últimas dos sesiones, y señales promedio mejorando cada día. La estructura está funcionando cuando se aplica correctamente.</p>
+
+      <div class="rules-box">
+        <div class="rules-box-title">Reglas para la próxima sesión</div>
+        <div class="rule-item">🔴 Entry = precio del sim ±0.25 pts máximo. No buscar mejoras de 1-2 pts en el limit.</div>
+        <div class="rule-item">🔴 Stop mínimo = 3 pts en ES. Con VIX &gt;20, considerar 4 pts. Nunca menos de 1.5× ATR.</div>
+        <div class="rule-item">🔴 Pausa de 15 min después de 2 pérdidas consecutivas.</div>
+        <div class="rule-item">🟡 Si el VWAP_Dir gira en el bar de entrada — no entrar. Ese es el filtro del ES-4.</div>
+        <div class="rule-item">🟡 Target mínimo = 2× el stop. Con stop de 3 pts, target ≥6 pts antes de considerar salida.</div>
+        <div class="rule-item">🟢 MNQ solo si tiene ≥3/4 señales alineadas. Hoy MNQ-1 tenía 2/4 — no debió tomarse.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- YOUTUBE -->
+  <div id="video" style="scroll-margin-top:52px">
+    <div class="yt-block">
+      <div class="yt-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      </div>
+      <div class="yt-text">
+        <div class="yt-title">Operativa en vivo — 25 Mar 2026</div>
+        <div class="yt-sub">Mira el análisis y la ejecución de esta sesión en tiempo real en YouTube</div>
+      </div>
+      <a href="https://youtu.be/8M4IdvsGFyM" target="_blank" rel="noopener noreferrer" class="yt-btn">Ver en YouTube →</a>
+    </div>
+  </div>
+
+</div><!-- /page -->
+<footer>Generado el 25 Mar 2026 · ES & MNQ JUN26 · Sim101 vs Cuenta Fondeo · VIX 26 · Reporte de uso personal</footer>
+
+<script>
+const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+const tc = isDark ? '#9c9a92' : '#73726c';
+const gc = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+const trades = [
+  { id:'ES-1',  hora:'10:19', inst:'ES',  dir:'Long', qty:2, entry:6650.75, exit:6654.5,   pnl:375,   sma20:0.075,   sma80:0.1069,  lr89:0.2078,  vwap:'UP'  },
+  { id:'MNQ-1', hora:'10:19', inst:'MNQ', dir:'Long', qty:1, entry:24450.25,exit:24459.25, pnl:18,    sma20:-0.0313, sma80:0.3059,  lr89:-0.061,  vwap:'UP'  },
+  { id:'ES-2',  hora:'10:24', inst:'ES',  dir:'Long', qty:2, entry:6653,    exit:6658.75,  pnl:575,   sma20:0.1438,  sma80:0.1819,  lr89:0.0667,  vwap:'UP'  },
+  { id:'ES-3',  hora:'10:36', inst:'ES',  dir:'Long', qty:2, entry:6658,    exit:6661.5,   pnl:350,   sma20:0.2663,  sma80:0.0387,  lr89:0.1584,  vwap:'UP'  },
+  { id:'ES-4',  hora:'10:54', inst:'ES',  dir:'Long', qty:2, entry:6662.25, exit:6660,     pnl:-225,  sma20:0.1425,  sma80:0.1056,  lr89:0.11,    vwap:'UP'  },
+];
+
+function sigScore(t) {
+  const up = t.dir === 'Long';
+  const v = (up && t.vwap==='UP')  || (!up && t.vwap==='DOWN');
+  const s = (up && t.sma20>0)      || (!up && t.sma20<0);
+  const e = (up && t.sma80>0)      || (!up && t.sma80<0);
+  const l = (up && t.lr89>0)       || (!up && t.lr89<0);
+  return { v, s, e, l, score:[v,s,e,l].filter(Boolean).length };
+}
+function dot(ok) { return `<span class="sdot ${ok?'dot-g':'dot-r'}"></span>`; }
+
+function tradeHTML(t) {
+  const win = t.pnl > 0;
+  const sig = sigScore(t);
+  const pnlStr = (t.pnl>=0?'+':'') + '$' + Math.abs(t.pnl).toFixed(0);
+  const pts = ((t.exit - t.entry) * (t.dir==='Long'?1:-1)).toFixed(2);
+  return `<div class="trade-row">
+    <span style="font-size:11px;color:var(--text3)">${t.id}</span>
+    <span style="color:var(--text2);font-size:11px">${t.hora}</span>
+    <span>${t.inst} <span style="color:var(--text3);font-size:11px">×${t.qty}</span></span>
+    <span><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></span>
+    <span class="${win?'pnl-pos':'pnl-neg'}" style="text-align:right">${pnlStr}</span>
+    <div class="sig-row">
+      ${dot(sig.v)}<span style="font-size:9px;color:var(--text3)">V</span>
+      ${dot(sig.s)}<span style="font-size:9px;color:var(--text3)">20</span>
+      ${dot(sig.e)}<span style="font-size:9px;color:var(--text3)">80</span>
+      ${dot(sig.l)}<span style="font-size:9px;color:var(--text3)">LR</span>
+      <span style="margin-left:4px;font-size:11px;color:var(--text3)">${sig.score}/4</span>
+    </div>
+  </div>`;
+}
+
+document.getElementById('tab-all').innerHTML = trades.map(tradeHTML).join('');
+document.getElementById('tab-es').innerHTML  = trades.filter(t=>t.inst==='ES').map(tradeHTML).join('');
+document.getElementById('tab-mnq').innerHTML = trades.filter(t=>t.inst==='MNQ').map(tradeHTML).join('');
+
+function showTab(e, name) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+const sg = document.getElementById('signal-grid');
+trades.forEach(t => {
+  const sig = sigScore(t);
+  const win = t.pnl > 0;
+  const pnlStr = (t.pnl>=0?'+':'') + '$' + Math.abs(t.pnl).toFixed(0);
+  const pts = ((t.exit - t.entry) * (t.dir==='Long'?1:-1)).toFixed(2);
+  sg.innerHTML += `<div class="kpi" style="padding:10px 12px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+      <span style="font-size:12px;font-weight:500">${t.id} <span style="font-size:10px;color:var(--text3)">${t.hora}</span></span>
+      <span class="${win?'pnl-pos':'pnl-neg'}" style="font-size:12px">${pnlStr}</span>
+    </div>
+    <div style="font-size:10px;color:var(--text3);margin-bottom:5px">${t.dir} @${t.entry} → @${t.exit} (${pts>0?'+':''}${pts} pts)</div>
+    <div class="sig-row" style="margin-bottom:5px">
+      ${dot(sig.v)}<span style="font-size:10px;color:var(--text3)">VWAP</span>
+      ${dot(sig.s)}<span style="font-size:10px;color:var(--text3)">SMA20</span>
+      ${dot(sig.e)}<span style="font-size:10px;color:var(--text3)">SMA80</span>
+      ${dot(sig.l)}<span style="font-size:10px;color:var(--text3)">LR89</span>
+    </div>
+    <div class="mini-bar-wrap"><div class="mini-bar" style="width:${sig.score/4*100}%;background:${win?'#639922':'#E24B4A'}"></div></div>
+    <div style="font-size:10px;color:var(--text3);margin-top:3px">${sig.score}/4 señales alineadas</div>
+  </div>`;
+});
+
+const simInsights = [
+  { type:'good', title:'ES-2: trade del día — 5.75 puntos en 1 minuto con 4/4 señales', text:'Long en 6653 con todas las señales alineadas: VWAP UP, SMA20 +0.14, SMA80 +0.18, LR89 +0.07. Captura de 5.75 pts en 1 minuto con 2 contratos: +$575. En contexto VIX 26 con ATR de 1.91 pts, este movimiento fue limpio y eficiente. La salida fue correcta — el precio llegó a resistencia.' },
+  { type:'warn', title:'MNQ-1: 2/4 señales — por debajo del mínimo establecido', text:'El MNQ del trade 1 tenía SMA20 negativa (-0.03) y LR89 negativa (-0.06). Solo VWAP y SMA80 estaban alineados. Según las reglas acordadas, se necesitan mínimo 3/4 para entrar. El resultado fue positivo (+$18) pero por estructura débil, no por edge claro. La regla existe para los días en que la misma estructura da -$100.' },
+  { type:'info', title:'VIX 26: ATR intradía reducido — salidas rápidas fueron correctas', text:'Con VIX en 26, el ATR intradía fue ~2 pts, significativamente menor que el 23 Mar (3.2 pts). En este entorno los impulsos son cortos y las reversiones frecuentes. Salir de ES-1 con +3.75 pts en 2 minutos y de ES-2 con +5.75 pts en 1 minuto fue la respuesta adecuada. Nota: el dato de Keltner Width registró incorrectamente en esta sesión y no se usa en el análisis.' },
+  { type:'warn', title:'ES-4: VWAP_Dir giró a DOWN en el exit — señal de cambio de estructura', text:'Long en 6662.25 con 4/4 señales en el entry. Al momento del exit, el VWAP_Dir había girado a DOWN y la SMA20 pasó a -0.11. Pérdida de -$225 (2.25 pts). El stop fue correcto. Cuando el VWAP gira es la señal de que el contexto cambió — este comportamiento debe reconocerse y usarse como filtro de entry en la próxima sesión.' },
+  { type:'good', title:'Tendencia confirmada: más confluencia = mejores resultados', text:'23 Mar 2.8/4 promedio → 24 Mar 3.5/4 → 25 Mar 3.75/4. La correlación entre alineación de señales y resultado es directa y consistente en los tres días. El acumulado del sim en 3 sesiones es +$2,236.50 aplicando el sistema correctamente.' },
+];
+document.getElementById('insights-sim').innerHTML = simInsights.map(i =>
+  `<div class="icard ${i.type}"><div class="icard-title">${i.title}</div><div class="icard-text">${i.text}</div></div>`
+).join('');
+
+const compInsights = [
+  { type:'good', title:'Primera sesión con pérdida menor a $100 en fondeo: -$50', text:'La tendencia de mejora en el fondeo es consistente: -$885 → -$337 → -$50. En 3 días la pérdida se redujo un 94%. Algo está cambiando estructuralmente. Los stops en 17s y 24s de hoy son mejores que los de 1-8 segundos del 23 Mar, y se ejecutaron los primeros trades del sim en lugar de perdérselos como el 24 Mar.' },
+  { type:'crit', title:'Stop breakeven en ES-1: 1.75 pts con ATR de 1.8 — menos de 1 ATR de margen', text:'Con ATR de 1.8 pts, colocar el stop en 6651.75 (1.75 pts sobre entry en 6650) es menos de 1 ATR de margen. En un mercado con VIX 26, las fluctuaciones de 1-2 pts en segundos son rutinarias. El precio tocó 6651.75 en camino hacia 6654.5 (donde salió el sim). Regla: stop mínimo = 3 pts, o si se quiere ajustar al ATR, mínimo 1.5× ATR del día.' },
+  { type:'crit', title:'ES-2: buscar precio más bajo que el sim costó el trade completo', text:'Entry a 6651.75 en lugar de 6653 (1.25 pts más bajo). Ese nivel atrapó el dip a 6649 que el sim nunca vio porque entró después del ruido. En mercados con VIX elevado, esperar la confirmación del movimiento vale más que el mejor precio de entrada. Solución práctica: entry = precio del sim ±0.25 pts máximo.' },
+  { type:'warn', title:'ES-3: limit en 6655.75 cuando el precio abrió en 6658 — 2.25 pts de diferencia', text:'La orden de compra en 6655.75 nunca se ejecutó porque el precio no retrocedió. Este es el mismo patrón del 24 Mar: intentar entrar más barato en lugar de confirmar el entry del sim. Resultado: ganador de +$175 equiv. perdido. El hábito de buscar "mejor precio" es el problema más persistente de estas 3 sesiones.' },
+  { type:'good', title:'ES-4 cancelado: primera vez que no entrar fue la decisión correcta', text:'ES-4 fue el único perdedor del sim (-$225 equiv.). El fondeo colocó órdenes a 6661 y 6661.25 pero las canceló. Aunque probablemente fue por miedo, el resultado fue correcto. Para convertirlo en una regla consciente: cuando el VWAP_Dir gira a DOWN en el momento de entrada, esa es la señal de no entrar — no la duda ni el miedo.' },
+];
+document.getElementById('insights-comp').innerHTML = compInsights.map(i =>
+  `<div class="icard ${i.type}"><div class="icard-title">${i.title}</div><div class="icard-text">${i.text}</div></div>`
+).join('');
+
+/* CHARTS */
+const labels = trades.map(t=>t.id);
+const pnls   = trades.map(t=>t.pnl);
+
+new Chart(document.getElementById('chartBar'),{
+  type:'bar',
+  data:{labels,datasets:[{data:pnls,backgroundColor:pnls.map(v=>v>=0?'rgba(99,153,34,0.75)':'rgba(226,75,74,0.75)'),borderRadius:4,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>(ctx.raw>=0?'+':'')+'$'+ctx.raw}}},
+    scales:{x:{ticks:{color:tc,font:{size:12}},grid:{color:gc}},y:{ticks:{color:tc,font:{size:11},callback:v=>'$'+v},grid:{color:gc}}}
+  }
+});
+
+let cum=0;
+const cumData=trades.map(t=>{cum+=t.pnl;return Math.round(cum*100)/100;});
+new Chart(document.getElementById('chartCurve'),{
+  type:'line',
+  data:{labels,datasets:[{data:cumData,borderColor:'#639922',backgroundColor:'rgba(99,153,34,0.08)',fill:true,tension:0.35,pointBackgroundColor:cumData.map(v=>v>=0?'#639922':'#E24B4A'),pointRadius:5,pointHoverRadius:7,borderWidth:2}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'Acumulado: '+(ctx.raw>=0?'+':'')+'$'+ctx.raw}}},
+    scales:{x:{ticks:{color:tc,font:{size:12}},grid:{display:false}},y:{ticks:{color:tc,font:{size:11},callback:v=>'$'+v},grid:{color:gc}}}
+  }
+});
+
+const compLabels=['ES-1 (10:19)','ES-2 (10:24)','ES-3 (10:36)','ES-4 (10:54)'];
+const simPnl=[187.5,287.5,175,-112.5];
+const fdPnl =[87.5,-137.5,0,0];
+new Chart(document.getElementById('chartComp'),{
+  type:'bar',
+  data:{labels:compLabels,datasets:[
+    {label:'Sim (1c equiv)',data:simPnl,backgroundColor:simPnl.map(v=>v>0?'rgba(99,153,34,0.7)':'rgba(226,75,74,0.7)'),borderRadius:4,borderSkipped:false},
+    {label:'Fondeo real',  data:fdPnl, backgroundColor:fdPnl.map(v=>v>0?'rgba(99,153,34,0.7)':v<0?'rgba(226,75,74,0.7)':'rgba(136,135,128,0.25)'),borderRadius:4,borderSkipped:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'top',labels:{color:tc,font:{size:11},boxWidth:10,padding:12}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': $'+ctx.raw}}},
+    scales:{x:{ticks:{color:tc,font:{size:10},maxRotation:15},grid:{color:gc}},y:{ticks:{color:tc,font:{size:11},callback:v=>'$'+v},grid:{color:gc}}}
+  }
+});
+
+new Chart(document.getElementById('chartTrend'),{
+  type:'line',
+  data:{labels:['23 Mar','24 Mar','25 Mar'],datasets:[
+    {label:'Fondeo',data:[-885,-337,-50],borderColor:'#EF9F27',backgroundColor:'rgba(239,159,39,0.07)',fill:true,tension:0.3,pointBackgroundColor:['#E24B4A','#E24B4A','#EF9F27'],pointRadius:5,borderWidth:2},
+    {label:'Sim',   data:[643,500,1093], borderColor:'#639922',backgroundColor:'rgba(99,153,34,0.06)',fill:true,tension:0.3,pointBackgroundColor:'#639922',pointRadius:4,borderWidth:1.5}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'top',labels:{color:tc,font:{size:11},boxWidth:10,padding:10}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': $'+ctx.raw}}},
+    scales:{x:{ticks:{color:tc,font:{size:11}},grid:{display:false}},y:{ticks:{color:tc,font:{size:10},callback:v=>'$'+v},grid:{color:gc}}}
+  }
+});
+
+/* NAV SCROLL */
+const sections=['sim','critico','comp','hallazgo','video'];
+window.addEventListener('scroll',()=>{
+  let cur='sim';
+  sections.forEach(id=>{const el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-80)cur=id;});
+  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+});
+</script>
+</body>
+</html>

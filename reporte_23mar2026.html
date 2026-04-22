@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Operativo — 23 Mar 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:        #ffffff;
+    --bg2:       #f5f4f0;
+    --bg3:       #eeecea;
+    --text:      #1a1a18;
+    --text2:     #5f5e5a;
+    --text3:     #888780;
+    --border:    rgba(0,0,0,0.10);
+    --border2:   rgba(0,0,0,0.20);
+    --green:     #3b6d11;
+    --green-bg:  #eaf3de;
+    --red:       #a32d2d;
+    --red-bg:    #fcebeb;
+    --amber:     #854f0b;
+    --amber-bg:  #faeeda;
+    --blue:      #185fa5;
+    --blue-bg:   #e6f1fb;
+    --r-md:      8px;
+    --r-lg:      12px;
+    --font:      -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:       #1e1e1c;
+      --bg2:      #272724;
+      --bg3:      #2e2e2b;
+      --text:     #e8e6e0;
+      --text2:    #9c9a92;
+      --text3:    #6e6d67;
+      --border:   rgba(255,255,255,0.09);
+      --border2:  rgba(255,255,255,0.18);
+      --green:    #8fb85a;
+      --green-bg: rgba(99,153,34,0.14);
+      --red:      #e87878;
+      --red-bg:   rgba(226,75,74,0.14);
+      --amber:    #f0b060;
+      --amber-bg: rgba(239,159,39,0.14);
+      --blue:     #6aaee8;
+      --blue-bg:  rgba(55,138,221,0.14);
+    }
+  }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); padding: 0; margin: 0; }
+
+  /* NAV */
+  nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 0.5px solid var(--border2); padding: 0 2rem; display: flex; align-items: center; gap: 0; overflow-x: auto; }
+  nav .brand { font-size: 13px; font-weight: 500; color: var(--text); padding: 14px 0; margin-right: 24px; white-space: nowrap; }
+  nav a { font-size: 12px; color: var(--text3); text-decoration: none; padding: 16px 14px; border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; white-space: nowrap; }
+  nav a:hover { color: var(--text); }
+  nav a.active { color: var(--text); border-bottom-color: var(--text); font-weight: 500; }
+
+  /* LAYOUT */
+  .page { max-width: 960px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+  .section-divider { height: 0.5px; background: var(--border2); margin: 3rem 0 2rem; }
+  .section-label { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text3); margin-bottom: 1rem; }
+  .section-label .num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--bg2); border: 0.5px solid var(--border2); font-size: 10px; font-weight: 500; color: var(--text2); }
+  h2 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
+  .sub { font-size: 12px; color: var(--text3); margin-bottom: 1.5rem; }
+  .sub-title { font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text3); margin: 1.5rem 0 0.7rem; }
+
+  /* KPI */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+  .kpi { background: var(--bg2); border-radius: var(--r-md); padding: 12px 14px; }
+  .kpi-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .kpi-value { font-size: 22px; font-weight: 500; }
+  .kpi-sub   { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+  /* COLORS */
+  .pos { color: var(--green); } .neg { color: var(--red); } .neu { color: var(--text); }
+  .pnl-pos { color: var(--green); font-weight: 500; }
+  .pnl-neg { color: var(--red);   font-weight: 500; }
+
+  /* CHARTS */
+  .chart-wrap { position: relative; width: 100%; }
+
+  /* TRADE TABLE */
+  .trade-row { display: grid; grid-template-columns: 58px 70px 1fr 80px 80px 110px; gap: 8px; align-items: center; padding: 9px 12px; font-size: 12px; border-bottom: 0.5px solid var(--border); }
+  .trade-row:last-child { border-bottom: none; }
+  .trade-row.hdr { font-size: 11px; color: var(--text3); font-weight: 500; padding-bottom: 6px; }
+  .badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+  .badge.long  { background: var(--blue-bg);  color: var(--blue); }
+  .badge.short { background: var(--amber-bg); color: var(--amber); }
+
+  /* TABS */
+  .tab-row { display: flex; gap: 4px; margin-bottom: 1rem; border-bottom: 0.5px solid var(--border); padding-bottom: 8px; }
+  .tab { padding: 5px 14px; border-radius: var(--r-md); font-size: 12px; cursor: pointer; border: 0.5px solid transparent; color: var(--text3); background: transparent; font-family: var(--font); }
+  .tab.active { background: var(--bg2); border-color: var(--border2); color: var(--text); font-weight: 500; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* SIGNALS */
+  .sdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .dot-g { background: #639922; } .dot-r { background: #E24B4A; }
+  .sig-row { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+  .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mini-bar-wrap { background: var(--border); border-radius: 2px; height: 6px; overflow: hidden; margin-top: 4px; }
+  .mini-bar { height: 6px; border-radius: 2px; }
+
+  /* INSIGHT CARDS */
+  .icard { background: var(--bg2); border-radius: var(--r-md); padding: 13px 15px; margin-bottom: 8px; border-left: 3px solid transparent; }
+  .icard.crit { border-left-color: #E24B4A; } .icard.warn { border-left-color: #EF9F27; }
+  .icard.good { border-left-color: #639922; } .icard.info { border-left-color: #378ADD; }
+  .icard-title { font-size: 13px; font-weight: 500; margin-bottom: 5px; }
+  .icard-text  { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+  /* COMP TABLE */
+  .comp-row { display: grid; grid-template-columns: 58px 1fr 1fr 1fr; gap: 8px; align-items: start; padding: 10px 12px; font-size: 12px; border-bottom: 0.5px solid var(--border); }
+  .comp-row:last-child { border-bottom: none; }
+  .comp-row.hdr { font-size: 11px; color: var(--text3); font-weight: 500; padding-bottom: 6px; }
+  .comp-row.missed { background: rgba(239,159,39,0.07); border-radius: var(--r-md); }
+  .comp-row.lost   { background: rgba(226,75,74,0.06);  border-radius: var(--r-md); }
+  .comp-row.extra  { background: rgba(226,75,74,0.10);  border-radius: var(--r-md); }
+  .tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 500; }
+  .tag-match  { background: var(--green-bg); color: var(--green); }
+  .tag-missed { background: var(--amber-bg); color: var(--amber); }
+  .tag-extra  { background: var(--red-bg);   color: var(--red); }
+  .entry-info { font-size: 10px; color: var(--text3); margin-top: 3px; }
+  .dur { display: inline-block; padding: 1px 5px; border-radius: 3px; font-size: 10px; background: var(--bg2); color: var(--text3); border: 0.5px solid var(--border); margin-left: 4px; }
+
+  /* BAR DURATION */
+  .bar-section { margin-bottom: 10px; }
+  .bar-label { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+  .bar-name { font-size: 10px; color: var(--text3); width: 44px; }
+  .bar-track { flex: 1; height: 7px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 7px; border-radius: 4px; }
+  .bar-val { font-size: 11px; color: var(--text3); min-width: 36px; }
+
+  /* METRICS TABLE */
+  .met-row { display: grid; grid-template-columns: 130px 1fr 1fr; gap: 8px; padding: 6px 12px; font-size: 12px; border-bottom: 0.5px solid var(--border); align-items: center; }
+  .met-row.hdr { font-size: 11px; color: var(--text3); font-weight: 500; }
+  .met-row:last-child { border-bottom: none; }
+  .delta-pos { color: var(--green); font-size: 11px; }
+  .delta-neg { color: var(--red);   font-size: 11px; }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* ALERTS */
+  .alert { border-radius: var(--r-md); padding: 12px 14px; margin-top: 10px; font-size: 12px; }
+  .alert.success { background: var(--green-bg); border: 0.5px solid rgba(99,153,34,0.35); }
+  .alert.danger  { background: var(--red-bg);   border: 0.5px solid rgba(226,75,74,0.35); }
+  .alert.warning { background: var(--amber-bg); border: 0.5px solid rgba(239,159,39,0.35); }
+  .alert-title { font-weight: 500; margin-bottom: 3px; }
+  .alert.success .alert-title { color: var(--green); }
+  .alert.danger  .alert-title { color: var(--red); }
+  .alert.warning .alert-title { color: var(--amber); }
+
+  /* FINDING */
+  .finding { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: var(--r-lg); padding: 24px 28px; position: relative; overflow: hidden; }
+  .finding::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(180deg, #E24B4A 0%, #EF9F27 100%); }
+  .finding-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); margin-bottom: 8px; }
+  .finding h3 { font-size: 17px; font-weight: 500; margin-bottom: 12px; line-height: 1.4; }
+  .finding p  { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 10px; }
+  .finding p:last-child { margin-bottom: 0; }
+  .finding strong { color: var(--text); font-weight: 500; }
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0; }
+  .stat-box  { background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--r-md); padding: 12px 14px; text-align: center; }
+  .stat-val  { font-size: 22px; font-weight: 500; }
+  .stat-lbl  { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+  /* INSTRUMENT DIST */
+  .inst-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* YOUTUBE */
+  .yt-block { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: var(--r-lg); padding: 18px 22px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 2rem; }
+  .yt-icon { width: 44px; height: 44px; border-radius: 50%; background: #E24B4A; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .yt-icon svg { width: 20px; height: 20px; fill: #fff; }
+  .yt-text { flex: 1; min-width: 180px; }
+  .yt-text .yt-title { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+  .yt-text .yt-sub   { font-size: 12px; color: var(--text3); }
+  .yt-btn { display: inline-block; background: #E24B4A; color: #fff; font-size: 12px; font-weight: 500; padding: 10px 20px; border-radius: var(--r-md); text-decoration: none; white-space: nowrap; transition: opacity .2s; }
+  .yt-btn:hover { opacity: .85; }
+
+  footer { text-align: center; font-size: 11px; color: var(--text3); padding: 2rem 1rem 3rem; border-top: 0.5px solid var(--border); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="https://edustrader.blogspot.com/" class="brand" >📊 Diario Operativo</a>
+  <a href="#sim"      class="active">Sim 23 Mar</a>
+  <a href="#critico">Análisis crítico</a>
+  <a href="#comp">Sim vs Fondeo</a>
+  <a href="#hallazgo">Hallazgo 2 días</a>
+  <a href="#video">Video</a>
+</nav>
+
+<div class="page">
+
+  <!-- ═══════════════════════════════════════════
+       SECCIÓN 1 — RESUMEN OPERATIVO SIM
+  ═══════════════════════════════════════════ -->
+  <div id="sim" style="scroll-margin-top:52px">
+    <div class="section-label"><span class="num">1</span>Resumen operativo — Simulador</div>
+    <h2>Dashboard 23 Mar 2026</h2>
+    <p class="sub">Sim101 · ES JUN26 + MNQ JUN26 · Setup Manual · 10 operaciones</p>
+
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-label">P&L neto</div><div class="kpi-value pos">+$643.50</div><div class="kpi-sub">10 operaciones</div></div>
+      <div class="kpi"><div class="kpi-label">Win rate</div><div class="kpi-value neu">40%</div><div class="kpi-sub">4W / 6L</div></div>
+      <div class="kpi"><div class="kpi-label">Profit factor</div><div class="kpi-value pos">1.36</div><div class="kpi-sub">bruto ganan/pierden</div></div>
+      <div class="kpi"><div class="kpi-label">Avg ganancia</div><div class="kpi-value pos">+$613</div><div class="kpi-sub">por trade ganador</div></div>
+      <div class="kpi"><div class="kpi-label">Avg pérdida</div><div class="kpi-value neg">-$302</div><div class="kpi-sub">por trade perdedor</div></div>
+      <div class="kpi"><div class="kpi-label">Ratio G/P</div><div class="kpi-value pos">2.03×</div><div class="kpi-sub">ganancia/pérdida</div></div>
+    </div>
+
+    <div class="alert warning" style="margin-top:12px">
+      <div class="alert-title">Sesión con señales mixtas</div>
+      <div style="color:var(--text2)">Día positivo gracias a ES-3 (+$1,500). Operativa dispersa entre ES y MNQ, señales promedio 2.8/4. Win rate del 40% salvado por ratio G/P de 2.03×.</div>
+    </div>
+
+    <div class="sub-title">Curva de capital acumulada</div>
+    <div class="chart-wrap" style="height:150px"><canvas id="chartCurve"></canvas></div>
+
+    <div class="sub-title">P&L por operación</div>
+    <div class="chart-wrap" style="height:160px"><canvas id="chartBar"></canvas></div>
+
+    <div class="sub-title">Detalle de operaciones</div>
+    <div class="tab-row">
+      <button class="tab active" onclick="showTab(event,'all')">Todas</button>
+      <button class="tab" onclick="showTab(event,'es')">ES JUN26</button>
+      <button class="tab" onclick="showTab(event,'mnq')">MNQ JUN26</button>
+    </div>
+    <div class="trade-row hdr"><span>#</span><span>Hora</span><span>Instrumento</span><span>Dir.</span><span>P&L</span><span>Señales</span></div>
+    <div id="tab-all" class="tab-content active"></div>
+    <div id="tab-es"  class="tab-content"></div>
+    <div id="tab-mnq" class="tab-content"></div>
+
+    <div class="sub-title">Alineación de señales por operación</div>
+    <div class="sig-grid" id="signal-grid"></div>
+
+    <div class="sub-title">Distribución por instrumento</div>
+    <div class="inst-grid">
+      <div class="kpi">
+        <div class="kpi-label">ES JUN26 (6 trades)</div>
+        <div class="kpi-value pos">+$662.50</div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--text3)"><span>Win rate: 33%</span><span>PF: 1.38</span></div>
+        <div class="mini-bar-wrap"><div class="mini-bar" style="width:33%;background:#639922"></div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">MNQ JUN26 (4 trades)</div>
+        <div class="kpi-value neg">-$19.00</div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--text3)"><span>Win rate: 50%</span><span>PF: 0.74</span></div>
+        <div class="mini-bar-wrap"><div class="mini-bar" style="width:50%;background:#EF9F27"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECCIÓN 2 — ANÁLISIS CRÍTICO SIM
+  ═══════════════════════════════════════════ -->
+  <div class="section-divider"></div>
+  <div id="critico" style="scroll-margin-top:52px">
+    <div class="section-label"><span class="num">2</span>Análisis crítico</div>
+    <h2>Diagnóstico de la sesión</h2>
+    <p class="sub">Oportunidades de mejora identificadas en la operativa del 23 Mar</p>
+    <div id="insights-sim"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECCIÓN 3 — SIM VS FONDEO
+  ═══════════════════════════════════════════ -->
+  <div class="section-divider"></div>
+  <div id="comp" style="scroll-margin-top:52px">
+    <div class="section-label"><span class="num">3</span>Sim vs Fondeo</div>
+    <h2>Análisis comparativo — 23 Mar 2026</h2>
+    <p class="sub">Cruce de órdenes reales del fondeo contra la operativa del simulador</p>
+
+    <div class="two-col">
+      <div class="kpi" style="border-top:3px solid #639922">
+        <div class="kpi-label">Simulador (Sim101)</div>
+        <div class="kpi-value pos">+$643.50</div>
+        <div class="kpi-sub">10 trades · WR 40% · PF 1.36</div>
+      </div>
+      <div class="kpi" style="border-top:3px solid #E24B4A">
+        <div class="kpi-label">Cuenta fondeo</div>
+        <div class="kpi-value neg">-$885.00</div>
+        <div class="kpi-sub">8 trades · WR 12.5% · PF 0.12</div>
+      </div>
+    </div>
+
+    <div class="alert danger">
+      <div class="alert-title">Divergencia total: -$1,528.50</div>
+      <div style="color:var(--text2)">Los mismos setups, la misma pantalla, el mismo mercado — resultados opuestos. La diferencia no es el análisis, es la ejecución bajo presión de la cuenta real.</div>
+    </div>
+
+    <div class="sub-title">Correlación trade por trade</div>
+    <div class="comp-row hdr"><span>Hora</span><span>Sim</span><span>Fondeo</span><span>Divergencia</span></div>
+
+    <div class="comp-row lost">
+      <div><div style="font-size:12px;font-weight:500">09:41</div><div style="margin-top:3px"><span class="tag tag-match">Correlado</span></div></div>
+      <div><span class="pnl-pos">+$900</span><span class="dur">1m</span><div class="entry-info">Long 2c @6651.5 → @6660.5</div></div>
+      <div><span class="pnl-neg">-$112.5</span><span class="dur" style="border-color:#E24B4A;color:var(--red)">1s</span><div class="entry-info">Long 1c @6651 → @6648.75</div></div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.45">Entry idéntico. Sim ganó manteniendo 60s. Fondeo cerró en 1 segundo con -$112.50.</div>
+    </div>
+
+    <div class="comp-row lost">
+      <div><div style="font-size:12px;font-weight:500">09:45</div><div style="margin-top:3px"><span class="tag tag-match">Correlado</span></div></div>
+      <div><span class="pnl-pos">+$1,500</span><span class="dur">5m</span><div class="entry-info">Long 2c @6657.25 → @6672.25</div></div>
+      <div><span class="pnl-pos">+$125</span><span class="dur">3.5m</span><div class="entry-info">Long 1c @6656.75 → @6659.25</div></div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.45">Sim capturó 15 pts. Fondeo salió con 2.5 pts. -$625 dejados sobre la mesa por salida prematura.</div>
+    </div>
+
+    <div class="comp-row lost">
+      <div><div style="font-size:12px;font-weight:500">09:55</div><div style="margin-top:3px"><span class="tag tag-match">Correlado</span></div></div>
+      <div><span class="pnl-neg">-$50</span><span class="dur">~0m</span><div class="entry-info">Long MNQ 1c @24574.5 → @24549.5</div></div>
+      <div><span class="pnl-neg">-$70</span><span class="dur" style="border-color:#E24B4A;color:var(--red)">5s</span><div class="entry-info">Long MNQ 5c @24561.25 → @24554.25</div></div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.45">5 contratos en fondeo vs 1 en sim. Sizing no calibrado al instrumento.</div>
+    </div>
+
+    <div class="comp-row lost">
+      <div><div style="font-size:12px;font-weight:500">09:57</div><div style="margin-top:3px"><span class="tag tag-match">Correlado</span></div></div>
+      <div><span class="pnl-neg">-$23.5</span><span class="dur">1m</span><div class="entry-info">Short MNQ 1c @24574 → @24585.75</div></div>
+      <div><span class="pnl-neg">-$127.5</span><span class="dur">1m</span><div class="entry-info">Short MNQ 5c @24574.75 → @24587.5</div></div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.45">Mismo trade perdedor. 5c en fondeo amplifica la pérdida ×5.4 respecto al sim.</div>
+    </div>
+
+    <div class="comp-row lost">
+      <div><div style="font-size:12px;font-weight:500">10:04</div><div style="margin-top:3px"><span class="tag tag-match">Correlado</span></div></div>
+      <div><span class="pnl-neg">-$187.5</span><span class="dur">~0m</span><div class="entry-info">Long 2c @6677.25 → @6675.38</div></div>
+      <div><span class="pnl-neg">-$162.5</span><span class="dur" style="border-color:#E24B4A;color:var(--red)">13s</span><div class="entry-info">Long 1c @6676 → @6672.75</div></div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.45">Ambos perdedores. Stop en 13s en fondeo — no dio tiempo al trade de desarrollarse.</div>
+    </div>
+
+    <div class="comp-row lost">
+      <div><div style="font-size:12px;font-weight:500">10:05</div><div style="margin-top:3px"><span class="tag tag-match">Correlado</span></div></div>
+      <div><span class="pnl-neg">-$425</span><span class="dur">3m</span><div class="entry-info">Short 2c @6673 → @6677.25</div></div>
+      <div><span class="pnl-neg">-$87.5</span><span class="dur" style="border-color:#EF9F27;color:var(--amber)">8s</span><div class="entry-info">Short 1c @6672.75 → @6674.5</div></div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.45">Fondeo salió antes (8s), perdió menos. Pero la salida fue por miedo, no por regla definida.</div>
+    </div>
+
+    <div class="comp-row extra">
+      <div><div style="font-size:12px;font-weight:500">10:07</div><div style="margin-top:3px"><span class="tag tag-extra">Solo fondeo</span></div></div>
+      <div style="font-size:11px;color:var(--text3)">— no existe en sim</div>
+      <div><span class="pnl-neg">-$237.5</span><span class="dur">4m</span><div class="entry-info">Short 1c @6675.25 → @6680</div><div style="font-size:10px;color:var(--red);margin-top:2px">Trade revenge</div></div>
+      <div style="font-size:11px;color:var(--red);line-height:1.45"><strong>REVENGE TRADE.</strong> No existe en sim. Abierto tras 2 pérdidas seguidas. -$237.50 = 26.8% del total perdido.</div>
+    </div>
+
+    <div class="comp-row lost">
+      <div><div style="font-size:12px;font-weight:500">10:28</div><div style="margin-top:3px"><span class="tag tag-match">Correlado</span></div></div>
+      <div><span class="pnl-neg">-$375</span><span class="dur">2m</span><div class="entry-info">Long 2c @6685 → @6681.25</div></div>
+      <div><span class="pnl-neg">-$212.5</span><span class="dur">8m</span><div class="entry-info">Long 1c @6685.75 → @6681.5</div></div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.45">Setup de señales mixtas (1/4) replicado en ambas cuentas. El fondeo aguantó más tiempo (+8 min vs 2 min).</div>
+    </div>
+
+    <div class="sub-title">Duración de posiciones: sim vs fondeo</div>
+    <div id="dur-bars"></div>
+
+    <div class="sub-title">P&L comparativo (equiv. 1 contrato ES)</div>
+    <div class="chart-wrap" style="height:170px"><canvas id="chartComp"></canvas></div>
+
+    <div class="sub-title">Simulación: si fondeo replicara ejecución del sim</div>
+    <div class="kpi">
+      <div class="two-col" style="margin-bottom:14px">
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">Trade 09:41 — no stop en 1s</div><div class="pnl-pos" style="font-size:13px">+$450 → diferencia +$562.50</div></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">Trade 09:45 — mantener 15 pts</div><div class="pnl-pos" style="font-size:13px">+$750 → diferencia +$625</div></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">No abrir trade 10:07 (revenge)</div><div class="pnl-pos" style="font-size:13px">$0 → diferencia +$237.50</div></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">MNQ con 1c en lugar de 5c</div><div class="pnl-pos" style="font-size:13px">-$23.5 → diferencia +$174</div></div>
+      </div>
+      <div style="border-top:0.5px solid var(--border);padding-top:10px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:0.5px solid var(--border)"><span style="color:var(--text2)">Resultado real fondeo</span><span class="pnl-neg">-$885.00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:0.5px solid var(--border)"><span style="color:var(--text2)">Resultado potencial (ejecución sim)</span><span class="pnl-pos">+$485.00 aprox.</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;font-weight:500"><span style="color:var(--text2)">Costo total del miedo + revenge hoy</span><span class="pnl-neg">-$1,370.00</span></div>
+      </div>
+    </div>
+
+    <div class="sub-title">Análisis crítico — Sim vs Fondeo</div>
+    <div id="insights-comp"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECCIÓN 4 — HALLAZGO 2 DÍAS
+  ═══════════════════════════════════════════ -->
+  <div class="section-divider"></div>
+  <div id="hallazgo" style="scroll-margin-top:52px">
+    <div class="section-label"><span class="num">4</span>Hallazgo acumulado</div>
+    <h2>El hallazgo más importante de estos 2 días</h2>
+    <p class="sub">23 Mar + 24 Mar · Sim101 vs Cuenta Fondeo · Diagnóstico conductual</p>
+
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-val pos">+$1,143</div><div class="stat-lbl">Sim acumulado 2 días</div></div>
+      <div class="stat-box"><div class="stat-val neg">-$1,222</div><div class="stat-lbl">Fondeo acumulado 2 días</div></div>
+      <div class="stat-box"><div class="stat-val neg">-$2,366</div><div class="stat-lbl">Divergencia total</div></div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">Diagnóstico conductual — 2 sesiones</div>
+      <h3>En el fondeo solo se ejecutan los perdedores</h3>
+
+      <p>Lo que los datos de dos días revelan es un patrón específico y repetible: <strong>la cuenta de fondeo actúa de espectador en los trades ganadores y de ejecutor en los perdedores</strong>. No es mala suerte ni análisis deficiente.</p>
+
+      <p>El <strong>23 Mar</strong> (esta sesión), el fondeo ejecutó 7 de 10 trades pero con stops de 1-8 segundos y un trade de revenge que no existe en el simulador. Los dos trades que necesitaban tiempo para desarrollarse — ES Long 09:41 (potencial +$450) y ES Long 09:45 (potencial +$750) — se cortaron en segundos. El único ganador real del fondeo fue ES 09:45, pero capturó solo 2.5 de los 15 puntos disponibles. Además se abrió un short a las 10:07 que no tiene correlato en el sim, generando -$237.50 de pérdida pura por revenge.</p>
+
+      <p>El <strong>24 Mar</strong>, el patrón se hace aún más claro: de 4 trades en el sim, el fondeo ejecutó exactamente los 2 perdedores y no tocó los 2 ganadores. Los dos ganadores (ES-1 y ES-2, 4/4 señales, primeros de la sesión) ocurrieron mientras el fondeo colocaba y cancelaba órdenes en MNQ. Para cuando se ejecutó el primer trade real en ES (10:12, el tercer setup del sim), el mercado ya había hecho el movimiento limpio.</p>
+
+      <p><strong>El mecanismo que lo causa:</strong> en los primeros minutos de sesión hay una actividad de "exploración" — órdenes que se colocan y cancelan, cambios de instrumento, hesitación — producida por la presión de la cuenta real. Esa hesitación consume exactamente el tiempo en que los mejores setups están activos. Para cuando se ejecuta el primer trade, el precio está en reversión o en zona de mayor riesgo.</p>
+
+      <p><strong>La conclusión práctica:</strong> el sistema de análisis funciona. El simulador lo demuestra con consistencia en los dos días. El problema no es técnico sino el intervalo entre "el setup es válido" y "ejecuto la orden", que en la cuenta real se alarga por presión emocional. No es un problema de saber — es un problema de hacer.</p>
+
+      <div style="background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--r-md);padding:14px 16px;margin-top:16px">
+        <div style="font-size:12px;font-weight:500;margin-bottom:10px">Reglas de operación propuestas</div>
+        <div style="font-size:12px;color:var(--text2);padding:5px 0;border-bottom:0.5px solid var(--border);line-height:1.5">🔴 Si hay un setup válido en el sim antes de las 10:15, ejecutarlo también en fondeo sin condiciones adicionales.</div>
+        <div style="font-size:12px;color:var(--text2);padding:5px 0;border-bottom:0.5px solid var(--border);line-height:1.5">🔴 Stop mínimo de 3 pts en ES. Si el precio no da 3 pts de margen, no entrar.</div>
+        <div style="font-size:12px;color:var(--text2);padding:5px 0;border-bottom:0.5px solid var(--border);line-height:1.5">🔴 Pausa de 15 min después de 2 pérdidas consecutivas — sin excepciones.</div>
+        <div style="font-size:12px;color:var(--text2);padding:5px 0;border-bottom:0.5px solid var(--border);line-height:1.5">🟡 Tamaño fijo: 1 contrato ES. No añadir contratos hasta WR &gt;45% en 20 trades.</div>
+        <div style="font-size:12px;color:var(--text2);padding:5px 0;border-bottom:0.5px solid var(--border);line-height:1.5">🟡 Target mínimo = 2× el stop. Con stop de 3 pts, target ≥6 pts. No cerrar antes.</div>
+        <div style="font-size:12px;color:var(--text2);padding:5px 0;line-height:1.5">🟢 MNQ prohibido en fondeo durante las primeras 2 horas de sesión.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- YOUTUBE -->
+  <div id="video" style="scroll-margin-top:52px">
+    <div class="yt-block">
+      <div class="yt-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      </div>
+      <div class="yt-text">
+        <div class="yt-title">Operativa en vivo — 23 Mar 2026</div>
+        <div class="yt-sub">Mira el análisis y la ejecución de esta sesión en tiempo real en YouTube</div>
+      </div>
+      <a href="https://youtu.be/qYUkwFEr1hA" target="_blank" rel="noopener noreferrer" class="yt-btn">Ver en YouTube →</a>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<footer>Generado el 23 Mar 2026 · ES & MNQ JUN26 · Sim101 vs Cuenta Fondeo · Reporte de uso personal</footer>
+
+<script>
+const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+const tc = isDark ? '#9c9a92' : '#73726c';
+const gc = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+/* ── TRADE DATA ── */
+const trades = [
+  { id:'ES-1',  hora:'09:36', inst:'ES',  dir:'Short', qty:2, entry:6651,     exit:6658.5,  pnl:-750,   sma20:-0.02,   sma80:-0.2719, lr89:0.0775,  vwap:'DOWN' },
+  { id:'ES-2',  hora:'09:41', inst:'ES',  dir:'Long',  qty:2, entry:6651.5,   exit:6660.5,  pnl:900,    sma20:0.1025,  sma80:0.0603,  lr89:0.3751,  vwap:'UP'   },
+  { id:'ES-3',  hora:'09:45', inst:'ES',  dir:'Long',  qty:2, entry:6657.25,  exit:6672.25, pnl:1500,   sma20:-0.0075, sma80:0.2475,  lr89:0.2452,  vwap:'UP'   },
+  { id:'ES-4',  hora:'10:04', inst:'ES',  dir:'Long',  qty:2, entry:6677.25,  exit:6675.38, pnl:-187.5, sma20:0.0837,  sma80:0.2006,  lr89:-0.0276, vwap:'UP'   },
+  { id:'ES-5',  hora:'10:05', inst:'ES',  dir:'Short', qty:2, entry:6673,     exit:6677.25, pnl:-425,   sma20:-0.68,   sma80:-0.0222, lr89:-0.3981, vwap:'DOWN' },
+  { id:'ES-6',  hora:'10:28', inst:'ES',  dir:'Long',  qty:2, entry:6685,     exit:6681.25, pnl:-375,   sma20:-0.4938, sma80:0.165,   lr89:-0.2318, vwap:'UP'   },
+  { id:'MNQ-1', hora:'09:51', inst:'MNQ', dir:'Long',  qty:1, entry:24558,    exit:24564,   pnl:12,     sma20:-0.16,   sma80:0.7625,  lr89:0.4259,  vwap:'UP'   },
+  { id:'MNQ-2', hora:'09:55', inst:'MNQ', dir:'Long',  qty:1, entry:24574.5,  exit:24549.5, pnl:-50,    sma20:-0.3012, sma80:0.5394,  lr89:-0.4198, vwap:'UP'   },
+  { id:'MNQ-3', hora:'09:57', inst:'MNQ', dir:'Short', qty:1, entry:24574,    exit:24585.75,pnl:-23.5,  sma20:-0.2388, sma80:-0.1766, lr89:-0.7416, vwap:'DOWN' },
+  { id:'MNQ-4', hora:'11:07', inst:'MNQ', dir:'Long',  qty:1, entry:24650.25, exit:24671.5, pnl:42.5,   sma20:-0.3875, sma80:0.5578,  lr89:-0.4203, vwap:'UP'   },
+];
+
+function sigScore(t) {
+  const up = t.dir === 'Long';
+  const v = (up && t.vwap==='UP')  || (!up && t.vwap==='DOWN');
+  const s = (up && t.sma20>0)      || (!up && t.sma20<0);
+  const e = (up && t.sma80>0)      || (!up && t.sma80<0);
+  const l = (up && t.lr89>0)       || (!up && t.lr89<0);
+  return { v, s, e, l, score:[v,s,e,l].filter(Boolean).length };
+}
+function dot(ok) { return `<span class="sdot ${ok?'dot-g':'dot-r'}"></span>`; }
+
+function tradeHTML(t) {
+  const win = t.pnl > 0;
+  const sig = sigScore(t);
+  const pnlStr = (t.pnl>=0?'+':'') + '$' + Math.abs(t.pnl).toFixed(2);
+  return `<div class="trade-row">
+    <span style="font-size:11px;color:var(--text3)">${t.id}</span>
+    <span style="color:var(--text2);font-size:11px">${t.hora}</span>
+    <span>${t.inst} <span style="color:var(--text3);font-size:11px">×${t.qty}</span></span>
+    <span><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></span>
+    <span class="${win?'pnl-pos':'pnl-neg'}" style="text-align:right">${pnlStr}</span>
+    <div class="sig-row">
+      ${dot(sig.v)}<span style="font-size:9px;color:var(--text3)">V</span>
+      ${dot(sig.s)}<span style="font-size:9px;color:var(--text3)">20</span>
+      ${dot(sig.e)}<span style="font-size:9px;color:var(--text3)">80</span>
+      ${dot(sig.l)}<span style="font-size:9px;color:var(--text3)">LR</span>
+      <span style="margin-left:4px;font-size:11px;color:var(--text3)">${sig.score}/4</span>
+    </div>
+  </div>`;
+}
+
+document.getElementById('tab-all').innerHTML = trades.map(tradeHTML).join('');
+document.getElementById('tab-es').innerHTML  = trades.filter(t=>t.inst==='ES').map(tradeHTML).join('');
+document.getElementById('tab-mnq').innerHTML = trades.filter(t=>t.inst==='MNQ').map(tradeHTML).join('');
+
+function showTab(e, name) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+/* ── SIGNAL GRID ── */
+const sg = document.getElementById('signal-grid');
+trades.forEach(t => {
+  const sig = sigScore(t);
+  const win = t.pnl > 0;
+  const pnlStr = (t.pnl>=0?'+':'') + '$' + Math.abs(t.pnl).toFixed(2);
+  sg.innerHTML += `<div class="kpi" style="padding:10px 12px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+      <span style="font-size:12px;font-weight:500">${t.id} <span style="font-size:10px;color:var(--text3)">${t.hora}</span></span>
+      <span class="${win?'pnl-pos':'pnl-neg'}" style="font-size:12px">${pnlStr}</span>
+    </div>
+    <div style="font-size:10px;color:var(--text3);margin-bottom:5px">${t.dir} ${t.inst} ×${t.qty}</div>
+    <div class="sig-row" style="margin-bottom:5px">
+      ${dot(sig.v)}<span style="font-size:10px;color:var(--text3)">VWAP</span>
+      ${dot(sig.s)}<span style="font-size:10px;color:var(--text3)">SMA20</span>
+      ${dot(sig.e)}<span style="font-size:10px;color:var(--text3)">SMA80</span>
+      ${dot(sig.l)}<span style="font-size:10px;color:var(--text3)">LR89</span>
+    </div>
+    <div class="mini-bar-wrap"><div class="mini-bar" style="width:${sig.score/4*100}%;background:${win?'#639922':'#E24B4A'}"></div></div>
+    <div style="font-size:10px;color:var(--text3);margin-top:3px">${sig.score}/4 señales alineadas</div>
+  </div>`;
+});
+
+/* ── INSIGHTS SIM ── */
+const simInsights = [
+  { type:'crit', title:'Trade ES-1: Short debajo del VWAP — error de contexto', text:'Entrada short en 6651 cuando el VWAP estaba en 6659.34 y el precio ya operaba por debajo. Shortar bajo el VWAP en estructura DOWN es operar a favor del mean-reversion hacia arriba, no a la baja. La LinReg89 (+0.08) ya confirmaba recuperación. Señales en contra: LR89 positivo. Pérdida: -$750. Regla: nunca shortar cuando el precio está lejos por debajo del VWAP en contexto sin momentum bajista fresco.' },
+  { type:'warn', title:'Trade ES-6: Solo 1/4 señales alineadas para el Long', text:'Entrada long en 6685 con SMA20 -0.49 y LR89 -0.23. Solo el VWAP_Dir apuntaba UP. Ratio de alineación: 1/4. En esta sesión las operaciones con menos del 50% de señales alineadas tienen pérdida esperada negativa. Implementar filtro mínimo de 3/4 señales antes de cualquier entrada.' },
+  { type:'warn', title:'Trade ES-5: Short con timing tardío en un movimiento ya recorrido', text:'Short en 6673 con 3/4 señales alineadas, pero el precio ya había caído desde 6685 (~12 pts de recorrido previo). Con ATR de 3.1 pts, entrar al short tras un movimiento de 4× el ATR reduce drásticamente el R:R disponible.' },
+  { type:'good', title:'Trade ES-3: Template de referencia para esta estrategia', text:'Long en 6657.25 con VWAP UP, SMA80 +0.25, LR89 +0.25. Precio por encima del VWAP. 3/4 señales alineadas. Resultado: +$1,500 en 5 minutos. Este es el perfil exacto a replicar: señales de tendencia alineadas, precio respetando el VWAP, momentum confirmado. Documentar como setup de referencia.' },
+  { type:'crit', title:'MNQ: -$19 neto y atención dividida sin beneficio real', text:'4 operaciones en MNQ con 1c generan -$19 neto. El multiplicador de $2/pt vs $50/pt del ES hace que se necesite 25× más movimiento para el mismo P&L. La atención dividida entre dos instrumentos en los momentos de mayor volatilidad (09:51-09:58) deteriora la calidad de ejecución en ES.' },
+  { type:'info', title:'Win rate 40% requiere ratio G/P ≥ 1.5× para ser estructuralmente rentable', text:'Hoy el ratio fue 2.03×, lo que salvó la sesión. Si los stops se hubieran ejecutado peor o las salidas de ganancia fueran más tempranas, el día habría sido negativo con el mismo win rate. Objetivo: mantener ratio G/P consistente por encima de 1.5× independientemente del win rate.' },
+];
+document.getElementById('insights-sim').innerHTML = simInsights.map(i =>
+  `<div class="icard ${i.type}"><div class="icard-title">${i.title}</div><div class="icard-text">${i.text}</div></div>`
+).join('');
+
+/* ── INSIGHTS COMP ── */
+const compInsights = [
+  { type:'crit', title:'Problema 1 — Stops de microsegundos (1s, 5s, 8s, 13s)', text:'En 4 de 8 trades la posición duró menos de 15 segundos. Un stop válido para ES requiere al menos 2-4 puntos de margen. Con stops tan apretados, el spread y el ruido de mercado ejecutan el stop antes de que el trade se desarrolle. El trade de 09:41 duró 1 segundo y perdió -$112.50 sobre un setup que el sim convirtió en +$450 manteniendo solo 60 segundos más.' },
+  { type:'crit', title:'Problema 2 — El mejor trade se cortó con el 88% del potencial sin explotar', text:'ES Long 09:45: sim capturó 15 puntos (+$750 equiv.), fondeo salió con 2.5 puntos (+$125). Se dejaron $625 sobre la mesa en el único trade que estuvo bien encaminado. Este es el patrón más destructivo bajo presión de capital real: recortar ganancias por miedo cuando el setup es correcto y el mercado confirma.' },
+  { type:'crit', title:'Problema 3 — Revenge trade en 10:07 (no existe en sim)', text:'Después de ES-4 (-$162.50) y ES-5 (-$87.50), se abrió un short a las 10:07 sin correlato en el simulador. Generó -$237.50 = 26.8% de toda la pérdida diaria. El simulador, sin presión emocional, nunca tomó esa entrada. Es el trade más caro del día y el único que nació del dolor, no del análisis.' },
+  { type:'warn', title:'Problema 4 — Sizing en MNQ inconsistente (5c vs 1c en sim)', text:'5 contratos MNQ en fondeo vs 1 en sim. En los trades de 09:55 y 09:57, ambos perdedores, el fondeo amplificó las pérdidas ×5.4 respecto al sim. Con $2/pt el MNQ necesita 5 contratos para igualar 1 ES, pero eso también amplifica cada error ×5.' },
+];
+document.getElementById('insights-comp').innerHTML = compInsights.map(i =>
+  `<div class="icard ${i.type}"><div class="icard-title">${i.title}</div><div class="icard-text">${i.text}</div></div>`
+).join('');
+
+/* ── DURATION BARS ── */
+const durData = [
+  { label:'ES Long 09:41', sim:60,  funded:1 },
+  { label:'ES Long 09:45', sim:300, funded:210 },
+  { label:'MNQ 09:55',     sim:5,   funded:5 },
+  { label:'ES Short 10:05',sim:180, funded:8 },
+  { label:'ES Long 10:28', sim:120, funded:488 },
+];
+const maxD = 300;
+const durEl = document.getElementById('dur-bars');
+durData.forEach(d => {
+  const sw = Math.min(d.sim/maxD*100,100);
+  const fw = Math.min(d.funded/maxD*100,100);
+  durEl.innerHTML += `<div class="bar-section">
+    <div class="bar-label">${d.label}</div>
+    <div class="bar-row"><span class="bar-name">Sim</span><div class="bar-track"><div class="bar-fill" style="width:${sw}%;background:#639922"></div></div><span class="bar-val">${d.sim>=60?Math.round(d.sim/60)+'m':d.sim+'s'}</span></div>
+    <div class="bar-row"><span class="bar-name">Fondeo</span><div class="bar-track"><div class="bar-fill" style="width:${fw}%;background:#E24B4A"></div></div><span class="bar-val">${d.funded>=60?Math.round(d.funded/60)+'m':d.funded+'s'}</span></div>
+  </div>`;
+});
+
+/* ── CHARTS ── */
+const labels  = trades.map(t=>t.id);
+const pnls    = trades.map(t=>t.pnl);
+
+new Chart(document.getElementById('chartBar'), {
+  type:'bar',
+  data:{labels,datasets:[{data:pnls,backgroundColor:pnls.map(v=>v>=0?'rgba(99,153,34,0.75)':'rgba(226,75,74,0.75)'),borderRadius:4,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>(ctx.raw>=0?'+':'')+'$'+ctx.raw}}},
+    scales:{x:{ticks:{color:tc,font:{size:11}},grid:{color:gc}},y:{ticks:{color:tc,font:{size:11},callback:v=>'$'+v},grid:{color:gc}}}
+  }
+});
+
+let cum=0;
+const cumData=trades.map(t=>{cum+=t.pnl;return Math.round(cum*100)/100;});
+new Chart(document.getElementById('chartCurve'),{
+  type:'line',
+  data:{labels,datasets:[{data:cumData,borderColor:'#639922',backgroundColor:'rgba(99,153,34,0.08)',fill:true,tension:0.35,pointBackgroundColor:cumData.map(v=>v>=0?'#639922':'#E24B4A'),pointRadius:4,pointHoverRadius:6,borderWidth:2}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'Acumulado: '+(ctx.raw>=0?'+':'')+'$'+ctx.raw}}},
+    scales:{x:{ticks:{color:tc,font:{size:11}},grid:{display:false}},y:{ticks:{color:tc,font:{size:11},callback:v=>'$'+v},grid:{color:gc}}}
+  }
+});
+
+const compLabels=['ES 09:41','ES 09:45','MNQ 09:55','MNQ 09:57','ES 10:04','ES 10:05','ES 10:07','ES 10:28'];
+const simPnl=[450,750,-50,-23.5,-93.75,-212.5,0,-187.5];
+const fdPnl =[-112.5,125,-70,-127.5,-162.5,-87.5,-237.5,-212.5];
+new Chart(document.getElementById('chartComp'),{
+  type:'bar',
+  data:{labels:compLabels,datasets:[
+    {label:'Sim (1c equiv)',data:simPnl,backgroundColor:simPnl.map(v=>v>0?'rgba(99,153,34,0.7)':v<0?'rgba(226,75,74,0.7)':'rgba(136,135,128,0.35)'),borderRadius:4,borderSkipped:false},
+    {label:'Fondeo real',  data:fdPnl, backgroundColor:fdPnl.map(v=>v>0?'rgba(99,153,34,0.7)':v<0?'rgba(226,75,74,0.7)':'rgba(136,135,128,0.35)'),borderRadius:4,borderSkipped:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'top',labels:{color:tc,font:{size:11},boxWidth:10,padding:12}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': $'+ctx.raw}}},
+    scales:{x:{ticks:{color:tc,font:{size:10},maxRotation:25},grid:{color:gc}},y:{ticks:{color:tc,font:{size:11},callback:v=>'$'+v},grid:{color:gc}}}
+  }
+});
+
+/* ── NAV SCROLL ── */
+const sections=['sim','critico','comp','hallazgo','video'];
+window.addEventListener('scroll',()=>{
+  let cur='sim';
+  sections.forEach(id=>{const el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-80)cur=id;});
+  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+});
+</script>
+</body>
+</html>
+
+

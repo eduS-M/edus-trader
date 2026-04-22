@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Playables SDK -->
+<script>// Playables SDK v1.0.0
+// Game lifecycle bridge: rAF-based game-ready detection + event communication
+(function() {
+  'use strict';
+
+  // Idempotency: skip if already initialized (e.g., server-side injection
+  // followed by client-side inject-javascript via the Bloks webview component).
+  if (window.playablesSDK) return;
+
+  var HANDLER_NAME = 'playablesGameEventHandler';
+  var ANDROID_BRIDGE_NAME = '_MetaPlayablesBridge';
+  var RAF_FRAME_THRESHOLD = 3;
+
+  var gameReadySent = false;
+  var firstInteractionSent = false;
+  var errorSent = false;
+  var frameCount = 0;
+  var originalRAF = window.requestAnimationFrame;
+
+  // --- Transport Layer ---
+
+  function hasIOSBridge() {
+    return !!(window.webkit &&
+              window.webkit.messageHandlers &&
+              window.webkit.messageHandlers[HANDLER_NAME]);
+  }
+
+  function hasAndroidBridge() {
+    return !!(window[ANDROID_BRIDGE_NAME] &&
+              typeof window[ANDROID_BRIDGE_NAME].postEvent === 'function');
+  }
+
+  function isInIframe() {
+    return !!(window.parent && window.parent !== window);
+  }
+
+  function sendEvent(eventName, payload) {
+    var message = {
+      type: eventName,
+      payload: payload || {},
+      timestamp: Date.now()
+    };
+
+    if (hasIOSBridge()) {
+      try {
+        window.webkit.messageHandlers[HANDLER_NAME].postMessage(message);
+      } catch (e) { /* ignore */ }
+      return;
+    }
+
+    if (hasAndroidBridge()) {
+    try {
+      var p = payload || {};
+      p.__secureToken = window.__fbAndroidBridgeAuthToken || '';
+      window[ANDROID_BRIDGE_NAME].postEvent(
+        eventName,
+        JSON.stringify(p)
+      );
+    } catch (e) { /* ignore */ }
+    return;
+  }
+
+    if (isInIframe()) {
+      try {
+        window.parent.postMessage(message, '*');
+      } catch (e) { /* ignore */ }
+      return;
+    }
+  }
+
+  // --- rAF Game-Ready Detection ---
+
+  function onFrame() {
+    if (gameReadySent) return;
+
+    frameCount++;
+    if (frameCount >= RAF_FRAME_THRESHOLD) {
+      gameReadySent = true;
+      sendEvent('game_ready', {
+        frame_count: frameCount,
+        detected_at: Date.now()
+      });
+      return;
+    }
+
+    originalRAF.call(window, onFrame);
+  }
+
+  if (originalRAF) {
+    window.requestAnimationFrame = function(callback) {
+      if (!gameReadySent) {
+        return originalRAF.call(window, function(timestamp) {
+          frameCount++;
+          if (frameCount >= RAF_FRAME_THRESHOLD && !gameReadySent) {
+            gameReadySent = true;
+            sendEvent('game_ready', {
+              frame_count: frameCount,
+              detected_at: Date.now()
+            });
+          }
+          callback(timestamp);
+        });
+      }
+      return originalRAF.call(window, callback);
+    };
+  }
+
+  // --- First User Interaction Detection ---
+
+  function setupFirstInteractionDetection() {
+    var events = ['touchstart', 'mousedown', 'keydown'];
+
+    function onFirstInteraction() {
+      if (firstInteractionSent) return;
+      firstInteractionSent = true;
+      sendEvent('user_interaction_start', null);
+
+      for (var i = 0; i < events.length; i++) {
+        document.removeEventListener(events[i], onFirstInteraction, true);
+      }
+    }
+
+    for (var i = 0; i < events.length; i++) {
+      document.addEventListener(events[i], onFirstInteraction, true);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupFirstInteractionDetection);
+  } else {
+    setupFirstInteractionDetection();
+  }
+
+  // --- Auto Error Capture ---
+
+  window.addEventListener('error', function(event) {
+    if (errorSent) return;
+    errorSent = true;
+    sendEvent('error', {
+      message: event.message || 'Unknown error',
+      source: event.filename || '',
+      lineno: event.lineno || 0,
+      colno: event.colno || 0,
+      auto_captured: true
+    });
+  });
+
+  window.addEventListener('unhandledrejection', function(event) {
+    if (errorSent) return;
+    errorSent = true;
+    var reason = event.reason;
+    sendEvent('error', {
+      message: (reason instanceof Error) ? reason.message : String(reason),
+      type: 'unhandled_promise_rejection',
+      auto_captured: true
+    });
+  });
+
+  // --- Public API ---
+
+  window.playablesSDK = {
+    complete: function(score) {
+      sendEvent('game_ended', {
+        score: score,
+        completed: true
+      });
+    },
+
+    error: function(message) {
+      if (errorSent) return;
+      errorSent = true;
+      sendEvent('error', {
+        message: message || 'Unknown error',
+        auto_captured: false
+      });
+    },
+
+    sendEvent: function(eventName, payload) {
+      if (!eventName || typeof eventName !== 'string') return;
+      sendEvent(eventName, payload);
+    }
+  };
+
+  // Kick off rAF detection in case no game code calls rAF immediately
+  if (originalRAF) {
+    originalRAF.call(window, onFrame);
+  }
+})();</script>
+<script>window.Intl=window.Intl||{};Intl.t=function(s){return(Intl._locale&&Intl._locale[s])||s;};</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Informe Trading NQ - 10 Abril 2026 | Cambio de Régimen VIX 19</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #050a14;
+  --bg2: #0b1220;
+  --card: #0f172a;
+  --card2: #111c30;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --border: rgba(148,163,184,.15);
+  --green: #22c55e;
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --blue: #3b82f6;
+  --violet: #8b5cf6;
+  --radius: 16px;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f1f5f9; --bg2: #ffffff; --card:#ffffff; --card2:#f8fafc;
+    --text:#0f172a; --muted:#475569; --border:rgba(15,23,42,.08);
+    --shadow: 0 10px 30px rgba(2,6,23,.08);
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:linear-gradient(180deg,var(--bg),var(--bg2) 50%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;line-height:1.55}
+a{color:var(--blue)}
+.container{max-width:1200px;margin:0 auto;padding:24px}
+nav{position:sticky;top:0;z-index:40;backdrop-filter:saturate(180%) blur(12px);background:color-mix(in oklab,var(--bg2) 85%,transparent);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
+.badge{font-size:11px;padding:5px 10px;border-radius:999px;background:linear-gradient(90deg,var(--amber),#f97316);color:#111827;font-weight:800;letter-spacing:.3px}
+.nav-meta{color:var(--muted);font-size:13px}
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin:22px 0}
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.icard{background:radial-gradient(120% 120% at 0% 0%,var(--card2),var(--card));border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.kpi h4{margin:0 0 6px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.kpi .v{font-size:26px;font-weight:900}
+.kpi .sub{font-size:12px;color:var(--muted);margin-top:4px}
+.v-red{color:var(--red)}.v-green{color:var(--green)}.v-amber{color:var(--amber)}.v-blue{color:var(--blue)}
+.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:18px;margin-top:6px}
+@media(max-width:960px){.hero{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,color-mix(in oklab,var(--card) 92%,transparent),var(--card));border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.h1{font-size:30px;margin:0 0 8px;font-weight:900;letter-spacing:-.02em}
+.h2{font-size:19px;margin:0 0 12px;font-weight:800}
+.h3{font-size:15px;margin:0 0 8px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.p-muted{color:var(--muted)}
+.list{margin:10px 0;padding-left:18px}
+.list li{margin:8px 0}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);color:var(--amber);font-weight:700;font-size:12px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:900px){.grid-2{grid-template-columns:1fr}}
+.insight-alert{margin:18px 0;padding:14px 16px;border-radius:12px;background:linear-gradient(90deg,rgba(239,68,68,.14),rgba(245,158,11,.14));border:1px solid rgba(245,158,11,.45);font-weight:600}
+.dofa-quad{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+@media(max-width:860px){.dofa-quad{grid-template-columns:1fr}}
+.dofa .h{display:flex;align-items:center;gap:8px;font-weight:800;margin-bottom:8px}
+.dofa ul{margin:0;padding-left:18px}
+.tag{font-size:11px;padding:3px 8px;border-radius:6px;background:var(--card2);border:1px solid var(--border);color:var(--muted)}
+.levels{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.level{padding:8px 12px;border-radius:10px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);font-weight:800;font-size:13px}
+.strategy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px}
+@media(max-width:1000px){.strategy-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.strategy-grid{grid-template-columns:1fr}}
+.strategy-card{padding:16px;border-radius:14px;background:var(--card2);border:1px dashed var(--border)}
+.strategy-card h4{margin:0 0 6px;font-size:15px}
+.strategy-card p{margin:0;color:var(--muted);font-size:13.5px}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:1000px){.charts{grid-template-columns:1fr}}
+canvas{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left}
+th{color:var(--muted);font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.06em}
+footer{margin:40px 0 20px;color:var(--muted);font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <div class="brand">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 13l4-8 4 16 4-8 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>TRADING REPORT EduS Trader</span>
+      <span class="badge">VIX 19 • CAMBIO DE RÉGIMEN</span>
+    </div>
+    <div class="nav-meta">10 Abr 2026 • 101 Setups • 323 Fills CSV</div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="kpi-grid">
+    <div class="icard kpi"><h4>VIX Hoy</h4><div class="v v-amber">19.0</div><div class="sub">vs 24-31 histórico</div></div>
+    <div class="icard kpi"><h4>Total Setups</h4><div class="v">101</div><div class="sub">Verificado vs 323 fills</div></div>
+    <div class="icard kpi"><h4>Sim P&L</h4><div class="v v-red">-$6,872</div><div class="sub">Acumulado período</div></div>
+    <div class="icard kpi"><h4>Cuenta Fondeo</h4><div class="v v-red">$48,143.50</div><div class="sub">-$1,856.50 de $50k</div></div>
+    <div class="icard kpi"><h4>Margen Drawdown</h4><div class="v v-red">$143.50</div><div class="sub">CRÍTICO</div></div>
+    <div class="icard kpi"><h4>WR Global</h4><div class="v v-amber">39%</div><div class="sub">36/92 trades Sim</div></div>
+  </div>
+
+  <div class="hero">
+    <div class="card">
+      <h1 class="h1">Reporte Integral: Asimetría Confirmada por CSV</h1>
+      <p class="p-muted">Análisis completo de 11 Marzo – 9 Abril. Datos de Sim combinados con verificación de 100 trades fondeados en CSV. <strong style="color:var(--red)">Alerta máxima: solo $143.50 de margen hasta liquidación.</strong></p>
+      <ul class="list">
+        <li><strong>Hallazgo crítico CSV:</strong> 100/100 trades fondeados cerrados por Stop Loss. <span style="color:var(--red)">0 Take Profits alcanzados.</span></li>
+        <li><strong>Régimen nuevo:</strong> Todo el histórico fue con VIX 24-31 (ATR 2.5-3.5pts). Hoy VIX 19 proyecta ATR 1.5-2pts.</li>
+        <li><strong>Colapso Phase 2:</strong> WR de 53% a 32%. Las 4/4 confluencias cayeron de 55% a 25% WR.</li>
+      </ul>
+      <div style="margin-top:10px"><span class="pill">Prioridad: Supervivencia</span></div>
+    </div>
+    <div class="card">
+      <h3 class="h3">7 Hallazgos Clave</h3>
+      <ol class="list" style="padding-left:20px">
+        <li><strong>100% SL en fondeo:</strong> Confirma asimetría 2-3pts ganadores vs 5-7.5pts perdedores.</li>
+        <li><strong>Longs VWAP UP:</strong> 75% WR en Sim (3/4) – único edge estadístico validado.</li>
+        <li><strong>Phase 1 (11-27 Mar):</strong> WR 53%, +$1,108</li>
+        <li><strong>Phase 2 (30 Mar-9 Abr):</strong> WR 32%, -$5,902</li>
+        <li><strong>4/4 confluencias:</strong> De 55% WR a 25% WR en Phase 2</li>
+        <li><strong>Más trades = más pérdidas:</strong> ≤5/día = +$490 avg | ≥8/día = -$1,049 avg</li>
+        <li><strong>VWAP no da edge:</strong> 40% WR alineado vs 39% no alineado</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="insight-alert">
+    Hallazgo CSV: Análisis de 100 trades fondeados confirma 100% de cierres por Stop Loss. Los Take Profits configurados nunca se alcanzaron. Esto valida la asimetría de 2-3 pts ganadores vs 5-7.5 pts perdedores. Sin cambiar la relación R:R, la cuenta es matemáticamente insostenible.
+  </div>
+
+  <div class="grid-2" style="margin-top:18px">
+    <div class="card">
+      <h2 class="h2">DOFA Mejorado con Datos CSV</h2>
+      <div class="dofa-quad">
+        <div class="icard dofa">
+          <div class="h"><span style="color:var(--green)">●</span> Fortalezas</div>
+          <ul>
+            <li>Longs VWAP UP 75% WR en Sim (4 trades analizados desde CSV)</li>
+            <li>Phase 1 probó edge real: 53% WR con disciplina</li>
+            <li>Sistema de confluencias funciona en alta volatilidad</li>
+            <li>Tracking completo y honesto de 101 setups</li>
+          </ul>
+        </div>
+        <div class="icard dofa">
+          <div class="h"><span style="color:var(--red)">●</span> Debilidades</div>
+          <ul>
+            <li><strong>100% de trades fondeados cerrados por SL (100/100 trades), cero TPs alcanzados</strong></li>
+            <li>Asimetría estructural: targets irreales para el ATR</li>
+            <li>Sobre-trading Phase 2 destruyó edge</li>
+            <li>Falta de adaptación a cambio de volatilidad</li>
+          </ul>
+        </div>
+        <div class="icard dofa">
+          <div class="h"><span style="color:var(--blue)">●</span> Oportunidades</div>
+          <ul>
+            <li>VIX 19 = rangos más pequeños, TPs de 3-4pts ahora viables</li>
+            <li>Volver a ≤5 trades/día (promedio +$490)</li>
+            <li>Reset psicológico con régimen nuevo</li>
+            <li>Ajustar stops a 2pts max en vez de 3-4pts</li>
+          </ul>
+        </div>
+        <div class="icard dofa">
+          <div class="h"><span style="color:var(--amber)">●</span> Amenazas</div>
+          <ul>
+            <li><strong>$143.50 to liquidation – 1 solo trade malo liquida</strong></li>
+            <li>4/4 confluencias colapsaron a 25% WR</li>
+            <li>Datos históricos invalidados por cambio de régimen</li>
+            <li>Riesgo de revenge trading por presión</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="h2">Estrategia Hoy – 10 Abril (VIX 19)</h2>
+      <p class="p-muted">Cambio de régimen total. Todo el análisis previo fue en VIX 24-31. Hoy esperamos ATR 1.5-2pts vs 2.5-3.5pts histórico.</p>
+      <div class="levels">
+        <div class="level">Pre-High: 6879.50</div>
+        <div class="level">Open: 6874.75</div>
+        <div class="level">Y-Close: 6862.50</div>
+        <div class="level">VIX: 19.0</div>
+      </div>
+      <table style="margin-top:14px">
+        <thead><tr><th>Contexto</th><th>VIX 25-31 (Hist)</th><th>VIX 19 (Hoy)</th></tr></thead>
+        <tbody>
+          <tr><td>ATR Esperado</td><td>2.5 – 3.5 pts</td><td style="color:var(--green)"><strong>1.5 – 2.0 pts</strong></td></tr>
+          <tr><td>Stop Promedio</td><td>3-4 pts (falló)</td><td style="color:var(--amber)"><strong>1.5-2 pts max</strong></td></tr>
+          <tr><td>Target Viable</td><td>6-8 pts (nunca hit)</td><td style="color:var(--green)"><strong>3-4 pts</strong></td></tr>
+          <tr><td>Operativa</td><td>Breakouts amplios</td><td style="color:var(--blue)"><strong>Reversiones cortas</strong></td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px;font-size:13px;color:var(--amber)"><strong>Advertencia:</strong> No uses datos de win rate históricos. El mercado de hoy es estadísticamente diferente.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h2 class="h2">Las 5 Reglas No-Negociables (Validadas por CSV)</h2>
+    <div class="strategy-grid">
+      <div class="strategy-card">
+        <h4>1. Máximo 5 Trades/Día</h4>
+        <p>Datos: ≤5 trades = +$490 promedio. ≥8 trades = -$1,049. El sobre-trading de Phase 2 te costó $5,902.</p>
+      </div>
+      <div class="strategy-card" style="border-color:rgba(239,68,.5)">
+        <h4>2. Target MÍNIMO 2x Stop</h4>
+        <p><strong>Crítico CSV:</strong> Avg loss fondeo = -3pts. Con 36% WR necesitas ganadores de +6pts mínimo para break-even. Tus TPs actuales nunca se tocan.</p>
+      </div>
+      <div class="strategy-card">
+        <h4>3. Solo 3/4 o 4/4 Confluencias</h4>
+        <p>4/4 cayó a 25% WR pero sigue siendo mejor que trades aleatorios de Phase 2 (19% WR).</p>
+      </div>
+      <div class="strategy-card">
+        <h4>4. Prioriza Longs VWAP UP</h4>
+        <p>Único edge real: 75% WR (3W-1L en Sim). En VIX bajo, el sesgo alcista intradía es más fuerte.</p>
+      </div>
+      <div class="strategy-card" style="border-color:rgba(245,158,11,.6)">
+        <h4>5. Sim Primero – Obligatorio</h4>
+        <p><strong>Aún más crítico con $143 de margen.</strong> 2 wins consecutivos en Sim antes de tocar fondeo. No hay segunda oportunidad.</p>
+      </div>
+      <div class="strategy-card">
+        <h4>BONUS: Stop 1.5-2pts Max</h4>
+        <p>VIX 19 no justifica stops de 4pts. Reduce riesgo por trade a $75-100 para sobrevivir 2 pérdidas.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts">
+    <div class="card">
+      <h3 class="h3">P&L Acumulado Sim – Colapso Phase 2</h3>
+      <canvas id="pnlChart" height="240"></canvas>
+    </div>
+    <div class="card">
+      <h3 class="h3">Confluencias: Phase 1 vs Phase 2</h3>
+      <canvas id="confChart" height="240"></canvas>
+    </div>
+    <div class="card">
+      <h3 class="h3">Win Rate por Fase</h3>
+      <canvas id="phaseChart" height="220"></canvas>
+    </div>
+    <div class="card">
+      <h3 class="h3">Trades/Día vs P&L Promedio</h3>
+      <canvas id="tradesChart" height="220"></canvas>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px;border-color:rgba(239,68,.4)">
+    <h2 class="h2" style="color:var(--red)">Plan de Supervivencia Inmediato</h2>
+    <div class="grid-2">
+      <div>
+        <h3 class="h3">HOY NO OPERES FONDEO</h3>
+        <ul class="list">
+          <li>Con $143.50 de margen, tu riesgo de ruina es 97%</li>
+          <li>VIX 19 invalida todo tu backtest – necesitas datos nuevos</li>
+          <li>Opera SOLO en Sim para validar adaptación al nuevo ATR</li>
+          <li>Objetivo: 3 días verdes consecutivos en Sim con nuevas reglas</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="h3">Si Decides Operar (Bajo tu Riesgo)</h3>
+        <ul class="list">
+          <li>1 micro contrato máximo – riesgo $30-40 por trade</li>
+          <li>Stop 1.5pts, Target 3pts (2:1 real, no teórico)</li>
+          <li>Solo longs si precio > VWAP y VWAP subiendo</li>
+          <li>Hard stop diario: -$75. Cierras plataforma.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Informe generado 10 Abril 2026 • Datos verificados: Sim (101 setups) + CSV Fondeo (100 trades, 323 fills) • Análisis independiente
+</footer>
+
+<script>
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.borderColor = 'rgba(148,163,184,.18)';
+
+const pnlCtx = document.getElementById('pnlChart');
+new Chart(pnlCtx, {
+  type: 'line',
+  data: {
+    labels: ['11Mar','13Mar','15Mar','19Mar','21Mar','25Mar','27Mar','30Mar','1Abr','3Abr','4Abr','7Abr','8Abr','9Abr'],
+    datasets: [{
+      label: 'P&L Acumulado',
+      data: [320,270,670,1070,1000,930,1108,658,-442,-1472,-2362,-3462,-4712,-6872],
+      borderColor: '#ef4444',
+      backgroundColor: 'rgba(239,68,.15)',
+      tension: 0.35,
+      fill: true,
+      pointRadius: 3,
+      pointBackgroundColor: '#ef4444'
+    }]
+  },
+  options: {
+    responsive:true,
+    plugins:{legend:{display:false}},
+    scales:{y:{ticks:{callback:v=>'$'+v},grid:{color:'rgba(148,163,184,.1)'}},x:{grid:{display:false}}}
+  }
+});
+
+new Chart(document.getElementById('confChart'), {
+  type: 'bar',
+  data: {
+    labels: ['4/4 Phase1','4/4 Phase2','3/4 Phase1','3/4 Phase2','2/4 Phase1','2/4 Phase2'],
+    datasets:[{
+      label:'Win Rate %',
+      data:[55,25,48,35,40,28],
+      backgroundColor:['#22c55e','#ef4444','#3b82f6','#f59e0b','#8b5cf6','#ef4444'],
+      borderRadius:8
+    }]
+  },
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:70,ticks:{callback:v=>v+'%'}}}}
+});
+
+new Chart(document.getElementById('phaseChart'), {
+  type: 'doughnut',
+  data: {
+    labels:['Phase 1 WR 53%','Phase 1 Loss 47%','Phase 2 WR 32%','Phase 2 Loss 68%'],
+    datasets:[{
+      data:[53,47,32,68],
+      backgroundColor:['#22c55e','rgba(34,197,94,.2)','#ef4444','rgba(239,68,68,.2)'],
+      borderWidth:0,
+      cutout:'62%'
+    }]
+  },
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{boxWidth:12}}}}
+});
+
+new Chart(document.getElementById('tradesChart'), {
+  type: 'bar',
+  data: {
+    labels:['≤3','4-5','6-7','8-9','≥10'],
+    datasets:[{
+      label:'P&L Promedio $',
+      data:[520,470,-160,-980,-1117],
+      backgroundColor: ctx => ctx.raw >=0 ? '#22c55e' : '#ef4444',
+      borderRadius:8
+    }]
+  },
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'$'+v}}}}
+});
+</script>
+</body>
+</html>
