@@ -526,7 +526,8 @@ async function loadVIX(){
 /* ── INDICES ── */
 async function loadIndices(){
   try{
-    const d=await(await fetch(API+'/indices')).json();
+    /* const d=await(await fetch(API+'/indices')).json(); */
+    const d = await (await fetchNgrok(API+'/indices')).json();
     const fmts={sp500:'$',nasdaq:'$',dow:'$',bitcoin:'$',eurusd:'',gold:'$'};
     Object.entries(d).forEach(([k,v])=>{
       const vel=document.getElementById('i-'+k);
@@ -555,7 +556,8 @@ function fmtPrice(p,k){
 let currentHeat='sp500';
 async function loadHeat(group){
   try{
-    const d=await(await fetch(API+'/heatmap/'+group)).json();
+    /* const d=await(await fetch(API+'/heatmap/'+group)).json(); */
+    const d = await (await fetchNgrok(API+'/heatmap/'+group)).json();
     if(!Array.isArray(d))throw new Error();
     renderHeat(d);
     /* document.getElementById('heat-ts').textContent='Act. '+new Date().toLocaleTimeString('es-ES'); */
@@ -599,7 +601,8 @@ function setCalFilter(ccy, btn){
 
 async function loadCalendar(){
   try{
-    calEvents=await(await fetch(API+'/calendar?t='+Date.now())).json();
+    calEvents=await(await fetchNgrok(API+'/calendar?t='+Date.now())).json();
+
     renderCalendar();
   }catch(e){
     document.getElementById('newsList').innerHTML='<div class="err">⚠ Servidor apagado</div>';
@@ -694,7 +697,7 @@ function getMarketEffect(event,currency){
 /* ── SOCIAL NEWS ── */
 async function loadNews(){
   try{
-    const d=await(await fetch(API+'/news')).json();
+    const d=await(await fetchNgrok(API+'/news')).json();
     const el=document.getElementById('socialFeed');
     if(!d.length){el.innerHTML='<div style="color:var(--muted);font-size:12px">Sin noticias disponibles</div>';return;}
     el.innerHTML=d.map(item=>{
@@ -853,7 +856,7 @@ function renderGex(){
 async function loadGex(sym){
   document.getElementById('gex-ts').innerHTML = '<span class="spin"></span>Calculando Greeks...';
   try{
-    const d = await (await fetch(API + '/gex/' + sym)).json();
+    const d = await (await fetchNgrok(API + '/gex/' + sym)).json();
     if(d.error) throw new Error(d.error);
     gexData[sym] = d;
     renderGex();
