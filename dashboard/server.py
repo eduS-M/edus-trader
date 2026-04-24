@@ -289,6 +289,7 @@ def api_calendar():
             KEEP = {'USD','EUR','GBP','JPY','CAD','AUD','CHF','NZD'}
 
             # DESDE HOY hasta viernes (si hoy es sábado, empieza el lunes siguiente)
+            
             start = today_et
             if start.weekday() >= 5: # sábado=5 domingo=6
                 start = start + timedelta(days=(7 - start.weekday()))
