@@ -20,7 +20,8 @@ FINNHUB_KEY = os.getenv('FINNHUB_KEY', '')
 
 
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # ─── Cache para no sobrecargar las APIs ───
 _cache = {}
