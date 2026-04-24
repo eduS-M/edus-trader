@@ -589,7 +589,7 @@ function switchHeat(group,btn){
 }
 
 /* ── CALENDAR ── */
-const IMPACT={'High':'red','Medium':'orange','Low':'yellow'};
+/*const IMPACT={'High':'red','Medium':'orange','Low':'yellow'};
 let calEvents=[], calFilter='USD';
 
 function setCalFilter(ccy, btn){
@@ -692,8 +692,140 @@ function getMarketEffect(event,currency){
   if(e.includes('pmi'))return 'PMI >50 expansión · <50 contracción';
   if(e.includes('interest rate'))return '🔴 Decisión de tasas → máxima volatilidad';
   return currency==='USD'?'Impacto en USD y mercados americanos':'Impacto en divisas y correlaciones';
+} */
+
+ /* ── CALENDAR ── */
+const IMPACT={'High':'red','Medium':'orange','Low':'yellow'};
+let calEvents=[], calFilter='USD';
+
+function setCalFilter(ccy, btn){
+  calFilter = ccy;
+  document.querySelectorAll('.ct').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderCalendar();
 }
 
+async function loadCalendar(){
+  try{
+    calEvents=await (await fetchNgrok(API+'/calendar?t='+Date.now())).json();
+    renderCalendar();
+  }catch(e){
+    document.getElementById('newsList').innerHTML='<div class="err">⚠ Servidor apagado</div>';
+  }
+}
+
+function renderCalendar(){
+  const now=new Date();
+  const nyNow=new Date(now.toLocaleString('en-US',{timeZone:'America/New_York'}));
+  const todayStr = nyNow.getFullYear()+'-'+String(nyNow.getMonth()+1).padStart(2,'0')+'-'+String(nyNow.getDate()).padStart(2,'0');
+  const el=document.getElementById('newsList');
+  if(!calEvents.length){el.innerHTML='<div style="color:var(--muted);font-size:12px">Sin eventos</div>';return;}
+
+  const filtered = calFilter==='ALL' ? calEvents : calEvents.filter(ev=>ev.currency===calFilter);
+  if(!filtered.length){
+    el.innerHTML=`<div style="color:var(--muted);font-size:12px;padding:8px 0">Sin eventos ${calFilter}</div>`;
+    return;
+  }
+
+  // Agrupar por fecha
+  const groups = {};
+  filtered.forEach(ev=>{
+    const d = ev.date || todayStr;
+    if(!groups[d]) groups[d]=[];
+    groups[d].push(ev);
+  });
+
+  const dayNames = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const monthNames = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const tomorrow = new Date(nyNow); tomorrow.setDate(tomorrow.getDate()+1);
+  const tomorrowStr = tomorrow.getFullYear()+'-'+String(tomorrow.getMonth()+1).padStart(2,'0')+'-'+String(tomorrow.getDate()).padStart(2,'0');
+
+  let html = '';
+  Object.keys(groups).sort().forEach(dateStr=>{
+    const evs = groups[dateStr];
+    const d = new Date(dateStr+'T12:00:00');
+    const isToday = dateStr === todayStr;
+    const isTomorrow = dateStr === tomorrowStr;
+    
+    let label = `${dayNames[d.getDay()]} ${d.getDate()} ${monthNames[d.getMonth()]}`;
+    if(isToday) label = `HOY · ${label}`;
+    if(isTomorrow) label = `MAÑANA · ${label}`;
+
+    html += `<div style="margin:14px 0 6px;padding:6px 10px;background:rgba(0,200,160,0.08);border-left:3px solid var(--accent);font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.5px">${label.toUpperCase()}</div>`;
+
+    html += evs.map(ev=>{
+      const evDate = ev.timestamp_et ? new Date(ev.timestamp_et) : parseEventTime(ev.time, nyNow);
+      const diffMs = evDate ? evDate - nyNow : null;
+      const diffMin = diffMs!=null ? diffMs/60000 : null;
+      const isActive = isToday && diffMin!=null && diffMin>=-5 && diffMin<=60;
+      const isPassed = diffMin!=null && diffMin<-5;
+      const impCls = IMPACT[ev.impact]||'yellow';
+
+      let countdownHtml='';
+      if(isActive && diffMs>0){
+        const totalSec=Math.round(diffMs/1000);
+        const m=Math.floor(totalSec/60);
+        const s=String(totalSec%60).padStart(2,'0');
+        countdownHtml=`<span class="countdown">⏱ ${m}:${s}</span>`;
+      }
+
+      const effectHtml=!isPassed&&ev.event?`<div class="ni-sub">📌 ${getMarketEffect(ev.event,ev.currency)}</div>`:'';
+      const resultHtml=ev.actual?`<div class="ni-result">✅ Real: ${ev.actual} | Est: ${ev.forecast||'—'}</div>`:'';
+      const forecastHtml=!ev.actual&&ev.forecast?`<div class="ni-sub">Est: ${ev.forecast} · Ant: ${ev.previous||'—'}</div>`:'';
+
+      return `<div class="ni${isActive?' active':''}${isPassed?' passed':''}">
+        <div style="flex:1;min-width:0">
+          <div class="ni-title">${ev.event} <span style="color:var(--muted);font-size:9px">${ev.currency}</span></div>
+          <div class="ni-time">${ev.time_raw||ev.time} ET · ${dateStr.split('-').reverse().join('/')}</div>
+          ${forecastHtml}${resultHtml}${effectHtml}
+        </div>
+        <div class="ni-right">
+          <span class="pill ${impCls}">${ev.impact.toUpperCase()}</span>
+          ${countdownHtml}
+          ${isPassed&&ev.actual?'<span class="pill green">PUBLICADO</span>':''}
+        </div>
+      </div>`;
+    }).join('');
+  });
+
+  el.innerHTML = html;
+}
+
+function parseEventTime(timeStr,refDate){
+  if(!timeStr) return null;
+  // Formato nuevo del server: "HH:MM" en 24h ET (ej: "08:30", "14:00")
+  const m24 = timeStr.match(/^(\d{1,2}):(\d{2})$/);
+  if(m24){
+    const d=new Date(refDate);
+    d.setHours(parseInt(m24[1]), parseInt(m24[2]), 0, 0);
+    return d;
+  }
+  // Formato legacy 12h (ej: "8:30am", "2:00pm") por compatibilidad
+  const m12=timeStr.replace(/\s/g,'').match(/^(\d+):(\d+)(am|pm)?$/i);
+  if(!m12) return null;
+  let h=parseInt(m12[1]), mn=parseInt(m12[2]);
+  const ap=(m12[3]||'').toLowerCase();
+  if(ap==='pm'&&h!==12) h+=12;
+  if(ap==='am'&&h===12) h=0;
+  const d=new Date(refDate);
+  d.setHours(h,mn,0,0);
+  return d;
+}
+
+function getMarketEffect(event,currency){
+  const e=event.toLowerCase();
+  if(e.includes('cpi')||e.includes('inflation'))return 'Mayor inflación → USD sube, acciones bajan';
+  if(e.includes('jobless')||e.includes('employment')||e.includes('nonfarm'))return 'Más empleo → USD sube, FED puede subir tasas';
+  if(e.includes('gdp'))return 'PIB alto → mercados suben, USD se fortalece';
+  if(e.includes('fed')||e.includes('powell')||e.includes('fomc'))return 'Discurso FED → alta volatilidad esperada';
+  if(e.includes('trade balance'))return 'Déficit mayor → presión bajista en USD';
+  if(e.includes('retail sales'))return 'Ventas altas → señal positiva para economía';
+  if(e.includes('pmi'))return 'PMI >50 expansión · <50 contracción';
+  if(e.includes('interest rate'))return '🔴 Decisión de tasas → máxima volatilidad';
+  return currency==='USD'?'Impacto en USD y mercados americanos':'Impacto en divisas y correlaciones';
+}
+ 
+  
 /* ── SOCIAL NEWS ── */
 async function loadNews(){
   try{
