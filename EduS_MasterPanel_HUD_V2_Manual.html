@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS MasterPanel HUD V2 — Manual de Usuario</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0e14;--bg2:#111520;--bg3:#181d2a;--border:#1e2535;--accent:#00e5a0;--accent2:#0090ff;--yellow:#f5c518;--red:#ff4757;--orange:#ff8c42;--text:#d4dbe8;--muted:#5a6480;--title:#ffffff;--mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.7}
+nav{position:fixed;top:0;left:0;width:240px;height:100vh;background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;z-index:100;padding:28px 0 40px}
+.nav-logo{padding:0 24px 24px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.nav-logo .tag{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:4px}
+.nav-logo h2{font-size:15px;font-weight:700;color:var(--title);line-height:1.3}
+nav ul{list-style:none}
+nav ul li a{display:block;padding:7px 24px;font-size:13px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:all .2s;font-weight:400}
+nav ul li a:hover,nav ul li a.active{color:var(--accent);border-left-color:var(--accent);background:rgba(0,229,160,.06)}
+nav ul li.section-title{padding:16px 24px 4px;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;font-family:var(--mono)}
+main{margin-left:240px;padding:0 0 80px}
+.hero{background:var(--bg2);border-bottom:1px solid var(--border);padding:60px 64px 52px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(0,229,160,.08) 0%,transparent 70%);pointer-events:none}
+.hero .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:16px}
+.hero h1{font-size:38px;font-weight:700;color:var(--title);line-height:1.15;margin-bottom:16px}
+.hero h1 span{color:var(--accent)}
+.hero p{font-size:16px;color:var(--text);max-width:640px;font-weight:300;margin-bottom:28px}
+.badge-row{display:flex;gap:10px;flex-wrap:wrap}
+.badge{font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:4px;border:1px solid}
+.badge.green{color:var(--accent);border-color:var(--accent);background:rgba(0,229,160,.08)}
+.badge.blue{color:var(--accent2);border-color:var(--accent2);background:rgba(0,144,255,.08)}
+.badge.yellow{color:var(--yellow);border-color:var(--yellow);background:rgba(245,197,24,.08)}
+section{padding:52px 64px;border-bottom:1px solid var(--border)}
+section:last-child{border-bottom:none}
+h2{font-size:24px;font-weight:700;color:var(--title);margin-bottom:8px;display:flex;align-items:center;gap:12px}
+h2 .num{font-family:var(--mono);font-size:12px;color:var(--accent);background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.3);padding:2px 8px;border-radius:4px}
+.section-lead{color:var(--muted);font-size:13px;font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.divider{width:40px;height:2px;background:var(--accent);margin:14px 0 28px}
+h3{font-size:16px;font-weight:600;color:var(--title);margin:28px 0 10px}
+p{margin-bottom:14px;color:var(--text)}p:last-child{margin-bottom:0}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:24px}
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:22px;transition:border-color .2s}
+.card:hover{border-color:var(--accent)}
+.card .card-icon{font-size:22px;margin-bottom:10px;display:block}
+.card h4{font-size:14px;font-weight:600;color:var(--title);margin-bottom:6px}
+.card p{font-size:13px;color:var(--muted);margin:0}
+.layer-block{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:16px;border-left:3px solid var(--accent)}
+.layer-block.blue{border-left-color:var(--accent2)}
+.layer-block.yellow{border-left-color:var(--yellow)}
+.layer-block.orange{border-left-color:var(--orange)}
+.layer-num{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.layer-block.blue .layer-num{color:var(--accent2)}
+.layer-block.yellow .layer-num{color:var(--yellow)}
+.layer-block.orange .layer-num{color:var(--orange)}
+.layer-block h4{font-size:15px;font-weight:600;color:var(--title);margin-bottom:10px}
+.layer-block p{font-size:13.5px;color:var(--text);margin-bottom:8px}
+.zone-grid{display:grid;grid-template-columns:80px 1fr 1fr;gap:2px;margin-top:16px;border-radius:8px;overflow:hidden;font-size:13px}
+.zone-grid .zh{background:var(--bg3);padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.zone-grid .zr{background:var(--bg2);border:1px solid var(--border);padding:10px 14px;color:var(--text)}
+.zone-grid .zr.tag{font-family:var(--mono);font-weight:700;font-size:13px}
+.zone-grid .zr.tag.g{color:var(--accent)}
+.zone-grid .zr.tag.lr{color:var(--accent2)}
+.zone-grid .zr.tag.y{color:var(--yellow)}
+.zone-grid .zr.tag.r{color:var(--red)}
+.semaforo-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+.sem-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:22px;text-align:center}
+.sem-dot{width:36px;height:36px;border-radius:50%;margin:0 auto 14px;border:2px solid}
+.sem-dot.green{background:rgba(0,229,160,.25);border-color:var(--accent);box-shadow:0 0 16px rgba(0,229,160,.3)}
+.sem-dot.yellow{background:rgba(245,197,24,.25);border-color:var(--yellow);box-shadow:0 0 16px rgba(245,197,24,.3)}
+.sem-dot.red{background:rgba(255,71,87,.25);border-color:var(--red);box-shadow:0 0 16px rgba(255,71,87,.3)}
+.sem-card h4{font-size:14px;font-weight:600;color:var(--title);margin-bottom:8px}
+.sem-card p{font-size:12.5px;color:var(--muted)}
+.prop-table{width:100%;border-collapse:collapse;margin-top:20px;font-size:13px}
+.prop-table th{background:var(--bg3);color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.prop-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+.prop-table tr:last-child td{border-bottom:none}
+.prop-table tr:hover td{background:rgba(255,255,255,.02)}
+.prop-table .pname{font-family:var(--mono);font-size:12px;color:var(--accent);white-space:nowrap}
+.prop-table .pdef{font-family:var(--mono);font-size:12px;color:var(--yellow)}
+.market-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:20px}
+.market-table th{background:var(--bg3);color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:2px solid var(--border)}
+.market-table td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text)}
+.market-table td:first-child{font-family:var(--mono);font-size:12px;color:var(--accent);white-space:nowrap;font-weight:700}
+.market-table td code{font-family:var(--mono);font-size:12px;color:var(--yellow);background:rgba(245,197,24,.08);padding:1px 5px;border-radius:3px}
+.market-table tr:hover td{background:rgba(255,255,255,.02)}
+.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:20px 24px;font-family:var(--mono);font-size:12.5px;line-height:1.8;margin:16px 0;color:var(--text);overflow-x:auto}
+.code-block .c{color:var(--muted)}.code-block .k{color:var(--accent)}.code-block .s{color:var(--yellow)}.code-block .n{color:var(--accent2)}
+.steps{counter-reset:step}
+.step{display:flex;gap:20px;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.step-num{flex-shrink:0;width:32px;height:32px;background:var(--accent);color:#000;border-radius:50%;font-family:var(--mono);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.step-content h4{font-size:14px;color:var(--title);font-weight:600;margin-bottom:6px}
+.step-content p{font-size:13.5px;color:var(--text);margin:0}
+code{font-family:var(--mono);font-size:12px;color:var(--accent);background:rgba(0,229,160,.08);padding:1px 6px;border-radius:3px}
+.callout{background:rgba(0,144,255,.06);border:1px solid rgba(0,144,255,.25);border-left:3px solid var(--accent2);border-radius:6px;padding:14px 18px;margin:18px 0;font-size:13.5px;color:var(--text)}
+.callout.warn{background:rgba(245,197,24,.05);border-color:rgba(245,197,24,.25);border-left-color:var(--yellow)}
+.callout strong{color:var(--title)}
+.formula{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:14px 20px;font-family:var(--mono);font-size:13px;color:var(--accent);margin:12px 0}
+.formula span{color:var(--muted)}
+footer{margin-left:240px;background:var(--bg2);border-top:1px solid var(--border);padding:24px 64px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);font-family:var(--mono)}
+footer span{color:var(--accent)}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+@media(max-width:900px){nav{display:none}main,footer{margin-left:0}.hero,section{padding:36px 24px}footer{padding:20px 24px;flex-direction:column;gap:8px;text-align:center}.semaforo-row{grid-template-columns:1fr}.zone-grid{grid-template-columns:70px 1fr}}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-logo">
+    <span class="tag">EduS Trader</span>
+    <h2>MasterPanel<br>HUD V2</h2>
+  </div>
+  <ul>
+    <li class="section-title">Introducción</li>
+    <li><a href="#overview">¿Qué es?</a></li>
+    <li><a href="#requirements">Requisitos</a></li>
+    <li><a href="#install">Instalación</a></li>
+    <li class="section-title">Lógica</li>
+    <li><a href="#capas">Las 4 Capas</a></li>
+    <li><a href="#zonas">Zonas de Entrada</a></li>
+    <li><a href="#semaforo">Semáforo</a></li>
+    <li><a href="#entrada">Zona Entrada HUD</a></li>
+    <li><a href="#keltner">Keltner Stop/Target</a></li>
+    <li class="section-title">Configuración</li>
+    <li><a href="#hud">HUD y Ventana</a></li>
+    <li><a href="#posicion">Posición y Logging</a></li>
+    <li><a href="#alertas">Alertas</a></li>
+    <li><a href="#v5">Capas y Filtros</a></li>
+    <li><a href="#periodos">Períodos y Zonas</a></li>
+    <li class="section-title">Por Mercado</li>
+    <li><a href="#market">Recomendaciones</a></li>
+    <li class="section-title">Referencia</li>
+    <li><a href="#csv">Formato CSV</a></li>
+    <li><a href="#faq">Preguntas Frecuentes</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<div class="hero" id="top">
+  <p class="eyebrow">Manual de Usuario · v2.5</p>
+  <h1>EduS <span>MasterPanel</span><br>HUD V2</h1>
+  <p>Indicador para NinjaTrader 8 que integra semáforo de tendencia de 4 capas, zonas de entrada de alta probabilidad (A+, A, LR+, LR), dimensionamiento de riesgo por Keltner y monitoreo de posición en tiempo real, en un único HUD flotante.</p>
+  <div class="badge-row">
+    <span class="badge green">NinjaTrader 8</span>
+    <span class="badge blue">C# · NinjaScript</span>
+    <span class="badge yellow">Namespace: EduS_Trader</span>
+  </div>
+</div>
+
+<!-- 01 -->
+<section id="overview">
+  <p class="section-lead">01 · Introducción</p>
+  <h2><span class="num">01</span> ¿Qué es el MasterPanel HUD V2?</h2>
+  <div class="divider"></div>
+  <p>El <strong>EduS MasterPanel HUD V2</strong> centraliza en una ventana flotante toda la información necesaria para operar setups de alta probabilidad. Combina cuatro capas de análisis independientes que forman un <em>sistema de semáforo</em> que comunica visualmente la calidad de la configuración actual del mercado, con identificación exacta del tipo de zona de entrada.</p>
+  <div class="cards">
+    <div class="card"><span class="card-icon">🚦</span><h4>Semáforo 3 estados</h4><p>Verde, Amarillo y Rojo con dirección (Alcista/Bajista) según la alineación de los 4 indicadores de Capa 1 y la zona de precio.</p></div>
+    <div class="card"><span class="card-icon">📍</span><h4>4 Zonas de Entrada</h4><p>A+, A (basadas en AVWAP) y LR+, LR (basadas en LinReg89). Cada señal queda etiquetada con su zona exacta en el HUD y en el CSV.</p></div>
+    <div class="card"><span class="card-icon">📐</span><h4>Stop y Targets automáticos</h4><p>Calculados por el ancho del Canal Keltner (30%) o por ATR. Muestra puntos, ticks y USD para el número de contratos configurado.</p></div>
+    <div class="card"><span class="card-icon">💼</span><h4>Posición en vivo</h4><p>Dirección, cantidad, precio de entrada, P&amp;L no realizado en $ y puntos, y detalle de órdenes Stop/Target activas.</p></div>
+    <div class="card"><span class="card-icon">📊</span><h4>Última señal persistente</h4><p>La zona de entrada permanece visible tras el cierre del verde, marcada como ACTIVA o HISTÓRICA con timestamp y tipo de zona.</p></div>
+    <div class="card"><span class="card-icon">📁</span><h4>Logging CSV automático</h4><p>Registra apertura y cierre de cada señal con ID, zona (A+/A/LR+/LR), dirección, precios, R:R y resultado (STOP/T2).</p></div>
+  </div>
+</section>
+
+<!-- 02 -->
+<section id="requirements">
+  <p class="section-lead">02 · Requisitos</p>
+  <h2><span class="num">02</span> Requisitos del Sistema</h2>
+  <div class="divider"></div>
+  <h3>Software</h3>
+  <div class="layer-block">
+    <p><strong>NinjaTrader 8</strong> — versión 8.0.23 o superior. El indicador usa SharpDX para el overlay en chart y WPF para la ventana flotante, ambas disponibles en NT8 de forma nativa.</p>
+    <p><strong>Conexión de datos en tiempo real</strong> — para las funciones de posición y alertas. En modo histórico funcionan el semáforo, la zona de entrada y el logging si <code>LoggearHistorico = true</code>.</p>
+  </div>
+  <h3>Indicadores internos (no requieren instalación separada)</h3>
+  <div class="layer-block blue">
+    <p>• <strong>SMA(20)</strong> y <strong>SMA(80)</strong> — medias móviles simples de tendencia<br>
+       • <strong>LinReg(89)</strong> — regresión lineal de 89 barras (Capa 1 y Capa 2)<br>
+       • <strong>AVWAP dinámico</strong> — VWAP anclado en swings automáticos<br>
+       • <strong>ATR(14)</strong> — Average True Range para cálculo de zonas<br>
+       • <strong>Canal Keltner</strong> — para stop, targets, Capa 3 y Capa 4</p>
+  </div>
+  <div class="callout warn"><strong>Nota:</strong> Si usas el AVWAP de EduS por separado en el chart, los valores pueden diferir por los parámetros de anclaje. El MasterPanel usa su propia instancia configurada por <code>AVWAP_SwingPeriod</code> y <code>AVWAP_BaseAPT</code>.</div>
+</section>
+
+<!-- 03 -->
+<section id="install">
+  <p class="section-lead">03 · Instalación</p>
+  <h2><span class="num">03</span> Instalación y Configuración Inicial</h2>
+  <div class="divider"></div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Copiar el archivo .cs</h4>
+        <p>Copia <code>EduSMasterPanelHUDV2.cs</code> a:<br><code>Documentos\NinjaTrader 8\bin\Custom\Indicators\EduS_Trader\</code><br>Si la carpeta <code>EduS_Trader</code> no existe, créala manualmente.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Compilar en NinjaTrader</h4>
+        <p>Menú <strong>New → NinjaScript Editor</strong>. Navega a <strong>Indicators → EduS_Trader → EduS_MasterPanel_HUD_V2</strong> y presiona <strong>F5</strong>. Sin errores = listo para usar.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Agregar al chart</h4>
+        <p>Clic derecho en el chart → <strong>Indicators</strong> → busca <code>EduS_MasterPanel_HUD_V2</code> → <strong>Add</strong>. La ventana flotante aparece automáticamente si <code>Ventana_Flotante = true</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Configurar la cuenta (para Posición)</h4>
+        <p>En las propiedades, grupo <strong>1. Posicion</strong>, escribe el nombre exacto de tu cuenta: <code>Sim101</code>, <code>Live123</code>, etc. Sin esto, la sección de posición no muestra datos.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h4>Configurar logging CSV (opcional)</h4>
+        <p>Activa <code>RegistrarSenales = true</code> y escribe la ruta de la carpeta destino, ej: <code>C:\Trading\Logs</code>. La carpeta debe existir previamente.</p>
+      </div>
+    </div>
+  </div>
+  <div class="callout"><strong>Multi-instrumento:</strong> Con <code>Ventana_Compartida = true</code>, todos los charts con el indicador se consolidan en una sola ventana flotante, identificados por instrumento.</div>
+</section>
+
+<!-- 04 -->
+<section id="capas">
+  <p class="section-lead">04 · Lógica del Sistema</p>
+  <h2><span class="num">04</span> Las 4 Capas del Indicador</h2>
+  <div class="divider"></div>
+  <p>El MasterPanel evalúa el mercado en 4 capas independientes. El <strong>semáforo Verde</strong> requiere que todas las capas estén alineadas. Las Capas 3 y 4 pueden desactivarse individualmente desde las propiedades.</p>
+
+  <div class="layer-block">
+    <div class="layer-num">Capa 1 — Tendencia</div>
+    <h4>4 Indicadores alineados en la misma dirección</h4>
+    <p>• <strong>SMA 20</strong>: <code>SMA20[0] &gt; SMA20[SlopeLookback]</code> → pendiente positiva<br>
+       • <strong>SMA 80</strong>: <code>SMA80[0] &gt; SMA80[SlopeLookback]</code> → pendiente positiva<br>
+       • <strong>LinReg 89</strong>: <code>LR89[0] &gt; LR89[SlopeLookback]</code> → pendiente positiva<br>
+       • <strong>AVWAP dinámico</strong>: existe VWAP_Up activo (alcista) o VWAP_Down (bajista)</p>
+    <p>Resultado: <code>tendenciaCount</code> = número de indicadores alineados (1–4). El semáforo verde exige 4/4.</p>
+  </div>
+
+  <div class="layer-block blue">
+    <div class="layer-num">Capa 2 — Zona de Precio</div>
+    <h4>Posición del precio respecto a AVWAP y LinReg89</h4>
+    <p>• <strong>A+</strong>: precio pincha el AVWAP (<code>Low ≤ AVWAP ≤ Close</code>)<br>
+       • <strong>A</strong>: precio dentro de <code>ZoneVerde</code> ATRs del AVWAP, mismo lado<br>
+       • <strong>LR+</strong>: precio pincha LinReg89 (<code>Low ≤ LR89 ≤ Close</code>)<br>
+       • <strong>LR</strong>: precio dentro de <code>ZoneVerde</code> ATRs del LinReg89<br>
+       • <strong>B+</strong>: precio dentro de <code>ZoneVerde</code> ATRs del AVWAP, lado contrario<br>
+       • <strong>B</strong>: precio dentro de <code>ZoneAmarilla</code> ATRs del AVWAP<br>
+       • <strong>--</strong>: fuera de cualquier zona reconocible</p>
+  </div>
+
+  <div class="layer-block yellow">
+    <div class="layer-num">Capa 3 — Toggle: UsarCapa3</div>
+    <h4>Confirmación AVWAP vs Banda Media Keltner</h4>
+    <p>Aplica únicamente cuando la zona activa es <strong>A o A+</strong>. Verifica que el AVWAP esté del lado correcto del canal.</p>
+    <div class="formula">Alcista: AVWAP_Up &gt; BM_Keltner &nbsp;|&nbsp; Bajista: AVWAP_Down &lt; BM_Keltner</div>
+    <p>Con <code>UsarCapa3 = false</code>, el verde en zona A/A+ solo requiere 4/4 + zona, sin confirmación Keltner.</p>
+  </div>
+
+  <div class="layer-block orange">
+    <div class="layer-num">Capa 4 — Toggle: UsarCapa4</div>
+    <h4>Confirmación LinReg89 vs Banda Media Keltner</h4>
+    <p>Aplica únicamente cuando la zona activa es <strong>LR o LR+</strong>. Verifica que la regresión lineal esté del lado correcto del canal.</p>
+    <div class="formula">Alcista: LinReg89 &gt; BM_Keltner &nbsp;|&nbsp; Bajista: LinReg89 &lt; BM_Keltner</div>
+    <p>Con <code>UsarCapa4 = false</code>, el verde en zona LR/LR+ solo requiere 4/4 + zona, sin confirmación Keltner.</p>
+  </div>
+</section>
+
+<!-- 05 -->
+<section id="zonas">
+  <p class="section-lead">05 · Zonas</p>
+  <h2><span class="num">05</span> Zonas de Entrada — Referencia Rápida</h2>
+  <div class="divider"></div>
+  <p>La prioridad de evaluación es descendente: A+ → A → LR+ → LR → B+ → B → Sin zona. La primera que se cumpla es la zona activa.</p>
+  <div class="zone-grid">
+    <div class="zh">Zona</div><div class="zh">Referencia</div><div class="zh">Condición exacta (alcista)</div>
+    <div class="zr tag g">A+</div><div class="zr">AVWAP</div><div class="zr"><code>Low[0] ≤ AVWAP ≤ Close[0]</code> — la vela toca el AVWAP</div>
+    <div class="zr tag g">A</div><div class="zr">AVWAP</div><div class="zr"><code>|Close - AVWAP| / ATR ≤ ZoneVerde</code> y precio por encima del AVWAP</div>
+    <div class="zr tag lr">LR+</div><div class="zr">LinReg 89</div><div class="zr"><code>Low[0] ≤ LR89 ≤ Close[0]</code> — la vela toca la regresión lineal</div>
+    <div class="zr tag lr">LR</div><div class="zr">LinReg 89</div><div class="zr"><code>|Close - LR89| / ATR ≤ ZoneVerde</code> y precio por encima de LR89</div>
+    <div class="zr tag y">B+</div><div class="zr">AVWAP</div><div class="zr"><code>|Close - AVWAP| / ATR ≤ ZoneVerde</code> y precio <em>bajo</em> el AVWAP (lado contrario)</div>
+    <div class="zr tag y">B</div><div class="zr">AVWAP</div><div class="zr"><code>|Close - AVWAP| / ATR ≤ ZoneAmarilla</code> — zona más alejada</div>
+    <div class="zr tag r">--</div><div class="zr">—</div><div class="zr">Precio fuera de todas las zonas reconocibles</div>
+  </div>
+  <div class="callout">Para <strong>posiciones cortas</strong>, las condiciones se invierten: se usa <code>High[0]</code> en lugar de <code>Low[0]</code> para los pins, y la referencia de "lado" se invierte respecto al AVWAP bajista.</div>
+</section>
+
+<!-- 06 -->
+<section id="semaforo">
+  <p class="section-lead">06 · Semáforo</p>
+  <h2><span class="num">06</span> Lógica del Semáforo</h2>
+  <div class="divider"></div>
+  <p>El semáforo evalúa las 4 capas para determinar el estado del mercado. Cada estado incluye dirección (Alcista / Bajista) determinada por la alineación de Capa 1.</p>
+  <div class="semaforo-row">
+    <div class="sem-card">
+      <div class="sem-dot green"></div>
+      <h4>Verde — Entrada válida</h4>
+      <p><strong>4/4 alineados</strong> + zona A/A+ (con Capa 3 si activa) <em>o</em> zona LR/LR+ (con Capa 4 si activa). Genera señal y activa logging CSV.</p>
+    </div>
+    <div class="sem-card">
+      <div class="sem-dot yellow"></div>
+      <h4>Amarillo — Condiciones parciales</h4>
+      <p>4/4 + zona premium sin pasar su capa de confirmación · 4/4 + zona B o B+ · 3/4 específicos (SMA20+LR+AVWAP) + zona premium.</p>
+    </div>
+    <div class="sem-card">
+      <div class="sem-dot red"></div>
+      <h4>Rojo — Sin setup</h4>
+      <p>Menos de 3 indicadores alineados, o no se cumple ninguna condición de zona. No operar.</p>
+    </div>
+  </div>
+  <h3>Pseudocódigo del semáforo</h3>
+  <div class="code-block">
+<span class="c">// Capa 1 — alineación</span>
+<span class="k">a4a</span>  = sma20Up && sma80Up && lrUp && vwapUp       <span class="c">// 4/4 alcista</span>
+<span class="k">a4b</span>  = !sma20Up && !sma80Up && !lrUp && !vwapUp   <span class="c">// 4/4 bajista</span>
+<span class="k">m3a</span>  = sma20Up && lrUp && vwapUp (sin sma80)       <span class="c">// 3 esp. alcista</span>
+
+<span class="c">// Capa 2 — zonas</span>
+<span class="k">zA</span>   = zona A+ o A    &nbsp;&nbsp;<span class="k">zLR</span> = zona LR+ o LR    &nbsp;&nbsp;<span class="k">zM</span> = zona B+ o B
+
+<span class="c">// Capas 3 y 4 — confirmación por zona</span>
+<span class="k">capa3Ok</span> = !UsarCapa3 || (AVWAP &gt; BM_Keltner)
+<span class="k">capa4Ok</span> = !UsarCapa4 || (LR89  &gt; BM_Keltner)
+
+<span class="c">// Resultado final</span>
+<span class="n">Verde Alcista</span>  = a4a && zA  && capa3Ok
+<span class="n">Verde Alcista</span> += a4a && zLR && capa4Ok
+<span class="n">Amarillo</span>       = a4a && (zA || zLR) [sin capa ok]
+<span class="n">Amarillo</span>      += a4a && zM
+<span class="n">Amarillo</span>      += m3a && (zA || zLR)
+<span class="n">Rojo</span>           = todo lo demás
+  </div>
+  <h3>Alertas sonoras</h3>
+  <p>El indicador dispara dos alertas independientes: una al alcanzar <strong>4/4 señales alineadas</strong> y otra al entrar a <strong>Zona A</strong> (A+ o A) desde una zona inferior. Ambas solo se disparan en modo Realtime.</p>
+</section>
+
+<!-- 07 -->
+<section id="entrada">
+  <p class="section-lead">07 · Zona de Entrada HUD</p>
+  <h2><span class="num">07</span> Sección Zona de Entrada en el HUD</h2>
+  <div class="divider"></div>
+  <p>Esta sección muestra permanentemente la <strong>última señal válida</strong> generada, incluso si el semáforo ya no está verde. Permite analizar los niveles clave de la última oportunidad identificada.</p>
+  <div class="layer-block">
+    <div class="layer-num">Badge de estado</div>
+    <h4>ACTIVA vs HISTÓRICA</h4>
+    <p>• <strong style="color:var(--accent)">[ ACTIVA ]</strong> dd/MM HH:mm [Zona] — El semáforo sigue verde. Los niveles corresponden al setup actual.</p>
+    <p>• <strong style="color:var(--orange)">[ HISTÓRICA ]</strong> dd/MM HH:mm [Zona] — El semáforo ya no está verde. Los niveles son de la última señal pasada, con zona identificada.</p>
+  </div>
+  <h3>Campos mostrados</h3>
+  <table class="prop-table">
+    <tr><th>Campo</th><th>Descripción</th></tr>
+    <tr><td class="pname">Entrada</td><td>Precio del Close de la barra donde se activó la señal.</td></tr>
+    <tr><td class="pname">AVWAP / LinReg</td><td>Nivel de referencia de la señal. Muestra <em>LinReg:</em> si la zona es LR/LR+, <em>AVWAP:</em> si es A/A+, con indicación (soporte) o (resist.).</td></tr>
+    <tr><td class="pname">Stop</td><td>Precio del stop + distancia en puntos desde la entrada.</td></tr>
+    <tr><td class="pname">T1</td><td>Primer objetivo + puntos + R:R implícito (ej: R:R 2.0).</td></tr>
+    <tr><td class="pname">T2</td><td>Segundo objetivo + puntos + R:R implícito (ej: R:R 3.0).</td></tr>
+  </table>
+  <div class="callout"><strong>Filtros de señal:</strong> Se requiere semáforo verde + <em>Filtro de Apertura</em> (ancho Keltner ≥ MinKeltnerVsATR × ATR) + <em>Barras de Confirmación</em> satisfechas. Si cualquiera falla, no se genera señal aunque el HUD muestre verde.</div>
+</section>
+
+<!-- 08 -->
+<section id="keltner">
+  <p class="section-lead">08 · Keltner</p>
+  <h2><span class="num">08</span> Sección Keltner Stop / Target</h2>
+  <div class="divider"></div>
+  <p>Muestra en tiempo real los niveles de stop y objetivo calculados desde el ancho del Canal Keltner. Independiente del estado del semáforo — siempre refleja el canal actual.</p>
+  <h3>Modo Stop Keltner (UsarStopKeltner = true — recomendado)</h3>
+  <div class="formula">
+    BandWidth = Banda Superior − Banda Inferior<br>
+    Stop_pts  = BandWidth × Kelt_StopPct &nbsp;&nbsp;<span style="color:var(--muted)">// default 30%</span><br>
+    T1_pts    = Stop_pts × Kelt_RiskReward &nbsp;&nbsp;<span style="color:var(--muted)">// default RR 1:2</span><br>
+    T2_pts    = Stop_pts × 3.0 &nbsp;&nbsp;<span style="color:var(--muted)">// RR 1:3</span><br>
+    Stop_usd  = Stop_pts × PointValue × Kelt_Contracts
+  </div>
+  <h3>Modo Stop ATR (UsarStopKeltner = false)</h3>
+  <div class="formula">
+    Stop = AVWAP − (ATR × Stop_ATRMult) &nbsp;&nbsp;<span style="color:var(--muted)">// alcista</span><br>
+    T1   = Banda Superior Keltner<br>
+    T2   = T1 + (T1 − AVWAP) &nbsp;&nbsp;<span style="color:var(--muted)">// extensión proyectada</span>
+  </div>
+  <div class="callout warn"><strong>El modo Keltner es adaptativo:</strong> en mercados volátiles (canal ancho) el stop será mayor; en mercados comprimidos, menor. El Filtro de Apertura evita señales cuando el canal está demasiado comprimido.</div>
+</section>
+
+<!-- 09 -->
+<section id="hud">
+  <p class="section-lead">09 · Propiedades</p>
+  <h2><span class="num">09</span> Grupo 0 — Ventana HUD y Apariencia</h2>
+  <div class="divider"></div>
+  <table class="prop-table">
+    <tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr>
+    <tr><td class="pname">Ventana_Flotante</td><td class="pdef">true</td><td>Activa la ventana WPF flotante. Sin esto, solo funciona el overlay en chart.</td></tr>
+    <tr><td class="pname">Ventana_Compartida</td><td class="pdef">false</td><td>Agrupa todos los instrumentos en una sola ventana. Útil para multi-chart.</td></tr>
+    <tr><td class="pname">Hud_X / Hud_Y</td><td class="pdef">20 / 80</td><td>Posición inicial en píxeles. La ventana puede moverse con el ratón una vez abierta.</td></tr>
+    <tr><td class="pname">Mostrar_En_Chart</td><td class="pdef">true</td><td>Overlay SharpDX sobre el gráfico, adicional a la ventana flotante.</td></tr>
+    <tr><td class="pname">Panel_Posicion</td><td class="pdef">1</td><td>Esquina del overlay: 0=sup.izq · 1=sup.der · 2=inf.izq · 3=inf.der.</td></tr>
+    <tr><td class="pname">Margen_Escala</td><td class="pdef">60</td><td>Píxeles de separación del panel respecto al eje de precios.</td></tr>
+    <tr><td class="pname">Tamano_Bolas</td><td class="pdef">7</td><td>Radio de los círculos del semáforo en el overlay de chart.</td></tr>
+    <tr><td class="pname">Fondo_Opacidad</td><td class="pdef">85</td><td>Opacidad del fondo del overlay (0–100). 100 = completamente opaco.</td></tr>
+    <tr><td class="pname">Mostrar_Semaforo</td><td class="pdef">true</td><td>Sección de semáforo: bolas + dirección + zona actual.</td></tr>
+    <tr><td class="pname">Mostrar_Senales</td><td class="pdef">true</td><td>4 señales de Capa 1 + estado Capa 3 (AVWAP vs BM) + estado Capa 4 (LR89 vs BM).</td></tr>
+    <tr><td class="pname">Mostrar_Entrada</td><td class="pdef">true</td><td>Última señal persistente con badge ACTIVA/HISTÓRICA, zona y niveles.</td></tr>
+    <tr><td class="pname">Mostrar_Keltner</td><td class="pdef">true</td><td>Ancho del canal + stop y target en pts, tks y USD.</td></tr>
+    <tr><td class="pname">Mostrar_Posicion</td><td class="pdef">true</td><td>P&amp;L no realizado, dirección y detalle de órdenes activas.</td></tr>
+  </table>
+</section>
+
+<!-- 10 -->
+<section id="posicion">
+  <p class="section-lead">10 · Posición y Logging</p>
+  <h2><span class="num">10</span> Grupo 1 — Posición, Cuenta y CSV</h2>
+  <div class="divider"></div>
+  <table class="prop-table">
+    <tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr>
+    <tr><td class="pname">Cuenta (AccountName)</td><td class="pdef">""</td><td>Nombre exacto de la cuenta NT8, sensible a mayúsculas. Ej: <code>Sim101</code>.</td></tr>
+    <tr><td class="pname">Pos_UpdateSeg</td><td class="pdef">3</td><td>Frecuencia de actualización del P&amp;L en segundos (1–60).</td></tr>
+    <tr><td class="pname">RegistrarSenales</td><td class="pdef">false</td><td>Activa el logging automático de señales en CSV.</td></tr>
+    <tr><td class="pname">RutaLog</td><td class="pdef">C:\Trading\Logs</td><td>Ruta completa de la carpeta destino. La carpeta debe existir previamente.</td></tr>
+    <tr><td class="pname">NombreArchivoLog</td><td class="pdef">EduS_Senales.csv</td><td>Nombre del archivo CSV. Se crea automáticamente si no existe.</td></tr>
+    <tr><td class="pname">LoggearHistorico</td><td class="pdef">false</td><td>Si true, registra señales también durante carga histórica. Útil para backtesting manual.</td></tr>
+  </table>
+</section>
+
+<!-- 11 -->
+<section id="alertas">
+  <p class="section-lead">11 · Alertas</p>
+  <h2><span class="num">11</span> Grupo 8 — Alertas Sonoras</h2>
+  <div class="divider"></div>
+  <table class="prop-table">
+    <tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr>
+    <tr><td class="pname">Alerta4de4</td><td class="pdef">true</td><td>Alerta al alcanzar 4/4 indicadores alineados por primera vez.</td></tr>
+    <tr><td class="pname">Sonido4de4</td><td class="pdef">Alert1.wav</td><td>Archivo .wav en la carpeta de sonidos de NT8.</td></tr>
+    <tr><td class="pname">AlertaZonaA</td><td class="pdef">true</td><td>Alerta al entrar a Zona A (A+ o A) desde una zona inferior.</td></tr>
+    <tr><td class="pname">SonidoZonaA</td><td class="pdef">Alert2.wav</td><td>Archivo .wav para la alerta de Zona A.</td></tr>
+  </table>
+  <div class="callout warn"><strong>Solo en Realtime:</strong> Las alertas no se disparan durante la carga histórica para evitar saturación al abrir el chart.</div>
+</section>
+
+<!-- 12 -->
+<section id="v5">
+  <p class="section-lead">12 · Capas y Filtros</p>
+  <h2><span class="num">12</span> Grupo 9 — V5: Capas y Filtros de Señal</h2>
+  <div class="divider"></div>
+  <table class="prop-table">
+    <tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr>
+    <tr><td class="pname">UsarCapa3</td><td class="pdef">true</td><td>Exige AVWAP vs BM Keltner para zonas A/A+. Con false, basta 4/4 + zona A/A+.</td></tr>
+    <tr><td class="pname">UsarCapa4</td><td class="pdef">true</td><td>Exige LinReg89 vs BM Keltner para zonas LR/LR+. Con false, basta 4/4 + zona LR/LR+.</td></tr>
+    <tr><td class="pname">UsarStopKeltner</td><td class="pdef">true</td><td>Stop = 30% del ancho Keltner. Con false, usa ATR × Stop_ATRMult.</td></tr>
+    <tr><td class="pname">FiltroApertura</td><td class="pdef">true</td><td>Requiere <code>BandWidth ≥ MinKeltnerVsATR × ATR</code> para generar señal. Filtra mercados en squeeze.</td></tr>
+    <tr><td class="pname">MinKeltnerVsATR</td><td class="pdef">1.8</td><td>Multiplicador mínimo. El canal debe ser al menos 1.8× el ATR para señal válida. Rango: 1.0–5.0.</td></tr>
+    <tr><td class="pname">EsperarConfirmacion</td><td class="pdef">true</td><td>Requiere que el verde se mantenga N barras antes de generar señal.</td></tr>
+    <tr><td class="pname">BarrasConfirmacion</td><td class="pdef">2</td><td>Barras mínimas de verde continuo para confirmar la señal. Rango: 1–5.</td></tr>
+  </table>
+</section>
+
+<!-- 13 -->
+<section id="periodos">
+  <p class="section-lead">13 · Períodos y Zonas</p>
+  <h2><span class="num">13</span> Grupos 3–7 — Períodos, Zonas y Keltner</h2>
+  <div class="divider"></div>
+  <table class="prop-table">
+    <tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr>
+    <tr><td class="pname">Period_SMA20</td><td class="pdef">20</td><td>Período de la SMA rápida de Capa 1.</td></tr>
+    <tr><td class="pname">Period_SMA80</td><td class="pdef">80</td><td>Período de la SMA lenta de Capa 1.</td></tr>
+    <tr><td class="pname">Period_LR89</td><td class="pdef">89</td><td>Período de la Regresión Lineal de Capa 1 y referencia de Capa 2 (LR+/LR).</td></tr>
+    <tr><td class="pname">SlopeLookback</td><td class="pdef">3</td><td>Barras hacia atrás para calcular pendiente de SMA y LinReg. Mayor = pendiente más suave.</td></tr>
+    <tr><td class="pname">AVWAP_SwingPeriod</td><td class="pdef">20</td><td>Período de swing para anclar el AVWAP dinámico.</td></tr>
+    <tr><td class="pname">AVWAP_BaseAPT</td><td class="pdef">10</td><td>Sensibilidad del algoritmo de anclaje AVWAP.</td></tr>
+    <tr><td class="pname">ATR_Period</td><td class="pdef">14</td><td>Período del ATR. Usado para zonas A/LR y filtro de apertura.</td></tr>
+    <tr><td class="pname">ZoneVerde</td><td class="pdef">0.5</td><td>Ancho de zona A y LR en múltiplos de ATR. 0.5 = dentro del 50% del ATR del nivel de referencia.</td></tr>
+    <tr><td class="pname">ZoneAmarilla</td><td class="pdef">1.0</td><td>Ancho de zona B en múltiplos de ATR.</td></tr>
+    <tr><td class="pname">Stop_ATRMult</td><td class="pdef">0.5</td><td>Multiplicador ATR para stop en modo ATR (solo si UsarStopKeltner = false).</td></tr>
+    <tr><td class="pname">Kelt_Period</td><td class="pdef">20</td><td>Período del EMA base del Canal Keltner.</td></tr>
+    <tr><td class="pname">Kelt_Multiplier</td><td class="pdef">1.5</td><td>Multiplicador del canal Keltner (ancho de la banda).</td></tr>
+    <tr><td class="pname">Kelt_StopPct</td><td class="pdef">0.30</td><td>Porcentaje del ancho Keltner para el stop (0.30 = 30%).</td></tr>
+    <tr><td class="pname">Kelt_RiskReward</td><td class="pdef">2.0</td><td>R:R del primer objetivo T1 (T1 = Stop × Kelt_RiskReward).</td></tr>
+    <tr><td class="pname">Kelt_Contracts</td><td class="pdef">1</td><td>Contratos para el cálculo de riesgo en USD en la sección Keltner.</td></tr>
+  </table>
+</section>
+
+<!-- 14 -->
+<section id="market">
+  <p class="section-lead">14 · Por Mercado</p>
+  <h2><span class="num">14</span> Recomendaciones de Propiedades por Mercado</h2>
+  <div class="divider"></div>
+  <p>Los parámetros predeterminados están calibrados para futuros de renta variable (ES, NQ) en timeframes de 5–15 minutos. Para otros mercados, ajusta según el carácter de volatilidad del instrumento.</p>
+
+  <table class="market-table">
+    <thead>
+      <tr><th>Mercado</th><th>Timeframe</th><th>Parámetros clave</th><th>Notas y justificación</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ES<br>S&amp;P 500 Fut.</td>
+        <td>5m / 15m</td>
+        <td>SMA20=<code>20</code> SMA80=<code>80</code> LR=<code>89</code><br>Kelt_Multi=<code>1.5</code> Kelt_Stop=<code>0.30</code><br>ZoneVerde=<code>0.5</code> MinKeltATR=<code>1.8</code><br>BarrasConf=<code>2</code> Capa3=<code>ON</code> Capa4=<code>ON</code></td>
+        <td>Configuración base del indicador. Alta liquidez y respeto al AVWAP. El ES es el mercado de referencia para todos los parámetros predeterminados. Ambas capas activas ofrecen alta selectividad.</td>
+      </tr>
+      <tr>
+        <td>NQ<br>Nasdaq 100 Fut.</td>
+        <td>5m / 15m</td>
+        <td>Kelt_Multi=<code>2.0</code> Kelt_Stop=<code>0.28</code><br>ZoneVerde=<code>0.6</code> MinKeltATR=<code>2.0</code><br>SlopeLookback=<code>4</code> BarrasConf=<code>3</code></td>
+        <td>Mayor volatilidad que ES. Kelt_Multiplier más alto evita stops muy ajustados en movimientos rápidos. ZoneVerde más amplia captura rebounds con mayor margen. Aumentar confirmación a 3 barras reduce señales falsas.</td>
+      </tr>
+      <tr>
+        <td>MNQ / MES<br>Micros</td>
+        <td>1m / 3m / 5m</td>
+        <td>SMA20=<code>20</code> SMA80=<code>60</code> LR=<code>55</code><br>ATR_Period=<code>10</code> ZoneVerde=<code>0.4</code><br>BarrasConf=<code>2</code> AVWAP_Swing=<code>15</code></td>
+        <td>En timeframes menores (1–3m) reducir todos los períodos. LR de 55 captura mejor la tendencia de corto plazo. ATR más reactivo (10). AVWAP_SwingPeriod menor encuentra swings más recientes y relevantes para el timeframe.</td>
+      </tr>
+      <tr>
+        <td>CL<br>Crude Oil Fut.</td>
+        <td>5m / 15m</td>
+        <td>Kelt_Multi=<code>2.0</code> Kelt_Stop=<code>0.25</code><br>ZoneVerde=<code>0.6</code> ZoneAmarilla=<code>1.2</code><br>MinKeltATR=<code>2.2</code> BarrasConf=<code>3</code></td>
+        <td>Alta volatilidad puntual (reportes de inventarios, OPEC). Kelt más amplio pero menor % de stop. FiltroApertura es crítico — evita señales en squeeze pre-noticia. Capa 4 especialmente útil para confirmar tendencia en LR.</td>
+      </tr>
+      <tr>
+        <td>GC<br>Gold Fut.</td>
+        <td>5m / 15m</td>
+        <td>Kelt_Multi=<code>1.8</code> Kelt_Stop=<code>0.30</code><br>ZoneVerde=<code>0.5</code> SlopeLookback=<code>4</code><br>AVWAP_Swing=<code>25</code> Capa3=<code>ON</code></td>
+        <td>El oro respeta muy bien el AVWAP. Aumentar AVWAP_SwingPeriod a 25 captura swings más significativos y produce un AVWAP más estable. Las zonas A+ y LR+ son especialmente efectivas. Capa 3 imprescindible — el AVWAP vs BM Keltner es confirmación de tendencia sólida en GC.</td>
+      </tr>
+      <tr>
+        <td>6E<br>Euro FX Fut.</td>
+        <td>15m / 1h</td>
+        <td>LR=<code>89</code> SlopeLookback=<code>5</code><br>ZoneVerde=<code>0.4</code> BarrasConf=<code>3</code><br>Kelt_Multi=<code>1.5</code> AVWAP_Swing=<code>25</code></td>
+        <td>Forex presenta tendencias más sostenidas y rangos más definidos. SlopeLookback mayor suaviza señales falsas en rangos diarios. BarrasConf de 3 es más conservador para este instrumento. En timeframe de 1h los períodos originales funcionan perfectamente.</td>
+      </tr>
+      <tr>
+        <td>BTC<br>Crypto (CME)</td>
+        <td>15m / 1h</td>
+        <td>Kelt_Multi=<code>2.5</code> Kelt_Stop=<code>0.22</code><br>ZoneVerde=<code>0.7</code> MinKeltATR=<code>2.5</code><br>BarrasConf=<code>3</code> Capa3=<code>ON</code> Capa4=<code>ON</code></td>
+        <td>Volatilidad extrema. Canal muy amplio — reducir % de stop para no asumir riesgo excesivo. ZoneVerde más amplia evita ser sacado en pullbacks bruscos. Priorizar siempre zonas A+ y LR+ (los más cercanos al nivel de referencia). Ambas capas activas son esenciales.</td>
+      </tr>
+      <tr>
+        <td>Acciones<br>mega-cap líquidas</td>
+        <td>5m / 15m</td>
+        <td>SMA80=<code>50</code> LR=<code>55</code><br>ATR_Period=<code>10</code> ZoneVerde=<code>0.5</code><br>Kelt_Multi=<code>1.5</code> BarrasConf=<code>2</code></td>
+        <td>Acciones individuales tienen menos inercia que índices: SMA80 reducida a 50, LR a 55. En megacap (AAPL, MSFT, NVDA) los parámetros del ES funcionan bien. Reducir ATR a 10 para mayor reactividad en intraday. Para acciones de menor liquidez, aumentar BarrasConf a 3.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout"><strong>Recomendación general:</strong> Siempre comienza con los parámetros predeterminados y ajusta <em>un solo parámetro a la vez</em>, evaluando el impacto en al menos 2–3 semanas de datos históricos antes de operar en vivo. El parámetro de mayor impacto es <code>MinKeltnerVsATR</code> — controla cuántas señales pasan el filtro de apertura.</div>
+</section>
+
+<!-- 15 -->
+<section id="csv">
+  <p class="section-lead">15 · Logging CSV</p>
+  <h2><span class="num">15</span> Formato del CSV de Señales</h2>
+  <div class="divider"></div>
+  <p>Cada señal genera dos líneas: <code>ABRE</code> al activarse y <code>CIERRA</code> al tocarse el Stop o el T2. El archivo es append-only y thread-safe. El campo <strong>Zona</strong> identifica el tipo de setup.</p>
+
+  <h3>Línea ABRE</h3>
+  <div class="code-block">
+ABRE, <span class="k">ID</span>, Fecha, Mercado, Cuenta, Timeframe, <span class="n">Direccion</span>, Estado, <span class="k">Zona</span>, Entrada, Stop, T1, T2, RR1, RR2
+  </div>
+
+  <h3>Línea CIERRA</h3>
+  <div class="code-block">
+CIERRA, <span class="k">ID</span>, FechaApertura, Mercado, Cuenta, Timeframe, <span class="n">Direccion</span>, Estado, <span class="k">Zona</span>,
+Entrada, Stop, T1, T2, RR1, RR2, FechaCierre, <span class="n">Resultado</span>, T1Tocado, PrecioSalida, Barras
+  </div>
+
+  <h3>Valores del campo Zona</h3>
+  <table class="prop-table">
+    <tr><th>Valor</th><th>Significado</th></tr>
+    <tr><td class="pname">A+</td><td>La vela tocó el AVWAP (Low ≤ AVWAP ≤ Close) en la barra de señal.</td></tr>
+    <tr><td class="pname">A</td><td>Precio dentro de ZoneVerde ATRs del AVWAP, mismo lado de la tendencia.</td></tr>
+    <tr><td class="pname">LR+</td><td>La vela tocó la LinReg89 (Low ≤ LR89 ≤ Close) en la barra de señal.</td></tr>
+    <tr><td class="pname">LR</td><td>Precio dentro de ZoneVerde ATRs de la LinReg89, mismo lado de la tendencia.</td></tr>
+  </table>
+
+  <h3>Valores del campo Resultado</h3>
+  <table class="prop-table">
+    <tr><th>Valor</th><th>Significado</th></tr>
+    <tr><td class="pname">STOP</td><td>El precio tocó el nivel de stop de pérdida calculado. Operación cerrada en pérdida.</td></tr>
+    <tr><td class="pname">T2</td><td>El precio alcanzó el segundo objetivo. Operación cerrada en ganancia máxima.</td></tr>
+  </table>
+  <div class="callout warn"><strong>T1Tocado</strong> (SI/NO) indica si el primer objetivo fue alcanzado durante la operación, pero el cierre formal solo se registra al tocar Stop o T2. Para gestión parcial de posición, el trader debe actuar manualmente.</div>
+</section>
+
+<!-- 16 -->
+<section id="faq">
+  <p class="section-lead">16 · FAQ</p>
+  <h2><span class="num">16</span> Preguntas Frecuentes</h2>
+  <div class="divider"></div>
+
+  <h3>¿Por qué el semáforo está verde pero no aparece la Zona de Entrada?</h3>
+  <p>Hay dos filtros adicionales: el <strong>Filtro de Apertura</strong> (<code>BandWidth ≥ MinKeltnerVsATR × ATR</code>) y las <strong>Barras de Confirmación</strong>. Verifica la sección Keltner — si el Width es bajo respecto al ATR, el mercado está en squeeze y el filtro está bloqueando la señal. Reduce <code>MinKeltnerVsATR</code> o desactiva <code>FiltroApertura</code> temporalmente para verificar.</p>
+
+  <h3>¿La ventana flotante desaparece al reiniciar?</h3>
+  <p>Sí, la ventana WPF se recrea cada vez que se inicializa el indicador. Al reabrir el chart, reaparece en la posición configurada por <code>Hud_X / Hud_Y</code>. Con <code>Ventana_Compartida = true</code>, la ventana persiste mientras algún chart con el indicador esté activo.</p>
+
+  <h3>¿Puedo tener el indicador en múltiples timeframes simultáneamente?</h3>
+  <p>Sí. Con <code>Ventana_Compartida = true</code>, todos los charts (diferentes timeframes del mismo instrumento o distintos instrumentos) se consolidan en la misma ventana flotante, identificados por nombre de instrumento.</p>
+
+  <h3>¿Pueden las zonas A y LR aparecer al mismo tiempo?</h3>
+  <p>No. La evaluación es secuencial y exclusiva: A+ tiene prioridad sobre A, que tiene prioridad sobre LR+, y así sucesivamente. En cada barra solo puede estar activa una zona. Si el precio pincha el AVWAP, será A+ aunque también esté cerca del LinReg.</p>
+
+  <h3>¿Cuándo conviene desactivar la Capa 3 o la Capa 4?</h3>
+  <p>Desactiva <strong>Capa 3</strong> (<code>UsarCapa3 = false</code>) cuando el AVWAP y el Keltner estén estructuralmente distantes (tendencias fuertes y sostenidas donde el AVWAP siempre supera el Keltner). Desactiva <strong>Capa 4</strong> en fases de alta volatilidad donde el LinReg oscila mucho respecto al canal. En general, con ambas activas obtienes señales más selectivas y de mayor calidad.</p>
+
+  <h3>¿El CSV registra señales que no pasan los filtros?</h3>
+  <p>No. Solo se registran señales que pasan los 3 filtros: semáforo verde + filtro de apertura + barras de confirmación. Las señales amarillas y las verdes que no superan los filtros no generan entrada en el CSV.</p>
+
+  <h3>¿Cómo interpreto el campo T1Tocado = SI en el CSV cuando el Resultado es STOP?</h3>
+  <p>Significa que el precio alcanzó T1 en algún momento durante la operación, pero luego retrocedió hasta el Stop. Esto representa un escenario donde el trader pudo haber cerrado parcialmente en T1 para asegurar ganancia antes de que el mercado revirtiera.</p>
+</section>
+
+</main>
+
+<footer>
+  <span>EduS_MasterPanel_HUD_V2</span>
+  <span>NinjaTrader 8 · Namespace: EduS_Trader</span>
+  <span>Manual v2.5 · 2025</span>
+</footer>
+
+<script>
+const sections = document.querySelectorAll('section[id]');
+const links = document.querySelectorAll('nav a');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const a = document.querySelector(`nav a[href="#${e.target.id}"]`);
+      if (a) a.classList.add('active');
+    }
+  });
+}, { threshold: 0.2, rootMargin: '-60px 0px -60% 0px' });
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
