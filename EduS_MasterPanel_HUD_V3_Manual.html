@@ -53,10 +53,10 @@ p{margin-bottom:14px;color:var(--text)}p:last-child{margin-bottom:0}
 .layer-block.orange .layer-num{color:var(--orange)}
 .layer-block h4{font-size:15px;font-weight:600;color:var(--title);margin-bottom:10px}
 .layer-block p{font-size:13.5px;color:var(--text);margin-bottom:8px}
-.zone-grid{display:grid;grid-template-columns:60px 130px 1fr;gap:2px;margin-top:16px;border-radius:8px;overflow:hidden;font-size:13px}
-.zone-grid .zh{background:var(--bg3);padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-.zone-grid .zr{background:var(--bg2);border:1px solid var(--border);padding:10px 14px;color:var(--text);white-space:nowrap}
-.zone-grid .zr:nth-child(3n){white-space:normal}
+.zone-grid{display:table;width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.zone-grid .zh{display:table-cell;background:var(--bg3);padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;white-space:nowrap;border:1px solid var(--border)}
+.zone-grid .zr{display:table-cell;background:var(--bg2);border:1px solid var(--border);padding:10px 14px;color:var(--text);white-space:nowrap;vertical-align:middle}
+.zone-grid .zr:last-child{white-space:normal;width:100%}
 .zone-grid .zr.tag{font-family:var(--mono);font-weight:700;font-size:13px}
 .zone-grid .zr.tag.g{color:var(--accent)}
 .zone-grid .zr.tag.lr{color:var(--accent2)}
@@ -282,7 +282,8 @@ footer span{color:var(--accent)}
   <h2><span class="num">05</span> Zonas de Entrada — Referencia Rápida</h2>
   <div class="divider"></div>
   <p>La prioridad de evaluación es descendente: A+ → A → LR+ → LR → B+ → B → Sin zona. La primera que se cumpla es la zona activa.</p>
-  <div class="zone-grid">
+  <!-- <div class="zone-grid"> 
+  <div class="zone-grid" style="width:100%;table-layout:fixed;">  
     <div class="zh">Zona</div><div class="zh">Referencia</div><div class="zh">Condición exacta (alcista)</div>
     <div class="zr tag g">A+</div><div class="zr">AVWAP</div><div class="zr"><code>Low[0] ≤ AVWAP ≤ Close[0]</code> — la vela toca el AVWAP</div>
     <div class="zr tag g">A</div><div class="zr">AVWAP</div><div class="zr"><code>|Close - AVWAP| / ATR ≤ ZoneVerde</code> y precio por encima del AVWAP</div>
@@ -291,7 +292,35 @@ footer span{color:var(--accent)}
     <div class="zr tag y">B+</div><div class="zr">AVWAP</div><div class="zr"><code>|Close - AVWAP| / ATR ≤ ZoneVerde</code> y precio <em>bajo</em> el AVWAP (lado contrario)</div>
     <div class="zr tag y">B</div><div class="zr">AVWAP</div><div class="zr"><code>|Close - AVWAP| / ATR ≤ ZoneAmarilla</code> — zona más alejada</div>
     <div class="zr tag r">--</div><div class="zr">—</div><div class="zr">Precio fuera de todas las zonas reconocibles</div>
+  </div>-->
+
+  <div class="zone-grid">
+  <div style="display:table-row">
+    <div class="zh">Zona</div><div class="zh">Referencia</div><div class="zh">Condición exacta (alcista)</div>
   </div>
+  <div style="display:table-row">
+    <div class="zr tag g">A+</div><div class="zr">AVWAP</div><div class="zr"><code>Low[0] ≤ AVWAP ≤ Close[0]</code> — la vela toca el AVWAP</div>
+  </div>
+  <div style="display:table-row">
+    <div class="zr tag g">A</div><div class="zr">AVWAP</div><div class="zr"><code>|Close - AVWAP| / ATR ≤ ZoneVerde</code> y precio por encima del AVWAP</div>
+  </div>
+  <div style="display:table-row">
+    <div class="zr tag lr">LR+</div><div class="zr">LinReg 89</div><div class="zr"><code>Low[0] ≤ LR89 ≤ Close[0]</code> — la vela toca la regresión lineal</div>
+  </div>
+  <div style="display:table-row">
+    <div class="zr tag lr">LR</div><div class="zr">LinReg 89</div><div class="zr"><code>|Close - LR89| / ATR ≤ ZoneVerde</code> y precio por encima de LR89</div>
+  </div>
+  <div style="display:table-row">
+    <div class="zr tag y">B+</div><div class="zr">AVWAP</div><div class="zr"><code>|Close - AVWAP| / ATR ≤ ZoneVerde</code> y precio <em>bajo</em> el AVWAP (lado contrario)</div>
+  </div>
+  <div style="display:table-row">
+    <div class="zr tag y">B</div><div class="zr">AVWAP</div><div class="zr"><code>|Close - AVWAP| / ATR ≤ ZoneAmarilla</code> — zona más alejada</div>
+  </div>
+  <div style="display:table-row">
+    <div class="zr tag r">--</div><div class="zr">—</div><div class="zr">Precio fuera de todas las zonas reconocibles</div>
+  </div>
+</div>
+  
   <div class="callout">Para <strong>posiciones cortas</strong>, las condiciones se invierten: se usa <code>High[0]</code> en lugar de <code>Low[0]</code> para los pins, y la referencia de "lado" se invierte respecto al AVWAP bajista.</div>
 </section>
 
