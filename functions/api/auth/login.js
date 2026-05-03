@@ -1,7 +1,6 @@
 // ============================================================
 // functions/api/auth/login.js
 // POST /api/auth/login
-// Login con email + contraseña → devuelve cookie JWT
 // ============================================================
 
 import { verifyPassword, signJWT, generateId } from '../../lib/jwt.js';
@@ -12,12 +11,12 @@ export async function onRequestOptions() { return preflight(); }
 export async function onRequestPost({ request, env }) {
   let body;
   try { body = await request.json(); }
-  catch { return badRequest('JSON inválido'); }
+  catch { return badRequest('JSON invalido'); }
 
   const { email, password, rememberMe } = body;
-  if (!email || !password) return badRequest('Email y contraseña son obligatorios');
+  if (!email || !password) return badRequest('Email y contrasena son obligatorios');
 
-  await new Promise(r => setTimeout(r, 300)); // anti brute-force
+  await new Promise(r => setTimeout(r, 300));
 
   try {
     const user = await env.DB.prepare(`
@@ -25,23 +24,20 @@ export async function onRequestPost({ request, env }) {
       FROM users WHERE email = ?
     `).bind(email.toLowerCase().trim()).first();
 
-    if (!user)                        return unauthorized('Email o contraseña incorrectos');
-    if (user.status === 'suspended')  return unauthorized('Tu cuenta está suspendida. Contacta soporte.');
-    if (user.status === 'deleted')    return unauthorized('Esta cuenta no existe');
-    if (!user.password_hash)          return unauthorized('Esta cuenta usa Google para iniciar sesión');
+    if (!user)                       return unauthorized('Email o contrasena incorrectos');
+    if (user.status === 'suspended') return unauthorized('Tu cuenta esta suspendida. Contacta soporte.');
+    if (user.status === 'deleted')   return unauthorized('Esta cuenta no existe');
+    if (!user.password_hash)         return unauthorized('Esta cuenta usa Google para iniciar sesion');
 
     const valid = await verifyPassword(password, user.password_hash);
-    if (!valid) return unauthorized('Email o contraseña incorrectos');
+    if (!valid) return unauthorized('Email o contrasena incorrectos');
 
-    // Plan activo (verificar expiración)
     const plan = getActivePlan(user);
 
-    // Actualizar last_login y sincronizar plan
     await env.DB.prepare(
       `UPDATE users SET last_login_at = datetime('now'), plan = ? WHERE id = ?`
     ).bind(plan, user.id).run();
 
-    // Crear sesión en DB
     const sessionId   = generateId();
     const expiryHours = rememberMe ? 168 : 24;
     const expiresAt   = new Date(Date.now() + expiryHours * 3600 * 1000).toISOString();
@@ -50,13 +46,13 @@ export async function onRequestPost({ request, env }) {
       INSERT INTO sessions (id, user_id, user_agent, ip_address, expires_at)
       VALUES (?, ?, ?, ?, ?)
     `).bind(
-      sessionId, user.id,
+      sessionId,
+      user.id,
       (request.headers.get('User-Agent') || '').slice(0, 255),
       request.headers.get('CF-Connecting-IP') || '',
       expiresAt
     ).run();
 
-    // Firmar JWT
     const token = await signJWT(
       { sub: user.id, sid: sessionId, email: user.email, name: user.name, plan },
       env.JWT_SECRET,
