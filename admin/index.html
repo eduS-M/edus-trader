@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — EduS Trader</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#3dd6c0; --gold:#c9a84c; --dark:#0f172a;
+  --mid:#475569;  --light:#64748b; --bg:#f5f7fa;
+  --white:#ffffff; --border:rgba(0,0,0,0.07);
+  --red:#e05252;  --green:#22c55e; --ff:'Montserrat',sans-serif;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:var(--teal);
+  border-bottom:2px solid #e2e8f0;
+  position:sticky;top:0;z-index:200;
+}
+.topbar-inner{
+  max-width:1300px;margin:0 auto;
+  display:flex;align-items:center;
+  justify-content:space-between;padding:0 24px;
+}
+.topbar-left{display:flex;align-items:center;gap:0}
+.topbar a,.topbar span{
+  display:block;padding:13px 16px;
+  font-family:var(--ff);font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.07em;
+  color:var(--dark);text-decoration:none;
+  cursor:pointer;transition:background .15s;
+}
+.topbar a:hover,.topbar span:hover{background:rgba(0,0,0,.1)}
+.topbar a.active{background:rgba(0,0,0,.15)}
+.admin-badge{
+  padding:5px 12px;border-radius:4px;
+  background:rgba(0,0,0,.12);border:.5px solid rgba(0,0,0,.18);
+  font-family:var(--ff);font-size:10px;font-weight:700;
+  letter-spacing:.08em;color:var(--dark);
+}
+
+/* ── LAYOUT ── */
+.layout{display:flex;min-height:calc(100vh - 46px)}
+.sidebar{
+  width:220px;flex-shrink:0;
+  background:var(--white);border-right:.5px solid #e2e8f0;
+  padding:20px 0;
+  position:sticky;top:46px;height:calc(100vh - 46px);
+  overflow-y:auto;
+}
+.sidebar-group{margin-bottom:6px}
+.sidebar-label{
+  padding:8px 20px 4px;
+  font-family:var(--ff);font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--light);
+}
+.sidebar-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 20px;font-size:12px;font-weight:500;
+  color:var(--mid);cursor:pointer;
+  border-left:2px solid transparent;
+  transition:all .12s;
+}
+.sidebar-item:hover{background:var(--bg);color:var(--dark)}
+.sidebar-item.active{
+  background:#f0fdf9;color:var(--dark);
+  border-left-color:var(--teal);font-weight:600;
+}
+.sidebar-item .icon{font-size:14px;width:18px;text-align:center}
+
+/* ── MAIN ── */
+.main{flex:1;min-width:0;padding:28px 32px}
+.page{display:none}
+.page.active{display:block}
+
+/* ── SECTION HEADER ── */
+.section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:24px;flex-wrap:wrap;gap:12px;
+}
+.section-title{
+  font-family:var(--ff);font-size:18px;font-weight:800;
+  color:var(--dark);letter-spacing:-.01em;
+}
+.section-sub{font-size:12px;color:var(--light);margin-top:2px}
+
+/* ── KPI CARDS ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px}
+.kpi{
+  background:var(--white);border:.5px solid var(--border);
+  border-radius:10px;padding:18px 20px;position:relative;overflow:hidden;
+}
+.kpi::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+}
+.kpi.teal::before{background:var(--teal)}
+.kpi.gold::before{background:var(--gold)}
+.kpi.green::before{background:var(--green)}
+.kpi.red::before{background:var(--red)}
+.kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--light);font-family:var(--ff);margin-bottom:8px}
+.kpi-value{font-family:var(--ff);font-size:28px;font-weight:800;color:var(--dark);letter-spacing:-.02em;line-height:1}
+.kpi-sub{font-size:11px;color:var(--light);margin-top:5px}
+
+/* ── TABLE ── */
+.table-wrap{background:var(--white);border:.5px solid var(--border);border-radius:10px;overflow:hidden}
+.table-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;border-bottom:.5px solid var(--border);
+  gap:12px;flex-wrap:wrap;
+}
+.table-search{
+  padding:8px 14px;border:.5px solid #cbd5e1;border-radius:7px;
+  font-size:12px;font-family:'Inter',sans-serif;
+  color:var(--dark);background:var(--bg);outline:none;
+  width:220px;transition:border-color .2s;
+}
+.table-search:focus{border-color:var(--teal)}
+table{width:100%;border-collapse:collapse}
+thead th{
+  padding:10px 16px;text-align:left;
+  font-family:var(--ff);font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--light);
+  border-bottom:.5px solid var(--border);background:var(--bg);
+}
+tbody tr{border-bottom:.5px solid var(--border);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#f8fafc}
+tbody td{padding:12px 16px;font-size:12px;color:var(--mid);vertical-align:middle}
+tbody td strong{color:var(--dark);font-weight:600}
+
+/* Plan badge */
+.badge{
+  display:inline-block;padding:3px 9px;border-radius:4px;
+  font-family:var(--ff);font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.07em;
+}
+.badge.free   {background:rgba(100,116,139,.1);color:var(--light)}
+.badge.basic  {background:rgba(61,214,192,.1);color:var(--teal)}
+.badge.pro    {background:rgba(201,168,76,.1);color:var(--gold)}
+.badge.premium{background:rgba(15,23,42,.08);color:var(--dark)}
+.badge.active  {background:rgba(34,197,94,.1);color:#16a34a}
+.badge.expired {background:rgba(224,82,82,.1);color:var(--red)}
+.badge.cancelled{background:rgba(100,116,139,.1);color:var(--light)}
+
+/* Action buttons */
+.btn{
+  padding:7px 14px;border-radius:6px;
+  font-family:var(--ff);font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;
+  cursor:pointer;border:none;transition:all .15s;
+}
+.btn-primary{background:var(--teal);color:var(--dark)}
+.btn-primary:hover{background:#2fc4af}
+.btn-danger{background:rgba(224,82,82,.1);color:var(--red);border:.5px solid rgba(224,82,82,.2)}
+.btn-danger:hover{background:var(--red);color:#fff}
+.btn-sm{padding:5px 10px;font-size:9px}
+.btn-ghost{background:var(--bg);color:var(--mid);border:.5px solid var(--border)}
+.btn-ghost:hover{background:#e2e8f0}
+
+/* ── MODAL ── */
+.modal-bg{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.4);z-index:500;
+  align-items:center;justify-content:center;padding:20px;
+}
+.modal-bg.open{display:flex}
+.modal{
+  background:var(--white);border-radius:12px;
+  padding:28px;width:100%;max-width:480px;
+  position:relative;max-height:90vh;overflow-y:auto;
+}
+.modal::before{
+  content:'';position:absolute;top:0;left:20px;right:20px;height:3px;
+  border-radius:0 0 3px 3px;
+  background:linear-gradient(90deg,var(--teal),var(--gold));
+}
+.modal-title{font-family:var(--ff);font-size:16px;font-weight:800;margin-bottom:20px;color:var(--dark)}
+.modal-close{
+  position:absolute;top:16px;right:16px;
+  background:none;border:none;font-size:18px;cursor:pointer;color:var(--light);
+}
+.modal-close:hover{color:var(--dark)}
+
+/* ── FORM ── */
+.form-row{margin-bottom:16px}
+.form-label{
+  display:block;font-family:var(--ff);font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.07em;color:var(--mid);margin-bottom:7px;
+}
+.form-input,.form-select{
+  width:100%;padding:10px 14px;
+  border:.5px solid #cbd5e1;border-radius:7px;
+  font-size:13px;font-family:'Inter',sans-serif;color:var(--dark);
+  background:var(--bg);outline:none;transition:border-color .2s;
+}
+.form-input:focus,.form-select:focus{border-color:var(--teal);background:#fff}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-hint{font-size:11px;color:var(--light);margin-top:5px}
+.form-error{font-size:11px;color:var(--red);margin-top:8px;display:none}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:24px;right:24px;z-index:999;
+  padding:12px 20px;border-radius:8px;
+  font-family:var(--ff);font-size:12px;font-weight:600;
+  color:#fff;box-shadow:0 4px 16px rgba(0,0,0,.15);
+  transform:translateY(80px);opacity:0;
+  transition:all .3s;pointer-events:none;
+}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.ok{background:var(--dark)}
+#toast.err{background:var(--red)}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:48px 20px;color:var(--light)}
+.empty-icon{font-size:32px;margin-bottom:12px}
+.empty-text{font-size:13px}
+
+@media(max-width:768px){
+  .sidebar{display:none}
+  .main{padding:16px}
+  .form-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-left">
+      <a href="/">← Sitio</a>
+      <a href="/members/">Miembros</a>
+      <span class="admin-badge">⚙️ Admin</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:11px;color:var(--dark);font-family:var(--ff)" id="admin-name"></span>
+      <a href="#" onclick="logout()">Salir</a>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-group">
+      <div class="sidebar-label">Principal</div>
+      <div class="sidebar-item active" onclick="showPage('overview')">
+        <span class="icon">📊</span> Resumen
+      </div>
+      <div class="sidebar-item" onclick="showPage('members')">
+        <span class="icon">👥</span> Miembros
+      </div>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-label">Comercial</div>
+      <div class="sidebar-item" onclick="showPage('coupons')">
+        <span class="icon">🏷️</span> Cupones
+      </div>
+      <div class="sidebar-item" onclick="showPage('payments')">
+        <span class="icon">💳</span> Pagos
+      </div>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-label">Sistema</div>
+      <div class="sidebar-item" onclick="showPage('plans')">
+        <span class="icon">📋</span> Planes
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ── OVERVIEW ── -->
+    <div class="page active" id="page-overview">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Resumen General</div>
+          <div class="section-sub" id="overview-date"></div>
+        </div>
+        <button class="btn btn-ghost" onclick="loadOverview()">↻ Actualizar</button>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi teal">
+          <div class="kpi-label">Total Miembros</div>
+          <div class="kpi-value" id="kpi-total">—</div>
+          <div class="kpi-sub">Registros activos</div>
+        </div>
+        <div class="kpi gold">
+          <div class="kpi-label">Suscripciones Activas</div>
+          <div class="kpi-value" id="kpi-active">—</div>
+          <div class="kpi-sub">Pagando actualmente</div>
+        </div>
+        <div class="kpi green">
+          <div class="kpi-label">Ingresos del Mes</div>
+          <div class="kpi-value" id="kpi-revenue">—</div>
+          <div class="kpi-sub">USD este mes</div>
+        </div>
+        <div class="kpi red">
+          <div class="kpi-label">Vencen Pronto</div>
+          <div class="kpi-value" id="kpi-expiring">—</div>
+          <div class="kpi-sub">Próximos 7 días</div>
+        </div>
+      </div>
+      <!-- Distribución de planes -->
+      <div class="table-wrap" style="margin-top:8px">
+        <div class="table-toolbar">
+          <div style="font-family:var(--ff);font-size:12px;font-weight:700">Distribución por Plan</div>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Plan</th><th>Usuarios</th><th>% del total</th><th>Ingresos estimados / mes</th>
+          </tr></thead>
+          <tbody id="plan-dist-body">
+            <tr><td colspan="4" style="text-align:center;color:var(--light);padding:24px">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── MEMBERS ── -->
+    <div class="page" id="page-members">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Miembros</div>
+          <div class="section-sub">Gestiona usuarios y sus suscripciones</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <input class="table-search" id="members-search"
+                 placeholder="Buscar por email o nombre..."
+                 oninput="filterMembers()">
+          <div style="display:flex;gap:8px">
+            <select class="form-select" style="width:auto;padding:7px 12px;font-size:11px"
+                    id="members-plan-filter" onchange="filterMembers()">
+              <option value="">Todos los planes</option>
+              <option value="free">Free</option>
+              <option value="basic">Basic</option>
+              <option value="pro">Pro</option>
+              <option value="premium">Premium</option>
+            </select>
+          </div>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Usuario</th><th>Plan</th><th>Estado</th>
+            <th>Registrado</th><th>Expira</th><th>Acciones</th>
+          </tr></thead>
+          <tbody id="members-body">
+            <tr><td colspan="6" style="text-align:center;color:var(--light);padding:24px">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── COUPONS ── -->
+    <div class="page" id="page-coupons">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Cupones de Descuento</div>
+          <div class="section-sub">Crea y gestiona códigos de descuento</div>
+        </div>
+        <button class="btn btn-primary" onclick="openCouponModal()">+ Nuevo Cupón</button>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <input class="table-search" placeholder="Buscar por código..."
+                 oninput="filterCoupons(this.value)">
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mid);cursor:pointer">
+            <input type="checkbox" id="show-inactive" onchange="loadCoupons()">
+            Mostrar inactivos
+          </label>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Código</th><th>Descuento</th><th>Usos</th>
+            <th>Planes</th><th>Vigencia</th><th>Estado</th><th></th>
+          </tr></thead>
+          <tbody id="coupons-body">
+            <tr><td colspan="7" style="text-align:center;color:var(--light);padding:24px">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── PAYMENTS ── -->
+    <div class="page" id="page-payments">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Historial de Pagos</div>
+          <div class="section-sub">Todos los cobros registrados</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <input class="table-search" placeholder="Buscar por email o ID..."
+                 oninput="filterPayments(this.value)">
+          <select class="form-select" style="width:auto;padding:7px 12px;font-size:11px"
+                  onchange="filterPayments(document.querySelector('#page-payments .table-search').value)">
+            <option value="">Todos los estados</option>
+            <option value="paid">Pagado</option>
+            <option value="failed">Fallido</option>
+            <option value="refunded">Reembolsado</option>
+          </select>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Usuario</th><th>Plan</th><th>Monto</th>
+            <th>Estado</th><th>Fecha</th><th>Factura</th>
+          </tr></thead>
+          <tbody id="payments-body">
+            <tr><td colspan="6" style="text-align:center;color:var(--light);padding:24px">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── PLANS ── -->
+    <div class="page" id="page-plans">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Planes y Precios</div>
+          <div class="section-sub">Configuración de acceso por plan (de solo lectura — edita en schema.sql)</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Plan</th><th>Tier</th><th>Mensual USD</th><th>Anual USD</th>
+            <th>De por vida</th><th>Rutas permitidas</th>
+          </tr></thead>
+          <tbody id="plans-body">
+            <tr><td colspan="6" style="text-align:center;color:var(--light);padding:24px">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODAL: Nuevo/editar cupón -->
+<div class="modal-bg" id="coupon-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeCouponModal()">✕</button>
+    <div class="modal-title" id="coupon-modal-title">Nuevo Cupón</div>
+    <input type="hidden" id="coupon-id">
+
+    <div class="form-row">
+      <label class="form-label">Código *</label>
+      <input class="form-input" id="f-code" placeholder="LAUNCH50" style="text-transform:uppercase">
+      <div class="form-hint">Solo letras y números, sin espacios. Se convierte a mayúsculas.</div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Descripción</label>
+      <input class="form-input" id="f-desc" placeholder="Descuento de lanzamiento">
+    </div>
+    <div class="form-grid">
+      <div class="form-row">
+        <label class="form-label">Tipo de descuento *</label>
+        <select class="form-select" id="f-type">
+          <option value="percent">Porcentaje (%)</option>
+          <option value="fixed">Fijo (USD)</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Valor *</label>
+        <input class="form-input" id="f-value" type="number" min="1" placeholder="20">
+        <div class="form-hint" id="f-value-hint">Ej: 20 = 20%</div>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-row">
+        <label class="form-label">Máx. usos totales</label>
+        <input class="form-input" id="f-maxuses" type="number" min="1" placeholder="Ilimitado">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Máx. usos por usuario</label>
+        <input class="form-input" id="f-maxperuser" type="number" min="1" value="1">
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Planes aplicables</label>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+        <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer">
+          <input type="checkbox" class="plan-check" value="basic"> Basic
+        </label>
+        <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer">
+          <input type="checkbox" class="plan-check" value="pro"> Pro
+        </label>
+        <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer">
+          <input type="checkbox" class="plan-check" value="premium"> Premium Plus
+        </label>
+      </div>
+      <div class="form-hint">Sin selección = aplica a todos los planes</div>
+    </div>
+    <div class="form-grid">
+      <div class="form-row">
+        <label class="form-label">Válido desde</label>
+        <input class="form-input" id="f-from" type="date">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Válido hasta</label>
+        <input class="form-input" id="f-until" type="date">
+      </div>
+    </div>
+    <div class="form-error" id="coupon-form-error"></div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="closeCouponModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveCoupon()">Guardar Cupón</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ── Estado ────────────────────────────────────────────────────
+let allMembers  = [];
+let allCoupons  = [];
+let allPayments = [];
+let currentPage = 'overview';
+
+// ── Navegación ────────────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  document.getElementById(`page-${name}`).classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(s => {
+    if (s.textContent.toLowerCase().includes(
+      name === 'overview' ? 'resumen' :
+      name === 'members'  ? 'miembros' :
+      name === 'coupons'  ? 'cupones' :
+      name === 'payments' ? 'pagos' : 'planes'
+    )) s.classList.add('active');
+  });
+  currentPage = name;
+  if (name === 'overview') loadOverview();
+  if (name === 'members')  loadMembers();
+  if (name === 'coupons')  loadCoupons();
+  if (name === 'payments') loadPayments();
+  if (name === 'plans')    loadPlans();
+}
+
+// ── API helper ────────────────────────────────────────────────
+async function api(path, opts = {}) {
+  const res = await fetch(path, {
+    ...opts,
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) },
+    body: opts.body ? JSON.stringify(opts.body) : undefined,
+  });
+  return res.json();
+}
+
+// ── Toast ─────────────────────────────────────────────────────
+function toast(msg, type = 'ok') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className   = `show ${type}`;
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ── Overview ──────────────────────────────────────────────────
+async function loadOverview() {
+  document.getElementById('overview-date').textContent =
+    new Date().toLocaleDateString('es-CL', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  try {
+    const data = await api('/api/admin/stats');
+    if (data.ok) {
+      document.getElementById('kpi-total').textContent    = data.total_users ?? '—';
+      document.getElementById('kpi-active').textContent   = data.active_subs ?? '—';
+      document.getElementById('kpi-revenue').textContent  = data.revenue_month ? `$${data.revenue_month}` : '—';
+      document.getElementById('kpi-expiring').textContent = data.expiring_soon ?? '—';
+
+      const dist = data.plan_distribution || [];
+      const total = dist.reduce((s, r) => s + r.count, 0) || 1;
+      const prices = { free: 0, basic: 15, pro: 29, premium: 49 };
+      document.getElementById('plan-dist-body').innerHTML = dist.length
+        ? dist.map(r => `
+            <tr>
+              <td><span class="badge ${r.plan}">${r.plan}</span></td>
+              <td><strong>${r.count}</strong></td>
+              <td>${Math.round(r.count / total * 100)}%</td>
+              <td>$${(r.count * prices[r.plan]).toLocaleString()} USD</td>
+            </tr>`).join('')
+        : '<tr><td colspan="4" style="text-align:center;color:var(--light);padding:20px">Sin datos</td></tr>';
+    }
+  } catch {
+    // Endpoint aún no implementado — mostrar placeholder
+    document.getElementById('kpi-total').textContent    = '—';
+    document.getElementById('kpi-active').textContent   = '—';
+    document.getElementById('kpi-revenue').textContent  = '—';
+    document.getElementById('kpi-expiring').textContent = '—';
+    document.getElementById('plan-dist-body').innerHTML =
+      '<tr><td colspan="4" style="text-align:center;color:var(--light);padding:20px">Conecta el endpoint /api/admin/stats para ver datos</td></tr>';
+  }
+}
+
+// ── Members ───────────────────────────────────────────────────
+async function loadMembers() {
+  try {
+    const data = await api('/api/admin/members');
+    allMembers = data.members || [];
+    renderMembers(allMembers);
+  } catch {
+    document.getElementById('members-body').innerHTML =
+      '<tr><td colspan="6" style="text-align:center;color:var(--light);padding:24px">Error al cargar miembros</td></tr>';
+  }
+}
+
+function renderMembers(list) {
+  const body = document.getElementById('members-body');
+  if (!list.length) {
+    body.innerHTML = '<tr><td colspan="6"><div class="empty"><div class="empty-icon">👥</div><div class="empty-text">Sin miembros registrados</div></div></td></tr>';
+    return;
+  }
+  body.innerHTML = list.map(u => `
+    <tr>
+      <td>
+        <strong>${escHtml(u.name || '—')}</strong><br>
+        <span style="color:var(--light);font-size:11px">${escHtml(u.email)}</span>
+      </td>
+      <td><span class="badge ${u.plan}">${u.plan}</span></td>
+      <td><span class="badge ${u.status}">${u.status}</span></td>
+      <td>${formatDate(u.created_at)}</td>
+      <td>${u.plan_expires_at ? formatDate(u.plan_expires_at) : '<span style="color:var(--light)">—</span>'}</td>
+      <td>
+        <button class="btn btn-sm btn-ghost" onclick="viewMember('${u.id}')">Ver</button>
+        ${u.status === 'active'
+          ? `<button class="btn btn-sm btn-danger" onclick="suspendMember('${u.id}')">Suspender</button>`
+          : `<button class="btn btn-sm btn-primary" onclick="reactivateMember('${u.id}')">Reactivar</button>`
+        }
+      </td>
+    </tr>`).join('');
+}
+
+function filterMembers() {
+  const q    = document.getElementById('members-search').value.toLowerCase();
+  const plan = document.getElementById('members-plan-filter').value;
+  renderMembers(allMembers.filter(u =>
+    (!q    || u.email.toLowerCase().includes(q) || (u.name||'').toLowerCase().includes(q)) &&
+    (!plan || u.plan === plan)
+  ));
+}
+
+async function suspendMember(id) {
+  if (!confirm('¿Suspender este miembro?')) return;
+  const r = await api('/api/admin/members', { method:'PUT', body:{ id, status:'suspended' }});
+  if (r.ok) { toast('Miembro suspendido'); loadMembers(); }
+  else toast(r.error || 'Error', 'err');
+}
+
+async function reactivateMember(id) {
+  const r = await api('/api/admin/members', { method:'PUT', body:{ id, status:'active' }});
+  if (r.ok) { toast('Miembro reactivado'); loadMembers(); }
+  else toast(r.error || 'Error', 'err');
+}
+
+function viewMember(id) {
+  const u = allMembers.find(m => m.id === id);
+  if (u) alert(`${u.name || u.email}\nPlan: ${u.plan}\nEstado: ${u.status}\nRegistrado: ${formatDate(u.created_at)}`);
+}
+
+// ── Coupons ───────────────────────────────────────────────────
+async function loadCoupons() {
+  try {
+    const data = await api('/api/admin/coupons');
+    allCoupons = data.coupons || [];
+    const showInactive = document.getElementById('show-inactive').checked;
+    renderCoupons(showInactive ? allCoupons : allCoupons.filter(c => c.is_active));
+  } catch {
+    document.getElementById('coupons-body').innerHTML =
+      '<tr><td colspan="7" style="text-align:center;color:var(--light);padding:24px">Error al cargar cupones</td></tr>';
+  }
+}
+
+function renderCoupons(list) {
+  const body = document.getElementById('coupons-body');
+  if (!list.length) {
+    body.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="empty-icon">🏷️</div><div class="empty-text">Sin cupones. Crea el primero.</div></div></td></tr>';
+    return;
+  }
+  body.innerHTML = list.map(c => {
+    const discLabel = c.discount_type === 'percent' ? `${c.discount_value}%` : `$${c.discount_value} USD`;
+    const usesLabel = c.max_uses ? `${c.uses_count}/${c.max_uses}` : `${c.uses_count}/∞`;
+    const plans     = c.applicable_plans ? JSON.parse(c.applicable_plans).join(', ') || 'Todos' : 'Todos';
+    const vigencia  = c.valid_until ? `hasta ${formatDate(c.valid_until)}` : 'Sin límite';
+    return `<tr style="${!c.is_active ? 'opacity:.5' : ''}">
+      <td><strong style="font-family:var(--ff);letter-spacing:.05em">${c.code}</strong>
+          ${c.description ? `<br><span style="color:var(--light);font-size:11px">${escHtml(c.description)}</span>` : ''}
+      </td>
+      <td><strong>${discLabel}</strong></td>
+      <td>${usesLabel}</td>
+      <td style="font-size:11px">${plans}</td>
+      <td style="font-size:11px">${vigencia}</td>
+      <td><span class="badge ${c.is_active ? 'active' : 'cancelled'}">${c.is_active ? 'Activo' : 'Inactivo'}</span></td>
+      <td style="display:flex;gap:4px">
+        <button class="btn btn-sm btn-ghost" onclick="editCoupon('${c.id}')">Editar</button>
+        ${c.is_active
+          ? `<button class="btn btn-sm btn-danger" onclick="deactivateCoupon('${c.id}')">Desactivar</button>`
+          : ''
+        }
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function filterCoupons(q) {
+  const showInactive = document.getElementById('show-inactive').checked;
+  const base = showInactive ? allCoupons : allCoupons.filter(c => c.is_active);
+  renderCoupons(q ? base.filter(c => c.code.includes(q.toUpperCase())) : base);
+}
+
+// Modal cupón
+function openCouponModal(data = null) {
+  document.getElementById('coupon-id').value    = data?.id    || '';
+  document.getElementById('f-code').value       = data?.code  || '';
+  document.getElementById('f-desc').value       = data?.description || '';
+  document.getElementById('f-type').value       = data?.discount_type || 'percent';
+  document.getElementById('f-value').value      = data?.discount_value || '';
+  document.getElementById('f-maxuses').value    = data?.max_uses || '';
+  document.getElementById('f-maxperuser').value = data?.max_uses_per_user || 1;
+  document.getElementById('f-from').value       = data?.valid_from?.split('T')[0] || '';
+  document.getElementById('f-until').value      = data?.valid_until?.split('T')[0] || '';
+
+  // Plan checkboxes
+  const plans = data?.applicable_plans ? JSON.parse(data.applicable_plans) : [];
+  document.querySelectorAll('.plan-check').forEach(cb => {
+    cb.checked = plans.includes(cb.value);
+  });
+
+  document.getElementById('coupon-modal-title').textContent = data ? 'Editar Cupón' : 'Nuevo Cupón';
+  document.getElementById('coupon-form-error').style.display = 'none';
+  document.getElementById('coupon-modal').classList.add('open');
+}
+
+function editCoupon(id) {
+  const c = allCoupons.find(x => x.id === id);
+  if (c) openCouponModal(c);
+}
+
+function closeCouponModal() {
+  document.getElementById('coupon-modal').classList.remove('open');
+}
+
+async function saveCoupon() {
+  const id    = document.getElementById('coupon-id').value;
+  const plans = [...document.querySelectorAll('.plan-check:checked')].map(c => c.value);
+  const body  = {
+    code:             document.getElementById('f-code').value.trim().toUpperCase(),
+    description:      document.getElementById('f-desc').value.trim() || null,
+    discount_type:    document.getElementById('f-type').value,
+    discount_value:   Number(document.getElementById('f-value').value),
+    max_uses:         document.getElementById('f-maxuses').value ? Number(document.getElementById('f-maxuses').value) : null,
+    max_uses_per_user:Number(document.getElementById('f-maxperuser').value) || 1,
+    applicable_plans: plans.length ? plans : null,
+    valid_from:       document.getElementById('f-from').value  || null,
+    valid_until:      document.getElementById('f-until').value || null,
+  };
+
+  const errEl = document.getElementById('coupon-form-error');
+  errEl.style.display = 'none';
+
+  const r = id
+    ? await api('/api/admin/coupons', { method:'PUT',  body:{ id, ...body } })
+    : await api('/api/admin/coupons', { method:'POST', body });
+
+  if (r.ok) {
+    toast(id ? 'Cupón actualizado ✓' : 'Cupón creado ✓');
+    closeCouponModal();
+    loadCoupons();
+  } else {
+    errEl.textContent    = r.error || 'Error al guardar';
+    errEl.style.display  = 'block';
+  }
+}
+
+async function deactivateCoupon(id) {
+  if (!confirm('¿Desactivar este cupón?')) return;
+  const r = await api(`/api/admin/coupons?id=${id}`, { method:'DELETE' });
+  if (r.ok) { toast('Cupón desactivado'); loadCoupons(); }
+  else toast(r.error || 'Error', 'err');
+}
+
+// ── Payments ──────────────────────────────────────────────────
+async function loadPayments() {
+  try {
+    const data = await api('/api/admin/payments');
+    allPayments = data.payments || [];
+    renderPayments(allPayments);
+  } catch {
+    document.getElementById('payments-body').innerHTML =
+      '<tr><td colspan="6" style="text-align:center;color:var(--light);padding:24px">Error al cargar pagos</td></tr>';
+  }
+}
+
+function renderPayments(list) {
+  const body = document.getElementById('payments-body');
+  if (!list.length) {
+    body.innerHTML = '<tr><td colspan="6"><div class="empty"><div class="empty-icon">💳</div><div class="empty-text">Sin pagos registrados todavía</div></div></td></tr>';
+    return;
+  }
+  body.innerHTML = list.map(p => `
+    <tr>
+      <td><strong>${escHtml(p.user_email || '—')}</strong></td>
+      <td><span class="badge ${p.plan_id || 'free'}">${p.plan_id || '—'}</span></td>
+      <td><strong>$${(p.amount/100).toFixed(2)}</strong> <span style="color:var(--light);font-size:11px">${p.currency}</span></td>
+      <td><span class="badge ${p.status}">${p.status}</span></td>
+      <td>${formatDate(p.paid_at || p.created_at)}</td>
+      <td>${p.gateway_invoice_url
+        ? `<a href="${p.gateway_invoice_url}" target="_blank" style="color:var(--teal);font-size:11px">Ver factura ↗</a>`
+        : '<span style="color:var(--light)">—</span>'}</td>
+    </tr>`).join('');
+}
+
+function filterPayments(q) {
+  renderPayments(q ? allPayments.filter(p =>
+    (p.user_email||'').toLowerCase().includes(q.toLowerCase()) ||
+    (p.gateway_payment_id||'').includes(q)
+  ) : allPayments);
+}
+
+// ── Plans ─────────────────────────────────────────────────────
+async function loadPlans() {
+  try {
+    const data = await api('/api/admin/plans');
+    const list = data.plans || [];
+    document.getElementById('plans-body').innerHTML = list.length
+      ? list.map(p => `
+          <tr>
+            <td><span class="badge ${p.id}">${p.name}</span></td>
+            <td>${p.tier}</td>
+            <td>${p.price_monthly ? '$'+(p.price_monthly/100).toFixed(0) : '—'}</td>
+            <td>${p.price_annual  ? '$'+(p.price_annual/100).toFixed(0)  : '—'}</td>
+            <td>${p.price_lifetime? '$'+(p.price_lifetime/100).toFixed(0): '—'}</td>
+            <td style="font-size:11px;color:var(--light);max-width:200px;word-break:break-word">
+              ${p.allowed_path_patterns || '—'}
+            </td>
+          </tr>`).join('')
+      : '<tr><td colspan="6" style="text-align:center;color:var(--light);padding:24px">Sin datos de planes</td></tr>';
+  } catch {
+    document.getElementById('plans-body').innerHTML =
+      '<tr><td colspan="6" style="text-align:center;color:var(--light);padding:24px">Error al cargar planes</td></tr>';
+  }
+}
+
+// ── Logout ────────────────────────────────────────────────────
+async function logout() {
+  await api('/api/auth/logout', { method: 'POST' });
+  window.location.href = '/';
+}
+
+// ── Helpers ───────────────────────────────────────────────────
+function formatDate(str) {
+  if (!str) return '—';
+  return new Date(str).toLocaleDateString('es-CL', { day:'2-digit', month:'short', year:'numeric' });
+}
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+document.getElementById('f-type').addEventListener('change', function() {
+  document.getElementById('f-value-hint').textContent =
+    this.value === 'percent' ? 'Ej: 20 = 20%' : 'Ej: 500 = $5.00 USD';
+});
+
+// ── Init ──────────────────────────────────────────────────────
+loadOverview();
+</script>
+</body>
+</html>
