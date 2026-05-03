@@ -5,8 +5,6 @@
 -- usar INTEGER PRIMARY KEY AUTOINCREMENT o TEXT para UUIDs.
 -- ============================================================
 
-PRAGMA journal_mode = WAL;
-PRAGMA foreign_keys = ON;
 
 -- ------------------------------------------------------------
 -- 1. USERS
@@ -167,7 +165,7 @@ CREATE TABLE IF NOT EXISTS subscription_changes (
   created_at      TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE INDEX IF NOT EXISTS idx_sub_changes_user TEXT ON subscription_changes(user_id);
+CREATE INDEX IF NOT EXISTS idx_sub_changes_user ON subscription_changes(user_id);
 CREATE INDEX IF NOT EXISTS idx_sub_changes_sub  ON subscription_changes(subscription_id);
 
 -- ------------------------------------------------------------
