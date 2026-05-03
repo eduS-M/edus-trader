@@ -144,6 +144,36 @@ img{max-width:100%;display:block}
 }
 .login-back a{color:#3dd6c0;text-decoration:none;font-weight:600}
 .login-back a:hover{text-decoration:underline}
+/* TABS */
+.login-tabs{display:flex;margin-bottom:24px;border-bottom:.5px solid #e2e8f0}
+.login-tab{
+  flex:1;padding:10px;text-align:center;
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.07em;
+  color:#94a3b8;cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:all .2s;
+}
+.login-tab.active{color:#3dd6c0;border-bottom-color:#3dd6c0}
+.login-tab:hover{color:#0f172a}
+.login-panel{display:none}
+.login-panel.active{display:block}
+.login-divider{
+  display:flex;align-items:center;gap:10px;
+  margin:18px 0;font-size:11px;color:#94a3b8;
+}
+.login-divider::before,.login-divider::after{
+  content:'';flex:1;height:.5px;background:#e2e8f0;
+}
+.google-btn{
+  width:100%;padding:11px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:#fff;border:.5px solid #cbd5e1;border-radius:8px;
+  font-size:13px;font-weight:600;color:#0f172a;
+  cursor:pointer;transition:background .2s;font-family:'Montserrat',sans-serif;
+}
+.google-btn:hover{background:#f8fafc}
+.google-icon{width:18px;height:18px}
 
 /* ==============================
    MEMBERS AREA (hidden until login)
@@ -466,14 +496,65 @@ img{max-width:100%;display:block}
     <img src="../assets/banner.png" alt="EduS Trader">
   </div>
   <div class="login-box">
-    <div class="login-badge">🔒 Acceso Restringido</div>
-    <div class="login-title">Zona de Miembros</div>
-    <div class="login-sub">Análisis de operativa, indicadores y manuales exclusivos. Introduce la contraseña para acceder.</div>
-    <label class="login-label">Contraseña</label>
-    <input type="password" class="login-input" id="pwd-input" placeholder="••••••••" autocomplete="current-password">
-    <button class="login-btn" onclick="doLogin()">Entrar →</button>
-    <div class="login-error" id="login-error">Contraseña incorrecta. Inténtalo de nuevo.</div>
-    <div class="login-back">¿Buscas el blog público? <a href="/">Volver al inicio</a></div>
+    <div class="login-badge">🔒 Zona de Miembros</div>
+
+    <!-- TABS -->
+    <div class="login-tabs">
+      <div class="login-tab active" onclick="switchTab('login')">Iniciar sesión</div>
+      <div class="login-tab" onclick="switchTab('register')">Registrarse</div>
+    </div>
+
+    <!-- PANEL: LOGIN -->
+    <div class="login-panel active" id="panel-login">
+      <button class="google-btn" onclick="loginGoogle()">
+        <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continuar con Google
+      </button>
+      <div class="login-divider">o con tu email</div>
+      <label class="login-label">Email</label>
+      <input type="email" class="login-input" id="login-email" placeholder="tu@email.com" autocomplete="email">
+      <label class="login-label">Contraseña</label>
+      <input type="password" class="login-input" id="login-pwd" placeholder="••••••••" autocomplete="current-password">
+      <div style="text-align:right;margin:-12px 0 16px">
+        <a href="#" onclick="switchTab('forgot')" style="font-size:11px;color:#94a3b8;text-decoration:none">¿Olvidaste tu contraseña?</a>
+      </div>
+      <button class="login-btn" id="login-btn" onclick="doLogin()">Iniciar sesión →</button>
+      <div class="login-error" id="login-error"></div>
+    </div>
+
+    <!-- PANEL: REGISTER -->
+    <div class="login-panel" id="panel-register">
+      <button class="google-btn" onclick="loginGoogle()">
+        <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Registrarse con Google
+      </button>
+      <div class="login-divider">o con email y contraseña</div>
+      <label class="login-label">Nombre</label>
+      <input type="text" class="login-input" id="reg-name" placeholder="Tu nombre">
+      <label class="login-label">Email</label>
+      <input type="email" class="login-input" id="reg-email" placeholder="tu@email.com" autocomplete="email">
+      <label class="login-label">Contraseña</label>
+      <input type="password" class="login-input" id="reg-pwd" placeholder="Mín. 8 caracteres, 1 mayúscula, 1 número">
+      <button class="login-btn" id="reg-btn" onclick="doRegister()" style="background:#0f172a;color:#fff;margin-top:4px">Crear cuenta →</button>
+      <div class="login-error" id="reg-error"></div>
+      <div class="login-error" id="reg-success" style="background:rgba(61,214,192,.08);border-color:rgba(61,214,192,.3);color:#3dd6c0"></div>
+    </div>
+
+    <!-- PANEL: FORGOT PASSWORD -->
+    <div class="login-panel" id="panel-forgot">
+      <div style="font-size:13px;color:#475569;margin-bottom:20px;line-height:1.6">
+        Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña.
+      </div>
+      <label class="login-label">Email</label>
+      <input type="email" class="login-input" id="forgot-email" placeholder="tu@email.com">
+      <button class="login-btn" onclick="doForgot()" style="background:#0f172a;color:#fff">Enviar enlace →</button>
+      <div class="login-error" id="forgot-msg"></div>
+      <div style="margin-top:16px;text-align:center">
+        <a href="#" onclick="switchTab('login')" style="font-size:12px;color:#3dd6c0;text-decoration:none">← Volver al login</a>
+      </div>
+    </div>
+
+    <div class="login-back">¿Buscas el blog público? <a href="/">Volver al inicio</a> · <a href="/pricing.html">Ver planes</a></div>
   </div>
 </div>
 
@@ -570,7 +651,6 @@ img{max-width:100%;display:block}
           <span class="mb-sidebar-item" onclick="loadContent('/repositorio-NT8.html')">📺 Repositorio NT8</span>
           <a class="mb-sidebar-item external" href="https://edus-trader.onrender.com" target="_blank">🚀 EduS Index Dashboard</a>
           <a class="mb-sidebar-item external" href="https://zestfully-retread-activism.ngrok-free.dev/ana-backtesting" target="_blank">📊 Backtesting Señales</a>
-          <a class="mb-sidebar-item external" href="https://zestfully-retread-activism.ngrok-free.dev/ana-backtesting-v2" target="_blank">📊 Backtesting Señales V2</a>
         </div>
       </div>
 
@@ -581,7 +661,7 @@ img{max-width:100%;display:block}
           <span class="mb-sidebar-arrow">▶</span>
         </div>
         <div class="mb-sidebar-submenu">
-          <span class="mb-sidebar-item" onclick="loadContent('/EduS_MasterPanel_HUD_V3_Manual.html')">🟢 Master Panel HUD V3 ⭐⭐</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/EduS_MasterPanel_HUD_V2_Manual.html')">🟢 Master Panel HUD V3 ⭐⭐</span>
           <span class="mb-sidebar-item" onclick="loadContent('/EduS_UMC_Manual.html')">🟢 Unified Market Context V3 ⭐</span>
           <span class="mb-sidebar-item" onclick="loadContent('/manual_avwap.html')">🟢 Dynamic Swing AVWAP</span>
           <span class="mb-sidebar-item" onclick="loadContent('/manual_masterpanelV2-niveles.html')">🟡 MasterPanel V2 con Niveles</span>
@@ -648,43 +728,173 @@ img{max-width:100%;display:block}
 
 <script>
 // ==============================
-// CONTRASEÑA — cámbiala aquí
+// AUTH — Login / Register / Google
 // ==============================
-var PASS = 'edustrader2026';
 
-// Login
-function doLogin(){
-  var val = document.getElementById('pwd-input').value;
-  if(val === PASS){
-    sessionStorage.setItem('edus_member','1');
-    showMembers();
-  } else {
-    document.getElementById('login-error').style.display='block';
-    document.getElementById('pwd-input').value='';
-    document.getElementById('pwd-input').focus();
+function switchTab(tab) {
+  document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.login-panel').forEach(p => p.classList.remove('active'));
+  const tabEl = document.querySelector(`.login-tab[onclick="switchTab('${tab}')"]`);
+  if(tabEl) tabEl.classList.add('active');
+  const panel = document.getElementById(`panel-${tab}`);
+  if(panel) panel.classList.add('active');
+  // Hide forgot tab visually (no tab button for it)
+  if(tab === 'forgot') {
+    document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
   }
 }
 
-document.getElementById('pwd-input').addEventListener('keydown',function(e){
-  if(e.key==='Enter') doLogin();
+// ── LOGIN ─────────────────────────────────────────────────
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pwd   = document.getElementById('login-pwd').value;
+  const errEl = document.getElementById('login-error');
+  const btn   = document.getElementById('login-btn');
+  errEl.style.display = 'none';
+
+  if(!email || !pwd) { showError(errEl, 'Completa todos los campos'); return; }
+
+  btn.textContent = 'Verificando...'; btn.disabled = true;
+
+  try {
+    const res  = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pwd }),
+      credentials: 'same-origin',
+    });
+    const data = await res.json();
+
+    if(data.ok) {
+      const params   = new URLSearchParams(window.location.search);
+      const redirect = params.get('redirect');
+      window.location.href = redirect || '/members/';
+    } else {
+      showError(errEl, data.error || 'Email o contraseña incorrectos');
+    }
+  } catch { showError(errEl, 'Error de conexión. Inténtalo de nuevo.'); }
+
+  btn.textContent = 'Iniciar sesión →'; btn.disabled = false;
+}
+
+// ── REGISTER ──────────────────────────────────────────────
+async function doRegister() {
+  const name   = document.getElementById('reg-name').value.trim();
+  const email  = document.getElementById('reg-email').value.trim();
+  const pwd    = document.getElementById('reg-pwd').value;
+  const errEl  = document.getElementById('reg-error');
+  const okEl   = document.getElementById('reg-success');
+  const btn    = document.getElementById('reg-btn');
+  errEl.style.display = 'none'; okEl.style.display = 'none';
+
+  if(!email || !pwd) { showError(errEl, 'Completa todos los campos'); return; }
+
+  btn.textContent = 'Creando cuenta...'; btn.disabled = true;
+
+  try {
+    const res  = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password: pwd }),
+      credentials: 'same-origin',
+    });
+    const data = await res.json();
+
+    if(data.ok) {
+      okEl.textContent  = '✓ Cuenta creada. Revisa tu email para verificarla.';
+      okEl.style.display = 'block';
+      document.getElementById('reg-pwd').value = '';
+      setTimeout(() => switchTab('login'), 3000);
+    } else {
+      showError(errEl, data.error || 'No se pudo crear la cuenta');
+    }
+  } catch { showError(errEl, 'Error de conexión. Inténtalo de nuevo.'); }
+
+  btn.textContent = 'Crear cuenta →'; btn.disabled = false;
+}
+
+// ── GOOGLE ────────────────────────────────────────────────
+function loginGoogle() {
+  window.location.href = '/api/auth/google';
+}
+
+// ── FORGOT PASSWORD ───────────────────────────────────────
+async function doForgot() {
+  const email = document.getElementById('forgot-email').value.trim();
+  const msgEl = document.getElementById('forgot-msg');
+  if(!email) { showError(msgEl, 'Ingresa tu email'); return; }
+
+  try {
+    const res  = await fetch('/api/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+      credentials: 'same-origin',
+    });
+    // Siempre mostrar mensaje positivo (no revelar si el email existe)
+    msgEl.textContent    = '✓ Si ese email está registrado recibirás el enlace en minutos.';
+    msgEl.style.display  = 'block';
+    msgEl.style.color    = '#3dd6c0';
+    msgEl.style.background = 'rgba(61,214,192,.08)';
+    msgEl.style.borderColor = 'rgba(61,214,192,.3)';
+  } catch { showError(msgEl, 'Error de conexión'); }
+}
+
+// ── LOGOUT ────────────────────────────────────────────────
+async function doLogout() {
+  await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
+  window.location.href = '/';
+}
+
+// ── SESSION CHECK ─────────────────────────────────────────
+// El middleware ya protege las rutas — si llegamos aquí sin cookie
+// es porque /members/ es pública (la página de login).
+// Revisamos si hay redirect pendiente en la URL.
+(function() {
+  const params   = new URLSearchParams(window.location.search);
+  const verified = params.get('verified');
+  const error    = params.get('error');
+  const reason   = params.get('reason');
+
+  if(verified === '1') {
+    const errEl = document.getElementById('login-error');
+    errEl.textContent   = '✓ Email verificado. Ya puedes iniciar sesión.';
+    errEl.style.display = 'block';
+    errEl.style.background = 'rgba(61,214,192,.08)';
+    errEl.style.borderColor = 'rgba(61,214,192,.3)';
+    errEl.style.color   = '#3dd6c0';
+  }
+  if(reason === 'session_expired') {
+    showError(document.getElementById('login-error'), 'Tu sesión expiró. Inicia sesión de nuevo.');
+  }
+  if(error === 'google_cancelled') {
+    showError(document.getElementById('login-error'), 'Login con Google cancelado.');
+  }
+})();
+
+function showMembers() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('members-area').style.display = 'flex';
+  document.getElementById('members-area').style.flexDirection = 'column';
+}
+
+function showError(el, msg) {
+  el.textContent  = msg;
+  el.style.display = 'block';
+  el.style.background = '';
+  el.style.borderColor = '';
+  el.style.color = '';
+}
+
+// Enter key handlers
+document.addEventListener('keydown', function(e) {
+  if(e.key !== 'Enter') return;
+  const active = document.querySelector('.login-panel.active');
+  if(!active) return;
+  if(active.id === 'panel-login')    doLogin();
+  if(active.id === 'panel-register') doRegister();
+  if(active.id === 'panel-forgot')   doForgot();
 });
-
-function doLogout(){
-  sessionStorage.removeItem('edus_member');
-  document.getElementById('members-area').style.display='none';
-  document.getElementById('login-screen').style.display='flex';
-}
-
-function showMembers(){
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('members-area').style.display='flex';
-  document.getElementById('members-area').style.flexDirection='column';
-}
-
-// Check session on load
-if(sessionStorage.getItem('edus_member')==='1'){
-  showMembers();
-}
 
 // ==============================
 // SIDEBAR TOGGLE
