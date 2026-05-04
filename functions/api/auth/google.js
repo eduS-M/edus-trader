@@ -1,22 +1,19 @@
 // ============================================================
 // functions/api/auth/google.js
-// GET /api/auth/google          → redirige a Google
-// GET /api/auth/google/callback → procesa el código OAuth
+// GET /api/auth/google          -> redirige a Google
+// GET /api/auth/google/callback -> procesa el codigo OAuth
 // ============================================================
 
 import { signJWT, generateId } from '../../lib/jwt.js';
 import { redirect, serverError, badRequest, buildSessionCookie } from '../../lib/response.js';
 
-// ---- Inicio del flujo OAuth --------------------------------
 export async function onRequestGet({ request, env }) {
-  const url    = new URL(request.url);
+  const url        = new URL(request.url);
   const isCallback = url.pathname.endsWith('/callback');
-
   if (isCallback) return handleCallback({ url, env, request });
 
-  // Generar state anti-CSRF (guardado en cookie temporal)
-  const state    = generateId();
-  const params   = new URLSearchParams({
+  const state  = generateId();
+  const params = new URLSearchParams({
     client_id:     env.GOOGLE_CLIENT_ID,
     redirect_uri:  `${env.APP_URL}/api/auth/google/callback`,
     response_type: 'code',
@@ -32,33 +29,27 @@ export async function onRequestGet({ request, env }) {
     'HttpOnly',
     'Secure',
     'SameSite=Lax',
-    'Max-Age=600',          // 10 minutos para completar el OAuth
+    'Max-Age=600',
   ].join('; ');
 
-  return redirect(
-    `https://accounts.google.com/o/oauth2/v2/auth?${params}`,
-    stateCookie
-  );
+  return redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`, stateCookie);
 }
 
-// ---- Callback de Google ------------------------------------
 async function handleCallback({ url, env, request }) {
   const code  = url.searchParams.get('code');
   const state = url.searchParams.get('state');
   const error = url.searchParams.get('error');
 
-  if (error) return redirect('/members/?error=google_cancelled');
-  if (!code || !state) return badRequest('Parámetros OAuth inválidos');
+  if (error)            return redirect('/members/?error=google_cancelled');
+  if (!code || !state)  return badRequest('Parametros OAuth invalidos');
 
-  // Verificar state anti-CSRF
   const cookieHeader = request.headers.get('Cookie') || '';
   const storedState  = getCookie(cookieHeader, 'oauth_state');
-  if (!storedState || storedState !== state) {
+  if (!storedState || storedState !== state)
     return redirect('/members/?error=oauth_state_mismatch');
-  }
 
   try {
-    // 1. Intercambiar código por tokens de Google
+    // 1. Intercambiar codigo por tokens
     const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -74,7 +65,7 @@ async function handleCallback({ url, env, request }) {
     if (!tokenRes.ok) return redirect('/members/?error=google_token_failed');
     const tokens = await tokenRes.json();
 
-    // 2. Obtener perfil del usuario desde Google
+    // 2. Obtener perfil
     const profileRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
       headers: { Authorization: `Bearer ${tokens.access_token}` },
     });
@@ -88,44 +79,30 @@ async function handleCallback({ url, env, request }) {
     const emailLower = email.toLowerCase();
 
     // 3. Buscar o crear usuario
-    let user = await env.DB.prepare(`
-      SELECT id, email, name, plan, plan_expires_at, status
-      FROM users WHERE email = ? OR google_id = ?
-    `).bind(emailLower, googleId).first();
+    let user = await env.DB.prepare(
+      'SELECT id, email, name, plan, plan_expires_at, status FROM users WHERE email = ? OR google_id = ?'
+    ).bind(emailLower, googleId).first();
 
     if (user) {
-      // Usuario existente — actualizar datos de Google si cambió algo
-      await env.DB.prepare(`
-        UPDATE users SET
-          google_id     = ?,
-          name          = COALESCE(name, ?),
-          avatar_url    = ?,
-          email_verified = 1,
-          last_login_at = datetime('now')
-        WHERE id = ?
-      `).bind(googleId, name, picture, user.id).run();
+      await env.DB.prepare(
+        `UPDATE users SET google_id = ?, name = COALESCE(name, ?), avatar_url = ?, email_verified = 1, last_login_at = datetime('now') WHERE id = ?`
+      ).bind(googleId, name, picture, user.id).run();
     } else {
-      // Usuario nuevo — crear con plan free
       const userId = generateId();
-      await env.DB.prepare(`
-        INSERT INTO users (id, email, google_id, name, avatar_url, plan, status, email_verified)
-        VALUES (?, ?, ?, ?, ?, 'free', 'active', 1)
-      `).bind(userId, emailLower, googleId, name, picture).run();
-
+      await env.DB.prepare(
+        `INSERT INTO users (id, email, google_id, name, avatar_url, plan, status, email_verified) VALUES (?, ?, ?, ?, ?, 'free', 'active', 1)`
+      ).bind(userId, emailLower, googleId, name, picture).run();
       user = { id: userId, email: emailLower, name, plan: 'free', plan_expires_at: null };
     }
 
-    // 4. Plan activo
-    const plan = getActivePlan(user);
+    // 4. Plan activo y sesion
+    const plan        = getActivePlan(user);
+    const sessionId   = generateId();
+    const expiresAt   = new Date(Date.now() + 7 * 24 * 3600 * 1000).toISOString();
 
-    // 5. Crear sesión y firmar JWT
-    const sessionId = generateId();
-    const expiresAt = new Date(Date.now() + 7 * 24 * 3600 * 1000).toISOString();
-
-    await env.DB.prepare(`
-      INSERT INTO sessions (id, user_id, user_agent, ip_address, expires_at)
-      VALUES (?, ?, ?, ?, ?)
-    `).bind(
+    await env.DB.prepare(
+      'INSERT INTO sessions (id, user_id, user_agent, ip_address, expires_at) VALUES (?, ?, ?, ?, ?)'
+    ).bind(
       sessionId, user.id,
       (request.headers.get('User-Agent') || '').slice(0, 255),
       request.headers.get('CF-Connecting-IP') || '',
@@ -133,16 +110,15 @@ async function handleCallback({ url, env, request }) {
     ).run();
 
     const token = await signJWT(
-      { sub: user.id, sid: sessionId, email: user.email, name: user.name, plan },
-      env.JWT_SECRET,
-      168   // 7 días para Google login
+      { sub: user.id, sid: sessionId, email: user.email, name: user.name, plan, role: user.role || 'member' },
+      env.JWT_SECRET, 168
     );
 
-    const jwtCookie   = buildSessionCookie(token, 7 * 24 * 3600);
-    const clearState  = 'oauth_state=; Path=/api/auth; HttpOnly; Secure; Max-Age=0';
+    const jwtCookie  = buildSessionCookie(token, 7 * 24 * 3600);
+    const clearState = 'oauth_state=; Path=/api/auth; HttpOnly; Secure; Max-Age=0';
 
-    // Redirigir a la zona de miembros con las dos cookies
-    const response = redirect('/members/', jwtCookie);
+    // Redirigir al portal (ruta protegida) — el middleware verifica la cookie
+    const response = redirect('/members/portal/', jwtCookie);
     response.headers.append('Set-Cookie', clearState);
     return response;
 
@@ -158,7 +134,6 @@ function getActivePlan(user) {
 }
 
 function getCookie(header, name) {
-  const match = header.split(';').map(c => c.trim())
-    .find(c => c.startsWith(`${name}=`));
+  const match = header.split(';').map(c => c.trim()).find(c => c.startsWith(`${name}=`));
   return match ? match.slice(name.length + 1) : null;
 }

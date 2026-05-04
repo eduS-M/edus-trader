@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal — EduS Trader</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f7fa;color:#0f172a;line-height:1.6}
+img{max-width:100%;display:block}
+
+/* ==============================
+   LOGIN SCREEN
+============================== */
+#login-screen{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  background:#f5f7fa;
+  padding:20px;
+}
+.login-banner{
+  width:100%;
+  max-width:480px;
+  margin-bottom:0;
+  border-radius:12px 12px 0 0;
+  overflow:hidden;
+  border:0.5px solid rgba(0,0,0,0.08);
+}
+.login-banner img{
+  width:100%;
+  height:auto;
+  max-height:160px;
+  object-fit:cover;
+  display:block;
+}
+.login-box{
+  background:#ffffff;
+  border:0.5px solid rgba(0,0,0,0.08);
+  border-top:none;
+  border-radius:0 0 14px 14px;
+  padding:32px 36px 36px;
+  width:100%;
+  max-width:480px;
+  position:relative;
+}
+.login-box::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:linear-gradient(90deg,#3dd6c0 0%,#c9a84c 50%,#3dd6c0 100%);
+}
+.login-badge{
+  display:inline-block;
+  padding:3px 10px;
+  border-radius:4px;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  background:rgba(61,214,192,0.1);
+  border:0.5px solid rgba(61,214,192,0.35);
+  color:#3dd6c0;
+  margin-bottom:16px;
+  font-family:'Montserrat',sans-serif;
+}
+.login-title{
+  font-family:'Montserrat',sans-serif;
+  font-size:20px;
+  font-weight:700;
+  color:#0f172a;
+  margin-bottom:6px;
+}
+.login-sub{
+  font-size:13px;
+  color:#64748b;
+  margin-bottom:28px;
+  line-height:1.6;
+}
+.login-label{
+  display:block;
+  font-size:11px;
+  font-weight:600;
+  color:#475569;
+  text-transform:uppercase;
+  letter-spacing:0.07em;
+  margin-bottom:8px;
+  font-family:'Montserrat',sans-serif;
+}
+.login-input{
+  width:100%;
+  padding:12px 16px;
+  border:0.5px solid #cbd5e1;
+  border-radius:8px;
+  font-size:14px;
+  font-family:inherit;
+  color:#0f172a;
+  background:#f8fafc;
+  outline:none;
+  transition:border-color .2s, background .2s;
+  margin-bottom:20px;
+}
+.login-input:focus{
+  border-color:#3dd6c0;
+  background:#ffffff;
+}
+.login-btn{
+  width:100%;
+  padding:13px;
+  background:#3dd6c0;
+  color:#0f172a;
+  border:none;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:700;
+  font-family:'Montserrat',sans-serif;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  cursor:pointer;
+  transition:background .2s, transform .1s;
+}
+.login-btn:hover{background:#2fc4af}
+.login-btn:active{transform:scale(0.99)}
+.login-error{
+  display:none;
+  margin-top:14px;
+  padding:10px 14px;
+  background:rgba(224,82,82,0.08);
+  border:0.5px solid rgba(224,82,82,0.3);
+  border-radius:6px;
+  font-size:12px;
+  color:#e05252;
+  font-weight:500;
+}
+.login-back{
+  margin-top:20px;
+  text-align:center;
+  font-size:12px;
+  color:#94a3b8;
+}
+.login-back a{color:#3dd6c0;text-decoration:none;font-weight:600}
+.login-back a:hover{text-decoration:underline}
+/* TABS */
+.login-tabs{display:flex;margin-bottom:24px;border-bottom:.5px solid #e2e8f0}
+.login-tab{
+  flex:1;padding:10px;text-align:center;
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.07em;
+  color:#94a3b8;cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:all .2s;
+}
+.login-tab.active{color:#3dd6c0;border-bottom-color:#3dd6c0}
+.login-tab:hover{color:#0f172a}
+.login-panel{display:none}
+.login-panel.active{display:block}
+.login-divider{
+  display:flex;align-items:center;gap:10px;
+  margin:18px 0;font-size:11px;color:#94a3b8;
+}
+.login-divider::before,.login-divider::after{
+  content:'';flex:1;height:.5px;background:#e2e8f0;
+}
+.google-btn{
+  width:100%;padding:11px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:#fff;border:.5px solid #cbd5e1;border-radius:8px;
+  font-size:13px;font-weight:600;color:#0f172a;
+  cursor:pointer;transition:background .2s;font-family:'Montserrat',sans-serif;
+}
+.google-btn:hover{background:#f8fafc}
+.google-icon{width:18px;height:18px}
+
+/* ==============================
+   MEMBERS AREA (hidden until login)
+============================== */
+#members-area{
+  display:none;
+  min-height:100vh;
+  flex-direction:column;
+}
+
+/* TOP BAR */
+.mb-topbar{
+  width:100%;
+  background:#ffffff;
+  border-bottom:1px solid #e2e8f0;
+  position:sticky;
+  top:0;
+  z-index:200;
+}
+.mb-topbar-banner{
+  width:100%;
+  background:#ffffff;
+  border-bottom:0.5px solid #e2e8f0;
+}
+.mb-topbar-banner img{
+  width:100%;
+  height:auto;
+  max-height:220px;
+  object-fit:cover;
+}
+.mb-topbar-nav{
+  background:#3dd6c0;
+  border-bottom:2px solid #e2e8f0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  font-family:'Montserrat',sans-serif;
+}
+.mb-topbar-nav-left{
+  display:flex;
+  align-items:center;
+  gap:0;
+}
+.mb-topbar-nav a.tn-link{
+  display:block;
+  padding:14px 18px;
+  text-decoration:none;
+  color:#0f172a;
+  font-size:13px;
+  font-weight:600;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.mb-topbar-nav a.tn-link:hover{background:#64748b;color:#fff}
+.mb-zone-badge{
+  padding:6px 14px;
+  background:rgba(0,0,0,0.12);
+  border-radius:4px;
+  font-size:11px;
+  font-weight:700;
+  color:#0f172a;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  border:0.5px solid rgba(0,0,0,0.15);
+}
+.mb-topbar-nav-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.mb-logout-btn{
+  padding:8px 16px;
+  background:rgba(0,0,0,0.1);
+  border:0.5px solid rgba(0,0,0,0.2);
+  border-radius:6px;
+  font-size:11px;
+  font-weight:700;
+  color:#0f172a;
+  font-family:'Montserrat',sans-serif;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  cursor:pointer;
+  transition:background .2s;
+}
+.mb-logout-btn:hover{background:rgba(0,0,0,0.2)}
+
+/* LAYOUT: sidebar + content */
+.mb-layout{
+  display:flex;
+  flex:1;
+  min-height:calc(100vh - 80px);
+}
+
+/* SIDEBAR */
+.mb-sidebar{
+  width:260px;
+  flex-shrink:0;
+  background:#ffffff;
+  border-right:0.5px solid #e2e8f0;
+  overflow-y:auto;
+  position:sticky;
+  top:80px;
+  height:calc(100vh - 80px);
+}
+.mb-sidebar-section{
+  border-bottom:0.5px solid #f1f5f9;
+}
+.mb-sidebar-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 18px;
+  cursor:pointer;
+  font-family:'Montserrat',sans-serif;
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.09em;
+  color:#3dd6c0;
+  user-select:none;
+  transition:background .15s;
+}
+.mb-sidebar-header:hover{background:#f8fafc}
+.mb-sidebar-header.open{background:#f0fdf9}
+.mb-sidebar-arrow{
+  font-size:10px;
+  transition:transform .2s;
+  color:#94a3b8;
+}
+.mb-sidebar-header.open .mb-sidebar-arrow{transform:rotate(90deg)}
+.mb-sidebar-submenu{
+  display:none;
+  padding-bottom:6px;
+}
+.mb-sidebar-submenu.open{display:block}
+.mb-sidebar-subheader{
+  padding:10px 18px 6px 28px;
+  font-size:10px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  color:#94a3b8;
+  font-family:'Montserrat',sans-serif;
+}
+.mb-sidebar-item{
+  display:block;
+  padding:9px 18px 9px 32px;
+  font-size:12px;
+  font-weight:500;
+  color:#475569;
+  text-decoration:none;
+  cursor:pointer;
+  transition:background .12s, color .12s;
+  border-left:2px solid transparent;
+  line-height:1.4;
+}
+.mb-sidebar-item:hover{
+  background:#f8fafc;
+  color:#0f172a;
+  border-left-color:#3dd6c0;
+}
+.mb-sidebar-item.active{
+  background:#f0fdf9;
+  color:#0f172a;
+  font-weight:600;
+  border-left-color:#3dd6c0;
+}
+.mb-sidebar-item.external::after{
+  content:' ↗';
+  font-size:10px;
+  color:#94a3b8;
+}
+
+/* CONTENT AREA */
+.mb-content{
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+}
+.mb-content-inner{
+  flex:1;
+  padding:0;
+  position:relative;
+}
+.mb-welcome{
+  padding:40px;
+  max-width:680px;
+}
+.mb-welcome-badge{
+  display:inline-block;
+  padding:3px 10px;
+  border-radius:4px;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  background:rgba(61,214,192,0.1);
+  border:0.5px solid rgba(61,214,192,0.35);
+  color:#3dd6c0;
+  margin-bottom:18px;
+  font-family:'Montserrat',sans-serif;
+}
+.mb-welcome h1{
+  font-family:'Montserrat',sans-serif;
+  font-size:24px;
+  font-weight:700;
+  color:#0f172a;
+  margin-bottom:10px;
+  line-height:1.3;
+}
+.mb-welcome p{
+  font-size:14px;
+  color:#475569;
+  line-height:1.8;
+  margin-bottom:14px;
+}
+.mb-welcome-divider{height:0.5px;background:rgba(61,214,192,0.2);margin:24px 0}
+.mb-welcome-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+  margin-top:20px;
+}
+.mb-welcome-card{
+  background:#ffffff;
+  border:0.5px solid rgba(0,0,0,0.08);
+  border-radius:10px;
+  padding:16px 18px;
+  cursor:pointer;
+  transition:border-color .2s, box-shadow .2s;
+  text-decoration:none;
+  display:block;
+}
+.mb-welcome-card:hover{
+  border-color:rgba(61,214,192,0.4);
+  box-shadow:0 2px 12px rgba(61,214,192,0.1);
+}
+.mb-welcome-card-icon{font-size:20px;margin-bottom:8px}
+.mb-welcome-card-title{
+  font-family:'Montserrat',sans-serif;
+  font-size:12px;
+  font-weight:700;
+  color:#0f172a;
+  margin-bottom:4px;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+}
+.mb-welcome-card-desc{font-size:11px;color:#64748b;line-height:1.5}
+
+/* IFRAME CONTAINER */
+#content-frame-wrap{
+  display:none;
+  width:100%;
+  height:calc(100vh - 80px);
+  position:relative;
+}
+#content-frame-wrap.active{display:block}
+#content-frame{
+  width:100%;
+  height:100%;
+  border:none;
+}
+.frame-loading{
+  position:absolute;
+  top:0;left:0;right:0;bottom:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#f5f7fa;
+  z-index:5;
+}
+.frame-loading-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#3dd6c0;
+  display:inline-block;
+  margin:0 4px;
+  animation:pulse 1.2s ease-in-out infinite;
+}
+.frame-loading-dot:nth-child(2){animation-delay:.2s}
+.frame-loading-dot:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,80%,100%{transform:scale(0.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+/* FOOTER */
+.mb-footer{
+  text-align:center;
+  font-size:10px;
+  color:#cbd5e1;
+  padding:14px 20px;
+  border-top:0.5px solid #f1f5f9;
+  background:#ffffff;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  .mb-sidebar{
+    width:100%;
+    height:auto;
+    position:static;
+    border-right:none;
+    border-bottom:1px solid #e2e8f0;
+  }
+  .mb-layout{flex-direction:column}
+  #content-frame-wrap{height:80vh}
+  .mb-topbar-banner img{max-height:120px}
+  .mb-welcome{padding:20px}
+  .mb-topbar-nav{flex-wrap:wrap;padding:0 10px;gap:4px}
+  .mb-zone-badge{font-size:9px}
+}
+</style>
+</head>
+<body>
+
+<div id="members-area" style="display:flex;flex-direction:column;min-height:100vh">
+
+  <!-- TOP BAR -->
+  <div class="mb-topbar">
+    <div class="mb-topbar-banner">
+      <img src="../assets/banner.png" alt="EduS Trader">
+    </div>
+    <div class="mb-topbar-nav">
+      <div class="mb-topbar-nav-left">
+        <a href="/" class="tn-link">← Inicio</a>
+        <span class="mb-zone-badge">🔒 Zona Miembros</span>
+      </div>
+      <div class="mb-topbar-nav-right">
+        <button class="mb-logout-btn" onclick="doLogout()">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT -->
+  <div class="mb-layout">
+
+    <!-- SIDEBAR -->
+    <nav class="mb-sidebar">
+
+      <!-- ANÁLISIS DE OPERATIVA -->
+      <div class="mb-sidebar-section">
+        <div class="mb-sidebar-header open" onclick="toggleSection(this)">
+          <span>📊 Análisis de Operativa</span>
+          <span class="mb-sidebar-arrow">▶</span>
+        </div>
+        <div class="mb-sidebar-submenu open">
+          <div class="mb-sidebar-subheader">Mayo 2026</div>
+          <span class="mb-sidebar-item" onclick="loadContent('welcome')">Próximo análisis...</span>
+
+          <div class="mb-sidebar-subheader">Abril 2026</div>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte-16-21-abr-2026.html')">Días 16 al 21</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_15abr2026.html')">Día 15</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_14abr2026.html')">Día 14</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_13abr2026.html')">Día 13</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/edus-trader-dofa-estrategia-10-abr-2026.html')">Día 10 — Análisis Integral</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_10abr2026_meta.html')">Día 10 — Ana 2</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_10abr2026.html')">Día 10 — Ana 1</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_09abr2026.html')">Día 9</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_08abr2026.html')">Día 8</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_07abr2026.html')">Día 7</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_06abr2026.html')">Día 6 — Ana 2</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/analisis_06abr2026.html')">Día 6 — Ana 1</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_02abr2026.html')">Día 2</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_01abr2026.html')">Día 1</span>
+
+          <div class="mb-sidebar-subheader">Marzo 2026</div>
+          <span class="mb-sidebar-item" onclick="loadContent('/cierre-de-mes-marzo-2026.html')">📅 Cierre de Mes</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_31mar2026.html')">Día 31</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_30mar2026.html')">Día 30</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_27mar2026.html')">Día 27</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_26mar2026.html')">Día 26</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_25mar2026.html')">Día 25</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_24mar2026.html')">Día 24</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/reporte_23mar2026.html')">Día 23</span>
+        </div>
+      </div>
+
+      <!-- GAME PLAN -->
+      <div class="mb-sidebar-section">
+        <div class="mb-sidebar-header" onclick="toggleSection(this)">
+          <span>🗓️ Game Plan</span>
+          <span class="mb-sidebar-arrow">▶</span>
+        </div>
+        <div class="mb-sidebar-submenu">
+          <div class="mb-sidebar-subheader">Abril 2026</div>
+          <span class="mb-sidebar-item" onclick="loadContent('/gameplan_17abr2026.html')">Día 17</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/gameplan_16abr2026.html')">Día 16</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/gameplan_14abr2026.html')">Día 14</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/gameplan_13abr2026.html')">Día 13</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/Premercado14-abril.html')">Pre-Mercado 14 Abr</span>
+          <div class="mb-sidebar-subheader">Mayo 2026</div>
+          <span class="mb-sidebar-item" style="color:#94a3b8;cursor:default">Próximo...</span>
+        </div>
+      </div>
+
+      <!-- INDICADORES -->
+      <div class="mb-sidebar-section">
+        <div class="mb-sidebar-header" onclick="toggleSection(this)">
+          <span>📺 Indicadores</span>
+          <span class="mb-sidebar-arrow">▶</span>
+        </div>
+        <div class="mb-sidebar-submenu">
+          <span class="mb-sidebar-item" onclick="loadContent('/repositorio-NT8.html')">📺 Repositorio NT8</span>
+          <a class="mb-sidebar-item external" href="https://edus-trader.onrender.com" target="_blank">🚀 EduS Index Dashboard</a>
+          <a class="mb-sidebar-item external" href="https://zestfully-retread-activism.ngrok-free.dev/ana-backtesting" target="_blank">📊 Backtesting Señales</a>
+        </div>
+      </div>
+
+      <!-- MANUALES -->
+      <div class="mb-sidebar-section">
+        <div class="mb-sidebar-header" onclick="toggleSection(this)">
+          <span>📚 Manuales</span>
+          <span class="mb-sidebar-arrow">▶</span>
+        </div>
+        <div class="mb-sidebar-submenu">
+          <span class="mb-sidebar-item" onclick="loadContent('/EduS_MasterPanel_HUD_V2_Manual.html')">🟢 Master Panel HUD V3 ⭐⭐</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/EduS_UMC_Manual.html')">🟢 Unified Market Context V3 ⭐</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/manual_avwap.html')">🟢 Dynamic Swing AVWAP</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/manual_masterpanelV2-niveles.html')">🟡 MasterPanel V2 con Niveles</span>
+          <span class="mb-sidebar-item" onclick="loadContent('/EduS_MasterPanel_V2_Documentacion.html')">🔴 MasterPanel V2 Docs</span>
+        </div>
+      </div>
+
+    </nav>
+
+    <!-- CONTENT -->
+    <main class="mb-content">
+      <div class="mb-content-inner">
+
+        <!-- WELCOME PANEL (default view) -->
+        <div id="welcome-panel" class="mb-welcome">
+          <div class="mb-welcome-badge">✅ Acceso concedido</div>
+          <h1>Bienvenido a la Zona de Miembros</h1>
+          <p>Aquí encontrarás el análisis completo de cada sesión de operativa, los Game Plans pre-mercado, el repositorio de indicadores para NinjaTrader 8 y todos los manuales de los indicadores propios.</p>
+          <p>Usa el menú de la izquierda para navegar entre secciones.</p>
+          <div class="mb-welcome-divider"></div>
+          <div class="mb-welcome-grid">
+            <div class="mb-welcome-card" onclick="openSection('analisis');loadContent('/reporte-16-21-abr-2026.html')">
+              <div class="mb-welcome-card-icon">📊</div>
+              <div class="mb-welcome-card-title">Análisis</div>
+              <div class="mb-welcome-card-desc">Reportes diarios de operativa desde Marzo 2026</div>
+            </div>
+            <div class="mb-welcome-card" onclick="openSection('gameplan');loadContent('/gameplan_17abr2026.html')">
+              <div class="mb-welcome-card-icon">🗓️</div>
+              <div class="mb-welcome-card-title">Game Plan</div>
+              <div class="mb-welcome-card-desc">Análisis pre-mercado y preparación de sesión</div>
+            </div>
+            <div class="mb-welcome-card" onclick="openSection('indicadores');loadContent('/repositorio-NT8.html')">
+              <div class="mb-welcome-card-icon">📺</div>
+              <div class="mb-welcome-card-title">Indicadores</div>
+              <div class="mb-welcome-card-desc">Repositorio NT8, Dashboard y Backtesting</div>
+            </div>
+            <div class="mb-welcome-card" onclick="openSection('manuales');loadContent('/EduS_MasterPanel_HUD_V2_Manual.html')">
+              <div class="mb-welcome-card-icon">📚</div>
+              <div class="mb-welcome-card-title">Manuales</div>
+              <div class="mb-welcome-card-desc">Documentación completa de todos los indicadores</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- IFRAME CONTENT -->
+        <div id="content-frame-wrap">
+          <div class="frame-loading" id="frame-loading">
+            <span class="frame-loading-dot"></span>
+            <span class="frame-loading-dot"></span>
+            <span class="frame-loading-dot"></span>
+          </div>
+          <iframe id="content-frame" src="" title="Contenido"></iframe>
+        </div>
+
+      </div>
+
+      <div class="mb-footer">
+        EduS Trader · Zona Miembros · Contenido de uso personal · No constituye asesoramiento financiero
+      </div>
+    </main>
+
+  </div>
+</div>
+
+
+<script>
+// Usuario autenticado — obtenemos datos del JWT via API
+(async function init() {
+  try {
+    const res  = await fetch('/api/auth/me', { credentials: 'same-origin' });
+    const data = await res.json();
+    if (data.ok && data.name) {
+      const el = document.getElementById('member-name');
+      if (el) el.textContent = data.name;
+    }
+  } catch(e) {}
+})();
+
+// ==============================
+// SIDEBAR TOGGLE
+// ==============================
+function toggleSection(header){
+  header.classList.toggle('open');
+  var sub = header.nextElementSibling;
+  sub.classList.toggle('open');
+}
+
+function openSection(name){
+  var map = {
+    'analisis': 0,
+    'gameplan': 1,
+    'indicadores': 2,
+    'manuales': 3
+  };
+  var headers = document.querySelectorAll('.mb-sidebar-header');
+  var idx = map[name];
+  if(idx !== undefined && headers[idx]){
+    var h = headers[idx];
+    if(!h.classList.contains('open')){
+      h.classList.add('open');
+      h.nextElementSibling.classList.add('open');
+    }
+  }
+}
+
+// ==============================
+// CONTENT LOADING
+// ==============================
+function loadContent(url){
+  if(url === 'welcome'){
+    document.getElementById('welcome-panel').style.display='block';
+    document.getElementById('content-frame-wrap').classList.remove('active');
+    document.querySelectorAll('.mb-sidebar-item').forEach(function(i){i.classList.remove('active')});
+    return;
+  }
+
+  // Mark active
+  document.querySelectorAll('.mb-sidebar-item').forEach(function(i){i.classList.remove('active')});
+  var items = document.querySelectorAll('.mb-sidebar-item');
+  items.forEach(function(item){
+    if(item.getAttribute('onclick') && item.getAttribute('onclick').indexOf(url) !== -1){
+      item.classList.add('active');
+    }
+  });
+
+  // Show iframe
+  document.getElementById('welcome-panel').style.display='none';
+  var wrap = document.getElementById('content-frame-wrap');
+  wrap.classList.add('active');
+
+  // Show loading
+  document.getElementById('frame-loading').style.display='flex';
+
+  var frame = document.getElementById('content-frame');
+  frame.src = url;
+  frame.onload = function(){
+    document.getElementById('frame-loading').style.display='none';
+  };
+}
+</script>
+</body>
+</html>
+
+// ==============================
+// CONTENT LOADING
+// ==============================
+function loadContent(url) {
+  if (url === 'welcome') {
+    document.getElementById('welcome-panel').style.display = 'block';
+    document.getElementById('content-frame-wrap').classList.remove('active');
+    document.querySelectorAll('.mb-sidebar-item').forEach(function(i) { i.classList.remove('active'); });
+    return;
+  }
+  // Navegar directamente — middleware verifica cookie JWT
+  window.location.href = url;
+}
+
+async function doLogout() {
+  await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
+  window.location.href = '/';
+}
+
+// Verificar sesion al cargar
+(async function checkSession() {
+  const params = new URLSearchParams(window.location.search);
+  // Si hay mensaje de verificacion de email
+  if (params.get('verified') === '1') {
+    // ya manejado por el login
+  }
+})();
+</script>
+</body>
+</html>
