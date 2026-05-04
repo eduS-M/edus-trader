@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mejora tu Plan — EduS Trader</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#3dd6c0;--gold:#c9a84c;--dark:#0f172a;
+  --mid:#475569;--light:#64748b;--bg:#f5f7fa;
+  --white:#ffffff;--border:rgba(0,0,0,0.07);
+  --ff:'Montserrat',sans-serif;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+
+/* NAV */
+#edus-nb{background:var(--teal);border-bottom:2px solid #e2e8f0;position:sticky;top:0;z-index:9999}
+#edus-nb ul{list-style:none;display:flex;align-items:center;max-width:1200px;margin:0 auto;padding:0}
+#edus-nb a{display:block;padding:14px 18px;text-decoration:none;color:var(--dark);
+  font-family:var(--ff);font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.05em;transition:background .15s}
+#edus-nb a:hover{background:#64748b;color:#fff}
+
+/* HERO */
+.hero{text-align:center;padding:60px 20px 40px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--teal) 0%,var(--gold) 50%,var(--teal) 100%)}
+.hero-icon{font-size:48px;margin-bottom:16px}
+.hero-badge{display:inline-block;padding:4px 14px;border-radius:4px;
+  font-family:var(--ff);font-size:10px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;background:rgba(201,168,76,.1);
+  border:.5px solid rgba(201,168,76,.4);color:var(--gold);margin-bottom:16px}
+.hero h1{font-family:var(--ff);font-size:clamp(24px,4vw,36px);font-weight:800;
+  color:var(--dark);line-height:1.2;margin-bottom:12px;letter-spacing:-.02em}
+.hero h1 em{color:var(--teal);font-style:normal}
+.hero-sub{font-size:14px;color:var(--light);max-width:480px;margin:0 auto 12px;line-height:1.7}
+.hero-need{display:inline-block;padding:6px 16px;border-radius:6px;
+  font-family:var(--ff);font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.08em;background:var(--dark);color:var(--white);margin-top:8px}
+
+/* BILLING TOGGLE */
+.billing-wrap{display:flex;align-items:center;justify-content:center;
+  gap:6px;margin:32px 0 40px;flex-wrap:wrap}
+.billing-btn{padding:9px 20px;border-radius:40px;font-family:var(--ff);
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
+  border:.5px solid rgba(0,0,0,.12);background:var(--white);color:var(--light);
+  cursor:pointer;transition:all .2s;position:relative}
+.billing-btn:hover{border-color:var(--teal);color:var(--dark)}
+.billing-btn.active{background:var(--dark);color:var(--white);border-color:var(--dark)}
+.billing-badge{position:absolute;top:-8px;right:-4px;padding:2px 7px;
+  border-radius:20px;font-size:9px;font-weight:700;background:var(--gold);color:var(--dark)}
+
+/* PLANS GRID */
+.plans-section{padding:0 20px 80px;max-width:1000px;margin:0 auto}
+.plans-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;align-items:start}
+
+/* PLAN CARD */
+.plan-card{background:var(--white);border:.5px solid var(--border);border-radius:14px;
+  padding:28px 22px 22px;position:relative;transition:box-shadow .2s,transform .2s;
+  display:flex;flex-direction:column}
+.plan-card:hover{box-shadow:0 8px 32px rgba(0,0,0,.08);transform:translateY(-2px)}
+.plan-card.locked{opacity:.55;pointer-events:none}
+.plan-card.current{border-color:var(--teal);border-width:1.5px}
+.plan-card.recommended{border-color:var(--gold);border-width:1.5px;
+  box-shadow:0 4px 24px rgba(201,168,76,.15);transform:scale(1.02)}
+.plan-card.recommended:hover{transform:scale(1.02) translateY(-2px)}
+.plan-card::before{content:'';position:absolute;top:0;left:16px;right:16px;
+  height:3px;border-radius:0 0 3px 3px}
+.plan-card.free::before   {background:var(--light)}
+.plan-card.basic::before  {background:var(--teal)}
+.plan-card.pro::before    {background:var(--gold)}
+.plan-card.premium::before{background:linear-gradient(90deg,var(--teal),var(--gold))}
+
+.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  padding:4px 14px;border-radius:20px;font-family:var(--ff);font-size:10px;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.plan-badge.current-badge{background:var(--teal);color:var(--dark)}
+.plan-badge.rec-badge{background:var(--gold);color:var(--dark)}
+
+.plan-name{font-family:var(--ff);font-size:18px;font-weight:800;color:var(--dark);margin-bottom:4px}
+.plan-desc{font-size:12px;color:var(--light);line-height:1.6;margin-bottom:18px;min-height:32px}
+
+/* Price */
+.plan-price-wrap{margin-bottom:18px}
+.price-usd{display:flex;align-items:baseline;gap:4px;font-family:var(--ff)}
+.price-symbol{font-size:16px;font-weight:600;color:var(--mid);margin-top:4px}
+.price-amount{font-size:36px;font-weight:800;color:var(--dark);letter-spacing:-.03em;line-height:1}
+.price-period{font-size:12px;color:var(--light);margin-left:2px}
+.price-clp{font-size:11px;color:var(--light);margin-top:3px;font-style:italic}
+.price-saving{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;
+  font-weight:700;background:rgba(61,214,192,.1);border:.5px solid rgba(61,214,192,.3);
+  color:var(--teal);font-family:var(--ff);margin-top:4px}
+
+/* Features */
+.plan-features{list-style:none;flex:1;margin-bottom:20px;display:flex;flex-direction:column;gap:8px}
+.plan-features li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--mid);line-height:1.4}
+.plan-features li .icon{flex-shrink:0;width:16px;height:16px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:9px;margin-top:1px}
+.plan-features li .icon.ok{background:rgba(61,214,192,.15);color:var(--teal)}
+.plan-features li .icon.no{background:rgba(0,0,0,.05);color:#cbd5e1}
+.plan-divider{height:.5px;background:var(--border);margin:12px 0}
+
+/* CTA */
+.plan-cta{display:block;width:100%;padding:12px;border-radius:8px;
+  font-family:var(--ff);font-size:12px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.07em;text-align:center;cursor:pointer;border:none;
+  transition:all .2s}
+.plan-cta:active{transform:scale(.99)}
+.plan-cta.current-cta{background:var(--bg);color:var(--dark);border:.5px solid var(--border);cursor:default}
+.plan-cta.basic-cta{background:var(--teal);color:var(--dark)}
+.plan-cta.basic-cta:hover{background:#2fc4af}
+.plan-cta.pro-cta{background:var(--gold);color:var(--dark)}
+.plan-cta.pro-cta:hover{background:#b8953f}
+.plan-cta.premium-cta{background:var(--dark);color:var(--white)}
+.plan-cta.premium-cta:hover{background:#1e293b}
+
+/* BACK LINK */
+.back-wrap{text-align:center;padding:0 20px 48px}
+.back-link{display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--ff);font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--light);text-decoration:none;
+  padding:10px 20px;border-radius:8px;border:.5px solid var(--border);
+  background:var(--white);transition:all .2s}
+.back-link:hover{color:var(--dark);border-color:var(--teal)}
+
+@media(max-width:640px){
+  .plans-grid{grid-template-columns:1fr}
+  .plan-card.recommended{transform:scale(1)}
+  .plan-card.recommended:hover{transform:translateY(-2px)}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="edus-nb">
+  <ul>
+    <li><a href="/members/">← Zona Miembros</a></li>
+    <li><a href="/pricing.html">Ver todos los planes</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-icon">🔒</div>
+  <div class="hero-badge" id="need-badge">Contenido Premium</div>
+  <h1>Mejora tu plan para<br>acceder a este <em>contenido</em></h1>
+  <p class="hero-sub" id="hero-sub">Este contenido requiere un plan superior al tuyo actual. Elige el plan que mejor se adapte a ti.</p>
+  <div class="hero-need" id="need-label">Cargando...</div>
+
+  <!-- BILLING TOGGLE -->
+  <div class="billing-wrap">
+    <button class="billing-btn active" data-billing="monthly" onclick="setBilling('monthly')">Mensual</button>
+    <button class="billing-btn" data-billing="annual" onclick="setBilling('annual')">
+      Anual <span class="billing-badge">−20%</span>
+    </button>
+    <button class="billing-btn" data-billing="lifetime" onclick="setBilling('lifetime')">De por vida</button>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="plans-section">
+  <div class="plans-grid" id="plans-grid">
+    <!-- Populated by JS -->
+  </div>
+</section>
+
+<!-- BACK -->
+<div class="back-wrap">
+  <a href="/members/" class="back-link">← Volver a la zona de miembros</a>
+</div>
+
+<script>
+// ── Params from URL ───────────────────────────────────────────
+const params      = new URLSearchParams(window.location.search);
+const fromPlan    = params.get('from')    || 'free';
+const needPlan    = params.get('need')    || 'basic';
+const nextUrl     = params.get('next')    || '/members/';
+const USD_TO_CLP  = 950;
+
+// ── Plan config ───────────────────────────────────────────────
+const PLAN_TIER = { free: 0, basic: 1, pro: 2, premium: 3 };
+
+const PLANS = [
+  {
+    id: 'free', name: 'Free', tier: 0,
+    desc: 'Acceso al blog público.',
+    features: [
+      { ok: true,  text: 'Blog público y novedades' },
+      { ok: false, text: 'Análisis de operativa' },
+      { ok: false, text: 'Game Plan pre-mercado' },
+      { ok: false, text: 'Indicadores NT8' },
+      { ok: false, text: 'Manuales completos' },
+    ],
+    prices: { monthly: 0, annual: 0, lifetime: 0 },
+  },
+  {
+    id: 'basic', name: 'Basic', tier: 1,
+    desc: 'Análisis diario y Game Plan pre-mercado.',
+    features: [
+      { ok: true,  text: 'Blog público y novedades' },
+      { ok: true,  text: 'Análisis de operativa diario' },
+      { ok: true,  text: 'Game Plan pre-mercado' },
+      { ok: false, text: 'Indicadores NT8' },
+      { ok: false, text: 'Manuales completos' },
+    ],
+    prices: { monthly: 15, annual: 144, lifetime: null },
+  },
+  {
+    id: 'pro', name: 'Pro', tier: 2,
+    desc: 'Basic + Indicadores NT8 y Dashboard en vivo.',
+    features: [
+      { ok: true,  text: 'Todo lo del plan Basic' },
+      { ok: true,  text: 'Repositorio indicadores NT8' },
+      { ok: true,  text: 'EduS Index Dashboard en vivo' },
+      { ok: true,  text: 'Backtesting de señales' },
+      { ok: false, text: 'Manuales completos' },
+    ],
+    prices: { monthly: 29, annual: 278, lifetime: null },
+  },
+  {
+    id: 'premium', name: 'Premium Plus', tier: 3,
+    desc: 'Acceso total: todo el contenido y manuales completos.',
+    features: [
+      { ok: true, text: 'Todo lo del plan Pro' },
+      { ok: true, text: 'Manual Master Panel HUD V3 ⭐⭐' },
+      { ok: true, text: 'Manual Unified Market Context V3' },
+      { ok: true, text: 'Manual Dynamic Swing AVWAP' },
+      { ok: true, text: 'Todos los manuales de indicadores' },
+    ],
+    prices: { monthly: 49, annual: 468, lifetime: 299 },
+  },
+];
+
+// ── Hero text ─────────────────────────────────────────────────
+const needNames = { basic: 'Plan Basic', pro: 'Plan Pro', premium: 'Plan Premium Plus' };
+const needDesc  = {
+  basic:   'Análisis y Game Plan',
+  pro:     'Indicadores NT8 y Dashboard',
+  premium: 'Manuales de indicadores',
+};
+document.getElementById('need-label').textContent    = `Requiere ${needNames[needPlan] || needPlan}`;
+document.getElementById('hero-sub').textContent      =
+  `Este contenido (${needDesc[needPlan] || needPlan}) requiere el plan ${needNames[needPlan] || needPlan} o superior. Tu plan actual es ${fromPlan.toUpperCase()}.`;
+
+// ── Billing ───────────────────────────────────────────────────
+let currentBilling = 'monthly';
+
+function setBilling(b) {
+  currentBilling = b;
+  document.querySelectorAll('.billing-btn').forEach(btn =>
+    btn.classList.toggle('active', btn.dataset.billing === b)
+  );
+  renderPlans();
+}
+
+// ── Render plans ──────────────────────────────────────────────
+function renderPlans() {
+  const grid      = document.getElementById('plans-grid');
+  const fromTier  = PLAN_TIER[fromPlan] ?? 0;
+  const needTier  = PLAN_TIER[needPlan] ?? 1;
+
+  grid.innerHTML = PLANS
+    .filter(p => p.tier >= needTier) // Solo mostrar planes que dan acceso
+    .map(plan => {
+      const isCurrent     = plan.id === fromPlan;
+      const isRecommended = plan.tier === needTier && !isCurrent;
+      const isLocked      = plan.tier < needTier;
+      const price         = plan.prices[currentBilling];
+      const hasLifetime   = plan.prices.lifetime !== null;
+
+      // No mostrar lifetime si no está disponible para este plan
+      if (currentBilling === 'lifetime' && !hasLifetime) return '';
+
+      let priceHtml = '';
+      if (plan.id === 'free' || price === 0) {
+        priceHtml = `
+          <div class="price-usd"><span class="price-amount">0</span><span class="price-period">/ siempre</span></div>
+          <div class="price-clp">CLP $0</div>`;
+      } else if (price === null) {
+        priceHtml = `<div style="font-size:12px;color:var(--light);font-style:italic;padding:8px 0">No disponible en este ciclo</div>`;
+      } else {
+        const clp     = Math.round(price * USD_TO_CLP).toLocaleString('es-CL');
+        const label   = currentBilling === 'monthly' ? 'mes' : currentBilling === 'annual' ? 'año' : 'pago único';
+        const saving  = currentBilling === 'annual' ? '<div class="price-saving">Ahorras 20%</div>' : '';
+        priceHtml = `
+          <div class="price-usd">
+            <span class="price-symbol">$</span>
+            <span class="price-amount">${price}</span>
+            <span class="price-period">USD / ${label}</span>
+          </div>
+          <div class="price-clp">≈ CLP $${clp}</div>
+          ${saving}`;
+      }
+
+      const ctaLabel = isCurrent ? '✓ Tu plan actual' :
+                       plan.id === 'free' ? 'Plan gratuito' :
+                       `Elegir ${plan.name} →`;
+      const ctaClass = isCurrent ? 'current-cta' :
+                       plan.id === 'basic' ? 'basic-cta' :
+                       plan.id === 'pro'   ? 'pro-cta'   : 'premium-cta';
+      const ctaClick = isCurrent ? '' : `onclick="checkout('${plan.id}')"`;
+
+      let badges = '';
+      if (isCurrent)     badges += `<div class="plan-badge current-badge">Tu plan actual</div>`;
+      if (isRecommended) badges += `<div class="plan-badge rec-badge">⭐ Recomendado</div>`;
+
+      return `
+        <div class="plan-card ${plan.id} ${isCurrent ? 'current' : ''} ${isRecommended ? 'recommended' : ''}">
+          ${badges}
+          <div class="plan-name">${plan.name}</div>
+          <div class="plan-desc">${plan.desc}</div>
+          <div class="plan-price-wrap">${priceHtml}</div>
+          <ul class="plan-features">
+            ${plan.features.map(f => `
+              <li>
+                <span class="icon ${f.ok ? 'ok' : 'no'}">${f.ok ? '✓' : '—'}</span>
+                ${f.text}
+              </li>`).join('')}
+          </ul>
+          <div class="plan-divider"></div>
+          <button class="plan-cta ${ctaClass}" ${ctaClick}>${ctaLabel}</button>
+        </div>`;
+    }).join('');
+}
+
+// ── Checkout ──────────────────────────────────────────────────
+function checkout(plan) {
+  // Cuando integres LemonSqueezy/Stripe, reemplaza con la URL del checkout.
+  // Por ahora redirige a la página de precios con el plan preseleccionado.
+  const returnUrl = encodeURIComponent(nextUrl);
+  window.location.href = `/pricing.html?plan=${plan}&billing=${currentBilling}&return=${returnUrl}`;
+}
+
+// ── Init ──────────────────────────────────────────────────────
+renderPlans();
+</script>
+</body>
+</html>
