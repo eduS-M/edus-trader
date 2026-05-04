@@ -766,10 +766,14 @@ async function doLogin() {
     const data = await res.json();
 
     if(data.ok) {
-      const params   = new URLSearchParams(window.location.search);
-      const redirect = params.get('redirect');
-      window.location.href = redirect || '/members/';
-    } else {
+  const params   = new URLSearchParams(window.location.search);
+  const redirect = params.get('redirect');
+  if(redirect) {
+    window.location.href = redirect;
+  } else {
+    showMembers();
+  }
+} else {
       showError(errEl, data.error || 'Email o contraseña incorrectos');
     }
   } catch { showError(errEl, 'Error de conexión. Inténtalo de nuevo.'); }
