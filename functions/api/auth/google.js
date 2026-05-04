@@ -138,14 +138,23 @@ async function handleCallback({ url, env, request }) {
       168   // 7 días para Google login
     );
 
+//    const jwtCookie   = buildSessionCookie(token, 7 * 24 * 3600);
+//    const clearState  = 'oauth_state=; Path=/api/auth; HttpOnly; Secure; Max-Age=0';
+
+    // Redirigir a la zona de miembros con las dos cookies
+//    const response = redirect('/members/', jwtCookie);
+//    response.headers.append('Set-Cookie', clearState);
+//    return response;
     const jwtCookie   = buildSessionCookie(token, 7 * 24 * 3600);
     const clearState  = 'oauth_state=; Path=/api/auth; HttpOnly; Secure; Max-Age=0';
 
-    // Redirigir a la zona de miembros con las dos cookies
-    const response = redirect('/members/', jwtCookie);
+// Redirigir a una ruta protegida — el middleware verifica la cookie
+// y si es válida sirve el contenido, si no redirige al login
+    const redirectTo = url.searchParams.get('state_redirect') || '/members/portal';
+    const response = redirect(redirectTo, jwtCookie);
     response.headers.append('Set-Cookie', clearState);
     return response;
-
+    
   } catch (err) {
     console.error('Error en Google OAuth callback:', err);
     return serverError();
