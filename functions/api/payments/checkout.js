@@ -204,4 +204,24 @@ async function activatePlanLocal(DB, userId, planId, billingCycle, couponId) {
   await DB.prepare(`
     UPDATE users SET plan = ?, plan_expires_at = ?, updated_at = datetime('now') WHERE id = ?
   `).bind(planId, periodEnd, userId).run();
+
+  // Registrar un pago interno de $0 para tener el historial
+  const paymentId = generateId();
+  await DB.prepare(`
+    INSERT INTO payments (
+      id, user_id, amount, amount_refunded, currency, status, description,
+      plan_id, billing_cycle, is_proration, coupon_id, discount_amount, paid_at
+    ) VALUES (?, ?, 0, 0, 'USD', 'paid', ?, ?, ?, 0, ?, 0, datetime('now'))
+  `).bind(
+    paymentId, userId, 
+    `Plan ${planId.toUpperCase()} (100% Descuento)`, 
+    planId, billingCycle, couponId || null
+  ).run();
+
+  // Incrementar contador de usos del cupón
+  if (couponId) {
+    await DB.prepare(`
+      UPDATE coupons SET uses_count = uses_count + 1 WHERE id = ?
+    `).bind(couponId).run();
+  }
 }

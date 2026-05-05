@@ -316,10 +316,10 @@ tbody td strong{color:var(--dark);font-weight:600}
         </div>
         <table>
           <thead><tr>
-            <th>Plan</th><th>Usuarios</th><th>% del total</th><th>Ingresos estimados / mes</th>
+            <th>Plan</th><th>Usuarios</th><th>% del total</th>
           </tr></thead>
           <tbody id="plan-dist-body">
-            <tr><td colspan="4" style="text-align:center;color:var(--light);padding:24px">Cargando...</td></tr>
+            <tr><td colspan="3" style="text-align:center;color:var(--light);padding:24px">Cargando...</td></tr>
           </tbody>
         </table>
       </div>
@@ -585,16 +585,14 @@ async function loadOverview() {
 
       const dist = data.plan_distribution || [];
       const total = dist.reduce((s, r) => s + r.count, 0) || 1;
-      const prices = { free: 0, basic: 15, pro: 29, premium: 49 };
       document.getElementById('plan-dist-body').innerHTML = dist.length
         ? dist.map(r => `
             <tr>
               <td><span class="badge ${r.plan}">${r.plan}</span></td>
               <td><strong>${r.count}</strong></td>
               <td>${Math.round(r.count / total * 100)}%</td>
-              <td>$${(r.count * prices[r.plan]).toLocaleString()} USD</td>
             </tr>`).join('')
-        : '<tr><td colspan="4" style="text-align:center;color:var(--light);padding:20px">Sin datos</td></tr>';
+        : '<tr><td colspan="3" style="text-align:center;color:var(--light);padding:20px">Sin datos</td></tr>';
     }
   } catch {
     // Endpoint aún no implementado — mostrar placeholder
@@ -817,7 +815,7 @@ function renderPayments(list) {
       <td><span class="badge ${p.plan_id || 'free'}">${p.plan_id || '—'}</span></td>
       <td><strong>$${(p.amount/100).toFixed(2)}</strong> <span style="color:var(--light);font-size:11px">${p.currency}</span></td>
       <td><span class="badge ${p.status}">${p.status}</span></td>
-      <td>${formatDate(p.paid_at || p.created_at)}</td>
+      <td>${formatDate(p.paid_at || new Date().toISOString())}</td>
       <td>${p.gateway_invoice_url
         ? `<a href="${p.gateway_invoice_url}" target="_blank" style="color:var(--teal);font-size:11px">Ver factura ↗</a>`
         : '<span style="color:var(--light)">—</span>'}</td>
@@ -839,13 +837,13 @@ async function loadPlans() {
     document.getElementById('plans-body').innerHTML = list.length
       ? list.map(p => `
           <tr>
-            <td><span class="badge ${p.id}">${p.name}</span></td>
+            <td><span class="badge ${p.id}">${p.id.toUpperCase()}</span></td>
             <td>${p.tier}</td>
-            <td>${p.price_monthly ? '$'+(p.price_monthly/100).toFixed(0) : '—'}</td>
-            <td>${p.price_annual  ? '$'+(p.price_annual/100).toFixed(0)  : '—'}</td>
-            <td>${p.price_lifetime? '$'+(p.price_lifetime/100).toFixed(0): '—'}</td>
+            <td>${p.monthly ? '$'+p.monthly : '—'}</td>
+            <td>${p.annual  ? '$'+p.annual  : '—'}</td>
+            <td>${p.lifetime? '$'+p.lifetime: '—'}</td>
             <td style="font-size:11px;color:var(--light);max-width:200px;word-break:break-word">
-              ${p.allowed_path_patterns || '—'}
+              ${(p.routes || []).join(', ') || '—'}
             </td>
           </tr>`).join('')
       : '<tr><td colspan="6" style="text-align:center;color:var(--light);padding:24px">Sin datos de planes</td></tr>';
