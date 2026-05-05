@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Planes y Precios — EduS Trader</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script>
+// Si esta página se carga dentro de un iframe (ej: desde el portal por una redirección de acceso denegado),
+// rompemos el iframe para que la página de precios ocupe toda la ventana principal.
+if (window !== window.top) {
+  window.top.location.href = window.location.href;
+}
+</script>
 <style>
 /* ─── RESET & BASE ───────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0}
@@ -749,7 +756,7 @@ async function checkout(plan) {
 
     const data = await res.json();
     if (data.ok && data.url) {
-      window.location.href = data.url; // Redirigir a MercadoPago o al portal
+      window.top.location.href = data.url; // Redirigir a MercadoPago o al portal (rompiendo iframes)
     } else {
       alert(data.error || 'Ocurrió un error al procesar el pago.');
       btn.textContent = originalText;
