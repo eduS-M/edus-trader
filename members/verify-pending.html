@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revisa tu correo — EduS Trader</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',sans-serif;
+  background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  color:#e2e8f0;
+}
+
+/* Card */
+.card{
+  background:#1e293b;
+  border:1px solid rgba(61,214,192,0.15);
+  border-radius:20px;
+  padding:48px 40px;
+  max-width:480px;
+  width:100%;
+  text-align:center;
+  box-shadow:0 24px 80px rgba(0,0,0,0.4);
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#3dd6c0,#c9a84c,#3dd6c0);
+}
+
+/* Icon */
+.icon-wrap{
+  width:80px;height:80px;
+  background:rgba(61,214,192,0.1);
+  border:1.5px solid rgba(61,214,192,0.3);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 28px;
+  font-size:36px;
+  animation:float 3s ease-in-out infinite;
+}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+
+/* Logo */
+.logo{
+  font-family:'Montserrat',sans-serif;
+  font-size:13px;font-weight:700;
+  color:#3dd6c0;
+  letter-spacing:0.05em;
+  margin-bottom:32px;
+}
+.logo span{color:#94a3b8}
+
+/* Badge */
+.badge{
+  display:inline-block;
+  padding:4px 14px;border-radius:20px;
+  font-family:'Montserrat',sans-serif;
+  font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(61,214,192,0.1);
+  border:.5px solid rgba(61,214,192,0.3);
+  color:#3dd6c0;margin-bottom:20px;
+}
+
+h1{
+  font-family:'Montserrat',sans-serif;
+  font-size:26px;font-weight:800;
+  color:#f1f5f9;
+  margin-bottom:12px;
+  line-height:1.25;
+  letter-spacing:-.02em;
+}
+
+.subtitle{
+  font-size:14px;color:#94a3b8;
+  line-height:1.7;margin-bottom:8px;
+}
+.email-display{
+  display:inline-block;
+  background:rgba(61,214,192,0.08);
+  border:.5px solid rgba(61,214,192,0.25);
+  border-radius:6px;
+  padding:6px 16px;
+  font-size:14px;font-weight:600;
+  color:#3dd6c0;
+  margin:12px 0 28px;
+  word-break:break-all;
+}
+
+/* Steps */
+.steps{
+  text-align:left;
+  background:rgba(0,0,0,0.2);
+  border-radius:10px;
+  padding:20px 24px;
+  margin-bottom:28px;
+}
+.step{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:8px 0;
+  border-bottom:.5px solid rgba(255,255,255,0.06);
+  font-size:13px;color:#94a3b8;
+}
+.step:last-child{border-bottom:none}
+.step-num{
+  flex-shrink:0;
+  width:22px;height:22px;
+  background:rgba(61,214,192,0.15);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#3dd6c0;
+  margin-top:1px;
+}
+
+/* Buttons */
+.btn-primary{
+  display:block;width:100%;
+  padding:14px;
+  background:linear-gradient(135deg,#3dd6c0,#2bb8a4);
+  color:#0f172a;
+  font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;
+  border:none;border-radius:10px;
+  cursor:pointer;text-decoration:none;
+  transition:transform .15s,box-shadow .15s;
+  margin-bottom:12px;
+}
+.btn-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 24px rgba(61,214,192,0.3);
+}
+.btn-secondary{
+  display:block;width:100%;
+  padding:13px;
+  background:transparent;
+  color:#94a3b8;
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;
+  border:.5px solid rgba(255,255,255,0.1);border-radius:10px;
+  cursor:pointer;text-decoration:none;
+  transition:background .15s,color .15s;
+}
+.btn-secondary:hover{background:rgba(255,255,255,0.05);color:#e2e8f0}
+
+/* Nota */
+.note{
+  margin-top:20px;
+  font-size:11px;color:#475569;
+  line-height:1.6;
+}
+.note a{color:#3dd6c0;text-decoration:none}
+.note a:hover{text-decoration:underline}
+
+/* Resend */
+#resend-area{margin-bottom:12px}
+#resend-msg{
+  font-size:12px;color:#94a3b8;
+  min-height:18px;margin-top:8px;
+  transition:color .2s;
+}
+#resend-msg.ok{color:#3dd6c0}
+#resend-msg.err{color:#e05252}
+
+@media(max-width:480px){
+  .card{padding:32px 24px}
+  h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">EduS <span>Trader</span></div>
+
+  <div class="icon-wrap">📧</div>
+
+  <div class="badge">✉ Verifica tu cuenta</div>
+
+  <h1>Revisa tu correo</h1>
+
+  <p class="subtitle">Te enviamos un enlace de verificación a:</p>
+  <div class="email-display" id="email-display">...</div>
+
+  <div class="steps">
+    <div class="step">
+      <span class="step-num">1</span>
+      <span>Abre el correo que te enviamos desde <strong style="color:#e2e8f0">EduS Trader</strong></span>
+    </div>
+    <div class="step">
+      <span class="step-num">2</span>
+      <span>Haz clic en el botón <strong style="color:#e2e8f0">"Verificar mi cuenta"</strong></span>
+    </div>
+    <div class="step">
+      <span class="step-num">3</span>
+      <span>Serás redirigido para elegir tu plan y acceder</span>
+    </div>
+  </div>
+
+  <div id="resend-area">
+    <button class="btn-primary" onclick="resendEmail()" id="resend-btn">
+      📨 Reenviar correo de verificación
+    </button>
+    <div id="resend-msg"></div>
+  </div>
+
+  <a href="/members/" class="btn-secondary">
+    ← Ya verifiqué mi cuenta / Iniciar sesión
+  </a>
+
+  <div class="note">
+    ¿No encuentras el correo? Revisa tu carpeta de <strong>spam</strong> o correo no deseado.<br>
+    El enlace expira en <strong>24 horas</strong>.<br><br>
+    ¿Problemas? <a href="/">Volver al inicio</a>
+  </div>
+</div>
+
+<script>
+// Obtener email de la URL
+const params    = new URLSearchParams(window.location.search);
+const email     = params.get('email') || '';
+const emailEl   = document.getElementById('email-display');
+emailEl.textContent = email || 'tu dirección de correo';
+
+// Reenviar email de verificación
+async function resendEmail() {
+  if (!email) {
+    showMsg('No se puede determinar tu email. Intenta registrarte de nuevo.', 'err');
+    return;
+  }
+
+  const btn = document.getElementById('resend-btn');
+  btn.textContent = 'Enviando...';
+  btn.disabled    = true;
+
+  try {
+    const res  = await fetch('/api/auth/resend-verification', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ email }),
+      credentials: 'same-origin',
+    });
+    const data = await res.json();
+
+    if (data.ok) {
+      showMsg('✓ Correo reenviado. Revisa tu bandeja de entrada.', 'ok');
+      // Deshabilitar botón por 60 seg
+      let secs = 60;
+      const interval = setInterval(() => {
+        btn.textContent = `Reenviar en ${secs}s`;
+        secs--;
+        if (secs < 0) {
+          clearInterval(interval);
+          btn.textContent = '📨 Reenviar correo de verificación';
+          btn.disabled    = false;
+        }
+      }, 1000);
+    } else {
+      showMsg(data.error || 'No se pudo reenviar. Intenta de nuevo.', 'err');
+      btn.textContent = '📨 Reenviar correo de verificación';
+      btn.disabled    = false;
+    }
+  } catch {
+    showMsg('Error de conexión. Inténtalo de nuevo.', 'err');
+    btn.textContent = '📨 Reenviar correo de verificación';
+    btn.disabled    = false;
+  }
+}
+
+function showMsg(text, type) {
+  const el = document.getElementById('resend-msg');
+  el.textContent  = text;
+  el.className    = `${type}`;
+}
+</script>
+</body>
+</html>

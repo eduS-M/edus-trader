@@ -11,13 +11,14 @@ import { verifyJWT } from './lib/jwt.js';
 // ------------------------------------------------------------
 const PUBLIC_PATHS = new Set([
   '/', '/index.html',
-  '/members', '/members/', '/members/index.html',
-  '/members/upgrade', '/members/upgrade/', '/members/upgrade/index.html',
   '/pricing.html',
-  '/api/auth/register', '/api/auth/login', '/api/auth/logout',
+  '/members', '/members/', '/members/index.html',
+  '/members/verify-pending.html',
+  '/members/upgrade', '/members/upgrade/', '/members/upgrade/index.html',
   // Google OAuth: inicio del flujo Y callback (sub-ruta separada en Cloudflare Pages)
   '/api/auth/google', '/api/auth/google/', '/api/auth/google/callback',
-  '/api/auth/verify-email',
+  '/api/auth/register', '/api/auth/login', '/api/auth/logout',
+  '/api/auth/verify-email', '/api/auth/resend-verification',
   '/api/coupons/validate',
 ]);
 

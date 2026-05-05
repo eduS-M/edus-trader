@@ -805,10 +805,9 @@ async function doRegister() {
     const data = await res.json();
 
     if(data.ok) {
-      okEl.textContent  = '✓ Cuenta creada. Revisa tu email para verificarla.';
-      okEl.style.display = 'block';
-      document.getElementById('reg-pwd').value = '';
-      setTimeout(() => switchTab('login'), 3000);
+      // Redirigir a la página de verificación pendiente
+      const encodedEmail = encodeURIComponent(email);
+      window.location.href = `/members/verify-pending.html?email=${encodedEmail}`;
     } else {
       showError(errEl, data.error || 'No se pudo crear la cuenta');
     }

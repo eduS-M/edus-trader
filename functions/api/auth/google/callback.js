@@ -134,7 +134,9 @@ export async function onRequestGet({ request, env }) {
     const jwtCookie  = buildSessionCookie(token, 7 * 24 * 3600);
     const clearState = 'oauth_state=; Path=/api/auth; HttpOnly; Secure; Max-Age=0';
 
-    const response = redirect('/members/portal/', jwtCookie);
+    // Nuevos usuarios van a elegir un plan; usuarios existentes van directo al portal
+    const destination = isNewUser ? '/pricing.html?onboarding=1' : '/members/portal/';
+    const response = redirect(destination, jwtCookie);
     response.headers.append('Set-Cookie', clearState);
     return response;
 

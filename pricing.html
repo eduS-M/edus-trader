@@ -325,6 +325,42 @@ body{
 }
 
 /* ─── RESPONSIVE ─────────────────────────────────────── */
+/* ─── ONBOARDING BANNER ────────────────────────── */
+.onboarding-banner{
+  background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+  border-bottom:1px solid rgba(61,214,192,0.2);
+  padding:20px;
+  text-align:center;
+  display:none;
+}
+.onboarding-banner.show{display:block}
+.ob-inner{
+  max-width:640px;margin:0 auto;
+  display:flex;align-items:center;justify-content:center;
+  gap:16px;flex-wrap:wrap;
+}
+.ob-icon{font-size:28px}
+.ob-text{
+  text-align:left;
+  font-family:'Montserrat',sans-serif;
+}
+.ob-text strong{
+  display:block;
+  font-size:15px;font-weight:800;color:#f1f5f9;
+  margin-bottom:2px;
+}
+.ob-text span{font-size:12px;color:#94a3b8}
+.ob-badge{
+  padding:6px 16px;border-radius:20px;
+  background:rgba(61,214,192,0.15);
+  border:.5px solid rgba(61,214,192,0.4);
+  color:#3dd6c0;
+  font-family:'Montserrat',sans-serif;
+  font-size:11px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  white-space:nowrap;
+}
+
 @media(max-width:640px){
   .plans-grid{grid-template-columns:1fr}
   .plan-card.featured{transform:scale(1)}
@@ -334,6 +370,18 @@ body{
 </style>
 </head>
 <body>
+
+<!-- ONBOARDING BANNER -->
+<div class="onboarding-banner" id="onboarding-banner">
+  <div class="ob-inner">
+    <div class="ob-icon">🎉</div>
+    <div class="ob-text">
+      <strong id="ob-name">¡Bienvenido a EduS Trader!</strong>
+      <span>Tu cuenta está lista. Elige el plan que mejor se adapte a ti.</span>
+    </div>
+    <div class="ob-badge">✅ Cuenta activada</div>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav id="edus-nb">
@@ -398,7 +446,7 @@ body{
         <li><span class="icon no">—</span>Manuales de indicadores</li>
       </ul>
       <div class="plan-divider"></div>
-      <a href="/members/" class="plan-cta free-cta">Acceder gratis</a>
+      <button class="plan-cta free-cta" onclick="checkout('free')">Continuar con Free →</button>
     </div>
 
     <!-- BASIC -->
@@ -664,18 +712,57 @@ document.getElementById('coupon-input').addEventListener('keydown', e => {
 // ─────────────────────────────────────────────────────────
 // Checkout
 // ─────────────────────────────────────────────────────────
-function checkout(plan) {
-  // Cuando integres LemonSqueezy/Stripe, reemplaza esto con
-  // la URL del checkout de la pasarela correspondiente.
-  // Ejemplo LemonSqueezy:
-  //   window.location.href = `https://edustrader.lemonsqueezy.com/checkout/buy/${VARIANT_IDS[plan][currentBilling]}`;
+async function checkout(plan) {
+  if (plan === 'free') {
+    // Verificar si está autenticado
+    try {
+      const res  = await fetch('/api/auth/me', { credentials: 'same-origin' });
+      const data = await res.json();
+      if (data.ok) {
+        window.location.href = '/members/portal/';
+      } else {
+        window.location.href = '/members/';
+      }
+    } catch {
+      window.location.href = '/members/';
+    }
+    return;
+  }
 
+  // Planes de pago: próximamente la pasarela de pago
+  // Por ahora mostrar mensaje informativo
   const couponParam = activeCoupon ? `&coupon=${activeCoupon.code}` : '';
-  const url = `/members/?checkout=${plan}&billing=${currentBilling}${couponParam}`;
-
-  // Por ahora redirige al login/portal (hasta que esté la pasarela)
-  window.location.href = '/members/';
+  const msg = `Plataforma de pago próximamente.\nPlan: ${plan.toUpperCase()} · ${currentBilling}\n${activeCoupon ? 'Cupón: ' + activeCoupon.code : ''}`;
+  alert(msg + '\n\nMientras tanto puedes acceder con el plan Free.');
 }
+
+// ─────────────────────────────────────────────────────────
+// Onboarding init
+// ─────────────────────────────────────────────────────────
+(async function initOnboarding() {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.get('onboarding')) return;
+
+  // Mostrar banner de bienvenida
+  document.getElementById('onboarding-banner').classList.add('show');
+
+  // Pre-llenar cupón si viene en la URL
+  const coupon = params.get('coupon');
+  if (coupon) {
+    document.getElementById('coupon-input').value = coupon;
+    applyCoupon();
+  }
+
+  // Obtener nombre del usuario si está autenticado
+  try {
+    const res  = await fetch('/api/auth/me', { credentials: 'same-origin' });
+    const data = await res.json();
+    if (data.ok && data.name) {
+      const firstName = data.name.split(' ')[0];
+      document.getElementById('ob-name').textContent = `¡Bienvenido, ${firstName}!`;
+    }
+  } catch {}
+})();
 
 // ─────────────────────────────────────────────────────────
 // FAQ toggle
@@ -683,7 +770,6 @@ function checkout(plan) {
 function toggleFaq(el) {
   const answer = el.nextElementSibling;
   const isOpen = el.classList.contains('open');
-  // Cerrar todos
   document.querySelectorAll('.faq-q').forEach(q => q.classList.remove('open'));
   document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
   if (!isOpen) {
@@ -692,9 +778,7 @@ function toggleFaq(el) {
   }
 }
 
-// ─────────────────────────────────────────────────────────
 // Init
-// ─────────────────────────────────────────────────────────
 renderPrices();
 </script>
 </body>

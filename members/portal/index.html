@@ -493,7 +493,7 @@ img{max-width:100%;display:block}
   <!-- TOP BAR -->
   <div class="mb-topbar">
     <div class="mb-topbar-banner">
-      <img src="../assets/banner.png" alt="EduS Trader">
+      <img src="/assets/banner.png" alt="EduS Trader">
     </div>
     <div class="mb-topbar-nav">
       <div class="mb-topbar-nav-left">
@@ -655,7 +655,9 @@ img{max-width:100%;display:block}
 
 
 <script>
-// Usuario autenticado — obtenemos datos del JWT via API
+// ==============================
+// INIT — obtener datos del usuario
+// ==============================
 (async function init() {
   try {
     const res  = await fetch('/api/auth/me', { credentials: 'same-origin' });
@@ -668,69 +670,34 @@ img{max-width:100%;display:block}
 })();
 
 // ==============================
+// LOGOUT
+// ==============================
+async function doLogout() {
+  await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
+  window.location.href = '/';
+}
+
+// ==============================
 // SIDEBAR TOGGLE
 // ==============================
-function toggleSection(header){
+function toggleSection(header) {
   header.classList.toggle('open');
   var sub = header.nextElementSibling;
   sub.classList.toggle('open');
 }
 
-function openSection(name){
-  var map = {
-    'analisis': 0,
-    'gameplan': 1,
-    'indicadores': 2,
-    'manuales': 3
-  };
+function openSection(name) {
+  var map = { 'analisis': 0, 'gameplan': 1, 'indicadores': 2, 'manuales': 3 };
   var headers = document.querySelectorAll('.mb-sidebar-header');
   var idx = map[name];
-  if(idx !== undefined && headers[idx]){
+  if (idx !== undefined && headers[idx]) {
     var h = headers[idx];
-    if(!h.classList.contains('open')){
+    if (!h.classList.contains('open')) {
       h.classList.add('open');
       h.nextElementSibling.classList.add('open');
     }
   }
 }
-
-// ==============================
-// CONTENT LOADING
-// ==============================
-function loadContent(url){
-  if(url === 'welcome'){
-    document.getElementById('welcome-panel').style.display='block';
-    document.getElementById('content-frame-wrap').classList.remove('active');
-    document.querySelectorAll('.mb-sidebar-item').forEach(function(i){i.classList.remove('active')});
-    return;
-  }
-
-  // Mark active
-  document.querySelectorAll('.mb-sidebar-item').forEach(function(i){i.classList.remove('active')});
-  var items = document.querySelectorAll('.mb-sidebar-item');
-  items.forEach(function(item){
-    if(item.getAttribute('onclick') && item.getAttribute('onclick').indexOf(url) !== -1){
-      item.classList.add('active');
-    }
-  });
-
-  // Show iframe
-  document.getElementById('welcome-panel').style.display='none';
-  var wrap = document.getElementById('content-frame-wrap');
-  wrap.classList.add('active');
-
-  // Show loading
-  document.getElementById('frame-loading').style.display='flex';
-
-  var frame = document.getElementById('content-frame');
-  frame.src = url;
-  frame.onload = function(){
-    document.getElementById('frame-loading').style.display='none';
-  };
-}
-</script>
-</body>
-</html>
 
 // ==============================
 // CONTENT LOADING
@@ -742,23 +709,27 @@ function loadContent(url) {
     document.querySelectorAll('.mb-sidebar-item').forEach(function(i) { i.classList.remove('active'); });
     return;
   }
-  // Navegar directamente — middleware verifica cookie JWT
-  window.location.href = url;
-}
 
-async function doLogout() {
-  await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
-  window.location.href = '/';
-}
+  // Marcar item activo en sidebar
+  document.querySelectorAll('.mb-sidebar-item').forEach(function(i) { i.classList.remove('active'); });
+  document.querySelectorAll('.mb-sidebar-item').forEach(function(item) {
+    if (item.getAttribute('onclick') && item.getAttribute('onclick').indexOf(url) !== -1) {
+      item.classList.add('active');
+    }
+  });
 
-// Verificar sesion al cargar
-(async function checkSession() {
-  const params = new URLSearchParams(window.location.search);
-  // Si hay mensaje de verificacion de email
-  if (params.get('verified') === '1') {
-    // ya manejado por el login
-  }
-})();
+  // Mostrar iframe
+  document.getElementById('welcome-panel').style.display = 'none';
+  var wrap = document.getElementById('content-frame-wrap');
+  wrap.classList.add('active');
+  document.getElementById('frame-loading').style.display = 'flex';
+
+  var frame = document.getElementById('content-frame');
+  frame.src = url;
+  frame.onload = function() {
+    document.getElementById('frame-loading').style.display = 'none';
+  };
+}
 </script>
 </body>
 </html>
