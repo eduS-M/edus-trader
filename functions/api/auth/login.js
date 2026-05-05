@@ -1,4 +1,4 @@
-﻿import { verifyPassword, signJWT, generateId } from '../../lib/jwt.js';
+import { verifyPassword, signJWT, generateId } from '../../lib/jwt.js';
 import { ok, badRequest, unauthorized, serverError, preflight, buildSessionCookie } from '../../lib/response.js';
 
 export async function onRequestOptions() { return preflight(); }
@@ -15,7 +15,7 @@ export async function onRequestPost({ request, env }) {
 
   try {
     const user = await env.DB.prepare(
-      'SELECT id, email, name, password_hash, plan, plan_expires_at, status FROM users WHERE email = ?'
+      'SELECT id, email, name, password_hash, plan, plan_expires_at, status, role FROM users WHERE email = ?'
     ).bind(email.toLowerCase().trim()).first();
 
     if (!user)                       return unauthorized('Email o contrasena incorrectos');
@@ -46,7 +46,7 @@ export async function onRequestPost({ request, env }) {
     ).run();
 
     const token = await signJWT(
-      { sub: user.id, sid: sessionId, email: user.email, name: user.name, plan },
+      { sub: user.id, sid: sessionId, email: user.email, name: user.name, plan, role: user.role || 'member' },
       env.JWT_SECRET, expiryHours
     );
 

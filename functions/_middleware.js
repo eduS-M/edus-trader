@@ -91,16 +91,29 @@ export async function onRequest({ request, next, env }) {
     return Response.redirect(new URL(loginUrl, url.origin).toString(), 302);
   }
 
-  // 6. Verificar sesion en DB
+  // 6. Verificar sesion en DB y obtener datos actualizados del usuario
   if (env.DB && claims.sid) {
-    const session = await env.DB.prepare(
-      'SELECT id FROM sessions WHERE id = ? AND expires_at > datetime("now")'
-    ).bind(claims.sid).first().catch(() => null);
+    const sessionData = await env.DB.prepare(`
+      SELECT s.id, u.plan, u.role, u.plan_expires_at 
+      FROM sessions s
+      JOIN users u ON u.id = s.user_id
+      WHERE s.id = ? AND s.expires_at > datetime('now')
+    `).bind(claims.sid).first().catch(() => null);
 
-    if (!session) {
+    if (!sessionData) {
       const loginUrl = `/members/?redirect=${encodeURIComponent(path)}&reason=session_expired`;
       return Response.redirect(new URL(loginUrl, url.origin).toString(), 302);
     }
+
+    // Actualizar claims con datos reales de DB para la autorizacion en este request
+    // Evaluar si el plan expiro
+    if (sessionData.plan !== 'free' && sessionData.plan_expires_at) {
+      const expired = new Date(sessionData.plan_expires_at) < new Date();
+      claims.plan = expired ? 'free' : sessionData.plan;
+    } else {
+      claims.plan = sessionData.plan;
+    }
+    claims.role = sessionData.role;
   }
 
   // 7. Solo necesita estar autenticado (admin, portal)
