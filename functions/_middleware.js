@@ -15,7 +15,9 @@ const PUBLIC_PATHS = new Set([
   '/members/upgrade', '/members/upgrade/', '/members/upgrade/index.html',
   '/pricing.html',
   '/api/auth/register', '/api/auth/login', '/api/auth/logout',
-  '/api/auth/google', '/api/auth/google/callback', '/api/auth/verify-email',
+  // Google OAuth: inicio del flujo Y callback (sub-ruta separada en Cloudflare Pages)
+  '/api/auth/google', '/api/auth/google/', '/api/auth/google/callback',
+  '/api/auth/verify-email',
   '/api/coupons/validate',
 ]);
 

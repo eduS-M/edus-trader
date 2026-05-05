@@ -6,6 +6,7 @@
 
 import { generateId, generateToken, hashPassword } from '../../lib/jwt.js';
 import { created, badRequest, conflict, serverError, preflight } from '../../lib/response.js';
+import { sendVerificationEmail } from '../../lib/emails.js';
 
 export async function onRequestOptions() {
   return preflight();
@@ -54,13 +55,15 @@ export async function onRequestPost({ request, env }) {
 
     // 6. Enviar email de verificación si RESEND_API_KEY está configurada
     if (env.RESEND_API_KEY) {
-      await sendVerificationEmail({
-        to:      emailLower,
-        name:    name?.trim(),
-        token:   verifyToken,
-        appUrl:  env.APP_URL || 'https://edustrader.pages.dev',
-        apiKey:  env.RESEND_API_KEY,
-      });
+      // No bloqueamos el registro si el email falla — el usuario puede reenviar
+      sendVerificationEmail({
+        to:     emailLower,
+        name:   name?.trim(),
+        token:  verifyToken,
+        appUrl: env.APP_URL || 'https://edustrader.pages.dev',
+        apiKey: env.RESEND_API_KEY,
+        from:   env.EMAIL_FROM || 'onboarding@resend.dev',
+      }).catch(err => console.error('[Email] Error enviando verificación:', err));
     }
 
     return created({
@@ -87,32 +90,4 @@ function validateRegister({ email, password }) {
   else if (!/[A-Z]/.test(password) || !/[0-9]/.test(password))
     errors.push('La contraseña debe incluir al menos una mayúscula y un número');
   return errors;
-}
-
-// ------------------------------------------------------------
-// Email de verificación via Resend
-// ------------------------------------------------------------
-async function sendVerificationEmail({ to, name, token, appUrl, apiKey }) {
-  const verifyUrl = `${appUrl}/api/auth/verify-email?token=${token}`;
-  const firstName = name?.split(' ')[0] || 'Trader';
-
-  await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from:    'EduS Trader <noreply@edustrader.pages.dev>',
-      to:      [to],
-      subject: 'Verifica tu cuenta — EduS Trader',
-      html: `
-        <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px">
-          <h2 style="color:#3dd6c0">Bienvenido, ${firstName}</h2>
-          <p>Haz clic para verificar tu cuenta en EduS Trader:</p>
-          <a href="${verifyUrl}" style="display:inline-block;margin:16px 0;padding:12px 24px;
-             background:#3dd6c0;color:#0f172a;border-radius:8px;text-decoration:none;font-weight:700">
-            Verificar mi cuenta →
-          </a>
-          <p style="font-size:12px;color:#64748b">Expira en 24 h. Si no creaste esta cuenta, ignora este email.</p>
-        </div>`,
-    }),
-  });
 }
