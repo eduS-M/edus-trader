@@ -20,6 +20,7 @@ const PUBLIC_PATHS = new Set([
   '/api/auth/register', '/api/auth/login', '/api/auth/logout',
   '/api/auth/verify-email', '/api/auth/resend-verification',
   '/api/coupons/validate',
+  '/api/payments/checkout', '/api/webhooks/mercadopago',
 ]);
 
 // Extensiones de assets — siempre publicos

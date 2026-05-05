@@ -729,11 +729,37 @@ async function checkout(plan) {
     return;
   }
 
-  // Planes de pago: próximamente la pasarela de pago
-  // Por ahora mostrar mensaje informativo
-  const couponParam = activeCoupon ? `&coupon=${activeCoupon.code}` : '';
-  const msg = `Plataforma de pago próximamente.\nPlan: ${plan.toUpperCase()} · ${currentBilling}\n${activeCoupon ? 'Cupón: ' + activeCoupon.code : ''}`;
-  alert(msg + '\n\nMientras tanto puedes acceder con el plan Free.');
+  // Planes de pago: llamar al endpoint de checkout
+  const btn = document.querySelector(`.plan-cta.${plan}-cta`);
+  const originalText = btn.textContent;
+  btn.textContent = 'Procesando...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/payments/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        plan, 
+        billing: currentBilling, 
+        coupon: activeCoupon ? activeCoupon.code : null 
+      }),
+      credentials: 'same-origin'
+    });
+
+    const data = await res.json();
+    if (data.ok && data.url) {
+      window.location.href = data.url; // Redirigir a MercadoPago o al portal
+    } else {
+      alert(data.error || 'Ocurrió un error al procesar el pago.');
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
+  } catch (err) {
+    alert('Error de conexión. Inténtalo de nuevo.');
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
 }
 
 // ─────────────────────────────────────────────────────────
