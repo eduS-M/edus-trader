@@ -8,9 +8,9 @@
 // /api/auth/google/callback -> google/callback.js  (este archivo)
 // ============================================================
 
-import { signJWT, generateId }                                from '../../../../lib/jwt.js';
-import { redirect, serverError, buildSessionCookie }          from '../../../../lib/response.js';
-import { sendWelcomeGoogleEmail }                              from '../../../../lib/emails.js';
+import { signJWT, generateId }                                from '../../../lib/jwt.js';
+import { redirect, serverError, buildSessionCookie }          from '../../../lib/response.js';
+import { sendWelcomeGoogleEmail }                              from '../../../lib/emails.js';
 
 export async function onRequestGet({ request, env }) {
   const url   = new URL(request.url);
