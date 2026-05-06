@@ -17,6 +17,10 @@ CREATE TABLE IF NOT EXISTS users (
   google_id     TEXT UNIQUE,               -- NULL si se registró con email
   name          TEXT,
   avatar_url    TEXT,
+  phone         TEXT,
+  country       TEXT,
+  address       TEXT,
+  tax_id        TEXT,
 
   -- Plan activo (desnormalizado para lecturas rápidas en el middleware)
   -- Se sincroniza desde subscriptions al activar/cancelar
@@ -27,6 +31,8 @@ CREATE TABLE IF NOT EXISTS users (
   -- Estado de la cuenta
   status        TEXT NOT NULL DEFAULT 'active'
                 CHECK (status IN ('active','suspended','deleted')),
+  role          TEXT NOT NULL DEFAULT 'member'
+                CHECK (role IN ('member','admin')),
   email_verified INTEGER NOT NULL DEFAULT 0, -- 0 = no, 1 = sí
 
   -- Metadatos

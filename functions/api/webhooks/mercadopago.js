@@ -116,7 +116,52 @@ async function processPayment(env, paymentId, mpToken) {
       UPDATE users SET plan = ?, plan_expires_at = ?, updated_at = datetime('now') WHERE id = ?
     `).bind(planId, periodEnd, userId).run();
 
+    // D) Cancelar preapprovals viejas en MercadoPago
+    if (billingCycle !== 'lifetime') {
+      await cancelOldPreapprovals(env, userId, externalReference, mpToken);
+    }
+
   } catch (err) {
     console.error('Error procesando webhook de MercadoPago:', err);
+  }
+}
+
+async function cancelOldPreapprovals(env, userId, externalReference, mpToken) {
+  try {
+    const user = await env.DB.prepare('SELECT email FROM users WHERE id = ?').bind(userId).first();
+    if (!user) return;
+
+    const res = await fetch(`https://api.mercadopago.com/preapproval/search?payer_email=${user.email}&status=authorized`, {
+      headers: { 'Authorization': `Bearer ${mpToken}` }
+    });
+    if (!res.ok) return;
+    
+    const data = await res.json();
+    const preapprovals = data.results || [];
+
+    // Sort descending by date_created (newest first)
+    preapprovals.sort((a, b) => new Date(b.date_created).getTime() - new Date(a.date_created).getTime());
+
+    let keptOne = false;
+    for (const pre of preapprovals) {
+      if (!keptOne && pre.external_reference === externalReference) {
+        keptOne = true;
+        // Guardar el ID de la suscripción activa
+        await env.DB.prepare('UPDATE subscriptions SET gateway_sub_id = ?, gateway = ? WHERE user_id = ?')
+          .bind(pre.id, 'mercadopago', userId).run();
+      } else {
+        // Cancelar las demás
+        await fetch(`https://api.mercadopago.com/preapproval/${pre.id}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${mpToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ status: 'cancelled' })
+        });
+      }
+    }
+  } catch (err) {
+    console.error('Error cancelando preapprovals viejas:', err);
   }
 }

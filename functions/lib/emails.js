@@ -303,6 +303,31 @@ function emailVerifiedTemplate({ firstName, appUrl }) {
 }
 
 // ─────────────────────────────────────────────────────────────
+// Template 4: Recuperación de contraseña
+// ─────────────────────────────────────────────────────────────
+function passwordResetTemplate({ firstName, resetUrl }) {
+  return baseTemplate({
+    title:     'Restablece tu contraseña — EduS Trader',
+    preheader: `${firstName}, solicitaste restablecer tu contraseña.`,
+    content: `
+      <div class="badge">🔒 Seguridad</div>
+      <h1>Restablecer contraseña</h1>
+      <p class="highlight">Hola ${firstName}, recibimos una solicitud para restablecer tu contraseña.</p>
+      <p>Haz clic en el siguiente botón para crear una nueva contraseña de acceso:</p>
+
+      <div class="btn-center">
+        <a href="${resetUrl}" class="btn">🔑 Cambiar mi contraseña →</a>
+      </div>
+
+      <p class="expire-note">⏱ Este enlace expira en <strong>2 horas</strong>.</p>
+      <hr class="divider">
+      <p style="font-size:13px">Si tú no solicitaste este cambio, simplemente ignora este correo. Tu cuenta está segura.</p>
+      <div class="token-box">${resetUrl}</div>
+    `,
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
 // Funciones exportadas publicas
 // ─────────────────────────────────────────────────────────────
 
@@ -349,5 +374,21 @@ export async function sendEmailVerifiedConfirmation({ to, name, appUrl, apiKey, 
     to,
     subject: '✅ Email verificado — EduS Trader',
     html:    emailVerifiedTemplate({ firstName, appUrl }),
+  });
+}
+
+/**
+ * Envia email para recuperar contraseña
+ */
+export async function sendPasswordResetEmail({ to, name, token, appUrl, apiKey, from }) {
+  const resetUrl = `${appUrl}/members/reset-password.html?token=${token}`;
+  const firstName = (name || 'Trader').split(' ')[0];
+
+  return sendEmail({
+    apiKey,
+    from,
+    to,
+    subject: '🔒 Restablece tu contraseña — EduS Trader',
+    html:    passwordResetTemplate({ firstName, resetUrl }),
   });
 }

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      color: #334155;
+      padding: 40px;
+    }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { font-family: 'Montserrat', sans-serif; font-size: 24px; color: #0f172a; margin-bottom: 24px; }
+    
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    .card-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 12px;
+    }
+    
+    /* Plan Info */
+    .plan-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .plan-badge.free { background: #f1f5f9; color: #64748b; }
+    .plan-badge.basic { background: #e0e7ff; color: #4f46e5; }
+    .plan-badge.pro { background: #fce7f3; color: #db2777; }
+    .plan-badge.premium { background: rgba(61,214,192,0.15); color: #0d9488; }
+    
+    .btn {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn-primary { background: #0f172a; color: #fff; border: none; }
+    .btn-danger { background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; }
+    .btn-outline { background: transparent; color: #0f172a; border: 1px solid #cbd5e1; }
+
+    /* Form */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 6px; }
+    input { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; }
+    input:focus { border-color: #3dd6c0; }
+    
+    /* Payments Table */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+    th { color: #64748b; font-weight: 600; }
+    td { color: #334155; }
+    .status-paid { color: #10b981; font-weight: 600; }
+    
+    .msg { padding: 12px; border-radius: 6px; font-size: 13px; display: none; margin-bottom: 16px; }
+    .msg.success { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+    .msg.error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Mi Cuenta</h1>
+    
+    <div id="msg" class="msg"></div>
+
+    <div class="card">
+      <div class="card-title flex-between">
+        <span>Suscripción Actual</span>
+        <span id="plan-name" class="plan-badge free">Cargando...</span>
+      </div>
+      <p style="font-size:14px; color:#64748b; margin-bottom: 20px;">
+        Válido hasta: <strong id="plan-expires" style="color:#0f172a">---</strong>
+      </p>
+      
+      <div style="display:flex; gap:12px;">
+        <a href="/pricing.html" target="_top" class="btn btn-primary">Hacer Upgrade</a>
+        <button id="cancel-btn" class="btn btn-danger" onclick="cancelSub()" style="display:none;">Cancelar Suscripción</button>
+      </div>
+      <p style="font-size:11px; color:#94a3b8; margin-top: 12px;">
+        * Al cancelar tu suscripción, mantendrás acceso hasta que termine tu periodo actual.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Información Personal</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" id="p-name">
+        </div>
+        <div class="form-group">
+          <label>Correo Electrónico (Solo Lectura)</label>
+          <input type="email" id="p-email" readonly style="background:#f8fafc; color:#94a3b8">
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="text" id="p-phone" placeholder="+56 9...">
+        </div>
+        <div class="form-group">
+          <label>País</label>
+          <input type="text" id="p-country" placeholder="Ej: Chile">
+        </div>
+        <div class="form-group">
+          <label>Dirección</label>
+          <input type="text" id="p-address" placeholder="Tu calle, ciudad">
+        </div>
+        <div class="form-group">
+          <label>RUT / Documento Fiscal</label>
+          <input type="text" id="p-tax" placeholder="Opcional">
+        </div>
+      </div>
+      <button class="btn btn-outline" onclick="saveProfile()" id="save-btn" style="margin-top:8px">Guardar Cambios</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Historial de Pagos</div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Descripción</th>
+              <th>Monto</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="payments-body">
+            <tr><td colspan="4" style="text-align:center; color:#94a3b8;">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function loadData() {
+      try {
+        const res = await fetch('/api/auth/profile');
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        
+        // Populate profile
+        const p = data.profile;
+        document.getElementById('p-name').value = p.name || '';
+        document.getElementById('p-email').value = p.email || '';
+        document.getElementById('p-phone').value = p.phone || '';
+        document.getElementById('p-country').value = p.country || '';
+        document.getElementById('p-address').value = p.address || '';
+        document.getElementById('p-tax').value = p.tax_id || '';
+        
+        // Populate subscription
+        const badge = document.getElementById('plan-name');
+        badge.className = 'plan-badge ' + p.plan;
+        badge.textContent = p.plan;
+        
+        document.getElementById('plan-expires').textContent = p.plan_expires_at 
+          ? new Date(p.plan_expires_at).toLocaleDateString() 
+          : 'Ilimitado';
+          
+        if (p.plan !== 'free' && p.plan_expires_at) {
+          document.getElementById('cancel-btn').style.display = 'inline-block';
+        }
+        
+        // Populate payments
+        const tbody = document.getElementById('payments-body');
+        if (!data.payments || data.payments.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#94a3b8;">No tienes pagos registrados.</td></tr>';
+        } else {
+          tbody.innerHTML = data.payments.map(pay => `
+            <tr>
+              <td>${new Date(pay.paid_at).toLocaleDateString()}</td>
+              <td>${pay.description || '-'}</td>
+              <td>$${(pay.amount/100).toFixed(2)} ${pay.currency}</td>
+              <td class="status-${pay.status}">${pay.status === 'paid' ? 'Pagado' : pay.status}</td>
+            </tr>
+          `).join('');
+        }
+      } catch {
+        showMessage('Error al cargar la información', 'error');
+      }
+    }
+
+    async function saveProfile() {
+      const btn = document.getElementById('save-btn');
+      btn.textContent = 'Guardando...';
+      btn.disabled = true;
+      
+      const body = {
+        name: document.getElementById('p-name').value,
+        phone: document.getElementById('p-phone').value,
+        country: document.getElementById('p-country').value,
+        address: document.getElementById('p-address').value,
+        tax_id: document.getElementById('p-tax').value
+      };
+      
+      try {
+        const res = await fetch('/api/auth/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        
+        if (res.ok) {
+          showMessage('Perfil actualizado correctamente', 'success');
+        } else {
+          throw new Error();
+        }
+      } catch {
+        showMessage('Error al guardar', 'error');
+      }
+      
+      btn.textContent = 'Guardar Cambios';
+      btn.disabled = false;
+    }
+    
+    async function cancelSub() {
+      if (!confirm('¿Estás seguro de que deseas cancelar tu suscripción? Se desactivarán los cobros automáticos pero mantendrás acceso hasta tu fecha de corte.')) return;
+      
+      try {
+        const res = await fetch('/api/payments/cancel', { method: 'POST' });
+        const data = await res.json();
+        
+        if (res.ok) {
+          showMessage('Suscripción cancelada exitosamente.', 'success');
+          document.getElementById('cancel-btn').style.display = 'none';
+        } else {
+          showMessage(data.error || 'Error al cancelar.', 'error');
+        }
+      } catch {
+        showMessage('Error de conexión', 'error');
+      }
+    }
+    
+    function showMessage(text, type) {
+      const msg = document.getElementById('msg');
+      msg.textContent = text;
+      msg.className = 'msg ' + type;
+      msg.style.display = 'block';
+      setTimeout(() => msg.style.display = 'none', 5000);
+    }
+
+    // Load on init
+    loadData();
+  </script>
+</body>
+</html>

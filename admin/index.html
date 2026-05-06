@@ -520,6 +520,49 @@ tbody td strong{color:var(--dark);font-weight:600}
   </div>
 </div>
 
+<!-- MODAL: Editar Miembro -->
+<div class="modal-bg" id="member-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeMemberModal()">✕</button>
+    <div class="modal-title">Editar Miembro</div>
+    <input type="hidden" id="member-id">
+
+    <div class="form-row">
+      <label class="form-label">Email (Solo Lectura)</label>
+      <input class="form-input" id="m-email" readonly style="background:var(--bg); color:var(--light)">
+    </div>
+    
+    <div class="form-grid">
+      <div class="form-row">
+        <label class="form-label">Plan *</label>
+        <select class="form-select" id="m-plan">
+          <option value="free">Free</option>
+          <option value="basic">Basic</option>
+          <option value="pro">Pro</option>
+          <option value="premium">Premium Plus</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Rol *</label>
+        <select class="form-select" id="m-role">
+          <option value="member">Miembro</option>
+          <option value="admin">Administrador</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="form-row" style="margin-top:20px; padding-top:16px; border-top:.5px solid var(--border);">
+      <button class="btn btn-ghost" onclick="sendResetPassword()">Enviar correo de recuperación de contraseña</button>
+      <div class="form-hint" style="margin-top:4px;">El usuario recibirá un link para cambiar su clave.</div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="closeMemberModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveMember()">Guardar Cambios</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div id="toast"></div>
 
@@ -634,7 +677,7 @@ function renderMembers(list) {
       <td>${formatDate(u.created_at)}</td>
       <td>${u.plan_expires_at ? formatDate(u.plan_expires_at) : '<span style="color:var(--light)">—</span>'}</td>
       <td>
-        <button class="btn btn-sm btn-ghost" onclick="viewMember('${u.id}')">Ver</button>
+        <button class="btn btn-sm btn-ghost" onclick="editMember('${u.id}')">Editar</button>
         ${u.status === 'active'
           ? `<button class="btn btn-sm btn-danger" onclick="suspendMember('${u.id}')">Suspender</button>`
           : `<button class="btn btn-sm btn-primary" onclick="reactivateMember('${u.id}')">Reactivar</button>`
@@ -665,9 +708,45 @@ async function reactivateMember(id) {
   else toast(r.error || 'Error', 'err');
 }
 
-function viewMember(id) {
+function editMember(id) {
   const u = allMembers.find(m => m.id === id);
-  if (u) alert(`${u.name || u.email}\nPlan: ${u.plan}\nEstado: ${u.status}\nRegistrado: ${formatDate(u.created_at)}`);
+  if (!u) return;
+  document.getElementById('member-id').value = u.id;
+  document.getElementById('m-email').value = u.email;
+  document.getElementById('m-plan').value = u.plan;
+  document.getElementById('m-role').value = u.role || 'member';
+  document.getElementById('member-modal').classList.add('open');
+}
+
+function closeMemberModal() {
+  document.getElementById('member-modal').classList.remove('open');
+}
+
+async function saveMember() {
+  const id = document.getElementById('member-id').value;
+  const plan = document.getElementById('m-plan').value;
+  const role = document.getElementById('m-role').value;
+  
+  const r = await api('/api/admin/members', { method:'PUT', body:{ id, plan, role } });
+  if (r.ok) {
+    toast('Miembro actualizado ✓');
+    closeMemberModal();
+    loadMembers();
+  } else {
+    toast(r.error || 'Error al guardar', 'err');
+  }
+}
+
+async function sendResetPassword() {
+  const id = document.getElementById('member-id').value;
+  if (!confirm('¿Enviar enlace de recuperación a este usuario?')) return;
+  
+  const r = await api('/api/admin/members', { method:'PUT', body:{ id, send_reset_password: true } });
+  if (r.ok) {
+    toast('Correo enviado ✓');
+  } else {
+    toast(r.error || 'Error al enviar correo', 'err');
+  }
 }
 
 // ── Coupons ───────────────────────────────────────────────────

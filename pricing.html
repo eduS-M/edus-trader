@@ -427,6 +427,14 @@ body{
   <div class="coupon-feedback" id="coupon-feedback"></div>
 </div>
 
+<!-- TERMS CHECKBOX -->
+<div style="text-align:center; margin-bottom: 30px; padding: 0 20px;">
+  <label style="font-size: 13px; color: var(--mid); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+    <input type="checkbox" id="terms-checkbox" style="width: 16px; height: 16px; accent-color: var(--teal);">
+    <span>He leído y acepto los <a href="/terminos.html" target="_blank" style="color:var(--teal); text-decoration:none; font-weight:600;">Términos y Condiciones</a> y la <a href="/privacidad.html" target="_blank" style="color:var(--teal); text-decoration:none; font-weight:600;">Política de Privacidad</a>.</span>
+  </label>
+</div>
+
 <!-- PLANS -->
 <section class="plans-section">
   <div class="plans-grid">
@@ -564,9 +572,15 @@ body{
 
 </section>
 
-<div class="page-footer">
-  EduS Trader · Los precios mostrados son de referencia y pueden cambiar · No constituye asesoramiento financiero
-</div>
+<footer style="text-align:center; padding: 40px 20px; font-size: 12px; color: #64748b; font-family: 'Inter', sans-serif;">
+  <div style="margin-bottom: 12px;">
+    <a href="/terminos.html" style="color:#64748b; text-decoration:none; margin: 0 10px;">Términos y Condiciones</a> | 
+    <a href="/privacidad.html" style="color:#64748b; text-decoration:none; margin: 0 10px;">Privacidad</a> | 
+    <a href="/reembolsos.html" style="color:#64748b; text-decoration:none; margin: 0 10px;">Reembolsos</a>
+  </div>
+  <p>EduS Trader · Los precios mostrados son de referencia y pueden cambiar · No constituye asesoramiento financiero</p>
+  <p>© 2026 EduS Trader. Todos los derechos reservados.</p>
+</footer>
 
 <script>
 // ─────────────────────────────────────────────────────────
@@ -720,6 +734,12 @@ document.getElementById('coupon-input').addEventListener('keydown', e => {
 // Checkout
 // ─────────────────────────────────────────────────────────
 async function checkout(plan) {
+  const termsCheckbox = document.getElementById('terms-checkbox');
+  if (!termsCheckbox.checked) {
+    alert('Por favor, acepta los Términos y Condiciones y la Política de Privacidad antes de continuar.');
+    return;
+  }
+
   if (plan === 'free') {
     // Verificar si está autenticado
     try {

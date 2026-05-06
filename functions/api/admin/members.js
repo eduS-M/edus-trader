@@ -27,7 +27,7 @@ export async function onRequestGet({ request, env }) {
   try {
     const { results } = await env.DB.prepare(`
       SELECT
-        u.id, u.email, u.name, u.plan, u.plan_expires_at,
+        u.id, u.email, u.name, u.plan, u.plan_expires_at, u.role,
         u.status, u.email_verified, u.created_at, u.last_login_at,
         s.billing_cycle, s.current_period_end, s.status AS sub_status
       FROM users u
@@ -52,10 +52,10 @@ export async function onRequestPut({ request, env }) {
   try { body = await request.json(); }
   catch { return badRequest('JSON inválido'); }
 
-  const { id, status, plan } = body;
+  const { id, status, plan, role, send_reset_password } = body;
   if (!id) return badRequest('ID de usuario requerido');
 
-  const user = await env.DB.prepare('SELECT id FROM users WHERE id = ?').bind(id).first();
+  const user = await env.DB.prepare('SELECT id, email, name FROM users WHERE id = ?').bind(id).first();
   if (!user) return notFound('Usuario no encontrado');
 
   const updates = [];
@@ -69,8 +69,40 @@ export async function onRequestPut({ request, env }) {
     updates.push('plan = ?');
     values.push(plan);
   }
+  if (role && ['member','admin'].includes(role)) {
+    updates.push('role = ?');
+    values.push(role);
+  }
 
-  if (!updates.length) return badRequest('Nada que actualizar');
+  if (send_reset_password) {
+    // Generate token and send email
+    const { generateId } = await import('../../lib/jwt.js');
+    const { sendPasswordResetEmail } = await import('../../lib/emails.js');
+    const token = generateId() + generateId();
+    await env.DB.prepare(
+      "INSERT INTO email_verifications (id, user_id, token, type, expires_at) VALUES (?, ?, ?, 'reset_password', datetime('now', '+1 hour'))"
+    ).bind(generateId(), id, token).run();
+    
+    // Call email API
+    const baseUrl = env.APP_URL || new URL(request.url).origin;
+    if (env.RESEND_API_KEY) {
+      await sendPasswordResetEmail({
+        to: user.email,
+        name: user.name,
+        token: token,
+        appUrl: baseUrl,
+        apiKey: env.RESEND_API_KEY,
+        from: env.EMAIL_FROM || 'EduS Trader <noreply@edustrader.com>'
+      }).catch(e => console.error("Error sending reset email:", e));
+    } else {
+      console.warn("No RESEND_API_KEY configured. Email not sent.");
+    }
+  }
+
+  if (!updates.length) {
+    if (send_reset_password) return ok({ message: 'Correo de recuperación enviado' });
+    return badRequest('Nada que actualizar');
+  }
   values.push(id);
 
   try {
