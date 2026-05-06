@@ -116,11 +116,11 @@
       <div class="form-grid">
         <div class="form-group">
           <label>Nombre</label>
-          <input type="text" id="p-name">
+          <input type="text" id="p-name" placeholder="Cargando...">
         </div>
         <div class="form-group">
           <label>Correo Electrónico (Solo Lectura)</label>
-          <input type="email" id="p-email" readonly style="background:#f8fafc; color:#94a3b8">
+          <input type="email" id="p-email" placeholder="Cargando..." readonly style="background:#f8fafc; color:#94a3b8; cursor:not-allowed;">
         </div>
         <div class="form-group">
           <label>Teléfono</label>
@@ -139,7 +139,10 @@
           <input type="text" id="p-tax" placeholder="Opcional">
         </div>
       </div>
-      <button class="btn btn-outline" onclick="saveProfile()" id="save-btn" style="margin-top:8px">Guardar Cambios</button>
+      <div style="display:flex; gap:12px; margin-top:8px;">
+        <button class="btn btn-outline" onclick="saveProfile()" id="save-btn">Guardar Cambios</button>
+        <button class="btn btn-outline" onclick="resetPassword()" id="reset-btn" style="color:#475569; border-color:#cbd5e1;">Restablecer Contraseña</button>
+      </div>
     </div>
 
     <div class="card">
@@ -240,6 +243,34 @@
       }
       
       btn.textContent = 'Guardar Cambios';
+      btn.disabled = false;
+    }
+    
+    async function resetPassword() {
+      const email = document.getElementById('p-email').value;
+      if (!email || email === 'Cargando...') return;
+      
+      const btn = document.getElementById('reset-btn');
+      btn.textContent = 'Enviando...';
+      btn.disabled = true;
+      
+      try {
+        const res = await fetch('/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        
+        if (res.ok) {
+          showMessage('Te enviamos un correo con las instrucciones para restablecer tu contraseña.', 'success');
+        } else {
+          showMessage('No se pudo enviar el correo.', 'error');
+        }
+      } catch {
+        showMessage('Error de conexión', 'error');
+      }
+      
+      btn.textContent = 'Restablecer Contraseña';
       btn.disabled = false;
     }
     

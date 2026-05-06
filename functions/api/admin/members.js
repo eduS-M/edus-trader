@@ -29,6 +29,7 @@ export async function onRequestGet({ request, env }) {
       SELECT
         u.id, u.email, u.name, u.plan, u.plan_expires_at, u.role,
         u.status, u.email_verified, u.created_at, u.last_login_at,
+        u.phone, u.country, u.address, u.tax_id,
         s.billing_cycle, s.current_period_end, s.status AS sub_status
       FROM users u
       LEFT JOIN subscriptions s ON s.user_id = u.id
@@ -52,7 +53,7 @@ export async function onRequestPut({ request, env }) {
   try { body = await request.json(); }
   catch { return badRequest('JSON inválido'); }
 
-  const { id, status, plan, role, send_reset_password } = body;
+  const { id, status, plan, role, send_reset_password, phone, country, address, tax_id } = body;
   if (!id) return badRequest('ID de usuario requerido');
 
   const user = await env.DB.prepare('SELECT id, email, name FROM users WHERE id = ?').bind(id).first();
@@ -72,6 +73,22 @@ export async function onRequestPut({ request, env }) {
   if (role && ['member','admin'].includes(role)) {
     updates.push('role = ?');
     values.push(role);
+  }
+  if (phone !== undefined) {
+    updates.push('phone = ?');
+    values.push(phone || null);
+  }
+  if (country !== undefined) {
+    updates.push('country = ?');
+    values.push(country || null);
+  }
+  if (address !== undefined) {
+    updates.push('address = ?');
+    values.push(address || null);
+  }
+  if (tax_id !== undefined) {
+    updates.push('tax_id = ?');
+    values.push(tax_id || null);
   }
 
   if (send_reset_password) {

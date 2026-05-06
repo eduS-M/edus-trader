@@ -534,6 +534,28 @@ tbody td strong{color:var(--dark);font-weight:600}
     
     <div class="form-grid">
       <div class="form-row">
+        <label class="form-label">Teléfono</label>
+        <input class="form-input" id="m-phone" placeholder="Opcional">
+      </div>
+      <div class="form-row">
+        <label class="form-label">País</label>
+        <input class="form-input" id="m-country" placeholder="Opcional">
+      </div>
+    </div>
+    
+    <div class="form-grid">
+      <div class="form-row">
+        <label class="form-label">Dirección</label>
+        <input class="form-input" id="m-address" placeholder="Opcional">
+      </div>
+      <div class="form-row">
+        <label class="form-label">RUT / Documento Fiscal</label>
+        <input class="form-input" id="m-tax" placeholder="Opcional">
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-row">
         <label class="form-label">Plan *</label>
         <select class="form-select" id="m-plan">
           <option value="free">Free</option>
@@ -715,6 +737,10 @@ function editMember(id) {
   document.getElementById('m-email').value = u.email;
   document.getElementById('m-plan').value = u.plan;
   document.getElementById('m-role').value = u.role || 'member';
+  document.getElementById('m-phone').value = u.phone || '';
+  document.getElementById('m-country').value = u.country || '';
+  document.getElementById('m-address').value = u.address || '';
+  document.getElementById('m-tax').value = u.tax_id || '';
   document.getElementById('member-modal').classList.add('open');
 }
 
@@ -726,8 +752,12 @@ async function saveMember() {
   const id = document.getElementById('member-id').value;
   const plan = document.getElementById('m-plan').value;
   const role = document.getElementById('m-role').value;
+  const phone = document.getElementById('m-phone').value;
+  const country = document.getElementById('m-country').value;
+  const address = document.getElementById('m-address').value;
+  const tax_id = document.getElementById('m-tax').value;
   
-  const r = await api('/api/admin/members', { method:'PUT', body:{ id, plan, role } });
+  const r = await api('/api/admin/members', { method:'PUT', body:{ id, plan, role, phone, country, address, tax_id } });
   if (r.ok) {
     toast('Miembro actualizado ✓');
     closeMemberModal();
