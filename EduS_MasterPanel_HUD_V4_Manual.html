@@ -133,7 +133,7 @@ footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3re
     <div class="header-text">
       <div class="brand">EduS Trader · Manual de Indicadores</div>
       <h1>EduS MasterPanel HUD V4</h1>
-      <span class="version">NinjaTrader 8 · HUD flotante + overlay · V4 · 5 capas de validación · HTF configurable</span>
+      <span class="version">NinjaTrader 8 · HUD flotante + overlay · V4 · 6 capas de validación · Filtros HTF, Nodos y POCs embebidos</span>
     </div>
   </div>
   <nav>
@@ -155,11 +155,11 @@ footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3re
 <div id="que-es" style="scroll-margin-top:46px;padding-top:0.5rem">
   <div class="section-label"><span class="num">1</span>¿Qué es?</div>
   <h2>EduS MasterPanel HUD V4</h2>
-  <p class="sub">HUD flotante + overlay en gráfica · 5 capas de análisis · Filtro HTF configurable · WinRate 60%+</p>
+  <p class="sub">HUD flotante + overlay en gráfica · 6 capas de análisis · Filtros HTF, Nodos y POCs embebidos · WinRate 60%+</p>
 
   <div class="alert alert-info">
     <div class="alert-title">🎯 Definición en una línea</div>
-    El MasterPanel HUD V4 es un panel de control que aparece como <strong>ventana flotante independiente</strong> (o como overlay sobre la gráfica) y te dice en tiempo real si el mercado está en condiciones de alta probabilidad para entrar. Analiza <strong>5 capas simultáneamente</strong>, incluyendo validación de Higher Timeframe configurable en minutos o ticks.
+    El MasterPanel HUD V4 es un panel de control que aparece como <strong>ventana flotante independiente</strong> (o como overlay sobre la gráfica) y te dice en tiempo real si el mercado está en condiciones de alta probabilidad para entrar. Analiza <strong>6 capas simultáneamente</strong>: tendencia, zonas AVWAP/LinReg, validación BM del canal Keltner, Higher Timeframe, puntos de control institucionales (nodos) y POCs de volumen. Todo sin dependencias externas.
   </div>
 
   <div class="three-col" style="margin-top:14px">
@@ -180,8 +180,8 @@ footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3re
       <p>Misma validación para zonas LR/LR+. LinReg89 debe estar del lado correcto del BM (tolerancia configurable).</p>
     </div>
     <div class="card card-red">
-      <div class="card-title">⬤ Filtro HTF (Higher Timeframe)</div>
-      <p>Valida que la tendencia del timeframe superior coincida con la dirección del semáforo. Compatible con minutos y ticks. Sin dependencias externas.</p>
+      <div class="card-title">⬤ Filtros Nodos + POCs (Embedded)</div>
+      <p>Detección de nodos institucionales de alto volumen y POCs de sesión. Totalmente integrados en el HUD V4, sin dependencias externas.</p>
     </div>
     <div class="card card-green">
       <div class="card-title">⬤ Posición en Vivo</div>
@@ -199,7 +199,7 @@ footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3re
 
   <div class="concept theory">
     <div class="concept-title">Principio fundamental — La convergencia reduce el ruido exponencialmente</div>
-    <p>La V4 no solo pregunta "¿la tendencia es alcista?" sino también "¿el AVWAP está bien posicionado respecto a la volatilidad?", "¿la temporalidad mayor está de acuerdo?". Cuando todas las capas coinciden, la probabilidad de éxito es máxima.</p>
+    <p>La V4 no solo pregunta "¿la tendencia es alcista?" sino también "¿el AVWAP está bien posicionado respecto a la volatilidad?", "¿la temporalidad mayor está de acuerdo?", "¿hay nodos institucionales bloqueando el camino?", "¿hay un POC desnudo que podría revertir el precio?". Todo integrado directamente en el HUD, sin depender de indicadores externos.</p>
   </div>
 
   <div class="layer layer-1">
@@ -231,8 +231,10 @@ footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3re
   </div>
 
   <div class="concept theory">
-    <div class="concept-title">Nuevo en V4 — Filtro HTF (Capa 5)</div>
-    <p>La tendencia del timeframe superior debe coincidir con la dirección del semáforo. Si operas en 610 ticks y el HTF en 987 ticks es bajista, las señales alcistas se bloquean. Compatible con minutos y ticks. Solo requiere SMA nativo de NT8 — sin dependencias externas.</p>
+    <div class="concept-title">Nuevo en V4 — Filtros embebidos: HTF + Nodos + POCs (Capas 5, 6, 7)</div>
+    <p><strong>Filtro HTF:</strong> la tendencia del timeframe superior debe coincidir con la dirección del semáforo. Compatible con minutos y ticks.</p>
+    <p><strong>Filtro Nodos:</strong> detección interna de nodos institucionales de alto volumen. El HUD construye su propio perfil de volumen por sesión y extrae los nodos más significativos (top 40% del volumen máximo).</p>
+    <p><strong>Filtro POCs:</strong> cálculo interno de Puntos de Control (POC) por sesión. Similar a EduS_Institutional_Naked_Pocs, pero completamente integrado. Los POCs se marcan como inactivos cuando el precio los toca en RTH.</p>
   </div>
 </div>
 
@@ -246,7 +248,15 @@ footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3re
   <div class="two-col">
     <div class="card card-blue">
       <div class="card-title">📈 Filtro HTF configurable</div>
-      <p>Soporta timeframes en <strong>minutos y ticks</strong>. Para gráficas de 610 ticks, configura HTF en 987 ticks (1, 987). El HTF se añade como Data Series secundaria automáticamente. Sin dependencias externas.</p>
+      <p>Soporta timeframes en <strong>minutos y ticks</strong>. Para gráficas de 610 ticks, configura HTF en 987 ticks (1, 987). El HTF se añade como Data Series secundaria automáticamente.</p>
+    </div>
+    <div class="card card-red">
+      <div class="card-title">🏛️ Filtro Nodos (Embedded)</div>
+      <p>Detección de nodos institucionales de alto volumen por sesión. El HUD calcula internamente el perfil de volumen y extrae los nodos significativos. Configurable por distancia en ticks.</p>
+    </div>
+    <div class="card card-amber">
+      <div class="card-title">🎯 Filtro POCs (Embedded)</div>
+      <p>Cálculo interno de Puntos de Control por sesión. Similar al EduS_Institutional_Naked_Pocs pero integrado directamente en el HUD V4. Sin dependencias externas.</p>
     </div>
     <div class="card card-green">
       <div class="card-title">💰 Stop máximo en dólares</div>
@@ -272,8 +282,8 @@ footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3re
   <p class="sub">El HUD V4 requiere dependencias instaladas previamente</p>
 
   <div class="alert alert-danger">
-    <div class="alert-title">🚨 Prerequisito obligatorio</div>
-    El HUD V4 solo requiere <strong>EduS_DynamicSwingAVWAP</strong> como dependencia externa. Los demás indicadores usados son nativos de NT8 (SMA, ATR, LinReg, EMA).
+    <div class="alert-title">🚨 Prerequisito</div>
+    El HUD V4 solo requiere <strong>EduS_DynamicSwingAVWAP</strong> como dependencia externa. Los filtros Nodos, POCs y HTF están embebidos directamente en el HUD. SMA, ATR, LinReg y EMA son nativos de NT8.
   </div>
 
   <div class="alert alert-warn">
@@ -338,7 +348,9 @@ footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3re
         ✅ 4/4 indicadores de tendencia alineados (alcista o bajista)<br>
         ✅ Precio en Zona A/A+ (Capa 3 OK) o LR/LR+ (Capa 4 OK)<br>
         ✅ Capa 3 o Capa 4 confirman (o tolerancia activa)<br>
-        ✅ Filtro HTF pasa (si activado)
+        ✅ Filtro HTF pasa (si activado)<br>
+        ✅ Filtro Nodos pasa (si activado)<br>
+        ✅ Filtro POCs pasa (si activado)
       </div>
     </div>
     <p><strong>Qué hacer:</strong> Buscar entrada en la dirección indicada. El panel muestra precio de entrada, stop, T1 y T2 con R:R. El badge "ACTIVA" aparece en verde.</p>
@@ -354,7 +366,8 @@ footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3re
         <strong style="color:var(--amber)">Se activa cuando:</strong><br>
         🟡 4/4 señales + zona premium PERO falla Capa 3 o Capa 4<br>
         🟡 4/4 señales + zona B/B+ (precio extendido)<br>
-        🟡 3/4 señales + zona A/A+ (una señal de tendencia falta)
+        🟡 3/4 señales + zona A/A+ (una señal de tendencia falta)<br>
+        🟡 Señal completa pero algún filtro V4 embebido no pasa
       </div>
     </div>
     <p><strong>Qué hacer:</strong> Operar con tamaño reducido (50% o menos). Ser más exigente con el precio de entrada y confirmación adicional.</p>
@@ -379,12 +392,13 @@ footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3re
   <h3>Tabla de condiciones completa</h3>
   <div style="overflow-x:auto">
     <table class="param-table">
-      <thead><tr><th>Capa 1 (4 señales)</th><th>Capa 2 (zona)</th><th>Capa 3/4 (BM)</th><th>Resultado</th></tr></thead>
+      <thead><tr><th>Capa 1 (4 señales)</th><th>Capa 2 (zona)</th><th>Capa 3/4 (BM)</th><th>Filtros V4</th><th>Resultado</th></tr></thead>
       <tbody>
         <tr style="background:rgba(77,186,118,0.05)">
           <td style="color:var(--green)">✅ 4/4 alineadas</td>
           <td style="color:var(--green)">A/A+ o LR/LR+</td>
           <td style="color:var(--green)">✅ OK o tolerancia</td>
+          <td style="color:var(--green)">✅ Todos OK</td>
           <td style="color:var(--green);font-weight:700">🟢 VERDE</td>
         </tr>
         <tr style="background:rgba(201,168,76,0.05)">
@@ -395,17 +409,10 @@ footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3re
           <td style="color:var(--amber);font-weight:700">🟡 AMARILLO</td>
         </tr>
         <tr style="background:rgba(201,168,76,0.05)">
-          <td style="color:var(--amber)">✅ 4/4 alineadas</td>
-          <td style="color:var(--amber)">⚠️ B/B+</td>
-          <td style="color:var(--text3)">–</td>
-          <td style="color:var(--green)">✅ OK</td>
-          <td style="color:var(--amber);font-weight:700">🟡 AMARILLO</td>
-        </tr>
-        <tr style="background:rgba(201,168,76,0.05)">
-          <td style="color:var(--amber)">⚠️ 3/4 alineadas</td>
+          <td style="color:var(--green)">✅ 4/4 alineadas</td>
           <td style="color:var(--green)">✅ A/A+ o LR/LR+</td>
-          <td style="color:var(--text3)">–</td>
-          <td style="color:var(--green)">✅ OK</td>
+          <td style="color:var(--green)">✅ OK o tolerancia</td>
+          <td style="color:var(--red)">❌ Algún filtro falla</td>
           <td style="color:var(--amber);font-weight:700">🟡 AMARILLO</td>
         </tr>
         <tr style="background:rgba(224,82,82,0.05)">
@@ -424,9 +431,10 @@ footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3re
 <div class="section-divider"></div>
 <div id="filtros" style="scroll-margin-top:46px">
   <div class="section-label"><span class="num">6</span>Filtros V4</div>
-  <h2>Filtro HTF (Higher Timeframe) configurable</h2>
-  <p class="sub">El único filtro V4 incorporado — valida alineación con temporalidad mayor. Sin dependencias externas.</p>
-  <div style="overflow-x:auto">
+  <h2>Filtros embebidos (sin dependencias externas)</h2>
+  <p class="sub">Tres filtros incorporados directamente en el HUD V4: HTF configurable, Nodos institucionales y POCs de volumen</p>
+
+  <h3>Filtro HTF (Higher Timeframe)</h3>
     <table class="param-table">
       <thead><tr><th>Propiedad</th><th>Rango</th><th>Default</th><th>Descripción</th></tr></thead>
       <tbody>
@@ -438,6 +446,30 @@ footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3re
     </table>
   </div>
   <p style="font-size:12px;color:var(--text2);margin-top:8px"><strong>Lógica:</strong> Compara Close[1] del HTF vs SMA20 del HTF. Si la dirección coincide con la del semáforo, pasa el filtro. Ej: gráfica 610 ticks con HTF 987 ticks.</p>
+
+  <h3>Filtro Nodos Institucionales (Embedded)</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Propiedad</th><th>Rango</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">UsarFiltroNodos</span></td><td>true/false</td><td><span class="param-default">false</span></td><td>Activa filtro de nodos institucionales embebido.</td></tr>
+        <tr><td><span class="param-name">Nodo_DistanciaTicks</span></td><td>0–50</td><td><span class="param-default">8</span></td><td>Distancia mínima en ticks del precio a cualquier nodo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:12px;color:var(--text2);margin-top:8px"><strong>Lógica:</strong> El HUD construye un perfil de volumen por sesión. Los nodos se identifican como los precios con mayor volumen (top 40% del máximo). Nodos cercanos se fusionan si están a menos de 3 ticks. <strong>Sin dependencias externas.</strong></p>
+
+  <h3>Filtro POCs (Embedded)</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Propiedad</th><th>Rango</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">UsarFiltroPocs</span></td><td>true/false</td><td><span class="param-default">false</span></td><td>Activa filtro de POCs embebido.</td></tr>
+        <tr><td><span class="param-name">Poc_DistanciaTicks</span></td><td>0–50</td><td><span class="param-default">8</span></td><td>Distancia mínima en ticks del precio a cualquier POC activo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:12px;color:var(--text2);margin-top:8px"><strong>Lógica:</strong> Distribuye el volumen de cada vela a través de los precios (tick por tick). Al final de cada sesión, calcula el POC (Point of Control) como el precio con mayor volumen acumulado. Los POCs se desactivan cuando el precio los toca en horario RTH (09:30–16:00). <strong>Sin dependencias externas.</strong></p>
 </div>
 
 <!-- ══ 7. SECCIONES DEL PANEL ══ -->
@@ -785,8 +817,8 @@ footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3re
     • <strong>HTF con ticks:</strong> Para ES 610t usa HTF 987t (Tick, 987). Para NQ 377t usa HTF 610t.<br>
     • <strong>StopMaxDolares:</strong> Para ES con 1 contrato, prueba $200. Para MES prueba $40. Reduce el riesgo sin tocar targets.<br>
     • <strong>ToleranciaBM_ATR:</strong> Prueba 1.5 para empezar. Si ves demasiadas señales amarillas donde crees que debería ser verde, sube a 2.0.<br>
-    • <strong>Orden de activación:</strong> Empieza con los filtros V4 desactivados. Actívalos uno por uno para entender cómo afectan tus señales.<br>
-    • <strong>Independencia:</strong> El HUD V4 solo requiere EduS_DynamicSwingAVWAP como dependencia externa. Los filtros V4 usan indicadores nativos de NT8.
+    • <strong>Independencia:</strong> El HUD V4 solo requiere EduS_DynamicSwingAVWAP como dependencia externa. Los filtros Nodos, POCs y HTF están embebidos.<br>
+    • <strong>Orden de activación:</strong> Empieza con los filtros V4 desactivados. Actívalos uno por uno para entender cómo afectan tus señales.
   </div>
 </div>
 
