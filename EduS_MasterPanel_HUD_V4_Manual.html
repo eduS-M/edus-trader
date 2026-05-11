@@ -1,431 +1,855 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduS MasterPanel HUD V4 - Manual</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #0b0d17;
-            --glass-bg: rgba(20, 24, 44, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --accent-primary: #6366f1;
-            --accent-secondary: #8b5cf6;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --gradient-1: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            --font-sans: 'Inter', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: var(--font-sans);
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Animated Background */
-        .bg-glow {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            overflow: hidden;
-            background: #0b0d17;
-        }
-
-        .bg-glow::before, .bg-glow::after {
-            content: '';
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.4;
-            animation: float 20s ease-in-out infinite alternate;
-        }
-
-        .bg-glow::before {
-            background: rgba(99, 102, 241, 0.3);
-            width: 600px;
-            height: 600px;
-            top: -100px;
-            left: -100px;
-        }
-
-        .bg-glow::after {
-            background: rgba(139, 92, 246, 0.3);
-            width: 500px;
-            height: 500px;
-            bottom: -100px;
-            right: -100px;
-            animation-delay: -10s;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(100px, 100px); }
-        }
-
-        /* Layout */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 60px;
-            animation: fadeInDown 1s ease-out;
-        }
-
-        .version-badge {
-            display: inline-block;
-            background: rgba(99, 102, 241, 0.15);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            color: #818cf8;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.2;
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Glassmorphism Sections */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 40px;
-            margin-bottom: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: fadeInUp 0.8s ease-out backwards;
-        }
-
-        .glass-panel:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 20px rgba(99, 102, 241, 0.1);
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-
-        h2 {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        h2 .icon {
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 1.5rem;
-        }
-
-        p {
-            margin-bottom: 20px;
-            font-size: 1.05rem;
-        }
-
-        /* Grid Layouts */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        /* Cards */
-        .feature-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 24px;
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(99, 102, 241, 0.4);
-        }
-
-        .feature-card h3 {
-            font-size: 1.25rem;
-            color: #fff;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .feature-card h3 span {
-            font-size: 1.5rem;
-        }
-
-        /* Tables */
-        .table-container {
-            overflow-x: auto;
-            margin-top: 30px;
-            border-radius: 16px;
-            border: 1px solid var(--glass-border);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        th, td {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        th {
-            background: rgba(255, 255, 255, 0.05);
-            font-weight: 600;
-            color: #fff;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .market-tag {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-family: var(--font-mono);
-            font-size: 0.9rem;
-            font-weight: 600;
-            background: rgba(99, 102, 241, 0.2);
-            color: #a5b4fc;
-        }
-
-        /* Code/Mono blocks */
-        code {
-            font-family: var(--font-mono);
-            background: rgba(0, 0, 0, 0.3);
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 0.9em;
-            color: #cbd5e1;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .alert {
-            background: rgba(245, 158, 11, 0.1);
-            border-left: 4px solid var(--warning);
-            padding: 20px;
-            border-radius: 0 12px 12px 0;
-            margin: 20px 0;
-        }
-
-        .alert-title {
-            color: var(--warning);
-            font-weight: 600;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Lists */
-        ul {
-            list-style: none;
-            margin-left: 10px;
-        }
-
-        ul li {
-            position: relative;
-            padding-left: 24px;
-            margin-bottom: 12px;
-        }
-
-        ul li::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: var(--accent-primary);
-            font-weight: bold;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-        .delay-4 { animation-delay: 0.4s; }
-
-        @media (max-width: 768px) {
-            .grid-2 { grid-template-columns: 1fr; }
-            h1 { font-size: 2.5rem; }
-            .glass-panel { padding: 24px; }
-        }
-    </style>
+<!-- Playables SDK -->
+<script>// Playables SDK v1.0.0
+(function(){'use strict';if(window.playablesSDK)return;var HANDLER_NAME='playablesGameEventHandler';var ANDROID_BRIDGE_NAME='_MetaPlayablesBridge';var RAF_FRAME_THRESHOLD=3;var gameReadySent=false;var firstInteractionSent=false;var errorSent=false;var frameCount=0;var originalRAF=window.requestAnimationFrame;function hasIOSBridge(){return !!(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers[HANDLER_NAME])}function hasAndroidBridge(){return !!(window[ANDROID_BRIDGE_NAME]&&typeof window[ANDROID_BRIDGE_NAME].postEvent==='function')}function isInIframe(){return !!(window.parent&&window.parent!==window)}function sendEvent(eventName,payload){var message={type:eventName,payload:payload||{},timestamp:Date.now()};if(hasIOSBridge()){try{window.webkit.messageHandlers[HANDLER_NAME].postMessage(message)}catch(e){}return}if(hasAndroidBridge()){try{var p=payload||{};p.__secureToken=window.__fbAndroidBridgeAuthToken||'';window[ANDROID_BRIDGE_NAME].postEvent(eventName,JSON.stringify(p))}catch(e){}return}if(isInIframe()){try{window.parent.postMessage(message,'*')}catch(e){}}}function onFrame(){if(gameReadySent)return;frameCount++;if(frameCount>=RAF_FRAME_THRESHOLD){gameReadySent=true;sendEvent('game_ready',{frame_count:frameCount,detected_at:Date.now()});return}originalRAF.call(window,onFrame)}if(originalRAF){window.requestAnimationFrame=function(callback){if(!gameReadySent){return originalRAF.call(window,function(timestamp){frameCount++;if(frameCount>=RAF_FRAME_THRESHOLD&&!gameReadySent){gameReadySent=true;sendEvent('game_ready',{frame_count:frameCount,detected_at:Date.now()})}callback(timestamp)})}return originalRAF.call(window,callback)}}function setupFirstInteractionDetection(){var events=['touchstart','mousedown','keydown'];function onFirstInteraction(){if(firstInteractionSent)return;firstInteractionSent=true;sendEvent('user_interaction_start',null);for(var i=0;i<events.length;i++){document.removeEventListener(events[i],onFirstInteraction,true)}}for(var i=0;i<events.length;i++){document.addEventListener(events[i],onFirstInteraction,true)}}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',setupFirstInteractionDetection)}else{setupFirstInteractionDetection()}window.addEventListener('error',function(event){if(errorSent)return;errorSent=true;sendEvent('error',{message:event.message||'Unknown error',source:event.filename||'',lineno:event.lineno||0,colno:event.colno||0,auto_captured:true})});window.addEventListener('unhandledrejection',function(event){if(errorSent)return;errorSent=true;var reason=event.reason;sendEvent('error',{message:(reason instanceof Error)?reason.message:String(reason),type:'unhandled_promise_rejection',auto_captured:true})});window.playablesSDK={complete:function(score){sendEvent('game_ended',{score:score,completed:true})},error:function(message){if(errorSent)return;errorSent=true;sendEvent('error',{message:message||'Unknown error',auto_captured:false})},sendEvent:function(eventName,payload){if(!eventName||typeof eventName!=='string')return;sendEvent(eventName,payload)}};if(originalRAF){originalRAF.call(window,onFrame)}})();</script>
+<script>window.Intl=window.Intl||{};Intl.t=function(s){return(Intl._locale&&Intl._locale[s])||s;};</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual — EduS MasterPanel HUD V4</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f7fa;--bg2:#ffffff;--bg3:#e8ecf2;
+  --text:#0f172a;--text2:#334155;--text3:#64748b;
+  --teal:#3dd6c0;--teal-bg:rgba(61,214,192,0.08);--teal-bd:rgba(61,214,192,0.25);
+  --green:#4dba76;--green-bg:rgba(77,186,118,0.08);--green-bd:rgba(77,186,118,0.25);
+  --red:#e05252;--red-bg:rgba(224,82,82,0.08);--red-bd:rgba(224,82,82,0.25);
+  --amber:#c9a84c;--amber-bg:rgba(201,168,76,0.08);--amber-bd:rgba(201,168,76,0.25);
+  --blue:#4a90d9;--blue-bg:rgba(74,144,217,0.08);--blue-bd:rgba(74,144,217,0.25);
+  --purple:#9b59b6;--purple-bg:rgba(155,89,182,0.08);--purple-bd:rgba(155,89,182,0.25);
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6}
+.site-header{background:linear-gradient(135deg,#ffffff,#f1f5f9);border-bottom:0.5px solid var(--purple-bd);padding:0}
+.header-inner{max-width:1000px;margin:0 auto;padding:24px 24px 0;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.header-logo{width:48px;height:48px;background:var(--purple-bg);border:1.5px solid var(--purple-bd);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.header-text .brand{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--purple);font-weight:600}
+.header-text h1{font-size:22px;font-weight:700;color:var(--text);margin-bottom:2px}
+.header-text .version{font-size:11px;color:var(--text3);background:rgba(0,0,0,0.04);border:0.5px solid var(--purple-bd);padding:2px 8px;border-radius:4px}
+nav{max-width:1000px;margin:0 auto;padding:0 24px;display:flex;overflow-x:auto;gap:0;margin-top:12px}
+nav a{font-size:11px;color:var(--text3);text-decoration:none;padding:10px 14px;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s}
+nav a:hover{color:var(--text)}
+nav a.active{color:var(--purple);border-bottom-color:var(--purple);font-weight:600}
+.page{max-width:1000px;margin:0 auto;padding:2rem 24px 4rem}
+.section-divider{height:0.5px;background:rgba(0,0,0,0.1);margin:3rem 0 2rem}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:0.8rem}
+.section-label .num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--bg3);border:0.5px solid rgba(0,0,0,0.12);font-size:9px;color:var(--purple)}
+h2{font-size:20px;font-weight:600;margin-bottom:4px;color:var(--text)}
+h3{font-size:15px;font-weight:600;margin:1.2rem 0 0.6rem;color:#0d7a6c}
+.sub{font-size:12px;color:var(--text3);margin-bottom:1.2rem;line-height:1.5}
+p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px}
+p:last-child{margin-bottom:0}
+strong{color:var(--text);font-weight:500}
+code{background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:3px;font-size:0.9em;color:var(--text)}
+.card{background:var(--bg2);border:0.5px solid rgba(0,0,0,0.08);border-radius:10px;padding:16px 18px;margin-bottom:12px}
+.card-green{border-color:var(--green-bd);background:var(--green-bg)}
+.card-amber{border-color:var(--amber-bd);background:var(--amber-bg)}
+.card-red{border-color:var(--red-bd);background:var(--red-bg)}
+.card-teal{border-color:var(--teal-bd);background:var(--teal-bg)}
+.card-blue{border-color:var(--blue-bd);background:var(--blue-bg)}
+.card-purple{border-color:var(--purple-bd);background:var(--purple-bg)}
+.card-title{font-size:13px;font-weight:600;margin-bottom:6px}
+.card-green .card-title{color:var(--green)}
+.card-amber .card-title{color:var(--amber)}
+.card-red .card-title{color:var(--red)}
+.card-teal .card-title{color:#0d7a6c}
+.card-blue .card-title{color:var(--blue)}
+.card-purple .card-title{color:var(--purple)}
+.card p{font-size:12px;color:var(--text2);margin-bottom:6px}
+.param-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.param-table th{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:8px 10px;border-bottom:0.5px solid rgba(0,0,0,0.1);text-align:left;background:rgba(0,0,0,0.02)}
+.param-table td{padding:9px 10px;border-bottom:0.5px solid rgba(0,0,0,0.05);color:var(--text2);vertical-align:top}
+.param-table tr:hover td{background:rgba(0,0,0,0.02)}
+.param-table tr:last-child td{border-bottom:none}
+.param-name{color:var(--text);font-weight:500;white-space:nowrap}
+.param-default{color:#0d7a6c;font-weight:600;font-family:monospace;white-space:nowrap}
+.config-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
+.config-table th{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:8px 10px;border-bottom:0.5px solid rgba(0,0,0,0.1);text-align:left;background:rgba(0,0,0,0.02)}
+.config-table td{padding:7px 9px;border-bottom:0.5px solid rgba(0,0,0,0.05);color:var(--text2);vertical-align:top}
+.config-table tr:hover td{background:rgba(0,0,0,0.02)}
+.config-table tr:last-child td{border-bottom:none}
+.val-cell{font-family:monospace;font-weight:600;color:#0d7a6c}
+.steps{counter-reset:step}
+.step{display:flex;gap:14px;margin-bottom:16px}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--purple-bg);border:1.5px solid var(--purple-bd);color:var(--purple);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-body{flex:1}
+.step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.step-desc{font-size:12px;color:var(--text2);line-height:1.6}
+.concept{border-radius:10px;padding:16px 18px;margin-bottom:12px}
+.concept.theory{background:rgba(74,144,217,0.07);border:0.5px solid var(--blue-bd)}
+.concept.theory .concept-title{font-size:12px;font-weight:600;color:var(--blue);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.07em}
+.concept p{font-size:12px;color:var(--text2)}
+.semaforo-demo{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.bola{width:36px;height:36px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.bola-on-green{background:#00c850;box-shadow:0 0 12px rgba(0,200,80,0.6)}
+.bola-off-green{background:#2d2d32;border:1px solid #3a3a42}
+.bola-on-amber{background:#ffd200;box-shadow:0 0 12px rgba(255,210,0,0.6)}
+.bola-off-amber{background:#2d2d32;border:1px solid #3a3a42}
+.bola-on-red{background:#dc3232;box-shadow:0 0 12px rgba(220,50,50,0.6)}
+.bola-off-red{background:#2d2d32;border:1px solid #3a3a42}
+.semaforo-label{font-size:12px;color:var(--text2);line-height:1.5}
+.layer{border-radius:10px;padding:14px 16px;margin-bottom:10px;border-left:4px solid}
+.layer-1{background:rgba(74,144,217,0.07);border-color:var(--blue)}
+.layer-2{background:rgba(61,214,192,0.07);border-color:#0d7a6c}
+.layer-3{background:rgba(155,89,182,0.07);border-color:var(--purple)}
+.layer-layer4{background:rgba(201,168,76,0.07);border-color:var(--amber)}
+.layer-5{background:rgba(224,82,82,0.07);border-color:var(--red)}
+.layer-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px}
+.layer-1 .layer-title{color:var(--blue)}
+.layer-2 .layer-title{color:#0d7a6c}
+.layer-3 .layer-title{color:var(--purple)}
+.layer-layer4 .layer-title{color:var(--amber)}
+.layer-5 .layer-title{color:var(--red)}
+.layer p{font-size:12px;color:var(--text2)}
+.panel-sec{background:rgba(0,0,0,0.03);border:0.5px solid rgba(0,0,0,0.09);border-radius:8px;padding:12px 14px;margin-bottom:8px}
+.panel-sec-title{font-size:11px;font-weight:700;color:#0d7a6c;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.alert{border-radius:8px;padding:12px 14px;font-size:12px;margin-bottom:12px}
+.alert-warn{background:var(--amber-bg);border:0.5px solid var(--amber-bd);color:var(--amber)}
+.alert-info{background:var(--teal-bg);border:0.5px solid var(--teal-bd);color:#0d7a6c}
+.alert-danger{background:var(--red-bg);border:0.5px solid var(--red-bd);color:var(--red)}
+.alert-title{font-weight:600;margin-bottom:3px}
+.tag-green{background:rgba(77,186,118,0.15);color:var(--green);border:0.5px solid var(--green-bd);padding:2px 6px;border-radius:3px;font-weight:600;white-space:nowrap;font-size:11px}
+.tag-amber{background:rgba(201,168,76,0.15);color:var(--amber);border:0.5px solid var(--amber-bd);padding:2px 6px;border-radius:3px;font-weight:600;white-space:nowrap;font-size:11px}
+.tag-red{background:rgba(224,82,82,0.15);color:var(--red);border:0.5px solid var(--red-bd);padding:2px 6px;border-radius:3px;font-weight:600;white-space:nowrap;font-size:11px}
+.tag-purple{background:rgba(155,89,182,0.15);color:var(--purple);border:0.5px solid var(--purple-bd);padding:2px 6px;border-radius:3px;font-weight:600;white-space:nowrap;font-size:11px}
+footer{text-align:center;font-size:10px;color:var(--text3);padding:2rem 1rem 3rem;border-top:0.5px solid rgba(0,0,0,0.08);margin-top:2rem;line-height:1.8}
+@media(max-width:640px){
+  .page{padding:1.5rem 16px 3rem}
+  .two-col,.three-col{grid-template-columns:1fr}
+  .config-table,.param-table{font-size:10px}
+  h2{font-size:17px}
+}
+</style>
 </head>
 <body>
-    <div class="bg-glow"></div>
 
-    <div class="container">
-        <header>
-            <div class="version-badge">Versión 4.0 (Institucional)</div>
-            <h1>EduS MasterPanel HUD V4</h1>
-            <p class="subtitle">El sistema definitivo de validación institucional. WinRate del 60%+ integrando filtros de estructura de mercado, Naked POCs y validación HTF.</p>
-        </header>
-
-        <section class="glass-panel delay-1">
-            <h2><span class="icon">🚀</span> Novedades en la Versión 4</h2>
-            <p>La V4 transforma el MasterPanel HUD en un validador institucional completo. No solo analiza el momentum del precio, sino que ahora incorpora el contexto macro, la estructura del mercado y la liquidez institucional para filtrar señales de baja calidad.</p>
-            
-            <div class="grid-2">
-                <div class="feature-card">
-                    <h3><span>📈</span> Filtro HTF (Higher Timeframe)</h3>
-                    <p>Valida que la tendencia en una temporalidad mayor (ej. 15min) esté alineada con tu gráfico operativo. Evita operar en contra del flujo principal.</p>
-                </div>
-                <div class="feature-card">
-                    <h3><span>🏛️</span> Integración Nodes V8</h3>
-                    <p>Comunicación directa con <code>EduS_Trader_Nodes_V8_Institutional</code>. El HUD ahora "sabe" dónde están los nodos de alto volumen institucionales para confirmar soporte/resistencia.</p>
-                </div>
-                <div class="feature-card">
-                    <h3><span>🎯</span> Naked POCs</h3>
-                    <p>Sincronización con <code>EduS_Institutional_Naked_Pocs</code>. Bloquea entradas que van directo contra un Point of Control desnudo, previniendo reversiones bruscas.</p>
-                </div>
-                <div class="feature-card">
-                    <h3><span>⏱️</span> Optimización Horaria</h3>
-                    <p>Lógica pre-calibrada para los horarios de máxima probabilidad: <strong>09:30 - 11:30 EST</strong> y <strong>14:00 - 15:30 EST</strong>.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="glass-panel delay-2">
-            <h2><span class="icon">⚙️</span> Requisitos y Configuración del Chart</h2>
-            <p>Para que los nuevos filtros institucionales funcionen correctamente, el gráfico requiere una configuración específica antes de cargar el indicador.</p>
-            
-            <div class="alert">
-                <div class="alert-title">⚠️ Requisito Crítico: Data Series HTF</div>
-                <p>Si activas <code>UsarFiltroHTF = true</code>, el indicador intentará acceder a <code>BarsArray[1]</code>. <strong>Debes agregar una segunda Data Series al gráfico</strong> (Ej: 15 Minutos) desde el menú <em>Data Series</em> de NinjaTrader, de lo contrario el indicador arrojará un error de compilación/ejecución por índice fuera de rango.</p>
-            </div>
-
-            <h3>Pasos de Arranque:</h3>
-            <ul>
-                <li>Abre el chart operativo (Ej: 5 Minutos).</li>
-                <li>Ve a <strong>Data Series</strong>, busca el mismo instrumento y agrégalo nuevamente, pero configúralo en <strong>15 Minutos</strong> (para el HTF). Aplica.</li>
-                <li>Ve a <strong>Indicators</strong> y agrega el <code>EduS_MasterPanel_HUD_V4</code>.</li>
-                <li>En las propiedades del HUD, en el grupo de Filtros V4, asegúrate de que <code>HTF_Minutos</code> coincida con la serie secundaria que agregaste (ej. 15).</li>
-                <li>Si usas <code>UsarFiltroNodos = true</code>, asegúrate de tener instalada la versión más reciente del <em>EduS_Trader_Nodes_V8_Institutional</em> en tu NinjaTrader.</li>
-            </ul>
-        </section>
-
-        <section class="glass-panel delay-3">
-            <h2><span class="icon">📊</span> Parámetros Recomendados por Volatilidad</h2>
-            <p>La siguiente tabla muestra la configuración óptima para alcanzar el 60% de WinRate objetivo, adaptada al comportamiento institucional de cada activo.</p>
-            
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Mercado</th>
-                            <th>Timeframe (Base/HTF)</th>
-                            <th>Keltner (Mult / Stop%)</th>
-                            <th>ZoneVerde (ATR)</th>
-                            <th>Notas de Estructura</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="market-tag">ES</span> S&P 500</td>
-                            <td>5m / 15m</td>
-                            <td>1.5 / 30% (0.30)</td>
-                            <td>0.5</td>
-                            <td>Mercado técnico. Respeta altamente los Naked POCs. <code>FiltroNodos = True</code> obligatorio.</td>
-                        </tr>
-                        <tr>
-                            <td><span class="market-tag">NQ</span> Nasdaq 100</td>
-                            <td>5m / 15m</td>
-                            <td>2.0 / 28% (0.28)</td>
-                            <td>0.6</td>
-                            <td>Alta volatilidad. Canal más amplio (2.0) evita barridos de stop. <code>FiltroApertura</code> esencial aquí.</td>
-                        </tr>
-                        <tr>
-                            <td><span class="market-tag">CL</span> Crude Oil</td>
-                            <td>5m / 15m</td>
-                            <td>2.0 / 25% (0.25)</td>
-                            <td>0.6</td>
-                            <td>Movimientos direccionales fuertes. Reducir stop pct al 25% por la amplitud de las velas.</td>
-                        </tr>
-                        <tr>
-                            <td><span class="market-tag">GC</span> Gold</td>
-                            <td>5m / 15m</td>
-                            <td>1.8 / 30% (0.30)</td>
-                            <td>0.5</td>
-                            <td>Excelente respeto al AVWAP dinámico. Activar <code>UsarCapa3 = True</code> para validación estricta de tendencia.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="alert" style="margin-top: 25px; border-left-color: var(--success); background: rgba(16, 185, 129, 0.1);">
-                <div class="alert-title" style="color: var(--success);">💡 Consejo Operativo</div>
-                <p>Las señales generadas fuera de los horarios óptimos (09:30-11:30 y 14:00-15:30 EST) tendrán un WinRate menor debido a la falta de volumen institucional. Utiliza el Dashboard web de EduSTrader para analizar la data depurada y verificar el rendimiento histórico reciente de tu configuración.</p>
-            </div>
-        </section>
-
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo">🎯</div>
+    <div class="header-text">
+      <div class="brand">EduS Trader · Manual de Indicadores</div>
+      <h1>EduS MasterPanel HUD V4</h1>
+      <span class="version">NinjaTrader 8 · HUD flotante + overlay · V4 · Filtros institucionales · 6 capas de validación</span>
     </div>
+  </div>
+  <nav>
+    <a class="active" href="#que-es">¿Qué es?</a>
+    <a href="#teoria">Teoría</a>
+    <a href="#novedades">Novedades V4</a>
+    <a href="#instalacion">Instalación</a>
+    <a href="#semaforo">Semáforo</a>
+    <a href="#filtros">Filtros V4</a>
+    <a href="#secciones">Secciones</a>
+    <a href="#parametros">Parámetros</a>
+    <a href="#config">Configuración</a>
+  </nav>
+</header>
+
+<div class="page">
+
+<!-- ══ 1. QUÉ ES ══ -->
+<div id="que-es" style="scroll-margin-top:46px;padding-top:0.5rem">
+  <div class="section-label"><span class="num">1</span>¿Qué es?</div>
+  <h2>EduS MasterPanel HUD V4</h2>
+  <p class="sub">HUD flotante + overlay en gráfica · 6 capas de análisis · Filtros institucionales · WinRate 60%+</p>
+
+  <div class="alert alert-info">
+    <div class="alert-title">🎯 Definición en una línea</div>
+    El MasterPanel HUD V4 es un panel de control que aparece como <strong>ventana flotante independiente</strong> (o como overlay sobre la gráfica) y te dice en tiempo real si el mercado está en condiciones de alta probabilidad para entrar. Analiza <strong>6 capas simultáneamente</strong>, incluyendo filtros institucionales de Higher Timeframe, Nodes V8 y Naked POCs.
+  </div>
+
+  <div class="three-col" style="margin-top:14px">
+    <div class="card card-blue">
+      <div class="card-title">⬤ Capa 1 — Señales</div>
+      <p>SMA20, SMA80, LinReg89 y AVWAP dinámico. 4/4 alineados = tendencia fuerte. Pendiente via SlopeLookback.</p>
+    </div>
+    <div class="card card-teal">
+      <div class="card-title">⬤ Capa 2 — Zonas AVWAP</div>
+      <p>A+/A/LR+/LR/B+/B. Mide distancia precio-AVWAP en ATRs. Zona A = alta probabilidad de rebote.</p>
+    </div>
+    <div class="card card-purple">
+      <div class="card-title">⬤ Capa 3 — AVWAP vs BM Keltner</div>
+      <p>Valida que AVWAP esté en el lado correcto de la banda media Keltner. Con tolerancia configurable.</p>
+    </div>
+    <div class="card card-amber">
+      <div class="card-title">⬤ Capa 4 — LinReg89 vs BM Keltner</div>
+      <p>Misma validación para zonas LR/LR+. LinReg89 debe estar del lado correcto del BM (tolerancia configurable).</p>
+    </div>
+    <div class="card card-red">
+      <div class="card-title">⬤ Filtros V4 — HTF + Nodes + POCs</div>
+      <p>Tres filtros institucionales: Higher Timeframe, Nodes V8, Naked POCs. Cada uno puede bloquear señales de baja calidad.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-title">⬤ Posición en Vivo</div>
+      <p>Monitorea tu posición abierta en tiempo real: P&L, stop risk, target profit, R:R. Actualización vía timer.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 2. TEORÍA ══ -->
+<div class="section-divider"></div>
+<div id="teoria" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">2</span>Fundamento Teórico</div>
+  <h2>Por qué 6 capas de validación</h2>
+  <p class="sub">Convergencia de señales · Market Profile · Teoría del Canal · Filtros en cascada · Contexto institucional</p>
+
+  <div class="concept theory">
+    <div class="concept-title">Principio fundamental — La convergencia reduce el ruido exponencialmente</div>
+    <p>Cada capa adicional elimina un tipo específico de falso positivo. La V4 no solo pregunta "¿la tendencia es alcista?" sino también "¿el AVWAP está bien posicionado respecto a la volatilidad?", "¿la temporalidad mayor está de acuerdo?", "¿hay nodos institucionales bloqueando el camino?", "¿hay un POC desnudo que podría revertir el precio?". Cuando todas las capas coinciden, la probabilidad de éxito es máxima.</p>
+  </div>
+
+  <div class="layer layer-1">
+    <div class="layer-title">Capa 1 — Las 4 señales de tendencia</div>
+    <p><strong>SMA 20:</strong> tendencia inmediata (~20 barras). Reacciona rápido pero genera ruido en laterales.</p>
+    <p><strong>SMA 80:</strong> tendencia estructural de mayor alcance. El "piso" del movimiento.</p>
+    <p><strong>LinReg 89:</strong> regresión lineal de 89 barras. Muestra la dirección real sin el efecto visual del promedio. Pendiente plana = mercado lateral.</p>
+    <p><strong>AVWAP Dinámico:</strong> el precio justo institucional del tramo actual. Cuando confirma las SMAs, el dinero grande está alineado.</p>
+  </div>
+
+  <div class="layer layer-2">
+    <div class="layer-title">Capa 2 — Zonas AVWAP / LinReg</div>
+    <p><strong>Zona A/A+:</strong> precio dentro de 0.5× ATR del AVWAP. Pin de rechazo = entrada de máxima precisión.</p>
+    <p><strong>Zona LR/LR+:</strong> precio toca LinReg89. Útil cuando el AVWAP no está claro y la regresión lineal actúa como soporte/resistencia.</p>
+    <p><strong>Zona B/B+:</strong> precio entre 0.5 y 2.0× ATR. Tradeble pero con precaución. Stop más amplio.</p>
+  </div>
+
+  <div class="layer layer-3">
+    <div class="layer-title">Capa 3 — AVWAP vs Keltner BM [V4 con tolerancia]</div>
+    <p>El canal Keltner define el rango de volatilidad "normal". La línea media (BM) divide el canal en dos mitades:</p>
+    <p><strong>Alcista sano:</strong> AVWAP está en la mitad superior del canal (o dentro de la tolerancia).</p>
+    <p><strong>Bajista sano:</strong> AVWAP está en la mitad inferior del canal (o dentro de la tolerancia).</p>
+    <p><strong>Tolerancia BM (NUEVO):</strong> con <code>ToleranciaBM_ATR = 1.5</code>, el AVWAP puede estar hasta 1.5× ATR por debajo (alcista) o por encima (bajista) del BM y la capa sigue siendo válida. Útil en mercados con ligera desviación pero estructura sólida.</p>
+  </div>
+
+  <div class="layer layer-4" style="background:rgba(201,168,76,0.07);border-left:4px solid var(--amber);border-radius:10px;padding:14px 16px;margin-bottom:10px">
+    <div class="layer-title" style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;color:var(--amber)">Capa 4 — LinReg89 vs Keltner BM [NUEVO V4]</div>
+    <p style="font-size:12px;color:var(--text2)">La misma validación de la Capa 3 pero aplicada a zonas LR/LR+. Cuando el semáforo está en zona LR+, la validación de que LinReg89 esté del lado correcto del BM se vuelve crítica. Con tolerancia configurable vía <code>ToleranciaBM_ATR</code>.</p>
+  </div>
+
+  <div class="concept theory">
+    <div class="concept-title">Nuevo en V4 — Filtros institucionales (Capas 5, 6, 7)</div>
+    <p><strong>Filtro HTF:</strong> la tendencia del timeframe superior debe coincidir con la dirección del semáforo. Si operas en 610 ticks y el HTF en 987 ticks es bajista, las señales alcistas se bloquean.</p>
+    <p><strong>Filtro Nodes V8:</strong> si el precio está dentro de N ticks de un nodo institucional de alto volumen, la entrada se bloquea. Los nodos son imanes de precio que pueden causar reversiones.</p>
+    <p><strong>Filtro Naked POCs:</strong> si hay un POC (Point of Control) desnudo activo cerca del precio, la entrada se bloquea. Los POCs representan el precio donde más volumen se negoció — son niveles de soporte/resistencia natural.</p>
+  </div>
+</div>
+
+<!-- ══ 3. NOVEDADES V4 ══ -->
+<div class="section-divider"></div>
+<div id="novedades" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">3</span>Novedades V4</div>
+  <h2>Todo lo nuevo en la versión 4</h2>
+  <p class="sub">De V3 a V4: filtros institucionales, tolerancias configurables, stop máximo en dólares, HTF con ticks</p>
+
+  <div class="two-col">
+    <div class="card card-purple">
+      <div class="card-title">📈 Filtro HTF configurable</div>
+      <p>Soporta timeframes en <strong>minutos y ticks</strong>. Para gráficas de 610 ticks, configura HTF en 987 ticks (Tick, 987). El HTF se añade como Data Series secundaria automáticamente.</p>
+    </div>
+    <div class="card card-red">
+      <div class="card-title">🏛️ Filtro Nodes V8</div>
+      <p>Integración directa con EduS_Trader_Nodes_V8_Institutional. Bloquea entradas cerca de nodos de alto volumen. Configurable por distancia en ticks.</p>
+    </div>
+    <div class="card card-amber">
+      <div class="card-title">🎯 Filtro Naked POCs</div>
+      <p>Sincronización con EduS_Institutional_Naked_Pocs. Bloquea entradas contra POCs desnudos activos. Configurable por distancia en ticks.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-title">💰 Stop máximo en dólares</div>
+      <p>Nueva propiedad <code>StopMaxDolares</code>. Si el stop del Keltner excede este valor, se reduce el stop al máximo sin modificar los targets. Mejora automática del R:R.</p>
+    </div>
+    <div class="card card-blue">
+      <div class="card-title">🎚️ Tolerancia BM configurable</div>
+      <p>Nueva propiedad <code>ToleranciaBM_ATR</code>. Permite que AVWAP/LinReg estén hasta N×ATR del "lado equivocado" de la banda media Keltner. 0 = estricto (V3). 1.5 = tolerancia recomendada.</p>
+    </div>
+    <div class="card card-teal">
+      <div class="card-title">⏱️ HTF con ticks</div>
+      <p>Nuevas propiedades <code>HTF_PeriodType</code> (0=Min, 1=Tick) y <code>HTF_Ticks</code>. Para traders que usan gráficas de ticks (610, 377, etc.), ahora el filtro HTF funciona con el mismo tipo de barra.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 4. INSTALACIÓN ══ -->
+<div class="section-divider"></div>
+<div id="instalacion" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">4</span>Instalación</div>
+  <h2>Cómo instalar en NinjaTrader 8</h2>
+  <p class="sub">El HUD V4 requiere dependencias instaladas previamente</p>
+
+  <div class="alert alert-danger">
+    <div class="alert-title">🚨 Prerequisitos obligatorios</div>
+    El HUD V4 depende de <strong>todos</strong> estos indicadores instalados primero:<br>
+    • EduS_DynamicSwingAVWAP • EduS_Trader_Nodes_V8_Institutional (si usas filtro nodos)<br>
+    • EduS_Institutional_Naked_Pocs (si usas filtro POCs) • SMA y ATR (nativos NT8)
+  </div>
+
+  <div class="alert alert-warn">
+    <div class="alert-title">⚠️ Requisito: Data Series HTF</div>
+    Si activas <code>UsarFiltroHTF = true</code>, debes configurar <code>HTF_PeriodType</code> (0=Min, 1=Tick) y el valor correspondiente. El indicador añade automáticamente la Data Series secundaria al estado Configure. Si usas modo Tick (ej: 987 ticks en chart de 610), el HTF se añade como BarsPeriodType.Tick.
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Instalar dependencias previas</div>
+        <div class="step-desc">Asegúrate de que EduS_DynamicSwingAVWAP compile correctamente. Si usarás filtros V4, instala también EduS_Trader_Nodes_V8_Institutional y EduS_Institutional_Naked_Pocs.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Obtener EduSMasterPanelHUDV4.cs</div>
+        <div class="step-desc">Guárdalo en tu carpeta <code>NinjaTrader 8\bin\Custom\Indicators\</code>.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">NinjaScript Editor → Compilar F5</div>
+        <div class="step-desc">Abre el NinjaScript Editor, carga el archivo (File → Open) y presiona F5. Debe mostrar "Compiled successfully".</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Agregar a la gráfica</div>
+        <div class="step-desc">Clic derecho → Indicators → busca "EduS_MasterPanel_HUD_V4" → Add. Configura las propiedades según tu mercado (ver sección de Configuración).</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Configurar ventana flotante</div>
+        <div class="step-desc">Por defecto, el HUD aparece como ventana flotante (Ventana_Flotante = true). Puedes activar Mostrar_En_Chart para que también se dibuje como overlay en la gráfica. Usa Ventana_Compartida = true para agrupar múltiples instrumentos en una sola ventana.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 5. SEMÁFORO ══ -->
+<div class="section-divider"></div>
+<div id="semaforo" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">5</span>El Semáforo</div>
+  <h2>Cómo interpretar los 3 estados</h2>
+  <p class="sub">El corazón del sistema · Guía de acción inmediata</p>
+
+  <div class="card card-green">
+    <div class="card-title">🟢 VERDE — Alta probabilidad · OPERAR</div>
+    <div class="semaforo-demo">
+      <div class="bola bola-on-green">●</div>
+      <div class="bola bola-off-amber">●</div>
+      <div class="bola bola-off-red">●</div>
+      <div class="semaforo-label">
+        <strong style="color:var(--green)">Se activa cuando:</strong><br>
+        ✅ 4/4 indicadores de tendencia alineados (alcista o bajista)<br>
+        ✅ Precio en Zona A/A+ (Capa 3 OK) o LR/LR+ (Capa 4 OK)<br>
+        ✅ Capa 3 o Capa 4 confirman (o tolerancia activa)<br>
+        ✅ Todos los filtros V4 activos pasan (HTF + Nodos + POCs)
+      </div>
+    </div>
+    <p><strong>Qué hacer:</strong> Buscar entrada en la dirección indicada. El panel muestra precio de entrada, stop, T1 y T2 con R:R. El badge "ACTIVA" aparece en verde.</p>
+  </div>
+
+  <div class="card card-amber">
+    <div class="card-title">🟡 AMARILLO — Media probabilidad · EVALUAR</div>
+    <div class="semaforo-demo">
+      <div class="bola bola-off-green">●</div>
+      <div class="bola bola-on-amber">●</div>
+      <div class="bola bola-off-red">●</div>
+      <div class="semaforo-label">
+        <strong style="color:var(--amber)">Se activa cuando:</strong><br>
+        🟡 4/4 señales + zona premium PERO falla Capa 3 o Capa 4<br>
+        🟡 4/4 señales + zona B/B+ (precio extendido)<br>
+        🟡 3/4 señales + zona A/A+ (una señal de tendencia falta)<br>
+        🟡 Señal completa pero algún filtro V4 no pasa
+      </div>
+    </div>
+    <p><strong>Qué hacer:</strong> Operar con tamaño reducido (50% o menos). Ser más exigente con el precio de entrada y confirmación adicional.</p>
+  </div>
+
+  <div class="card card-red">
+    <div class="card-title">🔴 ROJO — No operar · ESPERAR</div>
+    <div class="semaforo-demo">
+      <div class="bola bola-off-green">●</div>
+      <div class="bola bola-off-amber">●</div>
+      <div class="bola bola-on-red">●</div>
+      <div class="semaforo-label">
+        <strong style="color:var(--red)">Se activa cuando:</strong><br>
+        🔴 Señales contradictorias (mix alcista/bajista)<br>
+        🔴 Precio fuera de zona (> 2× ATR del AVWAP)<br>
+        🔴 Sin zona reconocida
+      </div>
+    </div>
+    <p><strong>Qué hacer:</strong> No abrir nuevas posiciones. El rojo es la señal más valiosa — te dice cuándo NO operar.</p>
+  </div>
+
+  <h3>Tabla de condiciones completa</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Capa 1 (4 señales)</th><th>Capa 2 (zona)</th><th>Capa 3/4 (BM)</th><th>Filtros V4</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr style="background:rgba(77,186,118,0.05)">
+          <td style="color:var(--green)">✅ 4/4 alineadas</td>
+          <td style="color:var(--green)">A/A+ o LR/LR+</td>
+          <td style="color:var(--green)">✅ OK o tolerancia</td>
+          <td style="color:var(--green)">✅ Todos OK</td>
+          <td style="color:var(--green);font-weight:700">🟢 VERDE</td>
+        </tr>
+        <tr style="background:rgba(201,168,76,0.05)">
+          <td style="color:var(--amber)">✅ 4/4 alineadas</td>
+          <td style="color:var(--green)">✅ A/A+</td>
+          <td style="color:var(--red)">❌ Falla sin tolerancia</td>
+          <td style="color:var(--green)">✅ OK</td>
+          <td style="color:var(--amber);font-weight:700">🟡 AMARILLO</td>
+        </tr>
+        <tr style="background:rgba(201,168,76,0.05)">
+          <td style="color:var(--amber)">✅ 4/4 alineadas</td>
+          <td style="color:var(--amber)">⚠️ B/B+</td>
+          <td style="color:var(--text3)">–</td>
+          <td style="color:var(--green)">✅ OK</td>
+          <td style="color:var(--amber);font-weight:700">🟡 AMARILLO</td>
+        </tr>
+        <tr style="background:rgba(201,168,76,0.05)">
+          <td style="color:var(--amber)">⚠️ 3/4 alineadas</td>
+          <td style="color:var(--green)">✅ A/A+ o LR/LR+</td>
+          <td style="color:var(--text3)">–</td>
+          <td style="color:var(--green)">✅ OK</td>
+          <td style="color:var(--amber);font-weight:700">🟡 AMARILLO</td>
+        </tr>
+        <tr style="background:rgba(201,168,76,0.05)">
+          <td style="color:var(--green)">✅ 4/4 alineadas</td>
+          <td style="color:var(--green)">✅ A/A+ o LR/LR+</td>
+          <td style="color:var(--green)">✅ OK o tolerancia</td>
+          <td style="color:var(--red)">❌ Algún filtro falla</td>
+          <td style="color:var(--amber);font-weight:700">🟡 AMARILLO</td>
+        </tr>
+        <tr style="background:rgba(224,82,82,0.05)">
+          <td style="color:var(--red)">❌ Mix señales</td>
+          <td style="color:var(--text3)">Cualquiera</td>
+          <td style="color:var(--text3)">–</td>
+          <td style="color:var(--text3)">–</td>
+          <td style="color:var(--red);font-weight:700">🔴 ROJO</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ 6. FILTROS V4 ══ -->
+<div class="section-divider"></div>
+<div id="filtros" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">6</span>Filtros V4</div>
+  <h2>Filtros institucionales configurables</h2>
+  <p class="sub">Tres filtros independientes que bloquean señales de baja calidad</p>
+
+  <div class="alert alert-info">
+    <div class="alert-title">🔧 Importante: filtros autónomos</div>
+    Los filtros Nodes V8 y Naked POCs se crean internamente como instancias ocultas. <strong>No necesitas tenerlos dibujados en la gráfica</strong> — el HUD los calcula en background. Solo requieres tenerlos instalados en NinjaTrader.
+  </div>
+
+  <h3>Filtro HTF (Higher Timeframe)</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Propiedad</th><th>Rango</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">UsarFiltroHTF</span></td><td>true/false</td><td><span class="param-default">false</span></td><td>Activa/desactiva el filtro de Higher Timeframe.</td></tr>
+        <tr><td><span class="param-name">HTF_PeriodType</span></td><td>0=Min, 1=Tick</td><td><span class="param-default">0</span></td><td>Tipo de período del HTF. 0 = Minutos, 1 = Ticks.</td></tr>
+        <tr><td><span class="param-name">HTF_Minutos</span></td><td>1–240</td><td><span class="param-default">15</span></td><td>Período en minutos cuando HTF_PeriodType = 0.</td></tr>
+        <tr><td><span class="param-name">HTF_Ticks</span></td><td>1–50000</td><td><span class="param-default">987</span></td><td>Período en ticks cuando HTF_PeriodType = 1.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:12px;color:var(--text2);margin-top:8px"><strong>Lógica:</strong> Compara Close[1] del HTF vs SMA20 del HTF. Si la dirección coincide con la del semáforo, pasa el filtro. Ej: gráfica 610 ticks con HTF 987 ticks.</p>
+
+  <h3>Filtro Nodes V8</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Propiedad</th><th>Rango</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">UsarFiltroNodos</span></td><td>true/false</td><td><span class="param-default">false</span></td><td>Activa el filtro de nodos institucionales.</td></tr>
+        <tr><td><span class="param-name">Nodo_DistanciaTicks</span></td><td>0–50</td><td><span class="param-default">8</span></td><td>Distancia mínima en ticks que debe haber entre el precio y cualquier nodo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:12px;color:var(--text2);margin-top:8px"><strong>Lógica:</strong> Recorre nodesToDraw y nakedNodes de EduS_Trader_Nodes_V8_Institutional. Si el precio está dentro de N ticks de algún nodo, bloquea la entrada.</p>
+
+  <h3>Filtro Naked POCs</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Propiedad</th><th>Rango</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">UsarFiltroPocs</span></td><td>true/false</td><td><span class="param-default">false</span></td><td>Activa el filtro de POCs desnudos.</td></tr>
+        <tr><td><span class="param-name">Poc_DistanciaTicks</span></td><td>0–50</td><td><span class="param-default">8</span></td><td>Distancia mínima en ticks que debe haber entre el precio y cualquier POC activo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:12px;color:var(--text2);margin-top:8px"><strong>Lógica:</strong> Recorre nakedLevels de EduS_Institutional_Naked_Pocs. Si algún nivel está activo y el precio está dentro de N ticks, bloquea la entrada.</p>
+</div>
+
+<!-- ══ 7. SECCIONES DEL PANEL ══ -->
+<div class="section-divider"></div>
+<div id="secciones" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">7</span>Secciones del Panel</div>
+  <h2>Qué muestra cada parte del HUD</h2>
+  <p class="sub">6 secciones activables independientemente</p>
+
+  <div class="panel-sec">
+    <div class="panel-sec-title">Sección 0 — Posición (Mostrar_Posicion)</div>
+    <p style="font-size:12px;color:var(--text2)">Monitor de posición abierta en vivo. Muestra dirección + cantidad + precio de entrada, P&L no realizado en $ y pts, y órdenes stop/target activas con cálculo de R:R. Se actualiza cada N segundos vía <code>Pos_UpdateSeg</code>. Requiere configurar <code>AccountName</code> (ej: Sim101).</p>
+  </div>
+
+  <div class="panel-sec">
+    <div class="panel-sec-title">Sección 1 — Semáforo (Mostrar_Semaforo)</div>
+    <p style="font-size:12px;color:var(--text2)">Las 3 bolas con la activa iluminada, estado direccional (ALCISTA/BAJISTA/MIXTO) y grado de zona (A+, A, LR+, LR, B+, B, --).</p>
+  </div>
+
+  <div class="panel-sec">
+    <div class="panel-sec-title">Sección 2 — Señales (Mostrar_Senales)</div>
+    <p style="font-size:12px;color:var(--text2)">Tabla detallada de las 4 señales de tendencia + Capa 3 (AVWAP vs BM) + Capa 4 (LR89 vs BM) con valores y pendientes.</p>
+  </div>
+
+  <div class="panel-sec">
+    <div class="panel-sec-title">Sección 3 — Zona Entrada (Mostrar_Entrada)</div>
+    <p style="font-size:12px;color:var(--text2)">Se muestra siempre que haya una señal guardada (activa o histórica). Badge "[ ACTIVA ]" en verde o "[ HISTORICA ]" en naranja. Muestra entrada, AVWAP/LinReg de referencia, stop, T1 y T2 con pts y R:R.</p>
+  </div>
+
+  <div class="panel-sec">
+    <div class="panel-sec-title">Sección 4 — Keltner Stop/Target (Mostrar_Keltner)</div>
+    <p style="font-size:12px;color:var(--text2)">Ancho del canal Keltner, stop en %, puntos, ticks y dólares para el número de contratos configurado.</p>
+  </div>
+
+  <div class="panel-sec">
+    <div class="panel-sec-title">Sección 5 — Filtros V4 (integrado en secciones 1–2)</div>
+    <p style="font-size:12px;color:var(--text2)">El HUD muestra en tiempo real el estado de cada filtro V4: HTF ✓/✗, Nodos ✓/✗, POCs ✓/✗. Esto te permite diagnosticar qué filtro está bloqueando la entrada.</p>
+  </div>
+</div>
+
+<!-- ══ 8. PARÁMETROS ══ -->
+<div class="section-divider"></div>
+<div id="parametros" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">8</span>Parámetros de Configuración</div>
+  <h2>Todos los parámetros explicados</h2>
+  <p class="sub">10 grupos de configuración · Del más importante al visual</p>
+
+  <h3>Grupo 0 — Ventana HUD</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">Ventana_Flotante</span></td><td><span class="param-default">true</span></td><td>Muestra el HUD como ventana independiente desacoplada del chart.</td></tr>
+        <tr><td><span class="param-name">Ventana_Compartida</span></td><td><span class="param-default">true</span></td><td>Agrupa múltiples instrumentos en una sola ventana con scroll.</td></tr>
+        <tr><td><span class="param-name">Hud_X / Hud_Y</span></td><td><span class="param-default">20 / 20</span></td><td>Posición inicial de la ventana flotante en píxeles.</td></tr>
+        <tr><td><span class="param-name">Mostrar_En_Chart</span></td><td><span class="param-default">false</span></td><td>Dibuja el HUD también como overlay SharpDX sobre la gráfica.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Grupo 1 — Posición</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">Mostrar_Posicion</span></td><td><span class="param-default">true</span></td><td>Activa la sección de posición en vivo.</td></tr>
+        <tr><td><span class="param-name">AccountName</span></td><td><span class="param-default">Sim101</span></td><td>Nombre exacto de la cuenta NT8 a monitorear.</td></tr>
+        <tr><td><span class="param-name">Pos_UpdateSeg</span></td><td><span class="param-default">3</span></td><td>Segundos entre cada actualización de la posición.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Grupo 1b — Logging y Alertas</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">RegistrarSenales</span></td><td><span class="param-default">true</span></td><td>Guarda cada señal en un archivo CSV para análisis posterior.</td></tr>
+        <tr><td><span class="param-name">RutaLog / NombreArchivoLog</span></td><td>–</td><td>Ruta y nombre del archivo CSV de señales.</td></tr>
+        <tr><td><span class="param-name">Alerta4de4 / Sonido4de4</span></td><td>true / Alert1.wav</td><td>Alarma cuando se activan las 4 señales simultáneamente.</td></tr>
+        <tr><td><span class="param-name">AlertaZonaA / SonidoZonaA</span></td><td>true / Alert2.wav</td><td>Alarma cuando el precio entra en zona A.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:12px;color:var(--text3);margin-top:4px">📁 Los sonidos deben ser archivos .wav en <code>Documents\NinjaTrader 8\sounds\</code>.</p>
+
+  <h3>Grupo 2 — Secciones Visibles</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">Mostrar_Semaforo</span></td><td><span class="param-default">true</span></td><td>Bolas del semáforo + estado + zona.</td></tr>
+        <tr><td><span class="param-name">Mostrar_Senales</span></td><td><span class="param-default">true</span></td><td>Tabla de 4 señales + Capa 3 + Capa 4.</td></tr>
+        <tr><td><span class="param-name">Mostrar_Entrada</span></td><td><span class="param-default">true</span></td><td>Sección de entrada/stop/target (visible con señal activa o histórica).</td></tr>
+        <tr><td><span class="param-name">Mostrar_Keltner</span></td><td><span class="param-default">true</span></td><td>Datos del canal Keltner (ancho, stop, target en $/tks).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Grupo 3 — Períodos</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">Period_SMA20</span></td><td><span class="param-default">20</span></td><td>Media rápida. En 610 ticks captura corto plazo.</td></tr>
+        <tr><td><span class="param-name">Period_SMA80</span></td><td><span class="param-default">80</span></td><td>Media lenta. Estructura de mediano plazo.</td></tr>
+        <tr><td><span class="param-name">Period_LR89</span></td><td><span class="param-default">89</span></td><td>Regresión lineal. Número de Fibonacci.</td></tr>
+        <tr><td><span class="param-name">SlopeLookback</span></td><td><span class="param-default">3</span></td><td>Barras para calcular pendiente. 3 captura giros recientes.</td></tr>
+        <tr><td><span class="param-name">AVWAP_SwingPeriod</span></td><td><span class="param-default">50</span></td><td>Pivotes del AVWAP dinámico.</td></tr>
+        <tr><td><span class="param-name">AVWAP_BaseAPT</span></td><td><span class="param-default">20</span></td><td>Velocidad base del AVWAP.</td></tr>
+        <tr><td><span class="param-name">ATR_Period</span></td><td><span class="param-default">14</span></td><td>Período del ATR para zonas y stop.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Grupo 4 — Zonas AVWAP</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">ZoneVerde</span></td><td><span class="param-default">0.5</span></td><td>Límite zona A (ATR × valor). Menor = más estricto.</td></tr>
+        <tr><td><span class="param-name">ZoneAmarilla</span></td><td><span class="param-default">2.0</span></td><td>Límite zona B. Más allá = fuera de zona (rojo).</td></tr>
+        <tr><td><span class="param-name">Stop_ATRMult</span></td><td><span class="param-default">0.5</span></td><td>Buffer del stop sugerido vía ATR (modo no-Keltner).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Grupo 5 — Keltner</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">Kelt_Period</span></td><td><span class="param-default">52</span></td><td>Período EMA del canal Keltner.</td></tr>
+        <tr><td><span class="param-name">Kelt_Multiplier</span></td><td><span class="param-default">3.5</span></td><td>Amplitud del canal.</td></tr>
+        <tr><td><span class="param-name">Kelt_StopPct</span></td><td><span class="param-default">0.30</span></td><td>% del ancho del canal usado como stop.</td></tr>
+        <tr><td><span class="param-name">Kelt_RiskReward</span></td><td><span class="param-default">2.0</span></td><td>R:R para targets Keltner.</td></tr>
+        <tr><td><span class="param-name">Kelt_Contracts</span></td><td><span class="param-default">1</span></td><td>Contratos para valores en dólares.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Grupo 8 — Alertas</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">Alerta4de4</span></td><td><span class="param-default">true</span></td><td>Alarma cuando las 4 señales se alinean.</td></tr>
+        <tr><td><span class="param-name">AlertaZonaA</span></td><td><span class="param-default">true</span></td><td>Alarma al entrar en zona A.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>⭐ Grupo 9 — V5 Optimización (NUEVO)</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="param-name">UsarCapa3</span></td><td><span class="param-default">false</span></td>
+          <td>Requiere AVWAP en lado correcto del BM para verde con zona A/A+.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">UsarCapa4</span></td><td><span class="param-default">false</span></td>
+          <td>Requiere LinReg89 en lado correcto del BM para verde con zona LR/LR+.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">ToleranciaBM_ATR</span></td><td><span class="param-default">0</span></td>
+          <td>⭐ <strong>NUEVO:</strong> 0 = estricto. >0 permite AVWAP/LR desviado hasta N×ATR del lado opuesto del BM. Con 1.5, el AVWAP alcista solo necesita estar > BM − 1.5×ATR.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">UsarStopKeltner</span></td><td><span class="param-default">true</span></td>
+          <td>true = stop via % ancho Keltner. false = stop via ATR.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">FiltroApertura</span></td><td><span class="param-default">true</span></td>
+          <td>Requiere ancho Keltner > MinKeltnerVsATR × ATR para generar entrada.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">MinKeltnerVsATR</span></td><td><span class="param-default">1.8</span></td>
+          <td>Mínimo ancho de Keltner relativo al ATR.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">EsperarConfirmacion / BarrasConfirmacion</span></td><td><span class="param-default">true / 2</span></td>
+          <td>Espera N barras de semáforo verde antes de dar entrada.</td>
+        </tr>
+        <tr>
+          <td><span class="param-name">StopMaxDolares</span></td><td><span class="param-default">0</span></td>
+          <td>⭐ <strong>NUEVO:</strong> 0 = sin límite. >0 limita el stop a este valor en dólares. Los targets NO se modifican → el R:R mejora automáticamente.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>⭐ Grupo 10 — V4 Advanced Filters (NUEVO)</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">UsarFiltroHTF</span></td><td><span class="param-default">false</span></td><td>Activa filtro de Higher Timeframe.</td></tr>
+        <tr><td><span class="param-name">HTF_Minutos</span></td><td><span class="param-default">15</span></td><td>Valor en minutos (modo Minuto).</td></tr>
+        <tr><td><span class="param-name">HTF_PeriodType</span></td><td><span class="param-default">0</span></td><td>⭐ <strong>NUEVO:</strong> 0 = Minuto, 1 = Tick. Permite usar HTF con gráficas de ticks.</td></tr>
+        <tr><td><span class="param-name">HTF_Ticks</span></td><td><span class="param-default">987</span></td><td>⭐ <strong>NUEVO:</strong> Valor en ticks cuando PeriodType=1.</td></tr>
+        <tr><td><span class="param-name">UsarFiltroNodos</span></td><td><span class="param-default">false</span></td><td>Activa filtro de nodos institucionales (Nodes V8).</td></tr>
+        <tr><td><span class="param-name">Nodo_DistanciaTicks</span></td><td><span class="param-default">8</span></td><td>Distancia de seguridad para nodos.</td></tr>
+        <tr><td><span class="param-name">UsarFiltroPocs</span></td><td><span class="param-default">false</span></td><td>Activa filtro de Naked POCs.</td></tr>
+        <tr><td><span class="param-name">Poc_DistanciaTicks</span></td><td><span class="param-default">8</span></td><td>Distancia de seguridad para POCs.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Grupo 6 — Visual (overlay en chart)</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="param-name">Tamano_Bolas</span></td><td><span class="param-default">15</span></td><td>Diámetro de las bolas del semáforo en overlay.</td></tr>
+        <tr><td><span class="param-name">Fondo_Opacidad</span></td><td><span class="param-default">75</span></td><td>Opacidad del fondo del overlay (0–100).</td></tr>
+        <tr><td><span class="param-name">Panel_Posicion</span></td><td><span class="param-default">1</span></td><td>0=TL, 1=TR, 2=BL, 3=BR.</td></tr>
+        <tr><td><span class="param-name">Margen_Escala</span></td><td><span class="param-default">70</span></td><td>Margen extra para evitar escala de precios.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ 9. CONFIGURACIÓN ══ -->
+<div class="section-divider"></div>
+<div id="config" style="scroll-margin-top:46px">
+  <div class="section-label"><span class="num">9</span>Configuración Recomendada</div>
+  <h2>Parámetros por mercado y volatilidad</h2>
+  <p class="sub">ES 610 Ticks · NQ 377 Ticks · Basado en historial operativo EduS Trader 2026</p>
+
+  <h3>Tabla rápida por mercado</h3>
+  <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr><th>Mercado</th><th>TF Base</th><th>TF HTF</th><th>Kelt Mult</th><th>Stop%</th><th>ZoneVerde</th><th>Notas</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag-green">ES</span></td><td>610 ticks</td><td>987 ticks</td><td>1.5–2.0</td><td>0.30</td><td>0.5</td><td>FiltroNodos = true recomendado</td></tr>
+        <tr><td><span class="tag-green">NQ</span></td><td>377 ticks</td><td>610 ticks</td><td>2.0–2.5</td><td>0.28</td><td>0.6</td><td>FiltroApertura esencial</td></tr>
+        <tr><td><span class="tag-amber">CL</span></td><td>5 min</td><td>15 min</td><td>2.0</td><td>0.25</td><td>0.6</td><td>Stop reducido por amplitud</td></tr>
+        <tr><td><span class="tag-amber">GC</span></td><td>5 min</td><td>15 min</td><td>1.8</td><td>0.30</td><td>0.5</td><td>UsarCapa3 = true</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>ES JUN26 — Gráfica 610 Ticks</h3>
+  <div style="overflow-x:auto">
+    <table class="config-table">
+      <thead>
+        <tr>
+          <th>VIX</th><th>AVWAP Swing</th><th>AVWAP APT</th><th>ATR Per</th><th>Slope</th>
+          <th>ZoneV</th><th>ZoneA</th><th>StopATR</th>
+          <th>KeltPer</th><th>KeltMul</th><th>Stop%</th><th>R:R</th>
+          <th>Notas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag-green">&lt;18</span></td>
+          <td>35</td><td>30</td><td>14</td><td>3</td>
+          <td>0.45</td><td>1.8</td><td>0.4</td>
+          <td>45</td><td>3.0</td><td>0.25</td><td>2.5</td>
+          <td style="font-size:10px;color:var(--text3)">Mercado calmado. Zona A estrecha. Targets precisos.</td>
+        </tr>
+        <tr>
+          <td><span class="tag-amber">18–22</span></td>
+          <td>45</td><td>20</td><td>14</td><td>3</td>
+          <td>0.5</td><td>2.0</td><td>0.5</td>
+          <td>52</td><td>3.5</td><td>0.30</td><td>2.0</td>
+          <td style="font-size:10px;color:var(--text3)">Valores default. Zona óptima.</td>
+        </tr>
+        <tr>
+          <td><span class="tag-amber">22–27</span></td>
+          <td>55</td><td>15</td><td>14</td><td>4</td>
+          <td>0.6</td><td>2.5</td><td>0.5</td>
+          <td>52</td><td>4.0</td><td>0.30</td><td>2.0</td>
+          <td style="font-size:10px;color:var(--text3)">VIZ elevado. Canal más ancho. Reducir tamaño 50%.</td>
+        </tr>
+        <tr>
+          <td><span class="tag-red">27–32</span></td>
+          <td>65</td><td>12</td><td>14</td><td>5</td>
+          <td>0.7</td><td>3.0</td><td>0.6</td>
+          <td>60</td><td>4.5</td><td>0.35</td><td>2.0</td>
+          <td style="font-size:10px;color:var(--text3)">Alta volatilidad. Solo VERDES 4/4.</td>
+        </tr>
+        <tr>
+          <td><span class="tag-red">&gt;32</span></td>
+          <td>75</td><td>10</td><td>14</td><td>5</td>
+          <td>0.8</td><td>3.5</td><td>0.7</td>
+          <td>65</td><td>5.0</td><td>0.40</td><td>2.0</td>
+          <td style="font-size:10px;color:var(--text3)">Entorno extremo. No operar en fondeo.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>NQ JUN26 — Gráfica 377 Ticks</h3>
+  <div style="overflow-x:auto">
+    <table class="config-table">
+      <thead>
+        <tr>
+          <th>VIX</th><th>AVWAP Swing</th><th>AVWAP APT</th><th>ATR Per</th><th>Slope</th>
+          <th>ZoneV</th><th>ZoneA</th><th>StopATR</th>
+          <th>KeltPer</th><th>KeltMul</th><th>Stop%</th><th>R:R</th>
+          <th>Notas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag-green">&lt;18</span></td>
+          <td>28</td><td>25</td><td>14</td><td>3</td>
+          <td>0.40</td><td>1.8</td><td>0.4</td>
+          <td>40</td><td>3.0</td><td>0.25</td><td>2.5</td>
+          <td style="font-size:10px;color:var(--text3)">NQ calmado. Tendencias limpias.</td>
+        </tr>
+        <tr>
+          <td><span class="tag-amber">18–22</span></td>
+          <td>38</td><td>18</td><td>14</td><td>3</td>
+          <td>0.5</td><td>2.0</td><td>0.5</td>
+          <td>48</td><td>3.5</td><td>0.28</td><td>2.0</td>
+          <td style="font-size:10px;color:var(--text3)">Configuración base NQ.</td>
+        </tr>
+        <tr>
+          <td><span class="tag-amber">22–27</span></td>
+          <td>45</td><td>14</td><td>14</td><td>4</td>
+          <td>0.55</td><td>2.5</td><td>0.5</td>
+          <td>52</td><td>4.0</td><td>0.30</td><td>2.0</td>
+          <td style="font-size:10px;color:var(--text3)">NQ volátil. Slope 4. Tamaño reducido.</td>
+        </tr>
+        <tr>
+          <td><span class="tag-red">27–32</span></td>
+          <td>55</td><td>10</td><td>14</td><td>5</td>
+          <td>0.65</td><td>3.0</td><td>0.6</td>
+          <td>55</td><td>4.5</td><td>0.33</td><td>2.0</td>
+          <td style="font-size:10px;color:var(--text3)">Solo VERDES con filtros V4.</td>
+        </tr>
+        <tr>
+          <td><span class="tag-red">&gt;32</span></td>
+          <td>65</td><td>8</td><td>14</td><td>5</td>
+          <td>0.75</td><td>3.5</td><td>0.7</td>
+          <td>60</td><td>5.0</td><td>0.38</td><td>2.0</td>
+          <td style="font-size:10px;color:var(--text3)">Crisis. Solo SIM o micros.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert alert-info" style="margin-top:16px">
+    <div class="alert-title">💡 Recomendaciones de uso V4</div>
+    • <strong>HTF con ticks:</strong> Para ES 610t usa HTF 987t (Tick, 987). Para NQ 377t usa HTF 610t.<br>
+    • <strong>StopMaxDolares:</strong> Para ES con 1 contrato, prueba $200. Para MES prueba $40. Reduce el riesgo sin tocar targets.<br>
+    • <strong>ToleranciaBM_ATR:</strong> Prueba 1.5 para empezar. Si ves demasiadas señales amarillas donde crees que debería ser verde, sube a 2.0.<br>
+    • <strong>Orden de activación:</strong> Empieza con los filtros V4 desactivados. Actívalos uno por uno para entender cómo afectan tus señales.
+  </div>
+</div>
+
+</div>
+
+<footer>
+  EduS Trader © 2026 · NinjaTrader 8 · MasterPanel HUD V4<br>
+  Documentación generada a partir del código fuente EduSMasterPanelHUDV4.cs (última modificación: 11/05/2026)
+</footer>
+
 </body>
 </html>
