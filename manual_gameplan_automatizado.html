@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual — Sistema Automatizado de Game Plan | EduS Trader</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f7fa;--bg2:#ffffff;--bg3:#e8ecf2;
+  --text:#0f172a;--text2:#334155;--text3:#64748b;
+  --teal:#3dd6c0;--teal-bg:rgba(61,214,192,0.08);--teal-bd:rgba(61,214,192,0.25);
+  --green:#4dba76;--green-bg:rgba(77,186,118,0.08);--green-bd:rgba(77,186,118,0.25);
+  --red:#e05252;--red-bg:rgba(224,82,82,0.08);--red-bd:rgba(224,82,82,0.25);
+  --amber:#c9a84c;--amber-bg:rgba(201,168,76,0.08);--amber-bd:rgba(201,168,76,0.25);
+  --blue:#4a90d9;--blue-bg:rgba(74,144,217,0.08);--blue-bd:rgba(74,144,217,0.25);
+  --purple:#7c3aed;--purple-bg:rgba(124,58,237,0.08);--purple-bd:rgba(124,58,237,0.25);
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'Cascadia Code','Fira Code','JetBrains Mono',monospace;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6}
+.site-header{background:linear-gradient(135deg,#ffffff,#f1f5f9);border-bottom:0.5px solid var(--purple-bd);padding:0}
+.header-inner{max-width:1000px;margin:0 auto;padding:24px 24px 0;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.header-logo{width:48px;height:48px;background:var(--purple-bg);border:1.5px solid var(--purple-bd);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.header-text .brand{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--purple);font-weight:600}
+.header-text h1{font-size:22px;font-weight:700;color:var(--text);margin-bottom:2px}
+.header-text .version{font-size:11px;color:var(--text3);background:rgba(0,0,0,0.04);border:0.5px solid var(--purple-bd);padding:2px 8px;border-radius:4px}
+nav{max-width:1000px;margin:0 auto;padding:0 24px;display:flex;overflow-x:auto;gap:0;margin-top:12px}
+nav a{font-size:11px;color:var(--text3);text-decoration:none;padding:10px 14px;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s}
+nav a:hover{color:var(--text)}
+nav a.active{color:var(--purple);border-bottom-color:var(--purple);font-weight:600}
+.page{max-width:1000px;margin:0 auto;padding:2rem 24px 4rem}
+.section-divider{height:0.5px;background:rgba(0,0,0,0.1);margin:3rem 0 2rem}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:0.8rem}
+.section-label .num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--bg3);border:0.5px solid rgba(0,0,0,0.12);font-size:9px;color:var(--purple)}
+h2{font-size:20px;font-weight:600;margin-bottom:4px;color:var(--text)}
+h3{font-size:15px;font-weight:600;margin:1.2rem 0 0.6rem;color:var(--teal);border-left:3px solid var(--teal);padding-left:10px}
+h4{font-size:13px;font-weight:600;margin:0.8rem 0 0.4rem;color:var(--text2)}
+.sub{font-size:12px;color:var(--text3);margin-bottom:1.2rem;line-height:1.5}
+p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px}
+p:last-child{margin-bottom:0}
+strong{color:var(--text);font-weight:600}
+code{font-family:var(--mono);background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:3px;font-size:0.9em;color:var(--text)}
+pre{background:#1e293b;color:#e2e8f0;font-family:var(--mono);font-size:12px;padding:14px 16px;border-radius:8px;overflow-x:auto;margin:10px 0;line-height:1.5}
+pre .c{color:#64748b}
+pre .k{color:#c084fc}
+pre .s{color:#86efac}
+pre .n{color:#e2e8f0}
+pre .o{color:#fca5a5}
+.card{background:var(--bg2);border:0.5px solid rgba(0,0,0,0.08);border-radius:10px;padding:16px 18px;margin-bottom:12px}
+.card-green{border-color:var(--green-bd);background:var(--green-bg)}
+.card-amber{border-color:var(--amber-bd);background:var(--amber-bg)}
+.card-red{border-color:var(--red-bd);background:var(--red-bg)}
+.card-teal{border-color:var(--teal-bd);background:var(--teal-bg)}
+.card-blue{border-color:var(--blue-bd);background:var(--blue-bg)}
+.card-purple{border-color:var(--purple-bd);background:var(--purple-bg)}
+.card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
+.card-icon{font-size:18px;margin-right:8px}
+.step-box{background:var(--bg2);border:0.5px solid rgba(0,0,0,0.08);border-radius:10px;padding:18px 20px;margin-bottom:14px;border-left:4px solid var(--purple)}
+.step-box .step-num{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px}
+.step-box .step-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px}
+.step-box p{font-size:13px;margin-bottom:6px}
+ul,ol{padding-left:20px;margin:8px 0 12px}
+li{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:4px}
+li strong{color:var(--text)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:var(--bg3)}
+th{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);padding:8px 12px;text-align:left;border-bottom:1px solid rgba(0,0,0,0.08)}
+td{padding:8px 12px;border-bottom:0.5px solid rgba(0,0,0,0.06);color:var(--text2)}
+tr:hover td{background:rgba(0,0,0,0.02)}
+.tag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:0.05em}
+.tag-green{background:var(--green-bg);color:var(--green);border:0.5px solid var(--green-bd)}
+.tag-red{background:var(--red-bg);color:var(--red);border:0.5px solid var(--red-bd)}
+.tag-amber{background:var(--amber-bg);color:var(--amber);border:0.5px solid var(--amber-bd)}
+.tag-blue{background:var(--blue-bg);color:var(--blue);border:0.5px solid var(--blue-bd)}
+.tag-purple{background:var(--purple-bg);color:var(--purple);border:0.5px solid var(--purple-bd)}
+.flow-arrow{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin:16px 0;font-size:13px}
+.flow-step{background:var(--bg3);border-radius:6px;padding:6px 14px;font-size:11px;font-weight:500;color:var(--text2)}
+.flow-arrow-sym{color:var(--text3);font-size:16px}
+@media(max-width:640px){
+  .page{padding:1rem 16px 3rem}
+  h2{font-size:17px}
+  nav a{padding:8px 10px;font-size:10px}
+  pre{font-size:11px;padding:10px 12px}
+  .header-inner{padding:16px 16px 0}
+}
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="header-inner">
+    <div class="header-logo">&#9881;</div>
+    <div class="header-text">
+      <div class="brand">EduS Trader</div>
+      <h1>Sistema Automatizado de Game Plan</h1>
+      <span class="version">v1.0 &middot; Mayo 2026</span>
+    </div>
+  </div>
+  <nav>
+    <a href="#introduccion" class="active">Introduccion</a>
+    <a href="#arquitectura">Arquitectura</a>
+    <a href="#instalacion">Instalacion</a>
+    <a href="#configuracion">Configuracion</a>
+    <a href="#modos">Modos de Uso</a>
+    <a href="#flujo-completo">Flujo Completo</a>
+    <a href="#resultados">Resultados Esperados</a>
+    <a href="#troubleshooting">Solucion de Problemas</a>
+  </nav>
+</div>
+
+<div class="page">
+
+<!-- ═══════════════════ INTRODUCCION ═══════════════════ -->
+<div class="section-label"><span class="num">1</span>Introduccion</div>
+<h2 id="introduccion">Que es el Game Plan Automatizado?</h2>
+<p class="sub">Un sistema que genera automaticamente el analisis pre-mercado de EduS Trader para los futuros ES, NQ, CL y GC, combinando datos de mercado en tiempo real con inteligencia artificial.</p>
+
+<div class="card card-teal">
+  <div class="card-title">Que hace?</div>
+  <p>El sistema obtiene datos actualizados de ES (S&amp;P 500 E-mini), NQ (Nasdaq 100 E-mini), CL (Crude Oil WTI) y GC (Gold) via Yahoo Finance, construye un prompt estructurado con esos datos, lo envia a un modelo de IA (Groq, Gemini, Ollama, etc.), recibe el analisis en formato JSON, genera un HTML profesional con el estilo de EduS Trader, y lo publica automaticamente en <strong>edustrader.pages.dev</strong> via git push.</p>
+</div>
+
+<div class="card card-green">
+  <div class="card-title">Instrumentos cubiertos</div>
+  <table>
+    <thead>
+      <tr><th>Simbolo</th><th>Futuro</th><th>Contrato</th><th>Ticker Yahoo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>ES</strong></td><td>S&amp;P 500 E-mini</td><td>JUN26</td><td><code>ES=F</code></td></tr>
+      <tr><td><strong>NQ</strong></td><td>Nasdaq 100 E-mini</td><td>JUN26</td><td><code>NQ=F</code></td></tr>
+      <tr><td><strong>CL</strong></td><td>Crude Oil WTI</td><td>JUL26</td><td><code>CL=F</code></td></tr>
+      <tr><td><strong>GC</strong></td><td>Gold</td><td>JUN26</td><td><code>GC=F</code></td></tr>
+      <tr><td><strong>VIX</strong></td><td>Volatilidad</td><td>—</td><td><code>^VIX</code></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card card-amber">
+  <div class="card-title">Proveedores de IA soportados</div>
+  <table>
+    <thead>
+      <tr><th>Proveedor</th><th>Costo</th><th>Modelo por defecto</th><th>Requiere</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Groq</strong></td><td><span class="tag tag-green">GRATIS</span></td><td><code>llama-3.3-70b-versatile</code></td><td>API key (console.groq.com)</td></tr>
+      <tr><td><strong>Gemini</strong></td><td><span class="tag tag-green">GRATIS</span></td><td><code>gemini-1.5-flash</code></td><td>API key (aistudio.google.com)</td></tr>
+      <tr><td><strong>Ollama</strong></td><td><span class="tag tag-green">GRATIS</span></td><td><code>llama3.1</code> (local)</td><td>Instalar Ollama, descargar modelo (~4GB)</td></tr>
+      <tr><td><strong>OpenAI</strong></td><td><span class="tag tag-red">PAGO</span></td><td><code>gpt-4o</code></td><td>API key (platform.openai.com)</td></tr>
+      <tr><td><strong>Anthropic</strong></td><td><span class="tag tag-red">PAGO</span></td><td><code>claude-sonnet-4</code></td><td>API key (console.anthropic.com)</td></tr>
+      <tr><td><strong>Manual</strong></td><td><span class="tag tag-green">GRATIS</span></td><td>ChatGPT / Claude web</td><td>Solo navegador web</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ ARQUITECTURA ═══════════════════ -->
+<div class="section-label"><span class="num">2</span>Arquitectura</div>
+<h2 id="arquitectura">Como funciona el sistema</h2>
+<p class="sub">El flujo completo es una cadena de 4 pasos: desde los datos del mercado hasta la publicacion en la web.</p>
+
+<div style="background:var(--bg2);border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:24px;margin:16px 0">
+  <div class="flow-arrow">
+    <span class="flow-step">1. Yahoo Finance</span>
+    <span class="flow-arrow-sym">&rarr;</span>
+    <span class="flow-step">2. Prompt + datos</span>
+    <span class="flow-arrow-sym">&rarr;</span>
+    <span class="flow-step">3. IA (Groq/Gemini/Ollama/etc)</span>
+    <span class="flow-arrow-sym">&rarr;</span>
+    <span class="flow-step">4. HTML + git push</span>
+    <span class="flow-arrow-sym">&rarr;</span>
+    <span class="flow-step" style="background:var(--teal-bg);color:var(--teal);border:0.5px solid var(--teal-bd)">edustrader.pages.dev</span>
+  </div>
+  <div style="margin-top:16px;font-size:12px;color:var(--text3);text-align:center">
+    Tiempo total estimado: 15-30 segundos (dependiendo del proveedor IA)
+  </div>
+</div>
+
+<h3>Estructura de Archivos</h3>
+<pre>
+eduSTrader - Local Free/
+  gameplan_system/
+    config.json                Configuracion (API keys, rutas, contratos)
+    template.html              Template HTML estandar (EduS Brand)
+    generar_gameplan.py        Script principal (>1100 lineas)
+    requirements.txt           Dependencias Python
+    INICIAR_GAMEPLAN.bat       Acceso directo modo interactivo
+    INICIAR_GAMEPLAN_AUTO.bat  Acceso directo modo automatico
+    prompt_data.txt            (generado) Prompt enviado a la IA
+    ai_raw_response.txt        (generado) Respuesta cruda si falla el parseo
+</pre>
+
+<h3>Template HTML - Secciones</h3>
+<p>El HTML generado contiene 5 secciones principales, siguiendo el formato estandar de EduS Trader:</p>
+<ol>
+  <li><strong>PASO 01 &mdash; Sentimiento Global &amp; Fundamentales:</strong> Barra de sentimiento, alertas principales, tabla de eventos economicos del dia.</li>
+  <li><strong>PASO 02 &mdash; Analisis Estructural:</strong> 4 tarjetas de zonas (ES, NQ, CL, GC) en grid 2x2 con resistencias, soportes y analisis Wyckoff.</li>
+  <li><strong>PASO 03 &mdash; Matriz de Escenarios:</strong> Barra de probabilidades y 3 escenarios (Alcista, Bajista, Lateral) con triggers, estrategia, targets para los 4 instrumentos e invalidacion.</li>
+  <li><strong>PASO 04 &mdash; Market Breadth:</strong> Grid de las 7 Magnificas (AAPL, MSFT, GOOGL, AMZN, NVDA, META, TSLA) y tabla de Top Movers del dia.</li>
+  <li><strong>PASO 05 &mdash; Estrategia Operativa:</strong> Setups (primario y secundario), horarios criticos y reglas de la mesa.</li>
+</ol>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ INSTALACION ═══════════════════ -->
+<div class="section-label"><span class="num">3</span>Instalacion</div>
+<h2 id="instalacion">Requisitos y puesta en marcha</h2>
+<p class="sub">El sistema funciona en Windows con Python 3.11+. No requiere servidor ni cuenta paga (aunque algunos proveedores IA necesitan API key gratuita).</p>
+
+<h3>Requisitos del sistema</h3>
+<ul>
+  <li>Windows 10/11</li>
+  <li>Python 3.11 o superior</li>
+  <li>Conexion a internet (para datos de mercado y API de IA)</li>
+  <li>Git instalado (para publicar en Cloudflare Pages)</li>
+  <li>Al menos 8GB de RAM recomendado (16GB si usas Ollama)</li>
+</ul>
+
+<h3>Paso a paso</h3>
+
+<div class="step-box">
+  <div class="step-num">Paso 1</div>
+  <div class="step-title">Verificar Python</div>
+  <p>Abre PowerShell y ejecuta:</p>
+  <pre><span class="n">python</span> <span class="o">--</span><span class="n">version</span></pre>
+  <p>Debe mostrar <code>Python 3.11.x</code> o superior. Si no lo tienes, descargalo de <strong>python.org</strong>.</p>
+</div>
+
+<div class="step-box">
+  <div class="step-num">Paso 2</div>
+  <div class="step-title">Instalar dependencias</div>
+  <pre><span class="n">cd</span> <span class="s">"eduSTrader - Local Free\gameplan_system"</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span></pre>
+  <p>Esto instala: <code>yfinance</code>, <code>pandas</code>, <code>openai</code>, <code>anthropic</code>, <code>google-generativeai</code>.</p>
+</div>
+
+<div class="step-box">
+  <div class="step-num">Paso 3</div>
+  <div class="step-title">Configurar API keys (en config.json)</div>
+  <p>Edita el archivo <code>gameplan_system/config.json</code> y coloca las API keys:</p>
+  <pre>{
+  <span class="s">"groq"</span>: {
+    <span class="s">"api_key"</span>: <span class="s">"gsk_tu_key_aqui"</span>,
+    <span class="s">"model"</span>: <span class="s">"llama-3.3-70b-versatile"</span>
+  },
+  <span class="s">"gemini"</span>: {
+    <span class="s">"api_key"</span>: <span class="s">"AIzaSy_tu_key_aqui"</span>,
+    <span class="s">"model"</span>: <span class="s">"gemini-1.5-flash"</span>
+  }
+}</pre>
+  <p>Donde conseguir las keys:</p>
+  <ul>
+    <li><strong>Groq:</strong> <code>console.groq.com</code> &rarr; registrarse &rarr; API Keys &rarr; Crear key (sin tarjeta de credito)</li>
+    <li><strong>Gemini:</strong> <code>aistudio.google.com</code> &rarr; Get API key &rarr; Crear key (sin tarjeta)</li>
+  </ul>
+</div>
+
+<div class="step-box">
+  <div class="step-num">Paso 4</div>
+  <div class="step-title">Verificar que el repo git esta configurado</div>
+  <pre><span class="n">cd</span> <span class="s">"Documents\GitHub\edus-trader"</span>
+<span class="n">git</span> <span class="n">status</span></pre>
+  <p>Debe mostrar la rama y que todo esta en orden. Si no existe, clona el repo:</p>
+  <pre><span class="n">git</span> <span class="n">clone</span> <span class="o">&lt;</span><span class="n">url</span><span class="o">&gt;</span></pre>
+  <p>Luego actualiza <code>config.json</code> con la ruta correcta en <code>publishing.git_repo_path</code>.</p>
+</div>
+
+<div class="step-box">
+  <div class="step-num">Paso 5</div>
+  <div class="step-title">Ejecutar por primera vez (modo manual)</div>
+  <p>Para probar sin API key:</p>
+  <pre><span class="n">python</span> <span class="n">generar_gameplan</span><span class="o">.</span><span class="n">py</span></pre>
+  <p>Selecciona la opcion <strong>6) MANUAL</strong>. Esto genera el archivo <code>prompt_data.txt</code> con los datos del mercado. Copia su contenido, pegalo en ChatGPT/Claude web, guarda la respuesta como JSON y luego:</p>
+  <pre><span class="n">python</span> <span class="n">generar_gameplan</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">manual</span><span class="o">-</span><span class="n">text</span> <span class="n">respuesta</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">auto</span></pre>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ CONFIGURACION ═══════════════════ -->
+<div class="section-label"><span class="num">4</span>Configuracion</div>
+<h2 id="configuracion">Archivo config.json en detalle</h2>
+<p class="sub">Todas las opciones se configuran desde <code>gameplan_system/config.json</code>. No es necesario editar el codigo Python.</p>
+
+<div class="card">
+  <div class="card-title">Campos de configuracion</div>
+  <table>
+    <thead>
+      <tr><th>Clave</th><th>Descripcion</th><th>Ejemplo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>output_dir</code></td><td>Directorio donde se guarda el HTML (debe ser el repo)</td><td><code>C:\\...\\GitHub\\edus-trader</code></td></tr>
+      <tr><td><code>ai.default_provider</code></td><td>Proveedor por defecto en modo --auto</td><td><code>"groq"</code></td></tr>
+      <tr><td><code>ai.temperature</code></td><td>Creatividad del modelo (0.0 = deterministico, 1.0 = creativo)</td><td><code>0.7</code></td></tr>
+      <tr><td><code>ai.max_tokens</code></td><td>Maximo de tokens en la respuesta</td><td><code>8192</code></td></tr>
+      <tr><td><code>ai.providers.groq.api_key</code></td><td>API key de Groq</td><td><code>"gsk_..."</code></td></tr>
+      <tr><td><code>ai.providers.gemini.api_key</code></td><td>API key de Google Gemini</td><td><code>"AIzaSy..."</code></td></tr>
+      <tr><td><code>ai.providers.ollama.model</code></td><td>Modelo local de Ollama</td><td><code>"llama3.1"</code></td></tr>
+      <tr><td><code>session.tipo</code></td><td>Tipo de sesion: PRE-MARKET o POST-MARKET</td><td><code>"PRE-MARKET"</code></td></tr>
+      <tr><td><code>session.hora</code></td><td>Hora que aparece en el header del HTML</td><td><code>"09:20 AM ET"</code></td></tr>
+      <tr><td><code>contract_months.*</code></td><td>Meses de contrato para cada futuro</td><td><code>"JUN26"</code></td></tr>
+      <tr><td><code>publishing.auto_commit</code></td><td>Commitea automaticamente en git</td><td><code>true</code></td></tr>
+      <tr><td><code>publishing.auto_push</code></td><td>Hace push a GitHub (dispara deploy Cloudflare)</td><td><code>true</code></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ MODOS DE USO ═══════════════════ -->
+<div class="section-label"><span class="num">5</span>Modos de Uso</div>
+<h2 id="modos">Las 5 formas de generar el Game Plan</h2>
+<p class="sub">Cada modo tiene su propio flujo. El sistema te pregunta al inicio cual usar.</p>
+
+<h3>Menu Principal</h3>
+<p>Al ejecutar <code>python generar_gameplan.py</code> sin argumentos, aparece:</p>
+
+<pre>
+============================================================
+  METODO DE ANALISIS
+============================================================
+  1) Groq (gratis, via API)         &mdash; llama-3.3-70b / mixtral
+  2) Google Gemini (gratis, via API) &mdash; gemini-1.5-flash
+  3) Ollama (local, sin API key)     &mdash; llama3.1 / mistral
+  4) OpenAI (plan pago)              &mdash; gpt-4o / gpt-4o-mini
+  5) Anthropic (plan pago)           &mdash; claude-sonnet-4
+  6) MANUAL &mdash; genera prompt, pegas en web, cargas respuesta
+  7) Skip AI &mdash; solo datos, sin analisis
+
+  Selecciona (1-7):
+</pre>
+
+<h3 id="modo-1">Modo 1 &mdash; Groq (Recomendado)</h3>
+<div class="card card-green">
+  <div class="card-title">Caracteristicas</div>
+  <ul>
+    <li><strong>Costo:</strong> Gratis (sin tarjeta de credito)</li>
+    <li><strong>Modelo:</strong> <code>llama-3.3-70b-versatile</code> (70B parametros)</li>
+    <li><strong>Velocidad:</strong> Muy rapida (inferencia optimizada en GPU)</li>
+    <li><strong>Limite:</strong> 30 requests/minuto, 6000 requests/dia</li>
+    <li><strong>Tiempo tipico:</strong> 3-8 segundos</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Flujo de ejecucion</div>
+  <pre><span class="c"># Opcion A: Menu interactivo</span>
+<span class="n">python</span> <span class="n">generar_gameplan</span><span class="o">.</span><span class="n">py</span>
+<span class="c"># Elegir opcion 1</span>
+
+<span class="c"># Opcion B: Modo automatico (usa config.default_provider)</span>
+<span class="n">python</span> <span class="n">generar_gameplan</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">auto</span></pre>
+</div>
+<div class="card">
+  <div class="card-title">Salida esperada</div>
+  <pre><span class="n">ES:</span> <span class="n">7,432.25</span> <span class="o">(+</span><span class="n">0.15</span><span class="o">%)</span>
+<span class="n">NQ:</span> <span class="n">29,231.75</span> <span class="o">(-</span><span class="n">0.17</span><span class="o">%)</span>
+<span class="n">CL:</span> <span class="n">101.02</span> <span class="o">(+</span><span class="n">2.02</span><span class="o">%)</span>
+<span class="n">GC:</span> <span class="n">4,561.90</span> <span class="o">(-</span><span class="n">3.41</span><span class="o">%)</span>
+
+<span class="o">></span> <span class="n">Llamando a GROQ</span> <span class="o">(</span><span class="n">llama</span><span class="o">-</span><span class="n">3.3</span><span class="o">-</span><span class="n">70b</span><span class="o">-</span><span class="n">versatile</span><span class="o">)...</span>
+<span class="n">OK</span> <span class="n">Respuesta recibida de la IA</span>
+<span class="n">OK</span> <span class="n">Analisis parseado correctamente</span>
+<span class="n">OK</span> <span class="n">HTML generado: gameplan_17may2026.html</span>
+<span class="n">OK</span> <span class="n">Publicado en GitHub</span></pre>
+</div>
+
+<h3 id="modo-2">Modo 2 &mdash; Google Gemini</h3>
+<div class="card card-green">
+  <div class="card-title">Caracteristicas</div>
+  <ul>
+    <li><strong>Costo:</strong> Gratis (sin tarjeta de credito)</li>
+    <li><strong>Modelo:</strong> <code>gemini-1.5-flash</code></li>
+    <li><strong>Velocidad:</strong> Rapida</li>
+    <li><strong>Limite:</strong> 60 requests/minuto (generoso)</li>
+    <li><strong>Tiempo tipico:</strong> 4-10 segundos</li>
+  </ul>
+</div>
+<div class="card card-amber">
+  <div class="card-title">Importante: instalar dependencia extra</div>
+  <pre><span class="n">pip</span> <span class="n">install</span> <span class="n">google</span><span class="o">-</span><span class="n">generativeai</span></pre>
+</div>
+
+<h3 id="modo-3">Modo 3 &mdash; Ollama (Local)</h3>
+<div class="card card-green">
+  <div class="card-title">Caracteristicas</div>
+  <ul>
+    <li><strong>Costo:</strong> 100% gratis, sin API key, sin internet requerido</li>
+    <li><strong>Modelo:</strong> <code>llama3.1</code> (local, ~4GB de descarga)</li>
+    <li><strong>Velocidad:</strong> Depende de tu PC (lento en CPU, rapido con GPU)</li>
+    <li><strong>Privacidad:</strong> Los datos nunca salen de tu maquina</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Instalacion de Ollama</div>
+  <pre><span class="c"># 1. Descargar e instalar desde ollama.com</span>
+<span class="c"># 2. Abrir terminal y descargar el modelo:</span>
+<span class="n">ollama</span> <span class="n">pull</span> <span class="n">llama3.1</span>
+
+<span class="c"># 3. Verificar que funciona:</span>
+<span class="n">ollama</span> <span class="n">run</span> <span class="n">llama3.1</span> <span class="s">"Hola, prueba"</span>
+
+<span class="c"># 4. Dejar Ollama corriendo en segundo plano</span>
+<span class="c">#    (Ollama se inicia como servicio de Windows automaticamente)</span></pre>
+</div>
+
+<div class="card card-amber">
+  <div class="card-title">Requisitos de hardware para Ollama</div>
+  <table>
+    <thead>
+      <tr><th>Modelo</th><th>RAM minima</th><th>RAM recomendada</th><th>Velocidad en CPU</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>llama3.1</code> (8B)</td><td>8 GB</td><td>16 GB</td><td>10-20 tokens/s</td></tr>
+      <tr><td><code>llama3.1</code> (70B)</td><td>48 GB</td><td>64 GB</td><td>No recomendado en CPU</td></tr>
+      <tr><td><code>mistral</code> (7B)</td><td>8 GB</td><td>12 GB</td><td>15-25 tokens/s</td></tr>
+      <tr><td><code>phi3</code> (3.8B)</td><td>4 GB</td><td>8 GB</td><td>30-40 tokens/s</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3 id="modo-6">Modo 6 &mdash; Manual (Sin API key)</h3>
+<div class="card card-blue">
+  <div class="card-title">Como funciona</div>
+  <p>Ideal si no tienes API key o quieres usar ChatGPT/Claude desde el navegador web (versiones gratuitas).</p>
+  <ol>
+    <li>Ejecutas <code>python generar_gameplan.py</code> y eliges opcion 6</li>
+    <li>El sistema genera <code>prompt_data.txt</code> con los datos del mercado</li>
+    <li>Abras el archivo, copias TODO su contenido</li>
+    <li>Lo pegas en ChatGPT, Claude, Gemini (web, version gratuita)</li>
+    <li>La IA te devuelve un JSON con el analisis completo</li>
+    <li>Copias esa respuesta y la guardas en un archivo (ej: <code>respuesta.json</code>)</li>
+    <li>Ejecutas: <code>python generar_gameplan.py --manual-text respuesta.json --auto</code></li>
+    <li>El sistema genera el HTML y lo publica</li>
+  </ol>
+</div>
+<div class="card">
+  <div class="card-title">Ejemplo completo</div>
+  <pre><span class="c"># Terminal 1: Generar el prompt</span>
+<span class="n">python</span> <span class="n">generar_gameplan</span><span class="o">.</span><span class="n">py</span>
+<span class="c">> Elegir opcion 6</span>
+<span class="c">> Se genera prompt_data.txt</span>
+
+<span class="c"># Abrir prompt_data.txt, copiar, pegar en chat.openai.com</span>
+
+<span class="c"># Guardar respuesta como respuesta.json</span>
+
+<span class="c"># Terminal 2: Cargar respuesta y completar</span>
+<span class="n">python</span> <span class="n">generar_gameplan</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">manual</span><span class="o">-</span><span class="n">text</span> <span class="n">respuesta</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">auto</span></pre>
+</div>
+
+<h3 id="modo-7">Modo 7 &mdash; Skip AI (Solo datos)</h3>
+<div class="card card-amber">
+  <div class="card-title">Para que sirve</div>
+  <ul>
+    <li>Probar que los datos de mercado se obtienen correctamente</li>
+    <li>Verificar que el template HTML se genera sin errores</li>
+    <li>Depurar problemas de conectividad con Yahoo Finance</li>
+    <li>Generar un HTML rapido con solo precios (sin analisis)</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="card-title">Ejecucion</div>
+  <pre><span class="n">python</span> <span class="n">generar_gameplan</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">skip</span><span class="o">-</span><span class="n">ai</span></pre>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ FLUJO COMPLETO ═══════════════════ -->
+<div class="section-label"><span class="num">6</span>Flujo Completo</div>
+<h2 id="flujo-completo">Ejecucion paso a paso (con Groq)</h2>
+<p class="sub">Este es el flujo completo desde que abres PowerShell hasta que el Game Plan esta publicado en la web.</p>
+
+<div class="step-box" style="border-left-color:var(--green)">
+  <div class="step-num">Paso 1</div>
+  <div class="step-title">Abrir PowerShell y navegar al directorio</div>
+  <pre><span class="n">cd</span> <span class="s">"C:\Users\eduar\OneDrive - Desarrollo Personal\Documents - Operativa Diaria\EduSTrader - Local Free\gameplan_system"</span></pre>
+</div>
+
+<div class="step-box" style="border-left-color:var(--green)">
+  <div class="step-num">Paso 2</div>
+  <div class="step-title">Ejecutar el generador</div>
+  <pre><span class="n">python</span> <span class="n">generar_gameplan</span><span class="o">.</span><span class="n">py</span></pre>
+  <p>O si prefieres modo automatico (sin preguntas):</p>
+  <pre><span class="n">python</span> <span class="n">generar_gameplan</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">auto</span></pre>
+</div>
+
+<div class="step-box" style="border-left-color:var(--green)">
+  <div class="step-num">Paso 3</div>
+  <div class="step-title">Elegir metodo de analisis (solo en modo interactivo)</div>
+  <p>Aparece el menu. Presiona <strong>1</strong> para Groq y Enter.</p>
+</div>
+
+<div class="step-box" style="border-left-color:var(--green)">
+  <div class="step-num">Paso 4</div>
+  <div class="step-title">El sistema obtiene datos de mercado</div>
+  <p>Veras algo como:</p>
+  <pre><span class="o">></span> <span class="n">Obteniendo datos de mercado</span> <span class="o">(</span><span class="n">5d</span><span class="o">/</span><span class="n">1h</span><span class="o">)...</span>
+  <span class="o">-</span> <span class="n">ES</span> <span class="o">(</span><span class="n">ES</span><span class="o">=</span><span class="n">F</span><span class="o">):</span> <span class="n">7,432.25</span> <span class="o">+</span><span class="n">0.15</span><span class="o">%</span>
+  <span class="o">-</span> <span class="n">NQ</span> <span class="o">(</span><span class="n">NQ</span><span class="o">=</span><span class="n">F</span><span class="o">):</span> <span class="n">29,231.75</span> <span class="o">-</span><span class="n">0.17</span><span class="o">%</span>
+  <span class="o">-</span> <span class="n">CL</span> <span class="o">(</span><span class="n">CL</span><span class="o">=</span><span class="n">F</span><span class="o">):</span> <span class="n">101.02</span> <span class="o">+</span><span class="n">2.02</span><span class="o">%</span>
+  <span class="o">-</span> <span class="n">GC</span> <span class="o">(</span><span class="n">GC</span><span class="o">=</span><span class="n">F</span><span class="o">):</span> <span class="n">4,561.90</span> <span class="o">-</span><span class="n">3.41</span><span class="o">%</span>
+  <span class="o">-</span> <span class="n">VIX</span> <span class="o">(</span><span class="o">^</span><span class="n">VIX</span><span class="o">):</span> <span class="n">18.42</span> <span class="o">+</span><span class="n">1.21</span><span class="o">%</span></pre>
+</div>
+
+<div class="step-box" style="border-left-color:var(--green)">
+  <div class="step-num">Paso 5</div>
+  <div class="step-title">La IA genera el analisis</div>
+  <pre><span class="o">></span> <span class="n">Llamando a GROQ</span> <span class="o">(</span><span class="n">llama</span><span class="o">-</span><span class="n">3.3</span><span class="o">-</span><span class="n">70b</span><span class="o">-</span><span class="n">versatile</span><span class="o">)...</span>
+  <span class="n">OK</span> <span class="n">Respuesta recibida de la IA</span>
+  <span class="n">OK</span> <span class="n">Analisis parseado correctamente</span></pre>
+  <p>La IA devuelve un JSON estructurado con sentimiento, eventos, analisis tecnico para los 4 instrumentos, 3 escenarios con probabilidades, Mag7, Top Movers, setups operativos, horarios y reglas.</p>
+</div>
+
+<div class="step-box" style="border-left-color:var(--green)">
+  <div class="step-num">Paso 6</div>
+  <div class="step-title">Se genera el HTML</div>
+  <pre><span class="o">></span> <span class="n">Generando HTML</span><span class="o">...</span>
+  <span class="n">OK</span> <span class="n">HTML generado: gameplan_17may2026.html</span> <span class="o">(</span><span class="n">38,267</span> <span class="n">bytes</span><span class="o">)</span></pre>
+  <p>El template se rellena con todos los datos del analisis. El resultado es un HTML listo para publicar con el mismo estilo visual que los Game Plans anteriores de EduS Trader.</p>
+</div>
+
+<div class="step-box" style="border-left-color:var(--green)">
+  <div class="step-num">Paso 7</div>
+  <div class="step-title">Se publica en la web</div>
+  <pre><span class="n">OK</span> <span class="n">git add OK</span>
+<span class="n">OK</span> <span class="n">git commit OK</span>
+<span class="n">OK</span> <span class="n">git push OK</span>
+<span class="n">OK</span> <span class="n">Publicado: gameplan_17may2026.html</span></pre>
+  <p>El archivo se commitea y pushea al repositorio de GitHub. Cloudflare Pages detecta el cambio y despliega automaticamente (tarda ~30 segundos).</p>
+</div>
+
+<div class="step-box" style="border-left-color:var(--green)">
+  <div class="step-num">Paso 8</div>
+  <div class="step-title">Verificar en la web</div>
+  <p>Abre en tu navegador:</p>
+  <pre><span class="n">https:</span><span class="o">//</span><span class="n">edustrader</span><span class="o">.</span><span class="n">pages</span><span class="o">.</span><span class="n">dev</span><span class="o">/</span><span class="n">gameplan_17may2026</span><span class="o">.</span><span class="n">html</span></pre>
+  <p>Nota: los Game Plans estan detras del muro de autenticacion (solo accesibles para miembros Basic+ o admin).</p>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ RESULTADOS ═══════════════════ -->
+<div class="section-label"><span class="num">7</span>Resultados</div>
+<h2 id="resultados">Que contiene el HTML generado</h2>
+<p class="sub">El Game Plan generado incluye analisis completo para los 4 futuros. Esto es lo que debe contener cada seccion.</p>
+
+<h3>Header</h3>
+<div class="card card-teal">
+  <p>Logo "EduS Trader", fecha completa (ej: "DOMINGO 17 DE MAYO 2026"), hora (ej: "09:20 AM ET"), y los precios de los 5 instrumentos (ES, NQ, CL, GC, VIX) con sus cambios porcentuales codificados por color (verde = positivo, rojo = negativo).</p>
+</div>
+
+<h3>PASO 01 &mdash; Sentimiento Global</h3>
+<div class="card card-teal">
+  <ul>
+    <li><strong>Barra de sentimiento:</strong> RISK-ON (verde), RISK-OFF (rojo) o MIXTO (beige)</li>
+    <li><strong>Alerta principal:</strong> Bloque destacado con el shock o noticia mas importante del dia</li>
+    <li><strong>Alerta secundaria:</strong> Contexto adicional relevante</li>
+    <li><strong>Tabla de eventos:</strong> 5-7 filas con hora ET, nombre del dato, impacto (ALTO/MEDIO/BAJO), consenso y nota de liquidez</li>
+  </ul>
+</div>
+
+<h3>PASO 02 &mdash; Analisis Estructural</h3>
+<div class="card card-teal">
+  <p><strong>4 tarjetas en grid 2x2</strong> (ES | NQ / CL | GC). Cada tarjeta contiene:</p>
+  <ul>
+    <li>Nombre del instrumento y referencia de precio actual</li>
+    <li>Lista de <strong>resistencias</strong> con precios y tipo (HVN, LVN, POC)</li>
+    <li>Lista de <strong>soportes</strong> con precios y tipo</li>
+    <li>Nota de contexto Wyckoff / Market Profile especifica para ese instrumento</li>
+  </ul>
+</div>
+
+<h3>PASO 03 &mdash; Matriz de Escenarios</h3>
+<div class="card card-teal">
+  <ul>
+    <li><strong>Barra de probabilidades:</strong> Visualizacion grafica de las 3 probabilidades (deben sumar 100%)</li>
+    <li><strong>Escenarios (3):</strong> Alcista (verde), Bajista (rojo), Lateral (beige). Cada uno con:
+      <ul>
+        <li>Trigger / Condicion para que ocurra</li>
+        <li>Estrategia a seguir</li>
+        <li>Targets para ES, NQ, CL y GC (T1 y T2 para cada uno)</li>
+        <li>Invalidacion (que anularia el escenario)</li>
+        <li>Nota adicional de riesgo/recompensa</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<h3>PASO 04 &mdash; Market Breadth</h3>
+<div class="card card-teal">
+  <ul>
+    <li><strong>7 Magnificas:</strong> Grid con las 7 (AAPL, MSFT, GOOGL, AMZN, NVDA, META, TSLA) mostrando precio, cambio % y sesgo (alcista/bajista/neutral)</li>
+    <li><strong>Nota de sesgo:</strong> Analisis del comportamiento del grupo</li>
+    <li><strong>Top Movers:</strong> Tabla con 3-5 tickers que mas se mueven en el pre-market, con cambio %, volumen relativo y causa</li>
+  </ul>
+</div>
+
+<h3>PASO 05 &mdash; Estrategia Operativa</h3>
+<div class="card card-teal">
+  <ul>
+    <li><strong>Setup Primario:</strong> Nombre, descripcion detallada y parametros (Entry, Stop, Targets, R:R, Size)</li>
+    <li><strong>Setup Secundario:</strong> Alternativa con menor probabilidad</li>
+    <li><strong>Horarios Criticos:</strong> Tabla con zonas de alta volatilidad y accion recomendada (ej: "08:25-08:40 EVITAR")</li>
+    <li><strong>Reglas de la Mesa:</strong> Lista de reglas para la sesion del dia</li>
+  </ul>
+</div>
+
+<h3>Footer</h3>
+<div class="card card-teal">
+  <p>Marca EduS Trader, fecha, hora, disclaimer legal y contratos de los futuros analizados.</p>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ TROUBLESHOOTING ═══════════════════ -->
+<div class="section-label"><span class="num">8</span>Troubleshooting</div>
+<h2 id="troubleshooting">Solucion de problemas comunes</h2>
+<p class="sub">Problemas frecuentes y como resolverlos.</p>
+
+<div class="card card-red">
+  <div class="card-title">Error: API key no configurada</div>
+  <pre>ERROR: API key para groq no configurada.</pre>
+  <p><strong>Solucion:</strong> Abre <code>config.json</code> y verifica que la clave <code>api_key</code> tenga el valor correcto. O configura la variable de entorno correspondiente (<code>GROQ_API_KEY</code>, <code>GEMINI_API_KEY</code>, etc.).</p>
+</div>
+
+<div class="card card-red">
+  <div class="card-title">Error: modelo descontinuado</div>
+  <pre>Error code: 400 - model_decommissioned</pre>
+  <p><strong>Solucion:</strong> Los proveedores actualizan sus modelos periodicamente. En <code>config.json</code>, cambia el <code>model</code> del proveedor por uno activo. Para Groq, consulta <code>console.groq.com/docs/deprecations</code>.</p>
+</div>
+
+<div class="card card-red">
+  <div class="card-title">Error: Yahoo Finance no devuelve datos</div>
+  <pre>Datos en vivo no disponibles. Usando datos offline de respaldo.</pre>
+  <p><strong>Solucion:</strong> Esto ocurre en fines de semana o cuando no hay conexion. En dias de mercado (lunes a viernes), los datos deberian funcionar. Verifica conexion a internet.</p>
+</div>
+
+<div class="card card-amber">
+  <div class="card-title">La IA no genera todos los campos esperados</div>
+  <p><strong>Solucion:</strong> Prueba con otro proveedor. Groq (Llama 3.3 70B) y Gemini suelen dar los mejores resultados. Si el analisis viene incompleto, prueba el modo Manual (opcion 6) con ChatGPT o Claude web que suelen seguir mejor las instrucciones.</p>
+</div>
+
+<div class="card card-amber">
+  <div class="card-title">Ollama no responde</div>
+  <pre>Error: Cannot connect to host localhost:11434</pre>
+  <p><strong>Solucion:</strong> Asegurate de que Ollama esta instalado y corriendo. Abre PowerShell y ejecuta <code>ollama list</code>. Si no aparece, inicia Ollama desde el menu de inicio. Luego <code>ollama pull llama3.1</code> si no lo has descargado.</p>
+</div>
+
+<div class="card card-amber">
+  <div class="card-title">Git push falla</div>
+  <pre>⚠ Error en git push</pre>
+  <p><strong>Solucion:</strong> Asegurate de que el repositorio tiene un remote configurado. Ejecuta <code>git remote -v</code> dentro del repo. Si no hay remote, agrega: <code>git remote add origin &lt;url&gt;</code>. Verifica tambien que las credenciales de GitHub esten configuradas.</p>
+</div>
+
+<div class="card card-green">
+  <div class="card-title">Pro tip: atajo de un solo click</div>
+  <p>Usa el archivo <code>INICIAR_GAMEPLAN_AUTO.bat</code> para ejecutar todo automaticamente sin abrir PowerShell:</p>
+  <ol>
+    <li>Navega a <code>eduSTrader - Local Free/gameplan_system/</code></li>
+    <li>Haz doble click en <code>INICIAR_GAMEPLAN_AUTO.bat</code></li>
+    <li>El sistema: instala dependencias &rarr; pide elegir metodo &rarr; genera &rarr; publica</li>
+  </ol>
+  <p>Para ejecucion completamente desatendida (programable con Windows Task Scheduler), necesitas configurar <code>ai.default_provider</code> en <code>config.json</code> y usar:</p>
+  <pre><span class="n">python</span> <span class="n">generar_gameplan</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">auto</span></pre>
+  <p>Esto salta el menu y usa el proveedor por defecto.</p>
+</div>
+
+<div style="height:40px"></div>
+
+<div class="card card-purple" style="text-align:center">
+  <p style="font-size:14px;color:var(--text)">
+    <strong>EduS Trader</strong> &mdash; Sistema Automatizado de Game Plan v1.0<br>
+    Documentacion generada el 17 de Mayo 2026<br>
+    <span style="font-size:12px;color:var(--text3)">Para dudas o mejoras, contacta al desarrollador.</span>
+  </p>
+</div>
+
+</div>
+
+</body>
+</html>
