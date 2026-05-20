@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduS Trader — Post-Market Report | 20 MAY 2026</title>
+<title>EduS Trader — Post-Market Analysis | 20 MAY 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -24,6 +24,10 @@
     --bear-bg: #fdf0ee;
     --chop: #b38665;
     --chop-bg: #f6efe8;
+    --warn-bg: #fff8e1;
+    --warn-border: #f0c040;
+    --discrepancy-bg: #fef3e2;
+    --discrepancy-border: #d4a040;
     --shadow: 0 2px 20px rgba(13,31,38,0.10);
     --radius: 10px;
     --header-gradient: linear-gradient(135deg, #142d37 0%, #034649 100%);
@@ -48,80 +52,61 @@
     overflow: hidden;
   }
   .header-left { display: flex; align-items: center; gap: 16px; z-index: 1; }
+  .header-left .logo-img { height: 68px; width: auto; display: block; }
+  .header-left .brand { display: flex; flex-direction: column; }
   .header-left .brand-name { font-family: 'DM Sans', sans-serif; font-size: 32px; font-weight: 700; letter-spacing: -0.5px; color: white; line-height: 1; }
   .header-left .brand-name .gold { color: var(--gold); }
   .header-left .brand-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--gold-light); letter-spacing: 3px; margin-top: 2px; text-transform: uppercase; }
   .header-right { text-align: right; z-index: 1; }
   .header-right .date { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--gold); font-weight: 700; }
   .header-right .time { font-family: 'Space Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.55); margin-top: 2px; }
-  .container { max-width: 1120px; margin: 0 auto; padding: 32px 24px; }
-  .section-title { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; margin-top: 36px; position: relative; }
-  .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, var(--gold), transparent); margin-left: 4px; }
-  .section-title .step { background: var(--navy); color: var(--gold); font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 4px; letter-spacing: 1.5px; border: 1px solid rgba(179,134,101,0.3); }
-  .section-title h2 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--navy); }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 20px; }
-  table { width: 100%; border-collapse: collapse; }
-  thead tr { background: var(--navy); color: white; }
-  thead th { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; padding: 10px 14px; text-align: left; color: var(--gold-light); }
-  tbody tr { border-bottom: 1px solid var(--border); }
-  tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: var(--surface2); }
-  tbody td { padding: 10px 14px; font-size: 13px; vertical-align: top; }
-  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; font-family: 'Space Mono', monospace; }
-  .badge-win { background: var(--bull-bg); color: var(--bull); }
-  .badge-loss { background: var(--bear-bg); color: var(--bear); }
-  .badge-anom { background: var(--chop-bg); color: var(--chop); }
-  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-  .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; text-align: center; box-shadow: var(--shadow); }
-  .kpi-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); }
-  .kpi-value { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 2px; margin-top: 4px; }
-  .kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-  .kpi-green { color: var(--bull); }
-  .kpi-red { color: var(--bear); }
-  .kpi-gold { color: var(--gold); }
-  .dofa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
-  .dofa-card { border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
-  .dofa-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1.5px; margin-bottom: 10px; }
-  .dofa-card ul { list-style: none; padding: 0; }
-  .dofa-card li { padding: 6px 0; font-size: 13px; border-bottom: 1px solid rgba(0,0,0,0.05); }
-  .dofa-card li:last-child { border-bottom: none; }
-  .dofa-card li::before { content: '> '; font-weight: 700; }
-  .dofa-debilidades { background: var(--bear-bg); border: 1.5px solid var(--bear); }
-  .dofa-debilidades h3 { color: var(--bear); }
-  .dofa-debilidades li::before { color: var(--bear); }
-  .dofa-fortalezas { background: var(--bull-bg); border: 1.5px solid var(--bull); }
-  .dofa-fortalezas h3 { color: var(--bull); }
-  .dofa-fortalezas li::before { color: var(--bull); }
-  .dofa-oportunidades { background: #eef3fb; border: 1.5px solid #7da8d8; }
-  .dofa-oportunidades h3 { color: #2a6db5; }
-  .dofa-oportunidades li::before { color: #2a6db5; }
-  .dofa-amenazas { background: var(--chop-bg); border: 1.5px solid var(--gold); }
-  .dofa-amenazas h3 { color: var(--gold); }
-  .dofa-amenazas li::before { color: var(--gold); }
-  .alert-strip { border-radius: var(--radius); padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 12px; font-size: 13px; line-height: 1.5; }
-  .alert-strip .icon { font-size: 20px; flex-shrink: 0; }
-  .alert-strip.alert-danger { background: var(--bear-bg); border: 1px solid var(--bear); }
-  .alert-strip.alert-success { background: var(--bull-bg); border: 1px solid var(--teal); }
-  .alert-strip.alert-warning { background: var(--chop-bg); border: 1px solid var(--gold); }
-  .alert-strip.alert-info { background: #eef3fb; border: 1px solid #7da8d8; }
-  .scatter-legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 10px 0; font-size: 12px; }
-  .scatter-legend span { display: flex; align-items: center; gap: 4px; }
-  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-  .dot-win { background: var(--bull); }
-  .dot-loss { background: var(--bear); }
-  .footer { background: var(--header-gradient); color: rgba(255,255,255,0.4); font-family: 'Space Mono', monospace; font-size: 10px; text-align: center; padding: 18px; letter-spacing: 1px; margin-top: 40px; border-top: 3px solid var(--gold); }
-  .footer strong { color: var(--gold-light); }
-  .footer .brand-ft { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: -0.5px; color: var(--gold-light); }
-  .footer .brand-ft .gold { color: var(--gold); }
-  .badge-rule-pass { background: var(--bull-bg); color: var(--bull); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-  .badge-rule-fail { background: var(--bear-bg); color: var(--bear); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-  .badge-rule-warn { background: var(--chop-bg); color: var(--gold); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-  .reco-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 12px; box-shadow: var(--shadow); border-left: 4px solid var(--gold); }
+  .header-right .prices { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .price-chip { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; padding: 4px 10px; font-size: 11px; font-family: 'Space Mono', monospace; color: rgba(255,255,255,0.85); display: inline-flex; gap: 6px; }
+  .price-chip span:last-child { font-weight: 700; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
+  .banner-divider { position: relative; border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; height: 60px; background: var(--header-gradient); display: flex; align-items: center; justify-content: center; }
+  .banner-divider .overlay { color: white; font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.85; }
+  .section-title { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .section-title .step { background: var(--navy); color: white; font-family: 'Space Mono', monospace; font-size: 9px; padding: 2px 10px; border-radius: 20px; letter-spacing: 1px; }
+  .section-title h2 { font-size: 18px; font-weight: 600; color: var(--navy); }
+  .card { background: var(--surface); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .summary-card { background: var(--surface); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); text-align: center; }
+  .summary-card .label { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+  .summary-card .value { font-size: 24px; font-weight: 700; margin-top: 4px; }
+  .summary-card .value.positive { color: var(--bull); }
+  .summary-card .value.negative { color: var(--bear); }
+  .pnl-hero { text-align: center; padding: 32px; background: linear-gradient(135deg, #e6f5f4, #f0faf9); border-radius: var(--radius); margin-bottom: 20px; border: 2px solid var(--teal); }
+  .pnl-hero .label { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
+  .pnl-hero .amount { font-size: 42px; font-weight: 700; color: var(--bull); margin-top: 4px; }
+  .pnl-hero .source { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; text-align: left; padding: 8px 10px; border-bottom: 2px solid var(--border); }
+  td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  tr.trade-win td:last-child { color: var(--bull); }
+  tr.trade-loss td:last-child { color: var(--bear); }
+  .discrepancy-box { background: var(--discrepancy-bg); border-left: 4px solid var(--discrepancy-border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 20px; }
+  .discrepancy-box h3 { font-size: 14px; color: #8b6914; margin-bottom: 8px; }
+  .discrepancy-box ul { margin-left: 20px; font-size: 13px; color: var(--text); }
+  .discrepancy-box li { margin-bottom: 4px; }
+  .info-box { background: var(--bull-bg); border-left: 4px solid var(--bull); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 20px; }
+  .info-box h3 { font-size: 14px; color: var(--bull); margin-bottom: 8px; }
+  .info-box ul { margin-left: 20px; font-size: 13px; }
+  .info-box li { margin-bottom: 4px; }
+  .warn-box { background: var(--warn-bg); border-left: 4px solid var(--warn-border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 20px; }
+  .warn-box h3 { font-size: 14px; color: #b8860b; margin-bottom: 8px; }
+  .warn-box p { font-size: 13px; }
+  .footer { background: var(--navy-dark); color: rgba(255,255,255,0.5); text-align: center; padding: 20px; font-size: 11px; font-family: 'Space Mono', monospace; letter-spacing: 0.5px; }
+  .footer .brand-ft { font-family: 'DM Sans', sans-serif; font-weight: 700; }
+  .footer .gold { color: var(--gold); }
   @media (max-width: 768px) {
-    .kpi-grid { grid-template-columns: 1fr 1fr; }
-    .dofa-grid { grid-template-columns: 1fr; }
-    .header { flex-direction: column; gap: 14px; align-items: flex-start; }
-    .header-right { text-align: left; width: 100%; }
+    .header { flex-direction: column; text-align: center; padding: 16px; gap: 12px; }
+    .header-right .prices { justify-content: center; }
+    .header-left { flex-direction: column; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .pnl-hero .amount { font-size: 28px; }
+    table { font-size: 11px; }
+    th, td { padding: 4px 6px; }
   }
 </style>
 </head>
@@ -131,313 +116,355 @@
   <div class="header-left">
     <div class="brand">
       <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
-      <div class="brand-sub">Post-Market Report &middot; Mesa de Dinero</div>
+      <div class="brand-sub">Post-Market Analysis &middot; Mesa de Dinero</div>
     </div>
   </div>
   <div class="header-right">
-    <div class="date">MIERCOLES 20 DE MAYO 2026</div>
-    <div class="time">POST-MARKET &middot; An&aacute;lisis de Sesion</div>
+    <div class="date">Martes, 20 de Mayo de 2026</div>
+    <div class="time">Session Close &middot; Post-Market</div>
+    <div class="prices">
+      <div class="price-chip">Sim101 P&L <span style="color:#279995;">+4,295 USD</span></div>
+    </div>
   </div>
 </div>
 
 <div class="container">
 
-<div class="section-title">
-  <span class="step">PASO 01</span>
-  <h2>Resumen Ejecutivo de la Sesion</h2>
+<div class="banner-divider">
+  <div class="overlay">20 MAY 2026 &middot; Post-Market Report</div>
 </div>
 
-<div class="alert-strip alert-warning">
-  <div class="icon">📉</div>
-  <div>
-    <strong>Sesion negativa: -7 trades / +1 trade (12% win rate).</strong><br>
-    Jornada marcada por la publicaci&oacute;n de las Actas del FOMC a las 14:00 ET. El mercado abri&oacute; con presi&oacute;n bajista sincronizada (ES -1.13%, NQ -1.13%) seg&uacute;n el Game Plan. Los trades se concentraron en la ventana pre-FOMC (10:14-11:17 ET) con resultados predominantemente negativos. Se detect&oacute; 1 anomal&iacute;a de datos en el registro (Trade #4: entrada ES con precio de salida NQ).
-  </div>
-</div>
-
-<div class="kpi-grid">
-  <div class="kpi-card">
-    <div class="kpi-label">Total Trades</div>
-    <div class="kpi-value kpi-gold">7</div>
-    <div class="kpi-sub">+1 anomalia excluida</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-label">Win Rate</div>
-    <div class="kpi-value kpi-red">14%</div>
-    <div class="kpi-sub">1 win / 6 losses</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-label">PnL Neto</div>
-    <div class="kpi-value kpi-red">-US$ 5,237</div>
-    <div class="kpi-sub">Sin incluir anomalia</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-label">Senales V5</div>
-    <div class="kpi-value kpi-gold">30 T1 / 64 STOP</div>
-    <div class="kpi-sub">32% tasa de acierto</div>
-  </div>
+<div class="pnl-hero">
+  <div class="label">Resultado Neto Sesion (Sim101)</div>
+  <div class="amount">+4,295 USD</div>
+  <div class="source">Fuente: NinjaTrader 8 &middot; Cuenta Sim101</div>
 </div>
 
 <div class="section-title">
-  <span class="step">PASO 02</span>
-  <h2>Trade Log — Ejecucion del Dia</h2>
+  <span class="step">RESUMEN</span>
+  <h2>Resumen General de la Sesion</h2>
+</div>
+
+<div class="summary-grid">
+  <div class="summary-card">
+    <div class="label">Trades Logger</div>
+    <div class="value">11</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">Win Rate</div>
+    <div class="value" style="color:var(--bear)">27%</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">Wins</div>
+    <div class="value" style="color:var(--bull)">3</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">Losses</div>
+    <div class="value" style="color:var(--bear)">8</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">Logger P&L</div>
+    <div class="value negative">-19,047 USD</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">NT Grid Fills</div>
+    <div class="value">5</div>
+  </div>
+</div>
+
+<div class="section-title">
+  <span class="step">DISCREPANCIA</span>
+  <h2>Discrepancia entre Fuentes de Datos</h2>
+</div>
+
+<div class="discrepancy-box">
+  <h3>&#9888; Diferencia: Logger muestra -19,047 USD vs Sim101 real +4,295 USD</h3>
+  <ul>
+    <li><strong>Logger (TradesContext):</strong> 40 fills registrados. El Entry_ID se reusa entre instrumentos (ES y NQ comparten contador), lo que hace que el agrupamiento automatico mezcle trades independientes. Trade 4 y Trade 8 son los mas afectados.</li>
+    <li><strong>NT Grid Export:</strong> Solo 5 fills confirmados (State=Filled, Avg.price>0), todos en NQ. Las filas de ES en el grid tienen State=Initialized/Submitted y Avg.price=0 — son ordenes enviadas que no ejecutaron, no trades reales.</li>
+    <li><strong>Causa probable:</strong> El logger no captura todos los fills de la sesion. La cuenta Sim101 de NT8 incluye auto-trader (HUD V5), posiciones abiertas mark-to-market, y posiblemente trades que el logger no registro (como Close 3 @ 29,332.33 a las 11:21 que no aparece en el CSV).</li>
+    <li><strong>Conclusion:</strong> El Sim101 P&L es la fuente de verdad. El logger y el grid estan incompletos por separado.</li>
+  </ul>
+</div>
+
+<div class="section-title">
+  <span class="step">TRADES</span>
+  <h2>Trade by Trade — Logger (Agrupado por Entry_ID + Instrumento)</h2>
+</div>
+
+<div class="info-box">
+  <h3>Nota sobre el agrupamiento</h3>
+  <ul>
+    <li>El Entry_ID se reusa entre ES y NQ. Por ejemplo, Entry_ID=4 aparece en ES (Short 1 @ 7,404.50 — <strong>sin exit, posicion abierta</strong>) y en NQ (Long 2 — trade completo y cerrado).</li>
+    <li>Entry_ID=8 en NQ agrupa <strong>7 entries y 3 exits</strong> bajo el mismo ID, cuando en realidad son 3-4 sub-trades independientes. Eso distorsiona el PnL del Trade 8 a -20,934 USD.</li>
+  </ul>
 </div>
 
 <div class="card">
   <table>
     <thead>
       <tr>
-        <th>N&deg;</th>
-        <th>Inst.</th>
-        <th>Dir.</th>
-        <th>Entrada</th>
-        <th>Salida</th>
+        <th>ID</th>
+        <th>Inst</th>
+        <th>Dir</th>
         <th>Entry</th>
         <th>Exit</th>
+        <th>Entry Px</th>
+        <th>Exit Px</th>
         <th>Qty</th>
+        <th>PnL pts</th>
         <th>PnL USD</th>
-        <th>Resultado</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>1</td><td>ES</td><td>Short</td><td>10:14</td><td>10:14</td>
-        <td>7,381.00</td><td>7,388.50</td><td>4</td>
-        <td style="color:var(--bear);font-weight:700">-1,500</td>
-        <td><span class="badge badge-loss">STOP</span></td>
-      </tr>
-      <tr>
-        <td>2</td><td>ES</td><td>Short</td><td>10:14</td><td>10:15</td>
-        <td>7,390.75</td><td>7,393.50</td><td>4</td>
-        <td style="color:var(--bear);font-weight:700">-550</td>
-        <td><span class="badge badge-loss">STOP</span></td>
-      </tr>
-      <tr>
-        <td>3</td><td>ES</td><td>Long</td><td>10:20</td><td>10:24</td>
-        <td>7,413.25</td><td>7,408.25</td><td>4</td>
-        <td style="color:var(--bear);font-weight:700">-1,000</td>
-        <td><span class="badge badge-loss">STOP</span></td>
-      </tr>
-      <tr style="opacity:0.5;background:var(--chop-bg)">
-        <td>4*</td><td>ES/NQ</td><td>Short</td><td>10:25</td><td>11:02</td>
-        <td>7,404.50</td><td colspan="2">NQ 29,268</td>
-        <td style="color:var(--chop);font-weight:700">—</td>
-        <td><span class="badge badge-anom">ANOMALIA</span></td>
-      </tr>
-      <tr>
-        <td>5</td><td>NQ</td><td>Long</td><td>11:07</td><td>11:07</td>
-        <td>29,260.00</td><td>29,249.00</td><td>2</td>
-        <td style="color:var(--bear);font-weight:700">-1,100</td>
-        <td><span class="badge badge-loss">STOP</span></td>
-      </tr>
-      <tr>
-        <td>6</td><td>NQ</td><td>Long</td><td>11:09</td><td>11:14</td>
-        <td>29,259.25</td><td>29,248.00</td><td>2</td>
-        <td style="color:var(--bear);font-weight:700">-1,125</td>
-        <td><span class="badge badge-loss">STOP</span></td>
-      </tr>
-      <tr>
-        <td>7</td><td>NQ</td><td>Long</td><td>11:15</td><td>11:15</td>
-        <td>29,263.75</td><td>29,307.25</td><td>2</td>
-        <td style="color:var(--bull);font-weight:700">+4,350</td>
-        <td><span class="badge badge-win">T1</span></td>
-      </tr>
-      <tr>
-        <td>8</td><td>NQ</td><td>Short</td><td>11:15</td><td>11:17</td>
-        <td>29,313.50</td><td>29,370.25</td><td>7</td>
-        <td style="color:var(--bear);font-weight:700">-19,862</td>
-        <td><span class="badge badge-loss">STOP</span></td>
-      </tr>
+      
+    <tr class="trade-loss">
+      <td>1</td>
+      <td>ES</td>
+      <td>Short</td>
+      <td>10:14</td>
+      <td>10:14</td>
+      <td>7,381.00</td>
+      <td>7,388.50</td>
+      <td>2</td>
+      <td>-7.50</td>
+      <td><strong>-750</strong></td>
+    </tr>
+    <tr class="trade-loss">
+      <td>1</td>
+      <td>NQ</td>
+      <td>Long</td>
+      <td>10:39</td>
+      <td>10:39</td>
+      <td>29,218.50</td>
+      <td>29,205.25</td>
+      <td>2</td>
+      <td>-13.25</td>
+      <td><strong>-1,325</strong></td>
+    </tr>
+    <tr class="trade-loss">
+      <td>2</td>
+      <td>ES</td>
+      <td>Short</td>
+      <td>10:14</td>
+      <td>10:15</td>
+      <td>7,390.75</td>
+      <td>7,393.38</td>
+      <td>2</td>
+      <td>-2.62</td>
+      <td><strong>-262</strong></td>
+    </tr>
+    <tr class="trade-loss">
+      <td>2</td>
+      <td>NQ</td>
+      <td>Long</td>
+      <td>10:45</td>
+      <td>10:47</td>
+      <td>29,230.75</td>
+      <td>29,195.00</td>
+      <td>2</td>
+      <td>-35.75</td>
+      <td><strong>-3,575</strong></td>
+    </tr>
+    <tr class="trade-loss">
+      <td>3</td>
+      <td>ES</td>
+      <td>Long</td>
+      <td>10:20</td>
+      <td>10:24</td>
+      <td>7,413.25</td>
+      <td>7,408.25</td>
+      <td>2</td>
+      <td>-5.00</td>
+      <td><strong>-500</strong></td>
+    </tr>
+    <tr class="trade-win">
+      <td>3</td>
+      <td>NQ</td>
+      <td>Long</td>
+      <td>10:50</td>
+      <td>10:53</td>
+      <td>29,189.25</td>
+      <td>29,241.75</td>
+      <td>2</td>
+      <td>++52.50</td>
+      <td><strong>++5,250</strong></td>
+    </tr>
+    <tr class="trade-win">
+      <td>4</td>
+      <td>NQ</td>
+      <td>Long</td>
+      <td>10:59</td>
+      <td>11:02</td>
+      <td>29,261.25</td>
+      <td>29,268.12</td>
+      <td>2</td>
+      <td>++6.88</td>
+      <td><strong>++688</strong></td>
+    </tr>
+    <tr class="trade-loss">
+      <td>5</td>
+      <td>NQ</td>
+      <td>Long</td>
+      <td>11:07</td>
+      <td>11:07</td>
+      <td>29,260.00</td>
+      <td>29,249.00</td>
+      <td>2</td>
+      <td>-11.00</td>
+      <td><strong>-1,100</strong></td>
+    </tr>
+    <tr class="trade-loss">
+      <td>6</td>
+      <td>NQ</td>
+      <td>Long</td>
+      <td>11:09</td>
+      <td>11:14</td>
+      <td>29,259.25</td>
+      <td>29,248.00</td>
+      <td>2</td>
+      <td>-11.25</td>
+      <td><strong>-1,125</strong></td>
+    </tr>
+    <tr class="trade-win">
+      <td>7</td>
+      <td>NQ</td>
+      <td>Long</td>
+      <td>11:15</td>
+      <td>11:15</td>
+      <td>29,263.75</td>
+      <td>29,309.62</td>
+      <td>2</td>
+      <td>++45.88</td>
+      <td><strong>++4,588</strong></td>
+    </tr>
+    <tr class="trade-loss">
+      <td>8</td>
+      <td>NQ</td>
+      <td>Short</td>
+      <td>11:15</td>
+      <td>11:18</td>
+      <td>29,313.50</td>
+      <td>29,373.31</td>
+      <td>7</td>
+      <td>-59.81</td>
+      <td><strong>-20,934</strong></td>
+    </tr>
     </tbody>
   </table>
 </div>
 
-<div class="alert-strip alert-info">
-  <div class="icon">⚠️</div>
-  <div><strong>* Trade #4:</strong> Anomalia en el registro. La entrada muestra ES JUN26 a 7,404.50 pero los fills de salida registran NQ JUN26 a 29,268. Posible error de logging en NinjaTrader. Excluido del analisis cuantitativo.</div>
-</div>
-
 <div class="section-title">
-  <span class="step">PASO 03</span>
-  <h2>Analisis por Instrumento y Direccion</h2>
-</div>
-
-<div class="kpi-grid">
-  <div class="kpi-card">
-    <div class="kpi-label">ES — Trades</div>
-    <div class="kpi-value kpi-red">3</div>
-    <div class="kpi-sub">100% losses &middot; -US$ 3,050</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-label">NQ — Trades</div>
-    <div class="kpi-value kpi-gold">4</div>
-    <div class="kpi-sub">1W / 3L &middot; -US$ 17,737</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-label">Longs</div>
-    <div class="kpi-value kpi-gold">4</div>
-    <div class="kpi-sub">1W / 3L &middot; +US$ 1,125 neto</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-label">Shorts</div>
-    <div class="kpi-value kpi-red">3</div>
-    <div class="kpi-sub">0W / 3L &middot; -US$ 21,912</div>
-  </div>
-</div>
-
-<div class="alert-strip alert-danger">
-  <div class="icon">🔴</div>
-  <div>
-    <strong>Shorts en ES: 0% win rate.</strong> Los 3 trades en corto de ES fueron perdedores. El mercado mostro rejection de los niveles bajos post-apertura con compras agresivas desde 7,354 (soporte del Game Plan). El short en NQ (Trade #8) fue el de mayor perdida (-US$ 19,862) por sobredimensionamiento de posicion (7 contratos vs 2 del resto de trades).<br><br>
-    <strong>Long en NQ (Trade #7):</strong> Unico trade ganador del dia. Entrada en 29,263 con salida en 29,307 (+43.5 pts, +US$ 4,350). Scalp rapido de ~30 segundos en zona de demanda.
-  </div>
-</div>
-
-<div class="section-title">
-  <span class="step">PASO 04</span>
-  <h2>Cumplimiento del Game Plan — Reglas de la Mesa</h2>
+  <span class="step">OPEN</span>
+  <h2>Posiciones Abiertas (Logger sin salida registrada)</h2>
 </div>
 
 <div class="card">
+  <ul><li>Trade 4 | ES | Short | 1 @ 7,404.50</li></ul>
+  <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">Nota: Si estas posiciones fueron cerradas posteriormente por el auto-trader o manualmente, el cierre no quedo registrado en el logger.</p>
+</div>
+
+<div class="section-title">
+  <span class="step">NT GRID</span>
+  <h2>Ordenes Filled — NinjaTrader Grid</h2>
+</div>
+
+<div class="card">
+  <p style="margin-bottom:12px;font-size:12px;color:var(--text-muted);">Export directo de NT8 — Solo 5 ordenes con State=Filled y Avg.price>0. <strong>Todas en NQ.</strong> Ninguna orden de ES aparece como filled en el grid.</p>
   <table>
     <thead>
       <tr>
-        <th>Regla</th>
-        <th>Estatus</th>
-        <th>Observacion</th>
+        <th>Hora</th>
+        <th>Instrumento</th>
+        <th>Accion</th>
+        <th>Qty</th>
+        <th>Precio</th>
+        <th>Nombre</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><strong>Stops SIEMPRE activos</strong></td>
-        <td><span class="badge-rule-pass">✅ CUMPLE</span></td>
-        <td>Todos los trades ejecutaron stop. Ningun trade quedo abierto sin proteccion.</td>
-      </tr>
-      <tr>
-        <td><strong>No anticipar FOMC — reducir size al 50% antes 13:55 ET</strong></td>
-        <td><span class="badge-rule-warn">⚠ N/A</span></td>
-        <td>Todos los trades se ejecutaron antes de las 11:30 ET. No hubo actividad en ventana FOMC.</td>
-      </tr>
-      <tr>
-        <td><strong>Respetar datos economicos</strong></td>
-        <td><span class="badge-rule-pass">✅ CUMPLE</span></td>
-        <td>No se operaron los 5 min previos a datos EIA (10:30 ET) ni FOMC (14:00 ET).</td>
-      </tr>
-      <tr>
-        <td><strong>Tamanos reducidos en baja liquidez</strong></td>
-        <td><span class="badge-rule-fail">❌ INCUMPLE</span></td>
-        <td>Trade #8 entro con 7 contratos NQ en reversal agresivo. El riesgo de -US$ 19,862 es desproporcionado vs el resto de la sesion (promedio -US$ 1,055 en los otros trades).</td>
-      </tr>
-      <tr>
-        <td><strong>Esperar confirmacion en grafico 15min</strong></td>
-        <td><span class="badge-rule-fail">❌ INCUMPLE PARCIAL</span></td>
-        <td>Varias entradas se ejecutaron en menos de 1 minuto entre apertura y cierre. Trades #1, #2, #5, #7 duraron menos de 1 minuto — indica scalp sin esperar confirmacion de vela 15min.</td>
-      </tr>
-      <tr>
-        <td><strong>No perseguir precio en CL</strong></td>
-        <td><span class="badge-rule-pass">✅ CUMPLE</span></td>
-        <td>No se opero CL durante la sesion. Se respeto la advertencia del Game Plan sobre reversal violento.</td>
-      </tr>
+      
+    <tr>
+      <td>11:21:09</td>
+      <td>NQ JUN26</td>
+      <td>Buy to cover</td>
+      <td>3</td>
+      <td>29,332.33</td>
+      <td>Close</td>
+    </tr>
+    <tr>
+      <td>11:18:06</td>
+      <td>NQ JUN26</td>
+      <td>Buy to cover</td>
+      <td>2</td>
+      <td>29,376.25</td>
+      <td>StopCancelClose</td>
+    </tr>
+    <tr>
+      <td>11:18:06</td>
+      <td>NQ JUN26</td>
+      <td>Sell</td>
+      <td>2</td>
+      <td>29,376.00</td>
+      <td>CloseAll</td>
+    </tr>
+    <tr>
+      <td>11:18:05</td>
+      <td>NQ JUN26</td>
+      <td>Sell</td>
+      <td>1</td>
+      <td>29,379.00</td>
+      <td>HUD_T1</td>
+    </tr>
+    <tr>
+      <td>11:17:32</td>
+      <td>NQ JUN26</td>
+      <td>Buy</td>
+      <td>2</td>
+      <td>29,370.38</td>
+      <td>HUD_Entry</td>
+    </tr>
     </tbody>
   </table>
 </div>
 
 <div class="section-title">
-  <span class="step">PASO 05</span>
-  <h2>Matriz DOFA — Post-Mercado</h2>
+  <span class="step">AUTO-TRADER</span>
+  <h2>Auto-Trader HUD V5 — Trades en NT Grid</h2>
 </div>
 
-<div class="dofa-grid">
-  <div class="dofa-card dofa-fortalezas">
-    <h3>Fortalezas</h3>
-    <ul>
-      <li>Stops respetados en el 100% de los trades — sin perdidas catastrophicas abiertas</li>
-      <li>Unico trade ganador (Trade #7) ejecutado con precision quirurgica: +43.5 pts en 30 segundos</li>
-      <li>No se operaron datos economicos — disciplina en zonas de alta volatilidad programada</li>
-      <li>El Game Plan identifico correctamente el soporte en 7,354 ES — el mercado hizo low en 7,352, diferencia de 2 pts</li>
-      <li>CL no se opero — se respeto la alerta de reversal violento del Game Plan</li>
-    </ul>
-  </div>
-  <div class="dofa-card dofa-debilidades">
-    <h3>Debilidades</h3>
-    <ul>
-      <li>Win rate de 14% — 6 de 7 trades perdedores, muy por debajo del minimo aceptable del 40%</li>
-      <li>Sobredimensionamiento en Trade #8: 7 contratos NQ cuando el promedio era 2-4. Violacion de gestion de riesgo</li>
-      <li>Scalping excesivo sin esperar confirmacion de vela 15min — trades de menos de 60 segundos de duracion</li>
-      <li>Shorts en ES en apertura: 3 trades seguidos en la misma direccion fallando. Sin ajuste de sesgo tras el primer stop</li>
-      <li>Ausencia de trading en la ventana post-FOMC (14:00-15:30 ET) donde ocurrieron los movimientos mas significativos</li>
-    </ul>
-  </div>
-  <div class="dofa-card dofa-oportunidades">
-    <h3>Oportunidades</h3>
-    <ul>
-      <li>El FOMC genero volatilidad post-14:00 que no se aprovecho — oportunidad de mejora en planificacion de horarios</li>
-      <li>ES respeto el soporte de 7,354 del Game Plan — setup de largo desde soporte con R:R favorable disponible</li>
-      <li>NQ mostro reaccion violenta desde 28,814 (zona de demanda del Game Plan) — setup claro de largo perdido</li>
-      <li>Registro de Trades Context permite analisis granular de cada ejecucion — oportunidad para automatizar alertas de violacion de reglas en vivo</li>
-      <li>El mercado direccional post-FOMC ofrece setups de continuidad que no se operaron — mejora en disciplina de horarios</li>
-    </ul>
-  </div>
-  <div class="dofa-card dofa-amenazas">
-    <h3>Amenazas</h3>
-    <ul>
-      <li>Patron de revenge trading: despues de 3 stops en ES, se escalo a NQ con tamanos mayores</li>
-      <li>Anomalia de datos en Trade #4 indica posible problema de logging en NinjaTrader que puede afectar analisis futuro</li>
-      <li>VIX en 17.89 (rango bajo) sugiere complacencia — riesgo de explosion de volatilidad sin previo aviso</li>
-      <li>Falta de trading post-FOMC deja la sesion sin participacion en el evento principal del dia</li>
-      <li>Si el 86% de trades son perdedores, el sistema de senales V5 requiere revision de parametros (32% de acierto en backtest vs 14% en vivo)</li>
-    </ul>
-  </div>
+<div class="card">
+  <p>El auto-trader <strong>EduS_AutoTrader_V1</strong> ejecuto una operativa completa en NQ:</p>
+  <ul style="margin:12px 0 0 20px;">
+    <li><strong>HUD_Entry:</strong> Long 2 @ 29,370.38 (11:17:32) — Entrada del auto-trader</li>
+    <li><strong>HUD_T1:</strong> Sell 1 @ 29,379.00 (11:18:05) — Take profit parcial: +8.62 pts = +431 USD</li>
+    <li><strong>CloseAll:</strong> Sell 2 @ 29,376.00 (11:18:06) — Cierre del remanente: +281 USD</li>
+    <li><strong>StopCancelClose:</strong> Buy to cover 2 @ 29,376.25 (11:18:06) — Cierre de posicion corta abierta por CloseAll</li>
+    <li><strong>Close:</strong> Buy to cover 3 @ 29,332.33 (11:21:09) — Cierre manual de 3 cortos remanentes (probablemente de Trade 8)</li>
+  </ul>
+  <p style="margin-top:12px;font-size:12px;color:var(--text-muted);">PnL estimado auto-trader: ~+712 USD (HUD_Entry + HUD_T1). Estos trades no aparecen en el logger porque el logger solo registra Setup_Manual.</p>
 </div>
 
 <div class="section-title">
-  <span class="step">PASO 06</span>
-  <h2>Recomendaciones — Proxima Sesion</h2>
+  <span class="step">CIERRE</span>
+  <h2>Conclusiones y Acciones</h2>
 </div>
 
-<div class="reco-card">
-  <strong>1. Limitar tamanos a 2 contratos maximo por trade.</strong><br>
-  <span style="font-size:12px;color:var(--text-muted)">Trade #8 con 7 contratos NQ fue el 73% de la perdida del dia. Regla fija: nunca exceder 2 contratos hasta recuperar consistencia.</span>
-</div>
-
-<div class="reco-card">
-  <strong>2. Regla de 2 strikes por direccion.</strong><br>
-  <span style="font-size:12px;color:var(--text-muted)">Despues de 2 stops en la misma direccion en el mismo instrumento, no tomar un tercer trade en esa direccion. Forzar cambio de instrumento o pausa de 30 min.</span>
-</div>
-
-<div class="reco-card">
-  <strong>3. Esperar confirmacion de vela 15 minutos.</strong><br>
-  <span style="font-size:12px;color:var(--text-muted)">Ningun trade con duracion menor a 5 minutos. Si no hay vela 15min que confirme la direccion, no entrar. Esto elimina el 80% de los falsos rompimientos.</span>
-</div>
-
-<div class="reco-card">
-  <strong>4. Planificar ventanas de trading post-evento.</strong><br>
-  <span style="font-size:12px;color:var(--text-muted)">El FOMC a las 14:00 ET era el evento principal del dia. La siguiente sesion debe incluir trades planeados para la ventana 14:00-15:30 ET post-publicacion.</span>
-</div>
-
-<div class="reco-card">
-  <strong>5. Revisar anomalia de datos en NinjaTrader.</strong><br>
-  <span style="font-size:12px;color:var(--text-muted)">Trade #4 muestra entrada ES con salida NQ. Verificar configuracion de logging de fills para asegurar integridad de datos en futuros analisis.</span>
-</div>
-
-<div class="reco-card">
-  <strong>6. Evaluar senales V5 — tasa de acierto 32%.</strong><br>
-  <span style="font-size:12px;color:var(--text-muted)">Backtest del dia muestra 30 T1 vs 64 STOP. Con 32% de acierto, el sistema requiere R:R minimo de 1:3 para ser rentable. Verificar si los stops estan demasiado ajustados o si el filtro de entrada necesita ajuste.</span>
-</div>
-
-<div class="alert-strip alert-success">
-  <div class="icon">📌</div>
-  <div>
-    <strong>Conclusion:</strong> Sesion para aprender mas que para ganar. Los errores fueron de disciplina (sobredimensionamiento, scalping sin confirmacion, falta de ajuste de sesgo) no de analisis. El Game Plan identifico correctamente los niveles clave. La oportunidad de mejora esta en la <strong>ejecucion</strong>, no en el analisis. Recordatorio: "Un setup rechazado por criterios vale mas que una entrada prematura por impaciencia" — Regla #7 de la Mesa.
-  </div>
+<div class="card">
+  <ul style="margin-left:20px;">
+    <li><strong>Sesion positiva: +4,295 USD</strong> segun cuenta Sim101 de NT8.</li>
+    <li>El logger <code>EduS_TradesContext.csv</code> necesita revision: reusa Entry_ID entre instrumentos y no captura todos los fills (especialmente los del auto-trader y cierres manuales post-11:18).</li>
+    <li>El grid export de NT8 solo muestra fills confirmados; las filas con State=Initialized/Submitted y Avg.price=0 son ordenes no ejecutadas, no trades reales.</li>
+    <li>Para futuros reportes post-market, se recomienda usar el P&L de la cuenta Sim101 como fuente principal y el logger como referencia secundaria.</li>
+  </ul>
 </div>
 
 </div>
 
 <div class="footer">
-  <span class="brand-ft">Edu<span class="gold">S</span> Trader</span> &middot; POST-MARKET REPORT &middot; 20 MAY 2026 &middot; POST-MARKET<br>
+  <span class="brand-ft">Edu<span class="gold">S</span> Trader</span> &middot; POST-MARKET ANALYSIS &middot; 20 MAY 2026<br>
   Este documento es solo para uso interno de la mesa de dinero. No constituye asesoramiento financiero.<br>
-  Datos de TradesContext + Senales V5 + Game Plan 2026-05-20
+  Fuente principal: NinjaTrader 8 Sim101 &middot; Logger: EduS_TradesContext V5
 </div>
 
 </body>
