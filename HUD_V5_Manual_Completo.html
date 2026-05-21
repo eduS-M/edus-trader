@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — Manual Completo HUD V5 + AutoTrader V1</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #142d37; --navy-dark: #0d1f26; --teal: #279995; --gold: #b38665; --gold-light: #d4a982;
+    --bg: #f2f0eb; --surface: #ffffff; --surface2: #f8f6f0; --border: #e0dbd0;
+    --text: #1a1814; --text-muted: #7a7468;
+    --bull: #279995; --bull-bg: #e6f5f4; --bear: #c0392b; --bear-bg: #fdf0ee;
+    --warn-bg: #fff8e1; --warn-border: #f0c040;
+    --shadow: 0 2px 20px rgba(13,31,38,0.10); --radius: 10px;
+    --header-gradient: linear-gradient(135deg, #0d1f26 0%, #034649 100%);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.7; }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--header-gradient); color: white; padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .header-left .logo-img { height: 52px; width: auto; display: block; }
+  .header-left .brand-name { font-family: 'DM Sans', sans-serif; font-size: 26px; font-weight: 700; color: white; line-height: 1; }
+  .header-left .brand-name .gold { color: var(--gold); }
+  .header-left .brand-sub { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--gold-light); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+  .header-right { text-align: right; }
+  .header-right .version { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); font-weight: 700; }
+
+  /* ── LAYOUT ── */
+  .layout { display: flex; max-width: 1400px; margin: 0 auto; }
+  .sidebar {
+    width: 260px; min-width: 260px; background: var(--surface); border-right: 1px solid var(--border);
+    height: calc(100vh - 80px); position: sticky; top: 80px; overflow-y: auto; padding: 16px 0;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .sidebar .toc-section { margin-bottom: 4px; }
+  .sidebar .toc-section a {
+    display: block; padding: 6px 20px 6px 24px;
+    font-size: 12px; color: var(--text-muted); text-decoration: none;
+    border-left: 2px solid transparent; transition: all 0.15s;
+  }
+  .sidebar .toc-section a:hover { color: var(--teal); border-left-color: var(--teal); background: var(--bull-bg); }
+  .sidebar .toc-section .toc-h2 { font-weight: 600; color: var(--navy); font-size: 13px; padding-left: 16px; border-left: 2px solid var(--gold); margin-top: 12px; }
+  .sidebar .toc-section .toc-h2:first-child { margin-top: 0; }
+  .sidebar .toc-section .toc-h3 { padding-left: 32px; font-size: 11px; }
+  .container { flex: 1; min-width: 0; padding: 32px 40px 60px; }
+
+  /* ── TITLE ── */
+  .doc-title { margin-bottom: 32px; }
+  .doc-title h1 { font-size: 32px; font-weight: 700; color: var(--navy); }
+  .doc-title .subtitle { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-muted); letter-spacing: 1px; margin-top: 4px; }
+
+  /* ── SECTIONS ── */
+  .section { margin-bottom: 40px; }
+  .section-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+    padding-bottom: 8px; border-bottom: 2px solid var(--gold);
+  }
+  .section-header .num {
+    background: var(--navy); color: white; font-family: 'Space Mono', monospace;
+    font-size: 11px; padding: 2px 10px; border-radius: 20px; letter-spacing: 1px;
+  }
+  .section-header h2 { font-size: 22px; font-weight: 600; color: var(--navy); }
+
+  .section h3 { font-size: 17px; font-weight: 600; color: var(--navy); margin: 20px 0 10px; }
+  .section h4 { font-size: 15px; font-weight: 600; color: var(--text); margin: 14px 0 8px; }
+
+  .section p { margin-bottom: 10px; }
+  .section ul, .section ol { margin: 8px 0 12px 24px; }
+  .section li { margin-bottom: 4px; }
+
+  /* ── CARDS ── */
+  .card { background: var(--surface); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+  .card.highlight { border-left: 4px solid var(--gold); }
+  .card.info { border-left: 4px solid var(--teal); background: var(--bull-bg); }
+  .card.warn { border-left: 4px solid var(--warn-border); background: var(--warn-bg); }
+  .card.danger { border-left: 4px solid var(--bear); background: var(--bear-bg); }
+
+  /* ── GRIDS ── */
+  .layers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .layer-card { background: var(--surface); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); border: 1px solid var(--border); border-top: 3px solid var(--teal); }
+  .layer-card.l2 { border-top-color: #2980b9; }
+  .layer-card.l3 { border-top-color: var(--gold); }
+  .layer-card.l4 { border-top-color: #8e44ad; }
+  .layer-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .layer-card p { font-size: 13px; color: var(--text-muted); }
+
+  .zone-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+  .zone-item { background: var(--surface2); border-radius: 8px; padding: 14px; border-left: 3px solid var(--teal); }
+  .zone-item .z-name { font-weight: 700; font-size: 14px; }
+  .zone-item .z-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── TABLES ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  th { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; text-align: left; padding: 8px 10px; border-bottom: 2px solid var(--border); background: var(--surface2); }
+  td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  tr:hover td { background: var(--surface2); }
+
+  /* ── SEMAFORO ── */
+  .semaforo-visual { display: flex; gap: 8px; align-items: center; margin: 12px 0; }
+  .semaforo-visual .dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: white; }
+  .dot-0 { background: #95a5a6; }
+  .dot-1 { background: #e74c3c; } .dot-2 { background: #e67e22; }
+  .dot-3 { background: #2ecc71; } .dot-4 { background: #27ae60; }
+  .dot-inactive { background: #ddd !important; color: #999 !important; }
+
+  .sem-table td { text-align: center; font-weight: 600; }
+  .sem-table td.v { color: var(--bull); }
+  .sem-table td.r { color: var(--bear); }
+  .sem-table td.g { color: var(--text-muted); }
+
+  /* ── STOP BOX ── */
+  .stop-formula { background: var(--surface2); border-radius: 8px; padding: 16px; margin: 8px 0; font-family: 'Space Mono', monospace; font-size: 13px; }
+  .stop-formula .highlight { color: var(--teal); font-weight: 700; }
+  .stop-formula .danger { color: var(--bear); font-weight: 700; }
+
+  /* ── CODE ── */
+  code { background: var(--surface2); padding: 2px 6px; border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--bear); }
+  pre { background: var(--navy-dark); color: #e0e0e0; padding: 16px; border-radius: 8px; overflow-x: auto; font-family: 'Space Mono', monospace; font-size: 12px; line-height: 1.5; margin: 12px 0; }
+
+  /* ── INSTALL STEPS ── */
+  .step-list { counter-reset: step; }
+  .step-item { counter-increment: step; margin-bottom: 16px; padding-left: 40px; position: relative; }
+  .step-item::before { content: counter(step); position: absolute; left: 0; top: 0; width: 28px; height: 28px; background: var(--navy); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+  .step-item h4 { margin: 0 0 4px; }
+
+  /* ── FOOTER ── */
+  .footer { background: var(--navy-dark); color: rgba(255,255,255,0.5); text-align: center; padding: 20px; font-size: 11px; font-family: 'Space Mono', monospace; }
+  .footer .gold { color: var(--gold); }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .container { padding: 20px; }
+    .layers-grid, .zone-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .header { flex-direction: column; text-align: center; padding: 12px 16px; gap: 8px; }
+    .header-left { flex-direction: column; }
+  }
+
+  .toc-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+  .toc-legend span { font-size: 11px; color: var(--text-muted); font-family: 'Space Mono', monospace; }
+  .toc-legend .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <img src="/Logo%206%20EduS%20Trader-6.png" alt="EduS Trader" class="logo-img">
+    <div>
+      <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
+      <div class="brand-sub">Manual Completo &middot; Mesa de Dinero</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="version">HUD V5 &middot; AutoTrader V1</div>
+  </div>
+</div>
+
+<div class="layout">
+
+<!-- ===== SIDEBAR ===== -->
+<nav class="sidebar">
+  <div class="toc-section">
+    <a href="#sec1" class="toc-h2">1. Que es el HUD V5</a>
+    <a href="#sec1-capas" class="toc-h3">Las 4 Capas</a>
+    <a href="#sec1-panel" class="toc-h3">Panel del HUD</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec2" class="toc-h2">2. Fundamento Teorico</a>
+    <a href="#sec2-wyckoff" class="toc-h3">Wyckoff</a>
+    <a href="#sec2-avwap" class="toc-h3">AVWAP</a>
+    <a href="#sec2-keltner" class="toc-h3">Keltner + ATR</a>
+    <a href="#sec2-regresion" class="toc-h3">Regresion Lineal 89</a>
+    <a href="#sec2-sma" class="toc-h3">SMA 20/80</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec3" class="toc-h2">3. Posicion en el Panel</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec4" class="toc-h2">4. Semaforo de Tendencia</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec5" class="toc-h2">5. Zonas y Senales</a>
+    <a href="#sec5-zonas" class="toc-h3">Las 7 Zonas</a>
+    <a href="#sec5-senales" class="toc-h3">Activacion de Senales</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec6" class="toc-h2">6. Entrada Activa</a>
+    <a href="#sec6-precio" class="toc-h3">Precio de Entrada</a>
+    <a href="#sec6-stop" class="toc-h3">Stop Loss</a>
+    <a href="#sec6-target" class="toc-h3">Targets T1/T2</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec7" class="toc-h2">7. Market &amp; Keltner</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec8" class="toc-h2">8. Instalacion</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec9" class="toc-h2">9. Archivos CSV</a>
+    <a href="#sec9-config" class="toc-h3">V5_VolatilityConfig</a>
+    <a href="#sec9-senales" class="toc-h3">Senales CSV</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec10" class="toc-h2">10. Estrategia</a>
+    <a href="#sec10-conf" class="toc-h3">Configuracion</a>
+    <a href="#sec10-flujo" class="toc-h3">Flujo de Ejecucion</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec11" class="toc-h2">11. EduSAutoTrader V1</a>
+  </div>
+</nav>
+
+<!-- ===== CONTENT ===== -->
+<div class="container">
+
+<div class="doc-title">
+  <h1>EduS MasterPanel HUD V5 — Manual Completo</h1>
+  <div class="subtitle">Indicador Multi-Capa + EduS_AutoTrader_V1 &middot; NinjaTrader 8 &middot; Mayo 2026</div>
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec1">
+<div class="section-header"><span class="num">SECCION 1</span><h2>Que es el Indicador HUD V5</h2></div>
+
+<p>El <strong>EduS MasterPanel HUD V5</strong> (Heads-Up Display Version 5) es un indicador multidimension para NinjaTrader 8 que integra <strong>4 capas de validacion</strong> para generar senales de trading de alta probabilidad. Cada capa representa un marco teorico diferente: volumen institucional (AVWAP), tendencia estadistica (LinReg89), momentum de corto/medio plazo (SMA 20/80) y volatilidad adaptativa (Keltner Channels + ATR).</p>
+
+<p>El HUD V5 opera como un <strong>sistema de semaforo</strong>: cada capa emite un voto, y la senal solo se activa cuando el consenso alcanza un umbral minimo (3 de 4). Esto reduce drasticamente las entradas contra la tendencia dominante y filtra el ruido de alta frecuencia.</p>
+
+<p>El panel del HUD se dibuja directamente sobre el grafico de NinjaTrader y muestra en tiempo real:</p>
+<ul>
+  <li>El valor y direccion de cada una de las 4 capas</li>
+  <li>El semaforo de tendencia (0/4 a 4/4)</li>
+  <li>La posicion abierta con P&amp;L en ticks, puntos y USD</li>
+  <li>Las zonas de entrada disponibles (A, LR, 20, 80, M1, M2, M3)</li>
+  <li>El escenario de volatilidad activo (Baja, Media, Alta, Extrema, SuperExtrema)</li>
+  <li>La configuracion dinamica proveniente del CSV</li>
+</ul>
+
+<div class="section" id="sec1-capas">
+<h3>Las 4 Capas de Validacion</h3>
+
+<div class="layers-grid">
+  <div class="layer-card">
+    <h4>Capa 1 — AVWAP (Anchored VWAP)</h4>
+    <p><strong>Rol:</strong> Determina la tendencia institucional dominante. El AVWAP se calcula desde el ultimo swing relevante (HH en tendencia alcista, LL en tendencia bajista), encontrado mediante un algoritmo de busqueda de maximos/minimos relativos con periodo configurable (<code>AVWAP_SwingPeriod</code>). El ancla se actualiza dinamicamente cuando el precio se aleja mas de <code>AVWAP_BaseAPT</code> puntos del ancla anterior.</p>
+    <p><strong>Interpretacion:</strong> Precio sobre AVWAP = sesgo alcista institucional. Precio bajo AVWAP = sesgo bajista.</p>
+  </div>
+  <div class="layer-card l2">
+    <h4>Capa 2 — LinReg89 (Regresion Lineal 89)</h4>
+    <p><strong>Rol:</strong> Proporciona la direccionalidad matematica del mercado en 89 periodos. La pendiente de la recta de regresion indica si el mercado esta en tendencia (pendiente pronunciada) o en rango (pendiente plana).</p>
+    <p><strong>Interpretacion:</strong> Pendiente positiva + precio sobre la linea = tendencia alcista. Pendiente negativa + precio bajo la linea = tendencia bajista. Pendiente plana = mercado lateral, no tomar entradas direccionales.</p>
+  </div>
+  <div class="layer-card l3">
+    <h4>Capa 3 — SMA 20/80</h4>
+    <p><strong>Rol:</strong> Miden el momentum de corto (SMA20) y medio plazo (SMA80). La posicion relativa del precio respecto a estas medias define la fuerza del impulso actual. SMA20 > SMA80 = cruce alcista basico. SMA20 < SMA80 = cruce bajista.</p>
+    <p><strong>Interpretacion:</strong> Precio sobre SMA20 y SMA20 sobre SMA80 = estructura alcista. Precio bajo SMA20 y SMA20 bajo SMA80 = estructura bajista. Precio entre las dos medias = transicion o consolidacion.</p>
+  </div>
+  <div class="layer-card l4">
+    <h4>Capa 4 — Keltner Channels + ATR</h4>
+    <p><strong>Rol:</strong> Definen el contexto de volatilidad y los ciclos de expansion/contraccion. La Banda Media (MB) del Keltner funciona como un iman de precio en mercados laterales. El ancho del canal (<code>Keltner_Period_Signal * Keltner_Mult_Signal</code>) sensoriza la volatilidad y determina el escenario activo (Baja, Media, Alta, etc.).</p>
+    <p><strong>Interpretacion:</strong> Precio tocando la banda superior = sobrecompra relativo. Precio tocando la banda inferior = sobreventa relativo. Precio oscilando alrededor de la MB = rango. Expansion del ancho = aumento de volatilidad. Contraccion = disminucion.</p>
+  </div>
+</div>
+</div>
+
+<div class="section" id="sec1-panel">
+<h3>Estructura del Panel HUD</h3>
+
+<p>El panel se dibuja en la esquina superior izquierda (configurable) del grafico y se organiza en los siguientes bloques:</p>
+
+<table>
+  <thead><tr><th>Bloque</th><th>Contenido</th><th>Ejemplo Visual</th></tr></thead>
+  <tbody>
+    <tr><td>1. Encabezado</td><td>Nombre del indicador, version, instrumento y timeframe</td><td><code>HUD V5 | NQ 06-26 | 377Tick</code></td></tr>
+    <tr><td>2. Semaforo</td><td>Indicador de tendencia 0/4 a 4/4 con color</td><td><code>VERDE 3/4</code> o <code>ROJO 1/4</code></td></tr>
+    <tr><td>3. Valor de Capas</td><td>AVWAP, LinReg89, SMA20, SMA80, Keltner MB, ATR</td><td><code>AVWAP: 16396.39 ↑</code></td></tr>
+    <tr><td>4. Escenario</td><td>Nombre del escenario de volatilidad activo</td><td><code>Escenario: BAJA</code></td></tr>
+    <tr><td>5. Posicion</td><td>Si hay posicion abierta: direccion, qty, entrada, P&amp;L</td><td><code>LONG 2 @ 16396.39 | +145 USD</code></td></tr>
+    <tr><td>6. Zonas</td><td>Zonas de entrada disponibles en ese momento</td><td><code>A+ | LR | 20+ | M1</code></td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec2">
+<div class="section-header"><span class="num">SECCION 2</span><h2>Fundamento Teorico de las Capas</h2></div>
+
+<p>Cada capa del HUD V5 esta sustentada en una teoria de mercado especifica. La combinacion de estas 4 perspectivas crea un sistema de validacion cruzada que reduce drasticamente las senales falsas.</p>
+
+<div id="sec2-wyckoff">
+<h3>Teoria de Wyckoff — Estructura de Mercado</h3>
+<div class="card info">
+<p>El HUD V5 utiliza los conceptos de Wyckoff para definir la estructura subyacente del mercado: <strong>etapas de acumulacion, distribucion, mark-up y mark-down</strong>. Los nodos institucionales (LVNs, HVNs) y los POCs se identifican desde los swings del AVWAP, siguiendo la logica Wyckoff de que el precio se mueve entre zonas de alta liquidez (POCs) y zonas de baja liquidez (LVNs).</p>
+<ul>
+  <li><strong>POC (Point of Control):</strong> Nivel de mayor volumen en el perfil de mercado. Funciona como soporte/resistencia natural.</li>
+  <li><strong>LVN (Low Volume Node):</strong> Zona de baja liquidez. El precio tiende a atravesarla rapidamente. Buena zona para entradas en ruptura.</li>
+  <li><strong>HVN (High Volume Node):</strong> Zona de alta liquidez. El precio tiende a detenerse o revertir. Buena zona para toma de ganancias.</li>
+  <li><strong>Swing AVWAP Anchor:</strong> Se ancla en el HH mas reciente (tendencia alcista) o LL mas reciente (tendencia bajista), alineado con el concepto Wyckoff de que el ultimo swing define la estructura actual.</li>
+</ul>
+</div>
+</div>
+
+<div id="sec2-avwap">
+<h3>Anchored VWAP (AVWAP) — Precio Institucional</h3>
+<div class="card">
+<p>El AVWAP es una extension del VWAP clasico que, en lugar de anclarse al inicio de la sesion, se ancla a un <strong>punto de referencia estructural</strong> (un swing relevante). Esto lo convierte en un indicador de <strong>valor justo institucional</strong> que no se resetea diariamente.</p>
+<p><strong>Fundamento:</strong> Las instituciones (bancos, fondos, market makers) ejecutan ordenes masivamente durante periodos de alta liquidez. El AVWAP representa el precio promedio ponderado por volumen desde ese punto de referencia, funcionando como un iman de precio. Cuando el precio se aleja significativamente del AVWAP (>2x ATR), la probabilidad de reversion aumenta.</p>
+<ul>
+  <li><strong>Anclaje Dinamico:</strong> El indicador busca automaticamente el HH/LL mas relevante usando <code>AVWAP_SwingPeriod</code>. Cuando el precio se aleja mas de <code>AVWAP_BaseAPT</code> del ancla actual, se cambia al nuevo swing.</li>
+  <li><strong>Modo Adaptativo:</strong> Si <code>AVWAP_AdptAPT == true</code>, el umbral de cambio de ancla se ajusta segun la volatilidad actual.</li>
+  <li><strong>VolBIAS:</strong> Multiplicador de importancia del volumen. A mayor valor, mas peso tiene el volumen en el calculo del AVWAP.</li>
+</ul>
+</div>
+</div>
+
+<div id="sec2-keltner">
+<h3>Keltner Channels + ATR — Volatilidad Adaptativa</h3>
+<div class="card">
+<p>Los canales de Keltner se construyen a partir de la Banda Media (MB = SMA de periodo <code>Kelt_Period_Signal</code>) y las bandas superior/inferior a <code>Kelt_Mult_Signal</code> veces el ATR.</p>
+
+<p><strong>Escenarios de Volatilidad:</strong> El HUD V5 clasifica el mercado en 5 escenarios basados en el ancho del canal Keltner, siguiendo una adaptacion de la teoria de <strong>Regimenes de Volatilidad</strong>:</p>
+
+<table>
+  <thead><tr><th>Escenario</th><th>Rango Keltner Width</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td>Baja</td><td>&lt; 18</td><td>Mercado en compresion. Rangos estrechos. Estrategias de mean reversion.</td></tr>
+    <tr><td>Media</td><td>18 - 22</td><td>Condiciones normales. Trading direccional con stops estandar.</td></tr>
+    <tr><td>Alta</td><td>22 - 27</td><td>Volatilidad elevada. Reducir tamano de posicion. Stops mas amplios.</td></tr>
+    <tr><td>Extrema</td><td>27 - 32</td><td>Volatilidad excepcional. Operar solo con confirmacion multiple. Size minimo.</td></tr>
+    <tr><td>SuperExtrema</td><td>&gt; 32</td><td>Mercado en panico/euforia. Solo trading de muy corto plazo o esperar.</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Banda Media (MB):</strong> Actua como soporte/resistencia dinamico. En mercados laterales, el precio rebota en la MB sistematicamente. Las zonas M1, M2, M3 se generan en estos rebotes.</p>
+</div>
+</div>
+
+<div id="sec2-regresion">
+<h3>Regresion Lineal 89 Periodos — Direccionalidad Estadistica</h3>
+<div class="card">
+<p>La regresion lineal minimiza la suma de los cuadrados de las distancias entre los precios de cierre y la recta de regresion durante 89 barras. La pendiente de esta recta indica la direccion y fuerza de la tendencia.</p>
+<ul>
+  <li><strong>Pendiente positiva pronunciada:</strong> Tendencia alcista fuerte. Tomar solo entradas Long (o esperar retrocesos a la linea).</li>
+  <li><strong>Pendiente negativa pronunciada:</strong> Tendencia bajista fuerte. Tomar solo entradas Short (o esperar retrocesos a la linea).</li>
+  <li><strong>Pendiente plana (&plusmn;0.1):</strong> Mercado en rango. Las entradas direccionales tienen baja probabilidad de exito.</li>
+  <li><strong>Precio sobre la linea + pendiente positiva:</strong> Estructura alcista confirmada.</li>
+  <li><strong>Precio bajo la linea + pendiente negativa:</strong> Estructura bajista confirmada.</li>
+  <li><strong>Precio cruzando la linea:</strong> Potencial cambio de tendencia. Requiere confirmacion de las otras capas.</li>
+</ul>
+</div>
+</div>
+
+<div id="sec2-sma">
+<h3>SMA 20/80 — Momentum de Corto y Medio Plazo</h3>
+<div class="card">
+<p>Las medias moviles simples de 20 y 80 periodos proporcionan el contexto de momentum mas inmediato. Trabajan en conjunto:</p>
+<ul>
+  <li><strong>SMA20 &gt; SMA80 y precio sobre ambas:</strong> Rally alcista. Buscar entradas Long en retrocesos a SMA20.</li>
+  <li><strong>SMA20 &lt; SMA80 y precio bajo ambas:</strong> Sell-off bajista. Buscar entradas Short en rebotes a SMA20.</li>
+  <li><strong>Precio entre SMA20 y SMA80:</strong> Zona de transicion. Reducir tamano de posicion o esperar.</li>
+  <li><strong>Cruce SMA20 sobre SMA80 (Golden Cross):</strong> Senal alcista de mediano plazo.</li>
+  <li><strong>Cruce SMA20 bajo SMA80 (Death Cross):</strong> Senal bajista de mediano plazo.</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec3">
+<div class="section-header"><span class="num">SECCION 3</span><h2>Posicion en el Panel del HUD</h2></div>
+
+<p>Cuando hay una posicion abierta (gestionada por el AutoTrader V1 o manualmente), el panel del HUD muestra en tiempo real:</p>
+
+<table>
+  <thead><tr><th>Campo</th><th>Descripcion</th><th>Ejemplo</th></tr></thead>
+  <tbody>
+    <tr><td>Direccion</td><td>LONG o SHORT</td><td><span style="color:var(--bull);font-weight:700;">LONG</span></td></tr>
+    <tr><td>Quantity</td><td>Numero de contratos</td><td>2</td></tr>
+    <tr><td>Entry Price</td><td>Precio de entrada promedio</td><td>16396.39</td></tr>
+    <tr><td>Current Price</td><td>Precio actual del mercado</td><td>16412.87</td></tr>
+    <tr><td>P&amp;L Ticks</td><td>Ganancia/perdida en ticks</td><td>+33</td></tr>
+    <tr><td>P&amp;L Points</td><td>Ganancia/perdida en puntos</td><td>+16.48</td></tr>
+    <tr><td>P&amp;L USD</td><td>Ganancia/perdida en USD</td><td>+824.00</td></tr>
+    <tr><td>Stop Price</td><td>Precio del stop loss activo</td><td>16388.15</td></tr>
+    <tr><td>T1 Price</td><td>Precio del primer target</td><td>16412.87</td></tr>
+    <tr><td>T2 Price</td><td>Precio del segundo target</td><td>16421.11</td></tr>
+  </tbody>
+</table>
+
+<div class="card warn">
+<p><strong>Nota importante:</strong> El panel de posicion del HUD V5 refleja la posicion del AutoTrader o la posicion detectada en la cuenta. Si operas manualmente, la posicion se muestra igualmente siempre que el HUD detecte una posicion abierta en la simulacion/cuenta conectada.</p>
+</div>
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec4">
+<div class="section-header"><span class="num">SECCION 4</span><h2>Semaforo de Tendencia</h2></div>
+
+<p>El <strong>Semaforo de Tendencia</strong> es el componente central del HUD V5. Consiste en un contador de 0 a 4 que mide el <strong>grado de alineacion</strong> entre las 4 capas del sistema.</p>
+
+<h3>Como se calcula</h3>
+<p>El semaforo suma +1 por cada condicion que se cumpla:</p>
+
+<table class="sem-table">
+  <thead><tr><th>Condicion</th><th>+1 si se cumple</th><th>Ejemplo (LONG)</th></tr></thead>
+  <tbody>
+    <tr><td class="v">1. AVWAP alcista</td><td>Precio &gt; AVWAP</td><td class="v">Precio 16412 &gt; AVWAP 16396 ✓</td></tr>
+    <tr><td class="v">2. LinReg89 alcista</td><td>Pendiente LinReg &gt; 0 y precio sobre la linea</td><td class="v">Pendiente +0.32 ✓</td></tr>
+    <tr><td class="v">3. SMA20 alcista</td><td>Precio &gt; SMA20</td><td class="v">Precio 16412 &gt; SMA20 16395 ✓</td></tr>
+    <tr><td class="v">4. SMA80 alcista</td><td>Precio &gt; SMA80</td><td class="v">Precio 16412 &gt; SMA80 16386 ✓</td></tr>
+  </tbody>
+</table>
+
+<h3>Interpretacion del Semaforo</h3>
+
+<div class="semaforo-visual">
+  <span class="dot dot-0">0</span>
+  <span style="color:var(--text-muted);font-size:12px;">→</span>
+  <span class="dot dot-1">1</span>
+  <span style="color:var(--text-muted);font-size:12px;">→</span>
+  <span class="dot dot-2">2</span>
+  <span style="color:var(--text-muted);font-size:12px;">→</span>
+  <span class="dot dot-3">3</span>
+  <span style="color:var(--text-muted);font-size:12px;">→</span>
+  <span class="dot dot-4">4</span>
+</div>
+
+<table>
+  <thead><tr><th>Valor</th><th>Color</th><th>Interpretacion</th><th>Accion Recomendada</th></tr></thead>
+  <tbody>
+    <tr><td><strong>4/4</strong></td><td style="color:#27ae60;">Verde intenso</td><td>Alineacion total. Las 4 capas apuntan en la misma direccion. Tendencia fuerte y confirmada.</td><td>Entradas direccionales con tamano normal. Alta probabilidad de exito.</td></tr>
+    <tr><td><strong>3/4</strong></td><td style="color:#2ecc71;">Verde</td><td>Alineacion parcial pero solida. 3 de 4 capas alineadas. La mayoria de las senales de entrada requieren 3/4.</td><td>Entradas direccionales permitidas con size normal.</td></tr>
+    <tr><td><strong>2/4</strong></td><td style="color:#e67e22;">Naranja</td><td>Dividido. No hay consenso claro. 2 capas alcistas y 2 bajistas, o 2 alineadas y 2 neutrales.</td><td>No tomar entradas direccionales. Solo operar en los extremos del rango con size minimo.</td></tr>
+    <tr><td><strong>1/4</strong></td><td style="color:#e74c3c;">Rojo</td><td>La mayoria de las capas estan en contra de la direccion de entrada. Alta probabilidad de fracaso.</td><td>No tomar entradas en esa direccion. Buscar la direccion opuesta o esperar.</td></tr>
+    <tr><td><strong>0/4</strong></td><td style="color:#95a5a6;">Gris</td><td>Ninguna capa soporta la direccion. Contexto de mercado completamente desfavorable.</td><td>No operar. Esperar a que mejore la alineacion.</td></tr>
+  </tbody>
+</table>
+
+<div class="card info">
+<p><strong>Umbral de entrada:</strong> El HUD V5 requiere un minimo de <strong>3/4</strong> para generar senales de entrada direccionales. Si el semaforo esta en 2/4 o menos, no se generan senales aunque el precio este tocando una zona de entrada.</p>
+</div>
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec5">
+<div class="section-header"><span class="num">SECCION 5</span><h2>Zonas de Entrada y Senales</h2></div>
+
+<div id="sec5-zonas">
+<h3>Las 7 Zonas de Entrada</h3>
+
+<p>Cuando el semaforo esta en 3/4 o 4/4, el HUD V5 monitorea 7 zonas de entrada posibles. Cada zona representa un nivel tecnico especifico donde el precio puede retroceder para ofrecer una entrada de baja riesgo:</p>
+
+<div class="zone-grid">
+  <div class="zone-item"><div class="z-name">A / A+</div><div class="z-desc">Retroceso al AVWAP. La zona mas importante. Entrada institucional cuando el precio vuelve al valor justo. A = precio dentro de 0.5x ATR de la linea. A+ = precio separado mas de 0.5x ATR del lado correcto.</div></div>
+  <div class="zone-item"><div class="z-name">LR / LR+</div><div class="z-desc">Retroceso a la Linea de Regresion 89. Entrada estadistica cuando el precio vuelve a la media de 89 periodos. LR = tocando la linea. LR+ = separado de la linea en direccion de la tendencia.</div></div>
+  <div class="zone-item"><div class="z-name">20 / 20+</div><div class="z-desc">Retroceso a SMA20. Entrada de momentum cuando el precio corrige a la media de corto plazo. La SMA80 no necesita estar en la direccion correcta para esta zona.</div></div>
+  <div class="zone-item"><div class="z-name">80 / 80+</div><div class="z-desc">Retroceso a SMA80. Entrada de continuacion de tendencia cuando el precio corrige profundamente a la media de 80 periodos. La LinReg89 debe estar plana o a favor, nunca en contra.</div></div>
+  <div class="zone-item"><div class="z-name">M1 / M1+</div><div class="z-desc">Primer rebote en la Banda Media del Keltner. Entrada de mean reversion cuando el precio toca la MB por primera vez. La SMA80 no necesita estar en la direccion correcta.</div></div>
+  <div class="zone-item"><div class="z-name">M2 / M2+</div><div class="z-desc">Segundo rebote consecutivo en la MB del Keltner. Indica que la MB esta actuando como soporte/resistencia firme. Entrada de mayor probabilidad que M1.</div></div>
+  <div class="zone-item"><div class="z-name">M3 / M3+</div><div class="z-desc">Tercer rebote consecutivo. La MB es un nivel de alta confiabilidad. Entrada de alta probabilidad. Si el tercer rebote falla, la MB probablemente se rompera.</div></div>
+</div>
+
+<h4>Diferencia entre zona con y sin "+"</h4>
+<table>
+  <thead><tr><th>Sin +</th><th>Con +</th></tr></thead>
+  <tbody>
+    <tr><td>La barra esta <strong>tocando</strong> la linea</td><td>La barra esta <strong>separada</strong> de la linea</td></tr>
+    <tr><td>Precio dentro de 0.5x ATR de la linea</td><td>Precio fuera de 0.5x ATR de la linea hacia el lado correcto de la tendencia</td></tr>
+    <tr><td>Entrada mas conservadora (esperar toque exacto)</td><td>Entrada mas agresiva (el precio ya se movio en la direccion correcta)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div id="sec5-senales">
+<h3>Activacion de Senales</h3>
+
+<p>Una senal <strong>ABRE</strong> se activa cuando se cumplen <strong>TODAS</strong> las condiciones siguientes:</p>
+<ol>
+  <li><strong>Semaforo ≥ 3/4:</strong> Alineacion suficiente de las capas.</li>
+  <li><strong>Zona activa:</strong> El precio esta tocando o cerca de una de las 7 zonas.</li>
+  <li><strong>Filtros institucionales OK:</strong> HTF (Higher Time Frame), Nodos, POCs deben estar alineados con la direccion de entrada.</li>
+  <li><strong>Ratio R:R minimo:</strong> El stop calculado debe permitir un R:R de al menos 2:1 para T1.</li>
+  <li><strong>Cooldown respetado:</strong> No se ha generado una senal en la misma zona en las ultimas <code>CooldownBars</code> barras.</li>
+</ol>
+
+<p>La senal se registra en el archivo CSV con el prefijo <strong>ABRE</strong>, y cuando el trade se cierra se registra una linea <strong>CIERRE</strong> con el mismo <code>SignalID</code> para mantener la trazabilidad.</p>
+</div>
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec6">
+<div class="section-header"><span class="num">SECCION 6</span><h2>Entrada Activa</h2></div>
+
+<p>Cuando todas las condiciones de la seccion 5 se cumplen, el HUD V5 activa una <strong>Entrada Activa</strong> y el panel muestra visualmente la zona, el precio de entrada, el stop y los targets. A continuacion se detalla como se calcula cada componente.</p>
+
+<div id="sec6-precio">
+<h3>Precio de Entrada</h3>
+<p>El precio de entrada se define como el <strong>precio de mercado</strong> en el momento exacto en que se activa la senal (cuando todas las condiciones convergen en una misma barra). En la practica:</p>
+<ul>
+  <li>Si la senal se activa <strong>intrabarra</strong> (tiempo real), la entrada se ejecuta a mercado en la siguiente tick.</li>
+  <li>Si la senal se detecta <strong>al cierre de la barra</strong>, la entrada se ejecuta al open de la siguiente barra.</li>
+  <li>El precio de entrada queda registrado en el CSV en la columna <code>Entrada</code>.</li>
+</ul>
+</div>
+
+<div id="sec6-stop">
+<h3>Stop Loss — 3 Formas de Calculo</h3>
+
+<p>El stop loss se calcula mediante <strong>3 metodos concurrentes</strong>. El sistema usa el <strong>mayor de los 3 valores</strong> como distancia de stop, para garantizar que el stop no sea demasiado ajustado:</p>
+
+<div class="stop-formula">
+  <strong>Stop Distance = Max(</strong><br>
+  &nbsp;&nbsp;<span class="highlight">StopATRx</span> &times; ATR,<br>
+  &nbsp;&nbsp;<span class="highlight">StopPct</span> &times; EntryPrice,<br>
+  &nbsp;&nbsp;<span class="highlight">StopMaxTicks</span> (en ticks)<br>
+  <strong>)</strong>
+</div>
+
+<table>
+  <thead><tr><th>Metodo</th><th>Formula</th><th>Fuente</th><th>Cuando domina</th></tr></thead>
+  <tbody>
+    <tr><td><strong>1. ATR Multiplier</strong></td><td><code>StopATRx × ATR</code></td><td>CSV (<code>StopATRx</code>)</td><td>Mercados volatiles. Si StopATRx=0.5 y ATR=15, stop=7.5pts.</td></tr>
+    <tr><td><strong>2. Price % Cap</strong></td><td><code>StopPct × EntryPrice</code></td><td>CSV (<code>StopPct</code>)</td><td>Mercados de alto precio. Si StopPct=0.0025 (0.25%) y precio=29,000, stop=72.5pts.</td></tr>
+    <tr><td><strong>3. Max Ticks</strong></td><td><code>StopMaxTicks × TickSize</code></td><td>CSV o UI</td><td>Limite absoluto. Si StopMaxTicks=20 y TickSize=0.25, stop=5pts.</td></tr>
+  </tbody>
+</table>
+
+<div class="card warn">
+<p><strong>Filtro de seguridad StopPct (50%):</strong> Si el <code>StopPct</code> configurado produce un resultado menor al 50% del stop calculado por ATR/Keltner, el indicador ignora el StopPct y usa el valor mayor entre ATR y MaxTicks. Esto evita stops peligrosamente ajustados por errores de configuracion.</p>
+</div>
+
+<p><strong>Mathematical Priority para Targets:</strong> Los targets T1 y T2 se calculan siempre sobre el <strong>stop matematico real</strong> (antes de ser recortado por MaxTicks o StopPct). Esto asegura que el ratio R:R visualizado en el dashboard refleje fielmente el riesgo basado en volatilidad, no el riesgo artificialmente reducido por caps.</p>
+
+<h4>Activacion de cada forma de Stop</h4>
+<ul>
+  <li><strong>StopATRx:</strong> Siempre activo si el valor en CSV es > 0. Si es 0, se usa el valor de la interfaz de NinjaTrader (UI).</li>
+  <li><strong>StopPct:</strong> Siempre activo si el valor en CSV es > 0. Actua como cap (techo) sobre el stop de ATR.</li>
+  <li><strong>StopMaxTicks:</strong> Si el valor en CSV es > 0, se usa ese valor. Si es 0, se usa el valor configurado en las propiedades del indicador (UI).</li>
+</ul>
+</div>
+
+<div id="sec6-target">
+<h3>Targets T1 y T2</h3>
+
+<p>Los targets se calculan a partir del <strong>stop matematico</strong> (el calculado antes de caps) y los ratios R:R definidos en el CSV:</p>
+
+<div class="stop-formula">
+  <strong>T1 = EntryPrice + Direccion × (StopMatematico × RR1)</strong><br>
+  <strong>T2 = EntryPrice + Direccion × (StopMatematico × RR2)</strong><br>
+  <em>Donde Direccion = +1 para LONG, -1 para SHORT</em>
+</div>
+
+<table>
+  <thead><tr><th>Parametro</th><th>Default</th><th>Descripcion</th></tr></thead>
+  <tbody>
+    <tr><td><code>RR1</code></td><td>2.0</td><td>T1 se coloca a 2x la distancia del stop. Si stop=10pts, T1=+20pts del entry.</td></tr>
+    <tr><td><code>RR2</code></td><td>3.0</td><td>T2 se coloca a 3x la distancia del stop. Si stop=10pts, T2=+30pts del entry.</td></tr>
+  </tbody>
+</table>
+
+<div class="card info">
+<p><strong>Distribucion 2:1 de contratos:</strong> El AutoTrader V1 distribuye los contratos de la senal en una proporcion 2:1 — dos tercios de los contratos asignados a T1 y un tercio a T2. Por ejemplo, para una senal de 2 contratos: 1 contrato en T1 y 1 contrato en T2. Esto se configura en las propiedades de la estrategia.</p>
+</div>
+</div>
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec7">
+<div class="section-header"><span class="num">SECCION 7</span><h2>Panel Market &amp; Keltner</h2></div>
+
+<p>El panel <strong>Market &amp; Keltner</strong> del HUD V5 muestra los datos de volatilidad en tiempo real que gobiernan la configuracion adaptativa del sistema:</p>
+
+<table>
+  <thead><tr><th>Campo</th><th>Descripcion</th><th>Ejemplo</th></tr></thead>
+  <tbody>
+    <tr><td>Escenario Activo</td><td>Nombre del escenario segun Keltner Width (Baja, Media, etc.)</td><td>BAJA</td></tr>
+    <tr><td>Keltner Width</td><td>Ancho actual del canal Keltner en puntos</td><td>14.57</td></tr>
+    <tr><td>ATR(14)</td><td>Rango Verdadero Promedio de 14 periodos</td><td>2.07</td></tr>
+    <tr><td>Banda Media (MB)</td><td>Valor de la Banda Media del Keltner</td><td>7385.46</td></tr>
+    <tr><td>Banda Superior</td><td>MB + (Keltner_Mult x ATR)</td><td>7418.67</td></tr>
+    <tr><td>Banda Inferior</td><td>MB - (Keltner_Mult x ATR)</td><td>7352.25</td></tr>
+    <tr><td>Zona Verde</td><td>Distancia desde la linea de zona para considerar "en zona" (0.5x ATR)</td><td>±1.04</td></tr>
+    <tr><td>Zona Amarilla</td><td>Distancia desde la linea de zona para considerar "tocando" (2x ATR)</td><td>±4.14</td></tr>
+    <tr><td>Rango KeltWidth (CSV)</td><td>Rango configurado en el CSV para el escenario actual</td><td>0 - 18</td></tr>
+  </tbody>
+</table>
+
+<div class="card highlight">
+<p><strong>Actualizacion en caliente:</strong> Puedes editar el archivo <code>V5_VolatilityConfig.csv</code> mientras NinjaTrader esta abierto. Al cambiar de simbolo o presionar <strong>F5</strong>, el indicador lee los nuevos valores inmediatamente. No necesitas reiniciar NinjaTrader ni recargar el indicador.</p>
+</div>
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec8">
+<div class="section-header"><span class="num">SECCION 8</span><h2>Instalacion</h2></div>
+
+<div class="step-list">
+  <div class="step-item">
+    <h4>Descargar los archivos</h4>
+    <p>Asegurate de tener los siguientes archivos en tu sistema:</p>
+    <ul>
+      <li><code>EduSMasterPanelHUDV5.cs</code> — El indicador principal</li>
+      <li><code>EduSAutoTraderV1.cs</code> — La estrategia de ejecucion</li>
+      <li><code>V5_VolatilityConfig.csv</code> — La configuracion dinamica de escenarios</li>
+    </ul>
+  </div>
+
+  <div class="step-item">
+    <h4>Copiar los archivos .cs a NinjaTrader 8</h4>
+    <p>Copia los archivos a las carpetas correspondientes de NinjaTrader 8:</p>
+    <ul>
+      <li>Indicador: <code>&lt;Documents&gt;\NinjaTrader 8\bin\Custom\Indicators\</code></li>
+      <li>Estrategia: <code>&lt;Documents&gt;\NinjaTrader 8\bin\Custom\Strategies\</code></li>
+    </ul>
+  </div>
+
+  <div class="step-item">
+    <h4>Configurar la ruta del CSV</h4>
+    <p>El indicador busca el archivo <code>V5_VolatilityConfig.csv</code> en la carpeta de logs definida en la propiedad <code>RutaLog</code>. Por defecto:</p>
+    <pre>&lt;Documents&gt;\NinjaTrader 8\EduS_Logs\</pre>
+    <p>Puedes cambiar esta ruta en las propiedades del indicador dentro de NinjaTrader.</p>
+  </div>
+
+  <div class="step-item">
+    <h4>Compilar NinjaTrader</h4>
+    <p>Abre NinjaTrader 8, ve al menu <strong>Tools &gt; NinjaScript Editor</strong>, haz clic derecho en <strong>References</strong> y selecciona <strong>Compile</strong>. Si no hay errores, el indicador y la estrategia apareceran en las listas correspondientes.</p>
+  </div>
+
+  <div class="step-item">
+    <h4>Agregar el indicador al grafico</h4>
+    <p>En un grafico de NinjaTrader (ES, NQ, CL o GC en el timeframe correspondiente):</p>
+    <ol>
+      <li>Haz clic derecho en el grafico &gt; <strong>Indicators</strong></li>
+      <li>Busca <strong>EduSMasterPanelHUDV5</strong> en la lista</li>
+      <li>Agrega el indicador y configura las propiedades segun tu preferencia</li>
+      <li>Timeframes recomendados: NQ/MNQ = 377 ticks, ES/MES = 610 ticks, CL/GC = 5 min</li>
+    </ol>
+  </div>
+
+  <div class="step-item">
+    <h4>Verificar el funcionamiento</h4>
+    <p>El panel del HUD deberia aparecer en la esquina superior izquierda del grafico mostrando:</p>
+    <ul>
+      <li>El nombre del indicador y la version</li>
+      <li>Los valores de las 4 capas</li>
+      <li>El semaforo de tendencia</li>
+      <li>Las zonas de entrada disponibles</li>
+      <li>El escenario de volatilidad activo</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec9">
+<div class="section-header"><span class="num">SECCION 9</span><h2>Vinculacion con Archivos CSV</h2></div>
+
+<div id="sec9-config">
+<h3>V5_VolatilityConfig.csv — Configuracion Dinamica</h3>
+
+<p>El archivo <code>V5_VolatilityConfig.csv</code> es el cerebro adaptativo del sistema. Contiene una fila por cada combinacion de (Mercado × Timeframe × Escenario), con los parametros que el indicador debe usar en cada contexto de volatilidad.</p>
+
+<table>
+  <thead><tr><th>Columna</th><th>Descripcion</th><th>Ejemplo (NQ, 377, Baja)</th></tr></thead>
+  <tbody>
+    <tr><td><code>Market</code></td><td>Mercado (NQ, MNQ, ES, MES, CL, GC)</td><td>NQ</td></tr>
+    <tr><td><code>Timeframe</code></td><td>Valor del timeframe (377, 610, 5, etc.)</td><td>377</td></tr>
+    <tr><td><code>ScenarioName</code></td><td>Nombre del escenario</td><td>Baja</td></tr>
+    <tr><td><code>KeltWidth_Min</code></td><td>Limite inferior del sensor de volatilidad</td><td>0</td></tr>
+    <tr><td><code>KeltWidth_Max</code></td><td>Limite superior del sensor de volatilidad</td><td>18</td></tr>
+    <tr><td><code>AVWAP_SwingPeriod</code></td><td>Barras para busqueda de HH/LL</td><td>50</td></tr>
+    <tr><td><code>AVWAP_BaseAPT</code></td><td>Umbral de cambio de anclaje</td><td>20</td></tr>
+    <tr><td><code>AVWAP_AdptAPT</code></td><td>Anclaje adaptativo (True/False)</td><td>True</td></tr>
+    <tr><td><code>AVWAP_VolBIAS</code></td><td>Multiplicador de peso del volumen</td><td>10</td></tr>
+    <tr><td><code>StopATRx</code></td><td>Multiplicador de ATR para stop</td><td>0.5</td></tr>
+    <tr><td><code>StopPct</code></td><td>Cap por % del precio (decimal)</td><td>0.003</td></tr>
+    <tr><td><code>StopMaxTicks</code></td><td>Limite absoluto en ticks (0 = valor UI)</td><td>0</td></tr>
+    <tr><td><code>RR1 / RR2</code></td><td>Ratio Risk:Reward</td><td>2.0 / 3.0</td></tr>
+    <tr><td><code>Kelt_Period_Signal</code></td><td>Periodo del Keltner para senales</td><td>20</td></tr>
+    <tr><td><code>Kelt_Mult_Signal</code></td><td>Multiplicador del Keltner para senales</td><td>2.0</td></tr>
+  </tbody>
+</table>
+
+<div class="card warn">
+<p><strong>Regla de prioridad:</strong> Si el valor en el CSV es <strong>mayor a 0</strong>, el indicador usa ese valor e ignora la propiedad de la interfaz de NinjaTrader. Si el valor en el CSV es <strong>0</strong>, el indicador usa el valor configurado manualmente en las propiedades del indicador (UI).</p>
+</div>
+</div>
+
+<div id="sec9-senales">
+<h3>Senales CSV — Registro de Operaciones</h3>
+
+<p>Cada senal generada por el HUD V5 se registra en un archivo CSV con el nombre <code>&lt;Fecha&gt;-senales-v5.csv</code>. Este archivo es la base para el backtesting y el analisis posterior. Contiene 33 columnas:</p>
+
+<table>
+  <thead><tr><th>Columna</th><th>Descripcion</th></tr></thead>
+  <tbody>
+    <tr><td><code>Tipo</code></td><td>ABRE (apertura) o CIERRE (cierre)</td></tr>
+    <tr><td><code>SignalID</code></td><td>Identificador unico hexadecimal para emparejar apertura/cierre</td></tr>
+    <tr><td><code>FechaHora</code></td><td>Timestamp exacto de la senal</td></tr>
+    <tr><td><code>Mercado</code></td><td>Instrumento + contrato (ej. NQ JUN26)</td></tr>
+    <tr><td><code>Direccion</code></td><td>LONG o SHORT</td></tr>
+    <tr><td><code>Escenario</code></td><td>Escenario de volatilidad activo al momento de la senal</td></tr>
+    <tr><td><code>Zona</code></td><td>Zona de entrada (A, A+, LR, 20, 80, M1, M2, M3)</td></tr>
+    <tr><td><code>Entrada</code></td><td>Precio de entrada</td></tr>
+    <tr><td><code>Stop</code></td><td>Precio del stop loss</td></tr>
+    <tr><td><code>T1 / T2</code></td><td>Precios de los targets</td></tr>
+    <tr><td><code>RR1 / RR2</code></td><td>Ratios Risk:Reward</td></tr>
+    <tr><td><code>StopTicks / StopUSD</code></td><td>Distancia del stop en ticks y USD</td></tr>
+    <tr><td><code>ATR / KeltnerWidth</code></td><td>Valores de volatilidad al momento de la senal</td></tr>
+    <tr><td><code>AVWAP / LinReg / SMA20 / SMA80</code></td><td>Valores de las 4 capas al momento de la senal</td></tr>
+    <tr><td><code>TendenciaCount</code></td><td>Valor del semaforo (0-4)</td></tr>
+    <tr><td><code>Resultado</code></td><td>STOP, T1, T2 (se completa al cierre)</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec10">
+<div class="section-header"><span class="num">SECCION 10</span><h2>Vinculacion con la Estrategia</h2></div>
+
+<div id="sec10-conf">
+<h3>Configuracion de la Estrategia</h3>
+
+<p>El <strong>EduS_AutoTrader_V1</strong> se vincula automaticamente con el HUD V5 cuando ambos estan en el mismo grafico. La estrategia detecta el indicador HUD mediante la busqueda por nombre (<code>EduSMasterPanelHUDV5</code>) en los indicadores del grafico.</p>
+
+<table>
+  <thead><tr><th>Propiedad</th><th>Default</th><th>Rango</th><th>Descripcion</th></tr></thead>
+  <tbody>
+    <tr><td><code>ContratosPorSenal</code></td><td>2</td><td>1 - 100</td><td>Numero de contratos a ejecutar por cada senal del HUD</td></tr>
+    <tr><td><code>BEPlusTicks</code></td><td>4</td><td>0 - 20</td><td>Ticks adicionales sobre el precio de entrada cuando se mueve el stop a BreakEven tras alcanzar T1</td></tr>
+    <tr><td><code>SoloRealtime</code></td><td>True</td><td>True/False</td><td>Si es True, solo ejecuta senales generadas en tiempo real (no en historical)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div id="sec10-flujo">
+<h3>Flujo de Ejecucion Estrategia → Senal → Orden</h3>
+
+<div class="card">
+<ol>
+  <li><strong>Buscar HUD:</strong> En <code>OnStateChange()</code>, la estrategia busca el indicador <code>EduSMasterPanelHUDV5</code> en el grafico mediante <code>chartControl.Indicators</code>.</li>
+  <li><strong>Detectar senal:</strong> En cada <code>OnBarUpdate()</code>, la estrategia evalua la propiedad <code>_hud._entradaValida</code> del indicador. Cuando cambia de <code>false</code> a <code>true</code> (rising edge), se activa una senal.</li>
+  <li><strong>Enviar entrada:</strong> <code>EnviarEntrada()</code> ejecuta una orden a mercado en la direccion de la senal (Buy o SellShort).</li>
+  <li><strong>Confirmar fill:</strong> <code>OnOrderUpdate()</code> espera la confirmacion de que la orden fue llenada parcial o totalmente.</li>
+  <li><strong>Colocar stops y targets:</strong> Al confirmarse el fill, se colocan simultaneamente: una orden <strong>Stop Market</strong> para el stop loss, y dos ordenes <strong>Limit</strong> para T1 y T2. Las ordenes Stop/T1/T2 estan vinculadas en <strong>OCO</strong> (One Cancels Other).</li>
+  <li><strong>BreakEven:</strong> Cuando T1 se llena (<code>MoverStopABreakeven()</code>), el stop se mueve al precio de entrada + <code>BEPlusTicks</code> ticks, asegurando que el resto de la posicion cierre con ganancia minima.</li>
+  <li><strong>Cancelacion mutua:</strong> Cualquier fill (Stop, T1, T2, o cierre manual) dispara <code>CancelarOrdenesPendientes()</code> para cancelar las ordenes restantes.</li>
+</ol>
+</div>
+
+<h3>Respeto por la Intervencion Manual</h3>
+<div class="card info">
+<p>Si el usuario arrastra manualmente el stop loss, el target o cierra parcialmente la posicion, <strong>la estrategia no revierte la accion del usuario</strong>. La prioridad es: intervencion manual &gt; logica automatica. Esto evita que el sistema luche contra el trader en momentos de alta volatilidad donde la discrecion humana es superior.</p>
+</div>
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec11">
+<div class="section-header"><span class="num">SECCION 11</span><h2>EduS_AutoTrader V1 — Explicacion Detallada</h2></div>
+
+<div class="card">
+<p>El <strong>EduS_AutoTrader V1</strong> es una estrategia de ejecucion automatica para NinjaTrader 8 que opera en <strong>arquitectura Unmanaged</strong>. A diferencia de las estrategias Managed (donde NinjaTrader gestiona automaticamente las entradas/salidas), el modo Unmanaged da control total sobre cada orden individual.</p>
+
+<h3>Arquitectura Unmanaged</h3>
+<ul>
+  <li><strong>Ventaja:</strong> Control granular sobre cada orden. No hay interferencia de NinjaTrader en la gestion de stops y targets.</li>
+  <li><strong>Desventaja:</strong> El desarrollador es responsable de gestionar manualmente las entradas, salidas, cancelaciones y la consistencia de la posicion.</li>
+  <li><strong>Implementacion:</strong> Usa <code>EnterLong()</code>/<code>EnterShort()</code> para las entradas, y <code>SubmitOrderUnmanaged()</code> para stops y targets individuales.</li>
+</ul>
+
+<h3>Distribucion 2:1 de Contratos</h3>
+<p>Cuando se recibe una senal con <code>N</code> contratos, la estrategia los distribuye de la siguiente manera:</p>
+<ul>
+  <li><strong>Objetivo T1:</strong> Redondear(N &times; 2/3) contratos. Se coloca una orden Limit en el precio T1.</li>
+  <li><strong>Objetivo T2:</strong> Resto de los contratos. Se coloca una orden Limit en el precio T2.</li>
+  <li><strong>Stop Loss:</strong> N contratos. Se coloca una orden Stop Market en el precio Stop.</li>
+</ul>
+
+<div class="card warn">
+<p><strong>OCO (One Cancels Other):</strong> Las ordenes de Stop, T1 y T2 se agrupan en OCO. Cuando cualquiera de las tres se ejecuta, las otras dos se cancelan automaticamente. Esto evita que se ejecuten ordenes contradictorias (ej. que se llene el stop y luego el target).</p>
+</div>
+
+<h3>BreakEven Dinamico</h3>
+<p>Cuando T1 se alcanza (<code>MoverStopABreakeven()</code>):</p>
+<ol>
+  <li>El stop loss de los contratos restantes se mueve al precio de entrada + <code>BEPlusTicks</code> ticks</li>
+  <li>Esto garantiza que la posicion remanente cierre con una ganancia minima incluso si el mercado revierte</li>
+  <li>Ejemplo: Entrada LONG a 16,396.39 con BEPlusTicks=4 (en NQ, 4 ticks = 1.0 punto). Stop se mueve a 16,397.39.</li>
+</ol>
+
+<h3>Estados del Motor de Ordenes</h3>
+<table>
+  <thead><tr><th>Estado</th><th>Descripcion</th></tr></thead>
+  <tbody>
+    <tr><td>EsperandoSenal</td><td>A la espera de que el HUD active una senal de entrada</td></tr>
+    <tr><td>EnviandoEntrada</td><td>Orden de entrada enviada, esperando confirmacion de fill</td></tr>
+    <tr><td>EsperandoStopOTarget</td><td>Posicion abierta con Stop, T1 y T2 activos</td></tr>
+    <tr><td>MoviendoStopABreakeven</td><td>T1 alcanzado, moviendo stop a break-even</td></tr>
+    <tr><td>CancelandoOrdenes</td><td>Limpiando ordenes pendientes tras cierre de posicion</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Consideraciones de Seguridad</h3>
+<div class="card danger">
+<ul>
+  <li><strong>No usar en Cuenta Real sin backtesting:</strong> Prueba extensivamente en Sim101 antes de usar en produccion.</li>
+  <li><strong>Supervision requerida:</strong> El AutoTrader V1 es una herramienta de asistencia, no un sistema de trading autonomo. Revisa las senales antes de cada sesion.</li>
+  <li><strong>Riesgo de sobreoperacion:</strong> En mercados de alta volatilidad, el HUD puede generar multiples senales. Monitorea el Cooldown y ajusta <code>ContratosPorSenal</code> segun el escenario.</li>
+  <li><strong>Intervencion manual siempre disponible:</strong> Puedes arrastrar stops, targets o cerrar posiciones manualmente. La estrategia respeta tus cambios y no los revierte.</li>
+  <li><strong>Logs:</strong> Todas las operaciones se registran en archivos CSV para su posterior analisis y backtesting.</li>
+</ul>
+</div>
+
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section">
+<div class="section-header"><span class="num">FINAL</span><h2>Detalles Adicionales</h2></div>
+
+<div class="card">
+<h3>Sonidos y Alertas</h3>
+<p>El HUD V5 reproduce sonidos cuando se activan las senales:</p>
+<ul>
+  <li><strong>Zona verde:</strong> Sonido <code>green zone.wav</code> — una zona de entrada se ha puesto activa</li>
+  <li><strong>En zona:</strong> Sonido <code>in zone.wav</code> — el precio esta tocando una zona de entrada</li>
+</ul>
+<p>Los archivos de sonido deben estar en la ruta configurada en las propiedades del indicador.</p>
+</div>
+
+<div class="card">
+<h3>Indicadores Internos (Engines)</h3>
+<p>El HUD V5 es 100% independiente y no requiere indicadores externos. Incluye motores internos:</p>
+<ul>
+  <li><strong>V5_InternalSMA:</strong> Calcula historial interno de SMA 20 y 80 sin dependencias externas.</li>
+  <li><strong>V5_InternalAVWAP:</strong> Recalcula anclas de AVWAP dinamicamente sin necesidad del indicador AVWAP externo.</li>
+  <li><strong>V5_InternalLinReg:</strong> Calcula la regresion lineal de 89 periodos y su pendiente.</li>
+  <li><strong>V5_NodePocEngine:</strong> Identifica niveles institucionales (nodos, POCs) sin dependencia externa.</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>Actualizacion en Caliente del CSV</h3>
+<p>El archivo <code>V5_VolatilityConfig.csv</code> puede editarse mientras NinjaTrader esta abierto. El indicador relee el archivo al cambiar de simbolo en el grafico o al presionar <strong>F5</strong>. Esto permite ajustar parametros en tiempo real sin reiniciar nada.</p>
+</div>
+
+<div class="card">
+<h3>Timeframes Soportados</h3>
+<table>
+  <thead><tr><th>Mercado</th><th>Timeframe</th><th>Tipo</th></tr></thead>
+  <tbody>
+    <tr><td>NQ</td><td>377</td><td>Ticks</td></tr>
+    <tr><td>MNQ</td><td>377</td><td>Ticks</td></tr>
+    <tr><td>ES</td><td>610</td><td>Ticks</td></tr>
+    <tr><td>MES</td><td>610</td><td>Ticks</td></tr>
+    <tr><td>CL</td><td>5</td><td>Minutos</td></tr>
+    <tr><td>GC</td><td>5</td><td>Minutos</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div><!-- /container -->
+</div><!-- /layout -->
+
+<div class="footer">
+  <span style="font-family:'DM Sans',sans-serif;font-weight:700;">Edu<span class="gold">S</span> Trader</span> &middot; HUD V5 Manual Completo &middot; Mayo 2026<br>
+  NinjaTrader 8 &middot; Indicador Multi-Capa &middot; EduS_AutoTrader_V1
+</div>
+
+</body>
+</html>
