@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Historial Completo — EduS Trader</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      background:#f5f7fa;color:#0f172a;line-height:1.6
+    }
+    img{max-width:100%;display:block}
+
+    /* NAVBAR (same as index) */
+    #edus-nb{
+      display:block;width:100%;
+      background:#3dd6c0;
+      border-bottom:2px solid #e2e8f0;
+      position:sticky;top:0;z-index:9999
+    }
+    #edus-nb *{box-sizing:border-box;font-family:'Montserrat',sans-serif}
+    #edus-nb .nb-inner{
+      display:flex;align-items:center;justify-content:space-between;
+      max-width:1200px;margin:0 auto;padding:0 16px
+    }
+    #edus-nb .nb-brand{
+      display:flex;align-items:center;gap:10px;
+      text-decoration:none;color:#0f172a;flex-shrink:0
+    }
+    #edus-nb .nb-brand .nb-logo{height:36px;width:auto;display:block}
+    #edus-nb .nb-brand .nb-name{
+      font-size:16px;font-weight:700;letter-spacing:-0.3px;
+      white-space:nowrap
+    }
+    #edus-nb .nb-toggle{
+      display:none;background:none;border:none;cursor:pointer;
+      padding:12px 8px
+    }
+    #edus-nb .nb-toggle span{
+      display:block;width:22px;height:2px;background:#0f172a;
+      margin:4px 0;border-radius:2px;transition:.2s
+    }
+    #edus-nb .nb-links{
+      display:flex;align-items:center;list-style:none;gap:2px;margin:0;padding:0
+    }
+    #edus-nb .nb-links a{
+      display:block;padding:14px 14px;text-decoration:none;
+      color:#0f172a;font-size:11px;font-weight:600;
+      text-transform:uppercase;letter-spacing:.04em;
+      transition:background .15s,color .15s;white-space:nowrap
+    }
+    #edus-nb .nb-links a:hover{background:#64748b;color:#fff}
+    #edus-nb .nb-links a.active{background:rgba(0,0,0,.08)}
+    #edus-nb .nb-links a.members-btn{
+      background:rgba(0,0,0,.12);color:#0f172a;
+      border-left:2px solid rgba(0,0,0,.15);font-weight:700
+    }
+    #edus-nb .nb-links a.members-btn:hover{background:#0f172a;color:#3dd6c0}
+
+    /* PAGE HEADER */
+    .page-header{
+      max-width:1200px;margin:0 auto;padding:28px 20px 8px
+    }
+    .page-header h1{
+      font-family:'Montserrat',sans-serif;
+      font-size:22px;font-weight:800;color:#0f172a;margin-bottom:4px
+    }
+    .page-header p{font-size:13px;color:#64748b}
+    .page-header a{
+      display:inline-flex;align-items:center;gap:4px;
+      font-size:12px;color:#3dd6c0;text-decoration:none;
+      margin-top:8px;font-weight:600
+    }
+    .page-header a:hover{text-decoration:underline}
+
+    /* MAIN */
+    .main-wrap{max-width:1200px;margin:0 auto;padding:12px 20px 40px}
+
+    /* MONTH GROUP */
+    .month-group{
+      background:#fff;
+      border:.5px solid rgba(0,0,0,.08);
+      border-radius:10px;margin-bottom:12px;overflow:hidden
+    }
+    .month-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 18px;cursor:pointer;
+      font-family:'Montserrat',sans-serif;
+      font-size:13px;font-weight:700;color:#0f172a;
+      background:#f8fafc;
+      border-bottom:.5px solid rgba(0,0,0,.04);
+      transition:background .15s;
+      user-select:none
+    }
+    .month-header:hover{background:#f1f5f9}
+    .month-header .month-count{
+      font-size:11px;color:#64748b;font-weight:500;
+      font-family:'Inter',sans-serif
+    }
+    .month-header .month-arrow{
+      font-size:14px;color:#94a3b8;transition:transform .2s
+    }
+    .month-header .month-arrow.open{transform:rotate(180deg)}
+    .month-body{display:none}
+    .month-body.open{display:block}
+
+    /* CARDS INSIDE MONTH */
+    .month-body .edus-list{
+      display:flex;flex-direction:column;gap:6px;padding:10px 14px 14px
+    }
+    .month-body .edus-card{
+      display:flex;align-items:stretch;
+      background:#fff;
+      border:.5px solid rgba(0,0,0,.06);
+      border-radius:8px;overflow:hidden;
+      text-decoration:none;
+      transition:border-color .2s,background .2s;width:100%
+    }
+    .month-body .edus-card:hover{border-color:rgba(61,214,192,.3);background:#f8fafc}
+    .month-body .edus-card-accent{width:3px;flex-shrink:0}
+    .month-body .edus-card-body{
+      flex:1;padding:10px 12px;
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0
+    }
+    .month-body .edus-card-date-block{flex-shrink:0;min-width:36px}
+    .month-body .edus-card-day{
+      font-size:18px;font-weight:700;color:#c9a84c;line-height:1
+    }
+    .month-body .edus-card-month{
+      font-size:8px;color:#64748b;text-transform:uppercase;letter-spacing:.05em
+    }
+    .month-body .edus-card-info{flex:1;min-width:0}
+    .month-body .edus-card-title{
+      font-size:12px;font-weight:500;color:#0f172a;line-height:1.3;
+      display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden
+    }
+    .month-body .edus-card-meta{display:flex;gap:3px;flex-wrap:wrap;margin-top:3px}
+    .month-body .edus-tag{
+      display:inline-block;padding:1px 4px;border-radius:3px;
+      font-size:9px;font-weight:500;white-space:nowrap
+    }
+    .month-body .edus-tag.es{background:rgba(61,214,192,.1);color:#3dd6c0;border:.5px solid rgba(61,214,192,.25)}
+    .month-body .edus-tag.nq{background:rgba(201,168,76,.1);color:#c9a84c;border:.5px solid rgba(201,168,76,.25)}
+    .month-body .edus-tag.pos{background:rgba(61,214,100,.1);color:#4dba76;border:.5px solid rgba(61,214,100,.2)}
+    .month-body .edus-tag.neg{background:rgba(224,82,82,.1);color:#e05252;border:.5px solid rgba(224,82,82,.2)}
+    .month-body .edus-tag.neu{background:rgba(0,0,0,.04);color:#64748b;border:.5px solid rgba(0,0,0,.1)}
+    .month-body .edus-card-pnl-block{text-align:right;flex-shrink:0;min-width:60px}
+    .month-body .edus-card-pnl{font-size:15px;font-weight:600}
+    .month-body .edus-card-pnl.pos{color:#4dba76}
+    .month-body .edus-card-pnl.neg{color:#e05252}
+    .month-body .edus-card-pnl.neu{color:#64748b}
+    .month-body .edus-card-pnl-sub{font-size:8px;color:#64748b;line-height:1.2}
+    .month-body .edus-card-arrow{
+      font-size:14px;color:#cbd5e1;padding:0 10px 0 2px;
+      align-self:center;transition:color .2s;flex-shrink:0
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      #edus-nb .nb-toggle{display:block}
+      #edus-nb .nb-links{
+        display:none;flex-direction:column;
+        position:absolute;top:100%;left:0;right:0;
+        background:#3dd6c0;border-bottom:2px solid #e2e8f0;
+        box-shadow:0 8px 16px rgba(0,0,0,.15)
+      }
+      #edus-nb .nb-links.open{display:flex}
+      #edus-nb .nb-links a{padding:12px 20px;border-top:.5px solid rgba(0,0,0,.08)}
+      #edus-nb .nb-links a.members-btn{border-left:none}
+      .month-body .edus-card-pnl-block{display:none}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav id="edus-nb">
+    <div class="nb-inner">
+      <a class="nb-brand" href="/">
+        <img class="nb-logo" src="assets/logo.png" alt="EduS Trader">
+        <span class="nb-name">EduS Trader</span>
+      </a>
+      <button class="nb-toggle" id="nbToggle" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nb-links" id="nbLinks">
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/pricing.html">Cursos y Mentorías</a></li>
+        <li><a href="/members/" class="members-btn">🔒 Zona Miembros</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <a href="/">← Volver al inicio</a>
+    <h1>📜 Historial completo de sesiones</h1>
+    <p>Todos los registros de operativa organizados por mes — transparencia total.</p>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-wrap">
+
+    <!-- === ABRIL 2026 === -->
+    <div class="month-group">
+      <div class="month-header" onclick="toggleMonth(this)">
+        <span>Abril 2026 <span class="month-count">(14 registros)</span></span>
+        <span class="month-arrow open">▾</span>
+      </div>
+      <div class="month-body open">
+        <div class="edus-list">
+
+          <!-- 21 ABR -->
+          <a class="edus-card" href="/reporte-16-21-abr-2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#1e4a8a"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">21</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Martes — ES+NQ · VIX 19.9 · 12 setups · AM excelente, tarde negativa</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES·NQ</span><span class="edus-tag pos">+$85</span><span class="edus-tag neg">12 setups</span><span class="edus-tag neu">Solo Sim</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl pos">+$85</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 20 ABR -->
+          <a class="edus-card" href="/reporte-16-21-abr-2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#7b3a00"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">20</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Lunes — ES+MNQ · VIX 19.1 · 17+ setups ⚡ · Sobreoperación extrema</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES·MNQ</span><span class="edus-tag pos">+$910.50</span><span class="edus-tag neg">17+</span><span class="edus-tag neu">Solo Sim</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl pos">+$910.50</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 17 ABR -->
+          <a class="edus-card" href="/reporte-16-21-abr-2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#3b6d11"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">17</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Viernes — ES · VIX 16.9 · 1 setup · Último día de fondeo</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag pos">Sim +$50</span><span class="edus-tag pos">Fondeo +$0.25</span><span class="edus-tag pos">WR 100%</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl pos">+$50</div><div class="edus-card-pnl-sub">Sim</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 16 ABR -->
+          <a class="edus-card" href="/reporte-16-21-abr-2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#1e4a8a"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">16</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Jueves — MES+MNQ · VIX 18.2 · Primer día MES · Casi plano</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">MES·MNQ</span><span class="edus-tag pos">+$0.50</span><span class="edus-tag neg">WR 25%</span><span class="edus-tag neu">Solo Sim</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl pos">+$0.50</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 15 ABR -->
+          <a class="edus-card" href="/reporte_15abr2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#a32d2d"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">15</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Miércoles — MES · VIX 17.9 · SL 0.50 pts · Fondeo a $7.75 del límite</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">MES JUN26</span><span class="edus-tag neg">Sim -$15</span><span class="edus-tag neg">Fondeo -$3.50</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl neg">-$15</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 14 ABR -->
+          <a class="edus-card" href="/reporte_14abr2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:linear-gradient(180deg,#3b6d11,#185fa5)"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">14</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Martes — ES · VIX 18.1 · Scale-in PM · Fondeo en límite</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag pos">Sim +$375</span><span class="edus-tag neg">Fondeo -$10.75</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl pos">+$375</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 13 ABR -->
+          <a class="edus-card" href="/reporte_13abr2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#3b6d11"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">13</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Lunes — MES · VIX 21→19.9 · +48 pts alcista · SIM sin datos</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">MES JUN26</span><span class="edus-tag neu">Sim sin datos</span><span class="edus-tag neg">Fondeo ~-$85.50</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl neg">~-$85.50</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 10 ABR -->
+          <a class="edus-card" href="/reporte_10abr2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#3b6d11"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">10</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Jueves — ES · VIX 19.2 · 5 setups · Ambas positivas</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag pos">Sim +$275</span><span class="edus-tag pos">Fondeo +$27.50</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl pos">+$275</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 09 ABR -->
+          <a class="edus-card" href="/reporte_09abr2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#3b6d11"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">09</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Miércoles — ES · VIX 20 · 7 setups · Racha negativa interrumpida</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag pos">Sim +$62.50</span><span class="edus-tag neg">Fondeo ~-$61</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl pos">+$62.50</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 08 ABR -->
+          <a class="edus-card" href="/reporte_08abr2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#a32d2d"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">08</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Miércoles — ES · VIX 21 · 14 setups · Sobreoperación récord</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag neg">Sim -$1,350</span><span class="edus-tag neg">Fondeo -$6</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl neg">-$1,350</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 07 ABR -->
+          <a class="edus-card" href="/reporte_07abr2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#854f0b"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">07</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Martes — ES · VIX 24.6→25.8 · Bajista -35 pts · Scale-in Revenge</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag neg">Sim -$1,187.50</span><span class="edus-tag pos">Fondeo +$9.50</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl neg">-$1,187.50</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 06 ABR (1) -->
+          <a class="edus-card" href="/reporte_06abr2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#a32d2d"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">06</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Lunes — ES · VIX 24.9→24.2 · Rango Choppy (Análisis 2)</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag neg">Sim -$1,175</span><span class="edus-tag neg">Fondeo ~-$118</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl neg">-$1,175</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 06 ABR (2) -->
+          <a class="edus-card" href="/analisis_06abr2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#a32d2d"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">06</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Lunes — ES · VIX 24.9→24.2 · Rango Choppy (Análisis 1)</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag neg">Sim -$1,175</span><span class="edus-tag neg">Fondeo ~-$118</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl neg">-$1,175</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 02 ABR -->
+          <a class="edus-card" href="/reporte_02abr2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#185fa5"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">02</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Jueves — ES · VIX 27→24.6 · Impulso Alcista +93 pts</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag pos">Sim +$500*</span><span class="edus-tag neg">Fondeo -$48.75</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl pos">+$500*</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 01 ABR -->
+          <a class="edus-card" href="/reporte_01abr2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#854f0b"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">01</div><div class="edus-card-month">Abr</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Miércoles — ES · VIX 25 · Rango sin tendencia</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag neg">Sim -$1,250</span><span class="edus-tag neg">Fondeo -$3.75</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl neg">-$1,250</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- === MARZO 2026 === -->
+    <div class="month-group">
+      <div class="month-header" onclick="toggleMonth(this)">
+        <span>Marzo 2026 <span class="month-count">(8 registros)</span></span>
+        <span class="month-arrow">▾</span>
+      </div>
+      <div class="month-body">
+        <div class="edus-list">
+
+          <!-- CIERRE MES MARZO -->
+          <a class="edus-card" href="/cierre-de-mes-marzo-2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:linear-gradient(180deg,#185fa5,#639922)"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">MAR</div><div class="edus-card-month">Cierre</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">📅 Cierre de Mes — DOFA · 3 Cuentas · Lecciones</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag pos">Sim ~+$1,752</span><span class="edus-tag neg">Fondeo -$1,754</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl pos">~+$1,752</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 31 MAR -->
+          <a class="edus-card" href="/reporte_31mar2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#854f0b"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">31</div><div class="edus-card-month">Mar</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Martes — ES · VIX 29→27 · Transición Choppy</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag neg">Sim -$862.50</span><span class="edus-tag pos">Fondeo +$22.50</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl neg">-$862.50</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 30 MAR -->
+          <a class="edus-card" href="/reporte_30mar2026.html" target="_blank">
+            <div class="edus-card-accent" style="background:#a32d2d"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">30</div><div class="edus-card-month">Mar</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Lunes — ES+MNQ · VIX 31 · Régimen Choppy</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag neg">Sim -$2,201.50</span><span class="edus-tag pos">Fondeo +$45</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl neg">-$2,201.50</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 27 MAR -->
+          <a class="edus-card" href="/reporte_27mar2026.html" target="_blank">
+            <div class="edus-card-accent teal"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">27</div><div class="edus-card-month">Mar</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Viernes — ES · VIX 29 · Scale-in T2</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag pos">Sim +$762.50</span><span class="edus-tag pos">Fondeo ~+$63.75</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl pos">+$762.50</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 26 MAR -->
+          <a class="edus-card" href="/reporte_26mar2026.html" target="_blank">
+            <div class="edus-card-accent gold"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">26</div><div class="edus-card-month">Mar</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Jueves — ES+MNQ · VIX 27</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag nq">MNQ</span><span class="edus-tag pos">Sim +$554.50</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl pos">+$554.50</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 25 MAR -->
+          <a class="edus-card" href="/reporte_25mar2026.html" target="_blank">
+            <div class="edus-card-accent teal"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">25</div><div class="edus-card-month">Mar</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Miércoles — ES+MNQ · VIX 26</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag nq">MNQ</span><span class="edus-tag pos">Sim +$1,093</span><span class="edus-tag neg">Fondeo -$50</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl pos">+$1,093</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 24 MAR -->
+          <a class="edus-card" href="/reporte_24mar2026.html" target="_blank">
+            <div class="edus-card-accent teal"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">24</div><div class="edus-card-month">Mar</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Martes — ES · Solo S&amp;P</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag pos">Sim +$500</span><span class="edus-tag neg">Fondeo -$337</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl pos">+$500</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+          <!-- 23 MAR -->
+          <a class="edus-card" href="/reporte_23mar2026.html" target="_blank">
+            <div class="edus-card-accent gold"></div>
+            <div class="edus-card-body">
+              <div class="edus-card-date-block"><div class="edus-card-day">23</div><div class="edus-card-month">Mar</div></div>
+              <div class="edus-card-info">
+                <div class="edus-card-title">Lunes — Apertura de semana</div>
+                <div class="edus-card-meta">
+                  <span class="edus-tag es">ES JUN26</span><span class="edus-tag nq">MNQ</span><span class="edus-tag pos">Sim +$643</span><span class="edus-tag neg">Fondeo -$885</span>
+                </div>
+              </div>
+              <div class="edus-card-pnl-block"><div class="edus-card-pnl pos">+$643</div></div>
+            </div>
+            <div class="edus-card-arrow">›</div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer style="text-align:center;padding:40px 20px;font-size:12px;color:#64748b;font-family:'Inter',sans-serif;">
+    <div style="margin-bottom:12px;">
+      <a href="/terminos.html" style="color:#64748b;text-decoration:none;margin:0 10px;">Términos y Condiciones</a> |
+      <a href="/privacidad.html" style="color:#64748b;text-decoration:none;margin:0 10px;">Privacidad</a> |
+      <a href="/reembolsos.html" style="color:#64748b;text-decoration:none;margin:0 10px;">Reembolsos</a>
+    </div>
+    <p>© 2026 EduS Trader. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    (function(){
+      var toggle=document.getElementById('nbToggle');
+      var links=document.getElementById('nbLinks');
+      if(toggle&&links){
+        toggle.addEventListener('click',function(e){
+          e.stopPropagation();
+          links.classList.toggle('open');
+        });
+        document.addEventListener('click',function(e){
+          if(!links.contains(e.target)&&!toggle.contains(e.target)){
+            links.classList.remove('open');
+          }
+        });
+      }
+    })();
+    function toggleMonth(el){
+      var body=el.nextElementSibling;
+      var arrow=el.querySelector('.month-arrow');
+      if(body&&arrow){
+        body.classList.toggle('open');
+        arrow.classList.toggle('open');
+      }
+    }
+  </script>
+
+</body>
+</html>
