@@ -104,6 +104,7 @@ tr:hover td{background:rgba(0,0,0,0.02)}
     <a href="#modos">Modos de Uso</a>
     <a href="#flujo-completo">Flujo Completo</a>
     <a href="#resultados">Resultados</a>
+    <a href="#comandos">Comandos</a>
     <a href="#troubleshooting">Solucion de Problemas</a>
   </nav>
 </div>
@@ -672,8 +673,121 @@ eduSTrader - Local Free/
 
 <div class="section-divider"></div>
 
+<!-- ═══════════════════ REFERENCIA DE COMANDOS ═══════════════════ -->
+<div class="section-label"><span class="num">8</span>Referencia de Comandos</div>
+<h2 id="comandos">Todas las variantes de ejecucion</h2>
+<p class="sub">Cada comando se ejecuta desde <code>gameplan_system/</code> en PowerShell. Los parametros se pueden combinar libremente.</p>
+
+<h3>Modos de analisis</h3>
+<div class="card card-blue">
+  <div class="card-title">Comandos basicos</div>
+  <table>
+    <thead>
+      <tr><th>Comando</th><th>Que hace</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>python generar_postmarket.py</code></td><td>Analisis diario, modo interactivo (elige proveedor 1-7)</td></tr>
+      <tr><td><code>python generar_postmarket.py --auto</code></td><td>Analisis diario, modo automatico (usa default_provider del config)</td></tr>
+      <tr><td><code>python generar_postmarket.py --cierre-semanal</code></td><td>Cierre semanal interactivo (elige proveedor)</td></tr>
+      <tr><td><code>python generar_postmarket.py --cierre-semanal --auto</code></td><td>Cierre semanal automatico</td></tr>
+      <tr><td><code>python generar_postmarket.py --cierre-mensual</code></td><td>Cierre mensual interactivo</td></tr>
+      <tr><td><code>python generar_postmarket.py --cierre-mensual --auto</code></td><td>Cierre mensual automatico</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Seleccion de fecha</h3>
+<div class="card card-blue">
+  <div class="card-title">Por defecto usa la fecha de hoy. Con --date usas una fecha especifica.</div>
+  <table>
+    <thead>
+      <tr><th>Comando</th><th>Que hace</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>python generar_postmarket.py --date 20260522</code></td><td>Analisis diario del 22 de Mayo 2026</td></tr>
+      <tr><td><code>python generar_postmarket.py --date 20260522 --auto</code></td><td>Analisis diario automatico del 22 May</td></tr>
+      <tr><td><code>python generar_postmarket.py --date 20260522 --skip-ai</code></td><td>Solo datos del 22 May, sin IA</td></tr>
+      <tr><td><code>python generar_postmarket.py --cierre-semanal --date 20260522</code></td><td>Cierre semanal de la semana del 22 May</td></tr>
+      <tr><td><code>python generar_postmarket.py --cierre-mensual --date 20260501</code></td><td>Cierre mensual de Mayo 2026</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Modo Manual (sin API key)</h3>
+<div class="card card-blue">
+  <div class="card-title">Ideal cuando quieres usar ChatGPT/Claude web gratis.</div>
+  <table>
+    <thead>
+      <tr><th>Comando</th><th>Que hace</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>python generar_postmarket.py</code> → opcion 6</td><td>Genera prompt_postmarket_data.txt, sales a pegar en la IA</td></tr>
+      <tr><td><code>python generar_postmarket.py --manual-text respuesta.json --auto</code></td><td>Carga respuesta.json y genera HTML + publica</td></tr>
+      <tr><td><code>python generar_postmarket.py --date 20260522 --manual-text respuesta.json --auto</code></td><td>Lo mismo pero para fecha especifica</td></tr>
+      <tr><td><code>python generar_postmarket.py --cierre-semanal --manual-text respuesta.json --auto</code></td><td>Cierre semanal con respuesta manual</td></tr>
+      <tr><td><code>python generar_postmarket.py --cierre-mensual --manual-text respuesta.json --auto</code></td><td>Cierre mensual con respuesta manual</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Proveedor especifico en modo --auto</h3>
+<div class="card card-blue">
+  <div class="card-title">Si quieres forzar un proveedor sin menu interactivo, cambia <code>ai.default_provider</code> en config.json.</div>
+  <table>
+    <thead>
+      <tr><th>Valor en config.json</th><th>Proveedor</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>"default_provider": "groq"</code></td><td>Groq (llama-3.3-70b-versatile)</td></tr>
+      <tr><td><code>"default_provider": "gemini"</code></td><td>Google Gemini (gemini-2.0-flash)</td></tr>
+      <tr><td><code>"default_provider": "ollama"</code></td><td>Ollama local (qwen2.5-coder:7b)</td></tr>
+      <tr><td><code>"default_provider": "openai"</code></td><td>OpenAI (gpt-4o)</td></tr>
+      <tr><td><code>"default_provider": "anthropic"</code></td><td>Anthropic (claude-sonnet-4)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Wrappers y accesos directos</h3>
+<div class="card card-blue">
+  <div class="card-title">atajos para ejecucion rapida</div>
+  <table>
+    <thead>
+      <tr><th>Comando</th><th>Que hace</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>python generar_cierre_semanal.py</code></td><td>Wrapper para cierre semanal interactivo</td></tr>
+      <tr><td><code>python generar_cierre_semanal.py --auto</code></td><td>Wrapper para cierre semanal automatico</td></tr>
+      <tr><td><code>python generar_cierre_mensual.py</code></td><td>Wrapper para cierre mensual interactivo</td></tr>
+      <tr><td><code>python generar_cierre_mensual.py --auto</code></td><td>Wrapper para cierre mensual automatico</td></tr>
+      <tr><td><code>INICIAR_POSTMARKET.bat</code></td><td>Doble click: modo interactivo</td></tr>
+      <tr><td><code>INICIAR_POSTMARKET_AUTO.bat</code></td><td>Doble click: modo automatico</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Combinaciones utiles</h3>
+<div class="card card-green">
+  <div class="card-title">Casos de uso reales</div>
+  <table>
+    <thead>
+      <tr><th>Escenario</th><th>Comando</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Fin de sesion, publicar rapido</td><td><code>python generar_postmarket.py --auto</code></td></tr>
+      <tr><td>Viernes, cierre semanal automatico</td><td><code>python generar_postmarket.py --cierre-semanal --auto</code></td></tr>
+      <tr><td>Ultimo dia del mes, cierre mensual</td><td><code>python generar_postmarket.py --cierre-mensual --auto</code></td></tr>
+      <tr><td>Analizar dia pasado sin IA</td><td><code>python generar_postmarket.py --date 20260520 --skip-ai</code></td></tr>
+      <tr><td>Cargar analisis de ChatGPT</td><td><code>python generar_postmarket.py --date 20260522 --manual-text respuesta.json --auto</code></td></tr>
+      <tr><td>Probar sin publicar</td><td><code>python generar_postmarket.py --skip-ai</code> (y responde "n" a publicar)</td></tr>
+      <tr><td>Recuperar cierre semanal atrasado</td><td><code>python generar_postmarket.py --cierre-semanal --date 20260522 --auto</code></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section-divider"></div>
+
 <!-- ═══════════════════ TROUBLESHOOTING ═══════════════════ -->
-<div class="section-label"><span class="num">8</span>Troubleshooting</div>
+<div class="section-label"><span class="num">9</span>Troubleshooting</div>
 <h2 id="troubleshooting">Solucion de problemas comunes</h2>
 <p class="sub">Problemas frecuentes y como resolverlos.</p>
 
