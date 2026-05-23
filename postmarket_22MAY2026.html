@@ -16,7 +16,7 @@
   }
   * { box-sizing:border-box; margin:0; padding:0; }
   body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); font-size:14px; line-height:1.6; }
-  .header { background:var(--header-gradient); color:white; padding:24px 40px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:3px solid var(--gold); }
+  .header { background:var(--header-gradient); color:white; padding:24px 40px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:3px solid var(--gold); flex-wrap:wrap; gap:12px; }
   .header-left .brand-name { font-family:'DM Sans',sans-serif; font-size:32px; font-weight:700; color:white; }
   .header-left .brand-name .gold { color:var(--gold); }
   .header-left .brand-sub { font-family:'Space Mono',monospace; font-size:10px; color:var(--gold-light); letter-spacing:3px; text-transform:uppercase; }
@@ -33,6 +33,7 @@
   .pnl-hero { text-align:center; padding:32px; background:linear-gradient(135deg,#e6f5f4,#f0faf9); border-radius:var(--radius); margin-bottom:20px; border:2px solid var(--teal); }
   .pnl-hero .label { font-family:'Space Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; }
   .pnl-hero .amount { font-size:42px; font-weight:700; color:var(--bull); margin-top:4px; }
+  .pnl-hero .amount.negative { color:var(--bear); }
   .pnl-hero .source { font-size:11px; color:var(--text-muted); margin-top:8px; }
   .summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin-bottom:20px; }
   .summary-card { background:var(--surface); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); border:1px solid var(--border); text-align:center; }
@@ -49,7 +50,7 @@
   .stop-card { border-radius:var(--radius); padding:14px 16px; margin-bottom:12px; }
   .stop-card.tight-stop { background:#fdf0ee; border-left:4px solid #e74c3c; }
   .stop-card.wide-stop { background:#fff8e1; border-left:4px solid #f39c12; }
-  .stop-hdr { display:flex; gap:10px; align-items:center; margin-bottom:4px; font-size:13px; }
+  .stop-hdr { display:flex; gap:10px; align-items:center; margin-bottom:4px; font-size:13px; flex-wrap:wrap; }
   .stop-num { font-weight:700; }
   .stop-inst { font-family:'Space Mono',monospace; }
   .stop-pnl { margin-left:auto; font-weight:700; }
@@ -78,10 +79,35 @@
   .discrepancy-box { background:#fef3e2; border-left:4px solid #d4a040; border-radius:var(--radius); padding:16px 20px; margin-bottom:20px; }
   .discrepancy-box h3 { font-size:14px; color:#8b6914; margin-bottom:8px; }
   .discrepancy-box ul { margin-left:20px; font-size:13px; }
+  .ai-insight { background:linear-gradient(135deg,#f0f4ff,#e8f0fe); border-left:4px solid #4a7dc9; border-radius:var(--radius); padding:18px 22px; margin-bottom:20px; }
+  .ai-insight .ai-label { font-family:'Space Mono',monospace; font-size:9px; color:#4a7dc9; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+  .ai-insight p { font-size:13px; color:var(--text); line-height:1.7; }
+  .volatility-gauge { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+  .gauge-item { flex:1; min-width:140px; background:var(--surface); border-radius:var(--radius); padding:14px; border:1px solid var(--border); text-align:center; }
+  .gauge-item .g-label { font-family:'Space Mono',monospace; font-size:9px; color:var(--text-muted); letter-spacing:1.5px; text-transform:uppercase; }
+  .gauge-item .g-value { font-size:20px; font-weight:700; margin-top:2px; }
+  .gauge-item .g-sub { font-size:10px; color:var(--text-muted); margin-top:2px; }
+  .gameplan-compare { background:var(--surface); border-radius:var(--radius); padding:18px; border-left:4px solid var(--gold); margin-bottom:20px; box-shadow:var(--shadow); }
+  .gameplan-compare h3 { font-size:14px; color:var(--navy); margin-bottom:8px; }
+  .gameplan-compare ul { margin-left:16px; font-size:13px; }
+  .gameplan-compare li { margin-bottom:4px; }
+  .gameplan-compare .cumplido { color:var(--bull); }
+  .gameplan-compare .nocumplido { color:var(--bear); }
+  .gameplan-compare .parcial { color:#f39c12; }
   .footer { background:var(--navy-dark); color:rgba(255,255,255,0.5); text-align:center; padding:20px; font-size:11px; font-family:'Space Mono',monospace; }
   .footer .gold { color:var(--gold); }
   .tab-wrap { overflow-x:auto; }
-  @media (max-width:768px) { .header { flex-direction:column; text-align:center; padding:16px; } .dofa-grid { grid-template-columns:1fr; } .pnl-hero .amount { font-size:28px; } }
+  .tabs { display:flex; gap:4px; margin-bottom:16px; flex-wrap:wrap; }
+  .tab-btn { padding:8px 16px; border-radius:6px; border:1px solid var(--border); background:var(--surface); font-size:12px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+  .tab-btn.active { background:var(--navy); color:white; border-color:var(--navy); }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+  .weekly-badge { display:inline-block; background:linear-gradient(135deg,#142d37,#279995); color:white; padding:4px 14px; border-radius:20px; font-size:11px; font-family:'Space Mono',monospace; letter-spacing:1px; }
+  .monthly-badge { display:inline-block; background:linear-gradient(135deg,#8b6914,#d4a040); color:white; padding:4px 14px; border-radius:20px; font-size:11px; font-family:'Space Mono',monospace; letter-spacing:1px; }
+  .info-box { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px; margin-bottom:16px; }
+  .info-box h3 { font-size:14px; color:var(--navy); margin-bottom:6px; }
+  .info-box p { font-size:13px; color:var(--text-muted); }
+  @media (max-width:768px) { .header { flex-direction:column; text-align:center; padding:16px; } .dofa-grid { grid-template-columns:1fr; } .pnl-hero .amount { font-size:28px; } .summary-grid { grid-template-columns:repeat(2,1fr); } }
 </style>
 </head>
 <body>
@@ -89,38 +115,41 @@
 <div class="header">
   <div class="header-left">
     <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
-    <div class="brand-sub">Post-Market Analysis &middot; 22 Mayo 2026</div>
+    <div class="brand-sub">Post-Market Analysis &middot; Viernes 22 de Mayo 2026</div>
   </div>
   <div class="header-right">
-    <div class="date">Viernes, 22 de Mayo de 2026</div>
+    <div class="date">Post-Market Analysis</div>
     <div class="prices">
-      <div class="price-chip">Sim101 P&L <span style="color:#279995;">+4,950 USD</span></div>
-      <div class="price-chip">33 trades &middot; 21W / 11L / 1Flat</div>
+      <div class="price-chip">Sim101 P&amp;L <span style="color:#279995;">+$0.00</span></div>
+      <div class="price-chip">33 trades &middot; 0W / 0L &middot; 33 flat</div>
     </div>
   </div>
 </div>
 
 <div class="container">
 
-<div class="banner">22 MAY 2026 &middot; Post-Market Report &middot; Fuente: NT8 Por Trade</div>
+<div class="banner">22 MAY 2026 &middot; Post-Market Analysis &middot; Fuente: NT8 Por Trade</div>
+
+
+
 
 <div class="pnl-hero">
-  <div class="label">Resultado Neto Sesión (Sim101)</div>
-  <div class="amount">+4,950 USD</div>
-  <div class="source">33 trades &middot; 21 ganancias &middot; 11 pérdidas &middot; 1 flat &middot; Win Rate 63.6%</div>
+  <div class="label">Resultado Neto Sim101</div>
+  <div class="amount positive">+$0.00</div>
+  <div class="source">33 trades &middot; 0 ganancias &middot; 0 pérdidas &middot; 33 flat &middot; Win Rate 0.0%</div>
 </div>
 
 <div class="section-title"><span class="step">RESUMEN</span><h2>Resumen General</h2></div>
 
 <div class="summary-grid">
   <div class="summary-card"><div class="lbl">Total Trades</div><div class="val">33</div></div>
-  <div class="summary-card"><div class="lbl">Wins</div><div class="val positive">21</div></div>
-  <div class="summary-card"><div class="lbl">Losses</div><div class="val negative">11</div></div>
-  <div class="summary-card"><div class="lbl">Win Rate</div><div class="val">63.6%</div></div>
-  <div class="summary-card"><div class="lbl">Total PnL</div><div class="val positive">+4,950 USD</div></div>
-  <div class="summary-card"><div class="lbl">Avg Trade</div><div class="val">+150 USD</div></div>
-  <div class="summary-card"><div class="lbl">Mayor Win</div><div class="val positive">+$1,150</div></div>
-  <div class="summary-card"><div class="lbl">Mayor Loss</div><div class="val negative">$-475</div></div>
+  <div class="summary-card"><div class="lbl">Wins</div><div class="val positive">0</div></div>
+  <div class="summary-card"><div class="lbl">Losses</div><div class="val negative">0</div></div>
+  <div class="summary-card"><div class="lbl">Win Rate</div><div class="val">0.0%</div></div>
+  <div class="summary-card"><div class="lbl">Total PnL</div><div class="val positive">+$0.00</div></div>
+  <div class="summary-card"><div class="lbl">Avg Trade</div><div class="val positive">+$0.00</div></div>
+  <div class="summary-card"><div class="lbl">Mayor Win</div><div class="val positive">+$0.00</div></div>
+  <div class="summary-card"><div class="lbl">Mayor Loss</div><div class="val negative">+$0.00</div></div>
 </div>
 
 <div class="section-title"><span class="step">ESTRATEGIAS</span><h2>Resultados por Estrategia</h2></div>
@@ -130,200 +159,200 @@
   <table>
     <thead><tr><th>Estrategia</th><th>Trades</th><th>W</th><th>L</th><th>Flat</th><th>WR</th><th>PnL</th></tr></thead>
     <tbody>
-    <tr><td>HUD_Manual (Manual Setup)</td><td>18</td><td>12</td><td>5</td><td>1</td><td>70.6%</td><td class="positive">$+3,775</td></tr>
-    <tr><td>EduS_AutoTrader_V1</td><td>9</td><td>7</td><td>2</td><td>0</td><td>77.8%</td><td class="positive">$+1,055</td></tr>
-    <tr><td>1x (200 Profit 100 Lost)</td><td>6</td><td>2</td><td>4</td><td>0</td><td>33.3%</td><td class="positive">$+120</td></tr>
+    <tr><td>HUD_Manual</td><td>18</td><td>0</td><td>0</td><td>18</td><td>0.0%</td><td class="positive">+$0.00</td></tr>
+<tr><td>EduS_AutoTrader_V1</td><td>9</td><td>0</td><td>0</td><td>9</td><td>0.0%</td><td class="positive">+$0.00</td></tr>
+<tr><td>1x (200 Profit 100 Lost)</td><td>6</td><td>0</td><td>0</td><td>6</td><td>0.0%</td><td class="positive">+$0.00</td></tr>
     </tbody>
   </table>
   </div>
 </div>
 
-<div class="section-title"><span class="step">BUGS</span><h2>Bugs Críticos de Sesión y Diagnóstico</h2></div>
-
-<div class="card" style="border-left: 5px solid #c0392b;">
-  <h3 style="margin-bottom:12px; color:#c0392b; font-size:15px;">Incidente de la Orden Fantasma en NQ ~11:20 (Trade #18-22)</h3>
-  <p style="margin-bottom:12px;">Durante la sesión se experimentó una anomalía severa tras forzar el cierre manual de una posición en NQ. Se identificaron los siguientes comportamientos técnicos:</p>
+<div class="section-title"><span class="step">CONTEXTO</span><h2>Contexto de Indicadores por Entry</h2></div>
+<div class="card">
   
-  <div class="discrepancy-box" style="background:#fef5f5; border-left-color:#e74c3c;">
-    <h4 style="color:#c0392b; font-size:13px; margin-bottom:6px;">🛠️ Anatomía del Incidente Técnico:</h4>
-    <ul style="font-size:12px; line-height:1.5;">
-      <li><strong>Bug #1 (Race Condition - Re-entrada fantasma):</strong> Al realizar un cierre manual externo o mover el stop, `Position.MarketPosition` pasa transitoriamente a `Flat`. El AutoTrader limpia su estado pero resetea `_prevHudSignal` a `false`. En el mismo tick, al seguir activa la señal del HUD (`_entradaValida=true`), el AutoTrader la interpreta como una señal totalmente "nueva" e inmediatamente re-entra en el mercado.</li>
-      <li><strong>Bug #2 (CloseAll Duplicado sin stop/target):</strong> Cuando se ejecuta el Stop, el bot evalúa `Position.MarketPosition` de forma precipitada antes de que el broker confirme el fill completo. Dispara una orden de mercado `CloseAll` duplicada, limpia las variables del trade, y genera una posición huérfana abierta sin ningún stop ni target asociado en la estrategia.</li>
-      <li><strong>Bug #3 (Bloqueo de Chart Trader en Unmanaged):</strong> Al estar configurado en modo `IsUnmanaged = true`, NinjaTrader no tiene ownership directo de la posición de la estrategia. Cuando el usuario presiona "Cerrar" en Chart Trader, NT emite una orden sin estrategia asociada que cierra el fill de mercado, pero deja las órdenes Stop y Target `HUD_*` anteriores flotando como órdenes huérfanas en el broker.</li>
-    </ul>
-  </div>
-  
-  <p style="font-size:13px; font-weight:600; color:#279995;">✅ SOLUCIONADO en el Fix Rev 6:</p>
-  <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Se re-programó la lógica de `EduSAutoTraderV1.cs` para: (1) Poner `_prevHudSignal = true` por defecto en todos los resets evitando entradas fantasma, (2) Introducir un cooldown de 3 barras tras cualquier intervención manual externa, (3) Detectar y procesar órdenes externas "CloseAll" para limpiar automáticamente stops y targets huérfanos.</p>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#1</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🟢 Long</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 29,652.75 | VWAP 🟢 @ 29,632.42</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>0.25</td><td>SMA80 Pend</td><td>0.925</td></tr>
+        <tr><td>LinReg89</td><td>0.8633</td><td>Dist SMA20</td><td>23.45</td></tr>
+        <tr><td>Keltner W</td><td>96.86</td><td>ATR</td><td>13.68</td></tr>
+        <tr><td>MB Keltner</td><td>29,612.84</td><td>Window POC</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#1</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🟢 Long</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 29,653.00 | VWAP 🟢 @ 29,632.42</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>0.25</td><td>SMA80 Pend</td><td>0.925</td></tr>
+        <tr><td>LinReg89</td><td>0.8633</td><td>Dist SMA20</td><td>23.70</td></tr>
+        <tr><td>Keltner W</td><td>96.86</td><td>ATR</td><td>13.68</td></tr>
+        <tr><td>MB Keltner</td><td>29,612.84</td><td>Window POC</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#1</span>
+        <span class="stop-inst">ES JUN26</span>
+        <span>🟢 Long</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 7,511.50 | VWAP 🟢 @ 7,503.34</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>0.275</td><td>SMA80 Pend</td><td>0.1875</td></tr>
+        <tr><td>LinReg89</td><td>0.1969</td><td>Dist SMA20</td><td>0.70</td></tr>
+        <tr><td>Keltner W</td><td>12.42</td><td>ATR</td><td>1.59</td></tr>
+        <tr><td>MB Keltner</td><td>7,507.19</td><td>Window POC</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#2</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 29,652.75 | VWAP 🔴 @ 29,676.29</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>-1.5625</td><td>SMA80 Pend</td><td>1.0031</td></tr>
+        <tr><td>LinReg89</td><td>1.3089</td><td>Dist SMA20</td><td>-34.45</td></tr>
+        <tr><td>Keltner W</td><td>85.14</td><td>ATR</td><td>10.79</td></tr>
+        <tr><td>MB Keltner</td><td>29,665.30</td><td>Window POC</td><td>29,660.00</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#2</span>
+        <span class="stop-inst">ES JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 7,507.00 | VWAP 🟢 @ 7,508.58</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>-0.15</td><td>SMA80 Pend</td><td>0.1156</td></tr>
+        <tr><td>LinReg89</td><td>0.1505</td><td>Dist SMA20</td><td>-3.71</td></tr>
+        <tr><td>Keltner W</td><td>12.86</td><td>ATR</td><td>2.05</td></tr>
+        <tr><td>MB Keltner</td><td>7,510.06</td><td>Window POC</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#1</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🟢 Long</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 29,595.00 | VWAP 🟢 @ 29,560.72</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>1.4875</td><td>SMA80 Pend</td><td>0.1719</td></tr>
+        <tr><td>LinReg89</td><td>0.0122</td><td>Dist SMA20</td><td>13.89</td></tr>
+        <tr><td>Keltner W</td><td>79.36</td><td>ATR</td><td>9.70</td></tr>
+        <tr><td>MB Keltner</td><td>29,549.50</td><td>Window POC</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#1</span>
+        <span class="stop-inst">ES JUN26</span>
+        <span>🟢 Long</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 7,497.50 | VWAP 🟢 @ 7,489.28</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>0.1875</td><td>SMA80 Pend</td><td>0.0938</td></tr>
+        <tr><td>LinReg89</td><td>0.1291</td><td>Dist SMA20</td><td>2.25</td></tr>
+        <tr><td>Keltner W</td><td>11.27</td><td>ATR</td><td>1.71</td></tr>
+        <tr><td>MB Keltner</td><td>7,491.83</td><td>Window POC</td><td>7,494.50</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#2</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 29,652.25 | VWAP 🔴 @ 29,622.98</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>1.1125</td><td>SMA80 Pend</td><td>1.3813</td></tr>
+        <tr><td>LinReg89</td><td>1.4421</td><td>Dist SMA20</td><td>24.34</td></tr>
+        <tr><td>Keltner W</td><td>74.85</td><td>ATR</td><td>11.23</td></tr>
+        <tr><td>MB Keltner</td><td>29,618.88</td><td>Window POC</td><td>29,641.50</td></tr>
+      </table>
+    </div>
+  <p style="margin-top:12px;font-size:11px;color:var(--text-muted);text-align:center">Mostrando 8 de 19 entradas registradas</p>
 </div>
 
-<div class="section-title"><span class="step">STOPS</span><h2>Análisis de los Stop Loss</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-title"><span class="step">TRADES</span><h2>Registro Completo de la Sesión</h2></div>
 
 <div class="card">
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-    <div class="stop-card tight-stop">
-      <div class="stop-hdr"><span class="stop-num">#3</span><span class="stop-inst">ES</span><span class="stop-dir">Long</span><span class="stop-path">HUD_En &rarr; HUD_St</span><span class="stop-pnl">$-450</span></div>
-      <div class="stop-body">Entry 7,511.50 | Stop 7,507.00 | Dist 4.50pts | 24b</div>
-      <table class="indicator-table">
-        <tr><td>VWAP</td><td>UP @ 7,503.34</td><td>ATR</td><td>1.59</td></tr>
-        <tr><td>SMA20 Pend</td><td>0,2750</td><td>Keltner W</td><td>12.42</td></tr>
-        <tr><td>Dist/ATR</td><td>2.8x</td><td>Resultado</td><td>Barrido por ruido temporal</td></tr>
-      </table>
-    </div>
-    
-    <div class="stop-card tight-stop">
-      <div class="stop-hdr"><span class="stop-num">#6</span><span class="stop-inst">ES</span><span class="stop-dir">Short</span><span class="stop-path">CloseAll &rarr; Close</span><span class="stop-pnl">$-475</span></div>
-      <div class="stop-body">Entry 7,508.75 | Exit 7,513.50 | Dist 4.75pts | 0b</div>
-      <table class="indicator-table">
-        <tr><td>VWAP</td><td>UP @ 7,508.58</td><td>ATR</td><td>2.05</td></tr>
-        <tr><td>SMA20 Pend</td><td>-0,1500</td><td>Keltner W</td><td>12.86</td></tr>
-        <tr><td>Dist/ATR</td><td>2.3x</td><td>Resultado</td><td>Manual close prematuro en contra de tendencia</td></tr>
-      </table>
-    </div>
-
-    <div class="stop-card wide-stop">
-      <div class="stop-hdr"><span class="stop-num">#32</span><span class="stop-inst">NQ</span><span class="stop-dir">Short</span><span class="stop-path">CloseAll &rarr; Entry</span><span class="stop-pnl">$-100</span></div>
-      <div class="stop-body">Entry 29,690.50 | Exit 29,695.50 | Dist 5.00pts | 0b</div>
-      <table class="indicator-table">
-        <tr><td>VWAP</td><td>UP @ 29,686.09</td><td>ATR</td><td>7.77</td></tr>
-        <tr><td>SMA20 Pend</td><td>-0,4625</td><td>Keltner W</td><td>55.70</td></tr>
-        <tr><td>Dist/ATR</td><td>0.6x</td><td>Resultado</td><td>Stop fijo extremadamente ajustado para NQ</td></tr>
-      </table>
-    </div>
-
-    <div class="stop-card wide-stop">
-      <div class="stop-hdr"><span class="stop-num">#33</span><span class="stop-inst">NQ</span><span class="stop-dir">Short</span><span class="stop-path">CloseAll &rarr; Entry</span><span class="stop-pnl">$-100</span></div>
-      <div class="stop-body">Entry 29,690.50 | Exit 29,695.50 | Dist 5.00pts | 0b</div>
-      <table class="indicator-table">
-        <tr><td>VWAP</td><td>UP @ 29,686.09</td><td>ATR</td><td>7.77</td></tr>
-        <tr><td>SMA20 Pend</td><td>-0,4625</td><td>Keltner W</td><td>55.70</td></tr>
-        <tr><td>Dist/ATR</td><td>0.6x</td><td>Resultado</td><td>Stop repetido barriendo cuentas por volatilidad</td></tr>
-      </table>
-    </div>
-  </div>
-
-  <h3 style="margin-top:20px;margin-bottom:10px; font-size:14px;">Resumen de Stop Loss por Estrategia</h3>
   <div class="tab-wrap">
   <table>
-    <thead><tr><th>Estrategia</th><th>Stops</th><th>Total Perdido</th><th>Avg/Stop</th><th>Patrón Identificado</th></tr></thead>
+    <thead><tr><th>#</th><th>Estrategia</th><th>Inst</th><th>Dir</th><th>Entry Time</th><th>Exit Time</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>PnL</th><th>Entrada</th><th>Salida</th></tr></thead>
     <tbody>
-      <tr><td>HUD_Manual</td><td>3</td><td>$-1,125</td><td>$-375</td><td>Stops ejecutados en ES por ruido menor en correcciones.</td></tr>
-      <tr><td>EduS_AutoTrader_V1</td><td>2</td><td>$-60</td><td>$-30</td><td>Pérdidas mínimas controladas por trailing de stop a BE dinámico.</td></tr>
-      <tr><td>1x (200 Profit 100 Lost)</td><td>4</td><td>$-400</td><td>$-100</td><td>4 stops fijos de 5pts en NQ. Con ATR 7.77, es inevitable ser barrido.</td></tr>
-    </tbody>
-  </table>
-  </div>
-</div>
-
-<div class="section-title"><span class="step">DOFA</span><h2>Matriz DOFA de la Sesión</h2></div>
-
-<div class="dofa-grid">
-  <div class="dofa-card fortaleza">
-    <div class="dofa-icon">F</div>
-    <div class="dofa-title">Fortalezas</div>
-    <ul>
-      <li><strong>Rentabilidad Sobresaliente:</strong> Retorno neto de <strong>+$4,950 USD</strong> en una única sesión matutina.</li>
-      <li><strong>HUD V5 Impecable:</strong> Las entradas basadas en el Master Panel demostraron una alta precisión en NQ y ES.</li>
-      <li><strong>Win Rate Robusto:</strong> WR del 63.6% en una sesión con volatilidad e interferencia técnica.</li>
-    </ul>
-  </div>
-  
-  <div class="dofa-card debilidad">
-    <div class="dofa-icon">D</div>
-    <div class="dofa-title">Debilidades</div>
-    <ul>
-      <li><strong>Bug de Race Condition:</strong> Inestabilidad del AutoTrader ante la interferencia manual en órdenes Unmanaged.</li>
-      <li><strong>Stops Fijos Inadecuados:</strong> Configuración fija de 5 puntos en NQ (0.6x ATR) que favorece barridos por ruido ordinario.</li>
-      <li><strong>Órdenes Duplicadas:</strong> Envío de múltiples `CloseAll` compitiendo por cerrar la misma posición.</li>
-    </ul>
-  </div>
-  
-  <div class="dofa-card oportunidad">
-    <div class="dofa-icon">O</div>
-    <div class="dofa-title">Oportunidades</div>
-    <ul>
-      <li><strong>Implementar Cooldowns:</strong> La adición de un cooldown temporal de 3 barras tras cierres protege la cuenta.</li>
-      <li><strong>Stops Adaptativos (ATR):</strong> Ajustar las distancias de Stop y Targets dinámicamente basadas en el ATR corriente.</li>
-      <li><strong>Robustez en OnOrderUpdate:</strong> Capturar eventos de modificación externa para recalibrar referencias.</li>
-    </ul>
-  </div>
-  
-  <div class="dofa-card amenaza">
-    <div class="dofa-icon">A</div>
-    <div class="dofa-title">Amenazas</div>
-    <ul>
-      <li><strong>Riesgo de Margen:</strong> Posiciones fantasma sin protección de stop expuestas a movimientos abruptos del mercado.</li>
-      <li><strong>Sobreoperación por Pánico:</strong> Ejecutar órdenes manuales en contra para mitigar fallos del software incrementa el spread/fees.</li>
-      <li><strong>Desincronización de Datos:</strong> Diferencia entre el logger local de trades y las ejecuciones reales de la grilla de NT8.</li>
-    </ul>
-  </div>
-</div>
-
-<div class="section-title"><span class="step">RECOMENDACIONES</span><h2>Recomendaciones Finales</h2></div>
-
-<div class="rec-card">
-  <h3>1. Implementación Obligatoria del Cooldown y Coexistencia</h3>
-  <ul>
-    <li>No operar manualmente en la misma gráfica si la estrategia automática `EduS_AutoTrader_V1` está activada. Si es imperativo intervenir, desactivar primero la estrategia desde el control de NinjaTrader.</li>
-    <li>El Cooldown de 3 barras introducido en la versión Rev 6 debe permanecer activo para filtrar señales residuales después de cierres forzados.</li>
-  </ul>
-</div>
-
-<div class="rec-card">
-  <h3>2. Migración a Stops Dinámicos basados en ATR</h3>
-  <ul>
-    <li>Evitar stops menores a 1.2x ATR en NQ. Con ATR promedio de 7.7pts, el stop mínimo debe situarse en 10-12 puntos. El stop de 5 puntos utilizado en la estrategia 1x está condenado al barrido sistemático.</li>
-    <li>Calcular el stop dinámicamente o alinearlo con la banda externa del canal de Keltner.</li>
-  </ul>
-</div>
-
-<div class="rec-card">
-  <h3>3. Saneamiento del Logger Local</h3>
-  <ul>
-    <li>Modificar el logger de la estrategia para concatenar el Instrumento al `Entry_ID` (ej: "NQ_1"), evitando que se mezclen registros paralelos de NQ y ES en el CSV de contexto.</li>
-  </ul>
-</div>
-
-<div class="section-title"><span class="step">TRADES</span><h2>Registro Completo de la Sesión — NT8 Por Trade</h2></div>
-
-<div class="card">
-  <div class="tab-wrap">
-  <table>
-    <thead><tr><th>#</th><th>Estrategia</th><th>Inst</th><th>Dir</th><th>Entry Time</th><th>Exit Time</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>PnL</th><th>Entrada Name</th><th>Salida Name</th></tr></thead>
-    <tbody>
-      <tr class="trade-win"><td>1</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>09:35:29</td><td>09:39:12</td><td>29,652.75</td><td>29,690.50</td><td>1</td><td class="positive">+$755.00</td><td>HUD_En_1</td><td>HUD_T1_1</td></tr>
-      <tr class="trade-win"><td>2</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>09:35:29</td><td>09:42:10</td><td>29,653.00</td><td>29,653.50</td><td>1</td><td class="positive">+$10.00</td><td>HUD_En_1</td><td>HUD_St_1</td></tr>
-      <tr class="trade-loss"><td>3</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>09:39:44</td><td>09:42:34</td><td>7,511.50</td><td>7,507.00</td><td>2</td><td class="negative">-$450.00</td><td>HUD_En_1</td><td>HUD_St_1</td></tr>
-      <tr class="trade-win"><td>4</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>09:42:10</td><td>09:42:34</td><td>29,652.75</td><td>29,619.00</td><td>1</td><td class="positive">+$675.00</td><td>CloseAll</td><td>Close</td></tr>
-      <tr class="trade-loss"><td>5</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>09:42:34</td><td>09:43:06</td><td>7,507.00</td><td>7,509.00</td><td>2</td><td class="negative">-$200.00</td><td>CloseAll</td><td>Close</td></tr>
-      <tr class="trade-loss"><td>6</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>09:43:05</td><td>09:51:14</td><td>7,508.75</td><td>7,513.50</td><td>2</td><td class="negative">-$475.00</td><td>CloseAll</td><td>Close</td></tr>
-      <tr class="trade-win"><td>7</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>09:42:34</td><td>09:51:45</td><td>29,616.75</td><td>29,616.50</td><td>1</td><td class="positive">+$5.00</td><td>CloseAll</td><td>Close</td></tr>
-      <tr class="trade-win"><td>8</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:36:02</td><td>10:42:53</td><td>29,595.00</td><td>29,628.75</td><td>1</td><td class="positive">+$675.00</td><td>HUD_En_1</td><td>HUD_T1_1</td></tr>
-      <tr class="trade-win"><td>9</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:36:02</td><td>10:56:30</td><td>29,595.00</td><td>29,652.50</td><td>1</td><td class="positive">+$1,150.00</td><td>HUD_En_1</td><td>HUD_T2_1</td></tr>
-      <tr class="trade-win"><td>10</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>10:56:30</td><td>10:57:21</td><td>29,652.25</td><td>29,645.00</td><td>1</td><td class="positive">+$145.00</td><td>CloseAll</td><td>HUD_En_2</td></tr>
-      <tr class="trade-win"><td>11</td><td>EduS_AutoTrader_V1</td><td>ES</td><td>Long</td><td>10:40:20</td><td>11:01:30</td><td>7,497.50</td><td>7,502.00</td><td>1</td><td class="positive">+$225.00</td><td>HUD_En_1</td><td>HUD_T1_1</td></tr>
-      <tr class="trade-win"><td>12</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:57:21</td><td>11:04:37</td><td>29,645.00</td><td>29,673.25</td><td>1</td><td class="positive">+$565.00</td><td>HUD_En_2</td><td>HUD_T1_2</td></tr>
-      <tr class="trade-win"><td>13</td><td>EduS_AutoTrader_V1</td><td>ES</td><td>Long</td><td>10:40:20</td><td>11:05:57</td><td>7,497.50</td><td>7,505.50</td><td>1</td><td class="positive">+$400.00</td><td>HUD_En_1</td><td>HUD_T2_1</td></tr>
-      <tr class="trade-win"><td>14</td><td>EduS_AutoTrader_V1</td><td>ES</td><td>Short</td><td>11:05:57</td><td>11:07:15</td><td>7,505.50</td><td>7,502.50</td><td>1</td><td class="positive">+$150.00</td><td>CloseAll</td><td>HUD_En_2</td></tr>
-      <tr class="trade-win"><td>15</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:07:12</td><td>11:13:09</td><td>29,678.00</td><td>29,695.75</td><td>1</td><td class="positive">+$355.00</td><td>HUD_En_3</td><td>HUD_T2_2</td></tr>
-      <tr class="trade-win"><td>16</td><td>EduS_AutoTrader_V1</td><td>ES</td><td>Long</td><td>11:07:15</td><td>11:18:09</td><td>7,502.50</td><td>7,507.50</td><td>1</td><td class="positive">+$250.00</td><td>HUD_En_2</td><td>HUD_T1_2</td></tr>
-      <tr class="trade-win"><td>17</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:07:12</td><td>11:19:46</td><td>29,678.00</td><td>29,700.00</td><td>1</td><td class="positive">+$440.00</td><td>HUD_En_3</td><td>HUD_T1_3</td></tr>
-      <tr style="background:#f5f7fa; color:#7a7468;"><td>18</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:20:10</td><td>11:20:18</td><td>29,695.25</td><td>29,695.25</td><td>2</td><td>$0.00 (Flat)</td><td>HUD_En_4</td><td>CloseAll</td></tr>
-      <tr class="trade-loss"><td>19</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:20:18</td><td>11:20:20</td><td>29,695.75</td><td>29,696.50</td><td>1</td><td class="negative">-$15.00</td><td>Close</td><td>Close</td></tr>
-      <tr class="trade-loss"><td>20</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:20:18</td><td>11:20:20</td><td>29,695.75</td><td>29,696.75</td><td>1</td><td class="negative">-$20.00</td><td>Close</td><td>Close</td></tr>
-      <tr class="trade-win"><td>21</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:20:44</td><td>11:21:07</td><td>29,695.00</td><td>29,697.25</td><td>2</td><td class="positive">+$90.00</td><td>HUD_En_1</td><td>HUD_St_1</td></tr>
-      <tr class="trade-win"><td>22</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:21:08</td><td>11:21:17</td><td>29,697.25</td><td>29,695.50</td><td>2</td><td class="positive">+$70.00</td><td>CloseAll</td><td>Close</td></tr>
-      <tr class="trade-win"><td>23</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>11:21:17</td><td>11:23:02</td><td>29,694.75</td><td>29,681.75</td><td>1</td><td class="positive">+$260.00</td><td>CloseAll</td><td>Entry</td></tr>
-      <tr class="trade-win"><td>24</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>11:21:17</td><td>11:23:02</td><td>29,694.75</td><td>29,681.75</td><td>1</td><td class="positive">+$260.00</td><td>CloseAll</td><td>Entry</td></tr>
-      <tr class="trade-win"><td>25</td><td>EduS_AutoTrader_V1</td><td>ES</td><td>Long</td><td>11:23:58</td><td>11:25:33</td><td>7,507.25</td><td>7,508.00</td><td>2</td><td class="positive">+$75.00</td><td>HUD_En_3</td><td>HUD_St_3</td></tr>
-      <tr class="trade-loss"><td>26</td><td>EduS_AutoTrader_V1</td><td>ES</td><td>Short</td><td>11:25:33</td><td>11:25:40</td><td>7,507.75</td><td>7,508.25</td><td>2</td><td class="negative">-$50.00</td><td>CloseAll</td><td>Close</td></tr>
-      <tr class="trade-loss"><td>27</td><td>1x (200 Profit 100 Lost)</td><td>ES</td><td>Short</td><td>11:25:40</td><td>11:26:07</td><td>7,508.00</td><td>7,510.00</td><td>1</td><td class="negative">-$100.00</td><td>CloseAll</td><td>Entry</td></tr>
-      <tr class="trade-loss"><td>28</td><td>1x (200 Profit 100 Lost)</td><td>ES</td><td>Short</td><td>11:25:40</td><td>11:26:07</td><td>7,508.00</td><td>7,510.00</td><td>1</td><td class="negative">-$100.00</td><td>CloseAll</td><td>Entry</td></tr>
-      <tr class="trade-win"><td>29</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>11:26:07</td><td>11:27:26</td><td>29,690.75</td><td>29,691.25</td><td>1</td><td class="positive">+$10.00</td><td>HUD_En_1</td><td>HUD_St_1</td></tr>
-      <tr class="trade-win"><td>30</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>11:26:07</td><td>11:27:26</td><td>29,691.00</td><td>29,691.25</td><td>1</td><td class="positive">+$5.00</td><td>HUD_En_1</td><td>HUD_St_1</td></tr>
-      <tr class="trade-loss"><td>31</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Short</td><td>11:27:26</td><td>11:27:37</td><td>29,691.00</td><td>29,691.25</td><td>2</td><td class="negative">-$10.00</td><td>CloseAll</td><td>Close</td></tr>
-      <tr class="trade-loss"><td>32</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>11:27:37</td><td>11:27:54</td><td>29,690.50</td><td>29,695.50</td><td>1</td><td class="negative">-$100.00</td><td>CloseAll</td><td>Entry</td></tr>
-      <tr class="trade-loss"><td>33</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>11:27:37</td><td>11:27:54</td><td>29,690.50</td><td>29,695.50</td><td>1</td><td class="negative">-$100.00</td><td>CloseAll</td><td>Entry</td></tr>
+    <tr class=""><td>1</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>9:35:29</td><td>9:39:12</td><td>29,652.75</td><td>29,690.50</td><td>1</td><td>++$0.00</td><td>HUD_En_1</td><td>HUD_T1_1</td></tr>
+<tr class=""><td>2</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>9:35:29</td><td>9:42:10</td><td>29,653.00</td><td>29,653.50</td><td>1</td><td>++$0.00</td><td>HUD_En_1</td><td>HUD_St_1</td></tr>
+<tr class=""><td>3</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>9:39:44</td><td>9:42:34</td><td>7,511.50</td><td>7,507.00</td><td>2</td><td>++$0.00</td><td>HUD_En_1</td><td>HUD_St_1</td></tr>
+<tr class=""><td>4</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>9:42:10</td><td>9:42:34</td><td>29,652.75</td><td>29,619.00</td><td>1</td><td>++$0.00</td><td>CloseAll</td><td>Close</td></tr>
+<tr class=""><td>5</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>9:42:34</td><td>9:43:06</td><td>7,507.00</td><td>7,509.00</td><td>2</td><td>++$0.00</td><td>CloseAll</td><td>Close</td></tr>
+<tr class=""><td>6</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>9:43:05</td><td>9:51:14</td><td>7,508.75</td><td>7,513.50</td><td>2</td><td>++$0.00</td><td>CloseAll</td><td>Close</td></tr>
+<tr class=""><td>7</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>9:42:34</td><td>9:51:45</td><td>29,616.75</td><td>29,616.50</td><td>1</td><td>++$0.00</td><td>CloseAll</td><td>Close</td></tr>
+<tr class=""><td>8</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:36:02</td><td>10:42:53</td><td>29,595.00</td><td>29,628.75</td><td>1</td><td>++$0.00</td><td>HUD_En_1</td><td>HUD_T1_1</td></tr>
+<tr class=""><td>9</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:36:02</td><td>10:56:30</td><td>29,595.00</td><td>29,652.50</td><td>1</td><td>++$0.00</td><td>HUD_En_1</td><td>HUD_T2_1</td></tr>
+<tr class=""><td>10</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>10:56:30</td><td>10:57:21</td><td>29,652.25</td><td>29,645.00</td><td>1</td><td>++$0.00</td><td>CloseAll</td><td>HUD_En_2</td></tr>
+<tr class=""><td>11</td><td>EduS_AutoTrader_V1</td><td>ES</td><td>Long</td><td>10:40:20</td><td>11:01:30</td><td>7,497.50</td><td>7,502.00</td><td>1</td><td>++$0.00</td><td>HUD_En_1</td><td>HUD_T1_1</td></tr>
+<tr class=""><td>12</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:57:21</td><td>11:04:37</td><td>29,645.00</td><td>29,673.25</td><td>1</td><td>++$0.00</td><td>HUD_En_2</td><td>HUD_T1_2</td></tr>
+<tr class=""><td>13</td><td>EduS_AutoTrader_V1</td><td>ES</td><td>Long</td><td>10:40:20</td><td>11:05:57</td><td>7,497.50</td><td>7,505.50</td><td>1</td><td>++$0.00</td><td>HUD_En_1</td><td>HUD_T2_1</td></tr>
+<tr class=""><td>14</td><td>EduS_AutoTrader_V1</td><td>ES</td><td>Short</td><td>11:05:57</td><td>11:07:15</td><td>7,505.50</td><td>7,502.50</td><td>1</td><td>++$0.00</td><td>CloseAll</td><td>HUD_En_2</td></tr>
+<tr class=""><td>15</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:07:12</td><td>11:13:09</td><td>29,678.00</td><td>29,695.75</td><td>1</td><td>++$0.00</td><td>HUD_En_3</td><td>HUD_T2_2</td></tr>
+<tr class=""><td>16</td><td>EduS_AutoTrader_V1</td><td>ES</td><td>Long</td><td>11:07:15</td><td>11:18:09</td><td>7,502.50</td><td>7,507.50</td><td>1</td><td>++$0.00</td><td>HUD_En_2</td><td>HUD_T1_2</td></tr>
+<tr class=""><td>17</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:07:12</td><td>11:19:46</td><td>29,678.00</td><td>29,700.00</td><td>1</td><td>++$0.00</td><td>HUD_En_3</td><td>HUD_T1_3</td></tr>
+<tr class=""><td>18</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:20:10</td><td>11:20:18</td><td>29,695.25</td><td>29,695.25</td><td>2</td><td>++$0.00</td><td>HUD_En_4</td><td>CloseAll</td></tr>
+<tr class=""><td>19</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:20:18</td><td>11:20:20</td><td>29,695.75</td><td>29,696.50</td><td>1</td><td>++$0.00</td><td>Close</td><td>Close</td></tr>
+<tr class=""><td>20</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:20:18</td><td>11:20:20</td><td>29,695.75</td><td>29,696.75</td><td>1</td><td>++$0.00</td><td>Close</td><td>Close</td></tr>
+<tr class=""><td>21</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:20:44</td><td>11:21:07</td><td>29,695.00</td><td>29,697.25</td><td>2</td><td>++$0.00</td><td>HUD_En_1</td><td>HUD_St_1</td></tr>
+<tr class=""><td>22</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:21:08</td><td>11:21:17</td><td>29,697.25</td><td>29,695.50</td><td>2</td><td>++$0.00</td><td>CloseAll</td><td>Close</td></tr>
+<tr class=""><td>23</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>11:21:17</td><td>11:23:02</td><td>29,694.75</td><td>29,681.75</td><td>1</td><td>++$0.00</td><td>CloseAll</td><td>Entry</td></tr>
+<tr class=""><td>24</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>11:21:17</td><td>11:23:02</td><td>29,694.75</td><td>29,681.75</td><td>1</td><td>++$0.00</td><td>CloseAll</td><td>Entry</td></tr>
+<tr class=""><td>25</td><td>EduS_AutoTrader_V1</td><td>ES</td><td>Long</td><td>11:23:58</td><td>11:25:33</td><td>7,507.25</td><td>7,508.00</td><td>2</td><td>++$0.00</td><td>HUD_En_3</td><td>HUD_St_3</td></tr>
+<tr class=""><td>26</td><td>EduS_AutoTrader_V1</td><td>ES</td><td>Short</td><td>11:25:33</td><td>11:25:40</td><td>7,507.75</td><td>7,508.25</td><td>2</td><td>++$0.00</td><td>CloseAll</td><td>Close</td></tr>
+<tr class=""><td>27</td><td>1x (200 Profit 100 Lost)</td><td>ES</td><td>Short</td><td>11:25:40</td><td>11:26:07</td><td>7,508.00</td><td>7,510.00</td><td>1</td><td>++$0.00</td><td>CloseAll</td><td>Entry</td></tr>
+<tr class=""><td>28</td><td>1x (200 Profit 100 Lost)</td><td>ES</td><td>Short</td><td>11:25:40</td><td>11:26:07</td><td>7,508.00</td><td>7,510.00</td><td>1</td><td>++$0.00</td><td>CloseAll</td><td>Entry</td></tr>
+<tr class=""><td>29</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>11:26:07</td><td>11:27:26</td><td>29,690.75</td><td>29,691.25</td><td>1</td><td>++$0.00</td><td>HUD_En_1</td><td>HUD_St_1</td></tr>
+<tr class=""><td>30</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>11:26:07</td><td>11:27:26</td><td>29,691.00</td><td>29,691.25</td><td>1</td><td>++$0.00</td><td>HUD_En_1</td><td>HUD_St_1</td></tr>
+<tr class=""><td>31</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Short</td><td>11:27:26</td><td>11:27:37</td><td>29,691.00</td><td>29,691.25</td><td>2</td><td>++$0.00</td><td>CloseAll</td><td>Close</td></tr>
+<tr class=""><td>32</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>11:27:37</td><td>11:27:54</td><td>29,690.50</td><td>29,695.50</td><td>1</td><td>++$0.00</td><td>CloseAll</td><td>Entry</td></tr>
+<tr class=""><td>33</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>11:27:37</td><td>11:27:54</td><td>29,690.50</td><td>29,695.50</td><td>1</td><td>++$0.00</td><td>CloseAll</td><td>Entry</td></tr>
     </tbody>
   </table>
   </div>
@@ -332,7 +361,7 @@
 </div>
 
 <div class="footer">
-  <span style="font-family:'DM Sans',sans-serif;font-weight:700;">Edu<span class="gold">S</span> Trader</span> &middot; POST-MARKET ANALYSIS &middot; 22 MAY 2026 &middot; Fuente: NinjaTrader 8 Sim101
+  <span style="font-family:'DM Sans',sans-serif;font-weight:700;">Edu<span class="gold">S</span> Trader</span> &middot; Post-Market Analysis &middot; 22 MAY 2026 &middot; Fuente: NT8 Por Trade
 </div>
 
 </body>
