@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario de Inversión - EduSTrader</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/inv-styles.css">
+    <style>
+        .quest-section { margin-bottom: 2rem; border: 1px solid var(--inv-border); border-radius: 8px; overflow: hidden; }
+        .quest-header { background: rgba(255,255,255,0.03); padding: 1rem 1.5rem; font-weight: 600; border-bottom: 1px solid var(--inv-border); }
+        .quest-body { padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    </style>
+</head>
+<body class="inversiones-app">
+
+    <header class="inv-header">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <img src="/Logo 6 EduS Trader-6.png" alt="EduSTrader" height="32">
+            <h1 style="font-size: 1.25rem; font-weight: 600; margin: 0;">Análisis y Cuestionario</h1>
+        </div>
+        <nav class="inv-nav">
+            <a href="index.html">Portafolio</a>
+            <a href="watchlist.html">Watchlist</a>
+            <a href="scanner.html">Scanner</a>
+            <a href="/index.html">← Volver</a>
+        </nav>
+    </header>
+
+    <main class="inv-container">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem;">
+            <h2 style="font-size: 2rem; margin: 0;" id="ticker-title">Cargando...</h2>
+            <div id="quest-date" class="text-muted text-sm"></div>
+        </div>
+
+        <form id="quest-form" class="inv-card" style="padding: 0;">
+            <!-- Sección 1: Análisis Fundamental -->
+            <div class="quest-section" style="border:none; border-bottom: 1px solid var(--inv-border); border-radius: 0; margin-bottom: 0;">
+                <div class="quest-header">1. Análisis Fundamental - Indicadores</div>
+                <div class="quest-body">
+                    <div class="form-group"><label>¿Ventas creciendo?</label><select name="sales_growing" class="form-control"><option value="">--</option><option value="1">Sí</option><option value="0">No</option></select></div>
+                    <div class="form-group"><label>¿Ganancias Netas creciendo?</label><select name="earnings_growing" class="form-control"><option value="">--</option><option value="1">Sí</option><option value="0">No</option></select></div>
+                    <div class="form-group"><label>¿Flujo Caja Operativo creciendo?</label><select name="cashflow_growing" class="form-control"><option value="">--</option><option value="1">Sí</option><option value="0">No</option></select></div>
+                    <div class="form-group"><label>ROE (%)</label><input type="number" step="0.01" name="roe" class="form-control"></div>
+                    <div class="form-group"><label>EPS Past 5 Yrs (%)</label><input type="number" step="0.01" name="eps_past_5y" class="form-control"></div>
+                    <div class="form-group"><label>EPS Next 5 Yrs (%)</label><input type="number" step="0.01" name="eps_next_5y" class="form-control"></div>
+                    <div class="form-group"><label>PEG Ratio</label><input type="number" step="0.01" name="peg" class="form-control"></div>
+                    <div class="form-group"><label>Debt / Equity</label><input type="number" step="0.01" name="debt_equity" class="form-control"></div>
+                    <div class="form-group"><label>¿Deuda Razonable?</label><select name="debt_reasonable" class="form-control"><option value="">--</option><option value="1">Sí</option><option value="0">No</option></select></div>
+                    <div class="form-group" style="grid-column: 1 / -1;"><label>Competidores</label><input type="text" name="competitors" class="form-control" placeholder="Ej: GOOGL, BIDU"></div>
+                </div>
+            </div>
+
+            <!-- Sección 2: Valoración -->
+            <div class="quest-section" style="border:none; border-bottom: 1px solid var(--inv-border); border-radius: 0; margin-bottom: 0;">
+                <div class="quest-header">2. Análisis de Valoración</div>
+                <div class="quest-body">
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Precio vs Valoración</label>
+                        <select name="price_vs_valuation" class="form-control">
+                            <option value="">--</option>
+                            <option value="muy_bajo">Muy por debajo (Subvalorada)</option>
+                            <option value="bajo">Por debajo (Subvalorada)</option>
+                            <option value="justo">Precio Justo</option>
+                            <option value="alto">Por encima (Sobrevalorada)</option>
+                            <option value="muy_alto">Muy por encima</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 3: Técnico -->
+            <div class="quest-section" style="border:none; border-radius: 0; margin-bottom: 0;">
+                <div class="quest-header">3. Análisis Técnico & Acción del Precio</div>
+                <div class="quest-body">
+                    <div class="form-group">
+                        <label>Tipo de Mercado</label>
+                        <select name="market_type" class="form-control">
+                            <option value="">--</option>
+                            <option value="tendencial">Tendencial</option>
+                            <option value="consolidacion">Consolidación</option>
+                            <option value="oscilante">Oscilante</option>
+                            <option value="erratico">Errático</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Notas de Acción del Precio (Price Action)</label>
+                        <textarea name="price_action_notes" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Notas del Analista & Decisión</label>
+                        <textarea name="analyst_notes" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Decisión Final (Invertir)</label>
+                        <select name="final_decision" class="form-control">
+                            <option value="">--</option>
+                            <option value="1">SÍ, Invertir</option>
+                            <option value="0">NO Invertir</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding: 1.5rem; background: rgba(0,0,0,0.2); text-align: right;">
+                <button type="submit" class="form-control" style="width: auto; background: var(--inv-accent); color: white; border: none; font-weight: 600; padding: 0.75rem 2rem; cursor: pointer;">
+                    Guardar Análisis
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const ticker = urlParams.get('symbol');
+
+        document.getElementById('ticker-title').textContent = `Checklist: ${ticker || 'No Ticker'}`;
+        document.getElementById('quest-date').textContent = new Date().toISOString().split('T')[0];
+
+        if (ticker) {
+            // Load existing data
+            fetch(`/api/inversiones/questionnaire?ticker=${ticker}`)
+                .then(r => r.json())
+                .then(res => {
+                    if (res.success && res.data.latest) {
+                        const form = document.getElementById('quest-form');
+                        Object.keys(res.data.latest).forEach(key => {
+                            const el = form.elements[key];
+                            if (el && res.data.latest[key] !== null) {
+                                el.value = res.data.latest[key];
+                            }
+                        });
+                        document.getElementById('quest-date').textContent = `Última edición: ${res.data.latest.analysis_date}`;
+                    }
+                });
+        }
+
+        document.getElementById('quest-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!ticker) return alert('No hay ticker seleccionado');
+            
+            const formData = new FormData(e.target);
+            const data = { ticker, analysis_date: new Date().toISOString().split('T')[0] };
+            formData.forEach((value, key) => data[key] = value === '' ? null : value);
+
+            try {
+                const res = await fetch('/api/inversiones/questionnaire', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.success) {
+                    alert('Guardado exitosamente');
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (err) {
+                alert('Error guardando');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+/* EduSTrader — Investment Dashboard Styles */
+
+:root {
+  --inv-bg-main: #0B0E14;
+  --inv-bg-card: #151A23;
+  --inv-bg-card-hover: #1C222E;
+  --inv-border: #2A3142;
+  --inv-text-primary: #E2E8F0;
+  --inv-text-secondary: #94A3B8;
+  --inv-accent: #3B82F6;
+  --inv-accent-glow: rgba(59, 130, 246, 0.2);
+  
+  /* Semáforo de Valoración */
+  --signal-subvalorada: #10B981; /* Verde esmeralda */
+  --signal-subvalorada-bg: rgba(16, 185, 129, 0.15);
+  
+  --signal-justo: #3B82F6; /* Azul */
+  --signal-justo-bg: rgba(59, 130, 246, 0.15);
+  
+  --signal-invertible: #F59E0B; /* Amarillo/Naranja */
+  --signal-invertible-bg: rgba(245, 158, 11, 0.15);
+  
+  --signal-sobrevalorada: #EF4444; /* Rojo */
+  --signal-sobrevalorada-bg: rgba(239, 68, 68, 0.15);
+  
+  --signal-na: #4B5563;
+  --signal-na-bg: rgba(75, 85, 99, 0.15);
+}
+
+body.inversiones-app {
+  background-color: var(--inv-bg-main);
+  color: var(--inv-text-primary);
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.inv-header {
+  background-color: var(--inv-bg-card);
+  border-bottom: 1px solid var(--inv-border);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.inv-nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.inv-nav a {
+  color: var(--inv-text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.inv-nav a:hover {
+  color: var(--inv-text-primary);
+}
+
+.inv-nav a.active {
+  color: var(--inv-accent);
+  border-bottom-color: var(--inv-accent);
+}
+
+.inv-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Cards & Containers */
+.inv-card {
+  background: var(--inv-bg-card);
+  border: 1px solid var(--inv-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.inv-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.inv-stat-card {
+  background: var(--inv-bg-card);
+  border: 1px solid var(--inv-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.inv-stat-label {
+  color: var(--inv-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.inv-stat-value {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--inv-text-primary);
+}
+
+.inv-stat-value.positive { color: var(--signal-subvalorada); }
+.inv-stat-value.negative { color: var(--signal-sobrevalorada); }
+
+/* Tables */
+.inv-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--inv-border);
+  border-radius: 12px;
+  background: var(--inv-bg-card);
+}
+
+.inv-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.inv-table th {
+  background: rgba(255,255,255,0.02);
+  color: var(--inv-text-secondary);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1rem;
+  border-bottom: 1px solid var(--inv-border);
+  white-space: nowrap;
+}
+
+.inv-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--inv-border);
+  vertical-align: middle;
+}
+
+.inv-table tbody tr:hover {
+  background: var(--inv-bg-card-hover);
+}
+
+.inv-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Badges & Signals */
+.signal-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.signal-subvalorada { background: var(--signal-subvalorada-bg); color: var(--signal-subvalorada); }
+.signal-justo { background: var(--signal-justo-bg); color: var(--signal-justo); }
+.signal-invertible { background: var(--signal-invertible-bg); color: var(--signal-invertible); }
+.signal-sobrevalorada { background: var(--signal-sobrevalorada-bg); color: var(--signal-sobrevalorada); }
+.signal-na { background: var(--signal-na-bg); color: var(--signal-na); }
+
+/* Signal Dots (for compact views) */
+.signal-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot-subvalorada { background: var(--signal-subvalorada); box-shadow: 0 0 8px var(--signal-subvalorada); }
+.dot-justo { background: var(--signal-justo); box-shadow: 0 0 8px var(--signal-justo); }
+.dot-invertible { background: var(--signal-invertible); box-shadow: 0 0 8px var(--signal-invertible); }
+.dot-sobrevalorada { background: var(--signal-sobrevalorada); }
+.dot-na { background: var(--signal-na); }
+
+/* Score Indicator */
+.score-stars {
+  display: flex;
+  gap: 4px;
+}
+.star {
+  width: 16px;
+  height: 16px;
+  fill: var(--inv-border);
+}
+.star.filled {
+  fill: var(--signal-invertible);
+}
+.star.excellent {
+  fill: var(--signal-subvalorada);
+}
+
+/* Typography Helpers */
+.text-xs { font-size: 0.75rem; }
+.text-sm { font-size: 0.875rem; }
+.text-muted { color: var(--inv-text-secondary); }
+.font-bold { font-weight: 700; }
+.font-medium { font-weight: 500; }
+
+.ticker-link {
+  color: var(--inv-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+.ticker-link:hover {
+  text-decoration: underline;
+}
+
+/* Questionnaire */
+.quest-section {
+  margin-bottom: 2rem;
+  border: 1px solid var(--inv-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.quest-header {
+  background: rgba(255,255,255,0.03);
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--inv-border);
+}
+
+.quest-body {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  color: var(--inv-text-secondary);
+}
+
+.form-control {
+  background: var(--inv-bg-main);
+  border: 1px solid var(--inv-border);
+  color: var(--inv-text-primary);
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--inv-accent);
+  box-shadow: 0 0 0 2px var(--inv-accent-glow);
+}

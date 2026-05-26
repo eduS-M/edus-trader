@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Ticker - EduSTrader</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/inv-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="inversiones-app">
+
+    <header class="inv-header">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <img src="/Logo 6 EduS Trader-6.png" alt="EduSTrader" height="32">
+            <h1 style="font-size: 1.25rem; font-weight: 600; margin: 0;">Análisis Fundamental y Técnico</h1>
+        </div>
+        <nav class="inv-nav">
+            <a href="index.html">Portafolio</a>
+            <a href="watchlist.html">Watchlist</a>
+            <a href="scanner.html">Scanner</a>
+            <a href="/index.html">← Volver</a>
+        </nav>
+    </header>
+
+    <main class="inv-container">
+        
+        <!-- Cabecera del Ticker -->
+        <div class="inv-card" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                    <h2 style="font-size: 2.5rem; margin: 0; line-height: 1;" id="t-symbol">--</h2>
+                    <span id="t-name" class="text-muted" style="font-size: 1.25rem;">--</span>
+                </div>
+                <div class="text-sm text-muted" id="t-sector">Sector / Industria</div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 2rem; font-weight: 700; line-height: 1; margin-bottom: 0.5rem;" id="t-price">$--</div>
+                <div class="font-bold" id="t-change">--</div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+            
+            <!-- Columna Izquierda: Los 5 Métodos -->
+            <div>
+                <h3 style="margin-top: 0; margin-bottom: 1.5rem;">Los 5 Métodos de Valoración</h3>
+                <div class="inv-stat-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    
+                    <!-- 1. Quick Check -->
+                    <div class="inv-stat-card">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span class="inv-stat-label">1. Quick Check (PEG)</span>
+                            <span id="s-peg-badge"></span>
+                        </div>
+                        <span class="inv-stat-value" id="s-peg-val">--</span>
+                        <div class="text-xs text-muted" style="margin-top: 0.5rem;">
+                            EPS Crec. 5A: <span id="s-peg-eps" class="font-bold">--</span> | P/E: <span id="s-peg-pe" class="font-bold">--</span>
+                        </div>
+                    </div>
+
+                    <!-- 2. DCF -->
+                    <div class="inv-stat-card">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span class="inv-stat-label">2. Flujo Caja Descontado (DCF)</span>
+                            <span id="s-dcf-badge"></span>
+                        </div>
+                        <span class="inv-stat-value" id="s-dcf-val">--</span>
+                        <div class="text-xs text-muted" style="margin-top: 0.5rem;">
+                            Dif. con precio: <span id="s-dcf-diff" class="font-bold">--</span>
+                        </div>
+                    </div>
+
+                    <!-- 3. Ganancias Descontadas (DDM) -->
+                    <div class="inv-stat-card">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span class="inv-stat-label">3. Ganancias Descontadas</span>
+                            <span id="s-ddm-badge"></span>
+                        </div>
+                        <span class="inv-stat-value" id="s-ddm-val">--</span>
+                        <div class="text-xs text-muted" style="margin-top: 0.5rem;">
+                            Dif. con precio: <span id="s-ddm-diff" class="font-bold">--</span>
+                        </div>
+                    </div>
+
+                    <!-- 4. PBV -->
+                    <div class="inv-stat-card">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span class="inv-stat-label">4. Valor en Libros (PBV)</span>
+                            <span id="s-pbv-badge"></span>
+                        </div>
+                        <span class="inv-stat-value" id="s-pbv-val">--</span>
+                        <div class="text-xs text-muted" style="margin-top: 0.5rem;">
+                            <span id="s-pbv-note">--</span>
+                        </div>
+                    </div>
+
+                    <!-- 5. Earning Estimate -->
+                    <div class="inv-stat-card" style="grid-column: 1 / -1;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span class="inv-stat-label">5. Earning Estimate (Yahoo)</span>
+                            <span id="s-eps-badge"></span>
+                        </div>
+                        <span class="inv-stat-value" id="s-eps-val">--</span>
+                    </div>
+                </div>
+
+                <div class="inv-card" style="margin-top: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="margin: 0;">Histórico de Valoración DCF</h3>
+                        <div class="text-sm text-muted">Intrínseco vs Precio Mercado</div>
+                    </div>
+                    <div style="height: 300px; background: rgba(0,0,0,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--inv-text-secondary);" id="dcf-chart">
+                        [Cargando gráfico...]
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Acciones y Cuestionario -->
+            <div>
+                <div class="inv-card" style="margin-bottom: 1.5rem; text-align: center;">
+                    <div class="inv-stat-label">Score de Inversión</div>
+                    <div style="display: flex; justify-content: center; margin: 1rem 0;" id="t-score">
+                        --
+                    </div>
+                    <a href="#" id="btn-quest" style="display: block; width: 100%; background: var(--inv-accent); color: white; text-decoration: none; padding: 0.75rem; border-radius: 6px; font-weight: 600; margin-bottom: 0.5rem;">
+                        📝 Abrir Cuestionario
+                    </a>
+                </div>
+
+                <div class="inv-card">
+                    <h3 style="margin-top: 0;">Datos Técnicos (52 Semanas)</h3>
+                    <div style="margin: 1.5rem 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;" class="text-sm">
+                            <span class="text-muted">Mínimo: <span id="t-low" class="font-bold text-primary">--</span></span>
+                            <span class="text-muted">Máximo: <span id="t-high" class="font-bold text-primary">--</span></span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: var(--inv-border); border-radius: 4px; position: relative;">
+                            <div id="t-bar" style="position: absolute; width: 8px; height: 16px; background: var(--inv-accent); border-radius: 4px; top: -4px; left: 0%; box-shadow: 0 0 8px var(--inv-accent);"></div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding-top: 1rem; border-top: 1px solid var(--inv-border);" class="text-sm">
+                        <span class="text-muted">Posición en Rango:</span>
+                        <span class="font-bold" id="t-range-pct">--</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="assets/inv-dashboard.js"></script>
+    <script src="assets/inv-charts.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const ticker = urlParams.get('symbol');
+
+        if (!ticker) {
+            document.body.innerHTML = '<div style="padding: 2rem; color: white;">Error: No se especificó el ticker en la URL (?symbol=AAPL)</div>';
+        } else {
+            document.getElementById('btn-quest').href = `cuestionario.html?symbol=${ticker}`;
+            loadTickerData(ticker);
+        }
+
+        async function loadTickerData(symbol) {
+            try {
+                const res = await fetch(`${API_BASE}/valuations?ticker=${symbol}`);
+                const { success, data } = await res.json();
+                
+                if (success && data.latest) {
+                    const l = data.latest;
+                    
+                    // Cabecera
+                    document.getElementById('t-symbol').textContent = l.ticker;
+                    document.getElementById('t-name').textContent = l.name || '';
+                    document.getElementById('t-sector').textContent = `${l.sector || 'N/A'}`;
+                    document.getElementById('t-price').textContent = formatMoney(l.last_price);
+                    
+                    // Score
+                    document.getElementById('t-score').innerHTML = getScoreStars(l.positive_signals);
+
+                    // 1. Quick Check
+                    document.getElementById('s-peg-val').textContent = l.peg_value ? l.peg_value.toFixed(2) : '--';
+                    document.getElementById('s-peg-badge').innerHTML = getSignalBadge(l.peg_signal);
+                    document.getElementById('s-peg-eps').textContent = l.peg_eps_growth ? formatPct(l.peg_eps_growth * 100) : '--';
+                    document.getElementById('s-peg-pe').textContent = l.peg_pe_used ? l.peg_pe_used.toFixed(2) : '--';
+
+                    // 2. DCF
+                    document.getElementById('s-dcf-val').textContent = formatMoney(l.dcf_intrinsic_value);
+                    document.getElementById('s-dcf-badge').innerHTML = getSignalBadge(l.dcf_signal);
+                    document.getElementById('s-dcf-diff').innerHTML = l.dcf_diff_pct ? 
+                        `<span style="color: ${l.dcf_diff_pct > 0 ? 'var(--signal-subvalorada)' : 'var(--signal-sobrevalorada)'}">${formatPct(l.dcf_diff_pct * 100)}</span>` : '--';
+
+                    // 3. DDM
+                    document.getElementById('s-ddm-val').textContent = formatMoney(l.ddm_intrinsic_value);
+                    document.getElementById('s-ddm-badge').innerHTML = getSignalBadge(l.ddm_signal);
+                    document.getElementById('s-ddm-diff').innerHTML = l.ddm_diff_pct ? 
+                        `<span style="color: ${l.ddm_diff_pct > 0 ? 'var(--signal-subvalorada)' : 'var(--signal-sobrevalorada)'}">${formatPct(l.ddm_diff_pct * 100)}</span>` : '--';
+
+                    // 4. PBV
+                    document.getElementById('s-pbv-val').textContent = l.pbv_ratio ? l.pbv_ratio.toFixed(2) : '--';
+                    document.getElementById('s-pbv-badge').innerHTML = getSignalBadge(l.pbv_signal);
+                    document.getElementById('s-pbv-note').textContent = l.pbv_is_bank ? 'Umbral especial para sector Bancario (< 1.5)' : 'Umbral normal (< 0.5)';
+
+                    // 5. EPS
+                    document.getElementById('s-eps-val').textContent = l.eps_next_5y_pct ? formatPct(l.eps_next_5y_pct * 100) : '--';
+                    document.getElementById('s-eps-badge').innerHTML = getSignalBadge(l.eps_signal);
+
+                    // Técnico 52w
+                    if (l.week_52_low && l.week_52_high && l.last_price) {
+                        document.getElementById('t-low').textContent = formatMoney(l.week_52_low);
+                        document.getElementById('t-high').textContent = formatMoney(l.week_52_high);
+                        
+                        const pct = ((l.last_price - l.week_52_low) / (l.week_52_high - l.week_52_low)) * 100;
+                        const safePct = Math.max(0, Math.min(100, pct));
+                        
+                        document.getElementById('t-bar').style.left = `calc(${safePct}% - 4px)`;
+                        document.getElementById('t-range-pct').textContent = `${safePct.toFixed(1)}%`;
+                    }
+
+                    // Cargar gráfico
+                    loadTickerChart(symbol);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+</html>
