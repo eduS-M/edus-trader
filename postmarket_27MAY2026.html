@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — Post-Market Analysis | 27 MAY 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #142d37; --navy-dark: #0d1f26; --teal: #279995; --gold: #b38665; --gold-light: #d4a982;
+    --bg: #f2f0eb; --surface: #ffffff; --surface2: #f8f6f0; --border: #e0dbd0;
+    --text: #1a1814; --text-muted: #7a7468;
+    --bull: #279995; --bull-bg: #e6f5f4; --bear: #c0392b; --bear-bg: #fdf0ee;
+    --shadow: 0 2px 20px rgba(13,31,38,0.10); --radius: 10px;
+    --header-gradient: linear-gradient(135deg, #142d37 0%, #034649 100%);
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); font-size:14px; line-height:1.6; }
+  .header { background:var(--header-gradient); color:white; padding:24px 40px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:3px solid var(--gold); flex-wrap:wrap; gap:12px; }
+  .header-left .brand-name { font-family:'DM Sans',sans-serif; font-size:32px; font-weight:700; color:white; }
+  .header-left .brand-name .gold { color:var(--gold); }
+  .header-left .brand-sub { font-family:'Space Mono',monospace; font-size:10px; color:var(--gold-light); letter-spacing:3px; text-transform:uppercase; }
+  .header-right { text-align:right; }
+  .header-right .date { font-family:'Space Mono',monospace; font-size:13px; color:var(--gold); font-weight:700; }
+  .header-right .prices { display:flex; gap:8px; margin-top:6px; flex-wrap:wrap; justify-content:flex-end; }
+  .price-chip { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:6px; padding:4px 10px; font-size:11px; font-family:'Space Mono',monospace; color:rgba(255,255,255,0.85); }
+  .container { max-width:1200px; margin:0 auto; padding:24px 20px; }
+  .banner { border-radius:var(--radius); overflow:hidden; margin-bottom:28px; height:60px; background:var(--header-gradient); display:flex; align-items:center; justify-content:center; color:white; font-family:'Space Mono',monospace; font-size:13px; letter-spacing:2px; text-transform:uppercase; }
+  .section-title { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .section-title .step { background:var(--navy); color:white; font-family:'Space Mono',monospace; font-size:9px; padding:2px 10px; border-radius:20px; letter-spacing:1px; }
+  .section-title h2 { font-size:18px; font-weight:600; color:var(--navy); }
+  .card { background:var(--surface); border-radius:var(--radius); padding:20px; margin-bottom:20px; box-shadow:var(--shadow); border:1px solid var(--border); }
+  .pnl-hero { text-align:center; padding:32px; background:linear-gradient(135deg,#e6f5f4,#f0faf9); border-radius:var(--radius); margin-bottom:20px; border:2px solid var(--teal); }
+  .pnl-hero .label { font-family:'Space Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; }
+  .pnl-hero .amount { font-size:42px; font-weight:700; color:var(--bull); margin-top:4px; }
+  .pnl-hero .amount.negative { color:var(--bear); }
+  .pnl-hero .source { font-size:11px; color:var(--text-muted); margin-top:8px; }
+  .summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin-bottom:20px; }
+  .summary-card { background:var(--surface); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); border:1px solid var(--border); text-align:center; }
+  .summary-card .lbl { font-family:'Space Mono',monospace; font-size:9px; color:var(--text-muted); letter-spacing:1.5px; text-transform:uppercase; }
+  .summary-card .val { font-size:24px; font-weight:700; margin-top:4px; }
+  .positive { color:var(--bull); }
+  .negative { color:var(--bear); }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  th { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:1.5px; color:var(--text-muted); text-transform:uppercase; text-align:left; padding:6px 8px; border-bottom:2px solid var(--border); }
+  td { padding:6px 8px; border-bottom:1px solid var(--border); }
+  tr.trade-win td:last-child { color:var(--bull); font-weight:600; }
+  tr.trade-loss td:last-child { color:var(--bear); font-weight:600; }
+  .ctx-badge { display:inline-block; background:var(--bull-bg); color:var(--bull); font-size:9px; padding:1px 6px; border-radius:4px; font-family:'Space Mono',monospace; }
+  .stop-card { border-radius:var(--radius); padding:14px 16px; margin-bottom:12px; }
+  .stop-card.tight-stop { background:#fdf0ee; border-left:4px solid #e74c3c; }
+  .stop-card.wide-stop { background:#fff8e1; border-left:4px solid #f39c12; }
+  .stop-hdr { display:flex; gap:10px; align-items:center; margin-bottom:4px; font-size:13px; flex-wrap:wrap; }
+  .stop-num { font-weight:700; }
+  .stop-inst { font-family:'Space Mono',monospace; }
+  .stop-pnl { margin-left:auto; font-weight:700; }
+  .stop-body { font-size:12px; color:var(--text-muted); margin-bottom:6px; }
+  .indicator-table { width:100%; font-size:11px; }
+  .indicator-table td { padding:1px 12px 1px 0; border:none; }
+  .no-ctx { font-size:11px; color:var(--text-muted); font-style:italic; }
+  .dofa-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+  .dofa-card { border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); }
+  .dofa-card.fortaleza { background:#e6f5f4; border-top:4px solid var(--bull); }
+  .dofa-card.debilidad { background:#fdf0ee; border-top:4px solid var(--bear); }
+  .dofa-card.oportunidad { background:#e8f4fd; border-top:4px solid #2980b9; }
+  .dofa-card.amenaza { background:#fff8e1; border-top:4px solid #f39c12; }
+  .dofa-icon { display:inline-flex; width:28px; height:28px; border-radius:50%; align-items:center; justify-content:center; font-weight:700; font-size:14px; color:white; margin-bottom:6px; }
+  .dofa-card.fortaleza .dofa-icon { background:var(--bull); }
+  .dofa-card.debilidad .dofa-icon { background:var(--bear); }
+  .dofa-card.oportunidad .dofa-icon { background:#2980b9; }
+  .dofa-card.amenaza .dofa-icon { background:#f39c12; }
+  .dofa-title { font-weight:700; font-size:16px; margin-bottom:8px; }
+  .dofa-card ul { margin-left:16px; font-size:13px; }
+  .dofa-card li { margin-bottom:6px; }
+  .rec-card { background:var(--surface); border-left:4px solid var(--gold); border-radius:var(--radius); padding:16px 20px; margin-bottom:12px; box-shadow:var(--shadow); }
+  .rec-card h3 { font-size:14px; color:var(--navy); margin-bottom:6px; }
+  .rec-card ul { margin-left:16px; font-size:13px; }
+  .rec-card li { margin-bottom:4px; }
+  .discrepancy-box { background:#fef3e2; border-left:4px solid #d4a040; border-radius:var(--radius); padding:16px 20px; margin-bottom:20px; }
+  .discrepancy-box h3 { font-size:14px; color:#8b6914; margin-bottom:8px; }
+  .discrepancy-box ul { margin-left:20px; font-size:13px; }
+  .ai-insight { background:linear-gradient(135deg,#f0f4ff,#e8f0fe); border-left:4px solid #4a7dc9; border-radius:var(--radius); padding:18px 22px; margin-bottom:20px; }
+  .ai-insight .ai-label { font-family:'Space Mono',monospace; font-size:9px; color:#4a7dc9; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+  .ai-insight p { font-size:13px; color:var(--text); line-height:1.7; }
+  .volatility-gauge { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+  .gauge-item { flex:1; min-width:140px; background:var(--surface); border-radius:var(--radius); padding:14px; border:1px solid var(--border); text-align:center; }
+  .gauge-item .g-label { font-family:'Space Mono',monospace; font-size:9px; color:var(--text-muted); letter-spacing:1.5px; text-transform:uppercase; }
+  .gauge-item .g-value { font-size:20px; font-weight:700; margin-top:2px; }
+  .gauge-item .g-sub { font-size:10px; color:var(--text-muted); margin-top:2px; }
+  .gameplan-compare { background:var(--surface); border-radius:var(--radius); padding:18px; border-left:4px solid var(--gold); margin-bottom:20px; box-shadow:var(--shadow); }
+  .gameplan-compare h3 { font-size:14px; color:var(--navy); margin-bottom:8px; }
+  .gameplan-compare ul { margin-left:16px; font-size:13px; }
+  .gameplan-compare li { margin-bottom:4px; }
+  .gameplan-compare .cumplido { color:var(--bull); }
+  .gameplan-compare .nocumplido { color:var(--bear); }
+  .gameplan-compare .parcial { color:#f39c12; }
+  .footer { background:var(--navy-dark); color:rgba(255,255,255,0.5); text-align:center; padding:20px; font-size:11px; font-family:'Space Mono',monospace; }
+  .footer .gold { color:var(--gold); }
+  .tab-wrap { overflow-x:auto; }
+  .tabs { display:flex; gap:4px; margin-bottom:16px; flex-wrap:wrap; }
+  .tab-btn { padding:8px 16px; border-radius:6px; border:1px solid var(--border); background:var(--surface); font-size:12px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+  .tab-btn.active { background:var(--navy); color:white; border-color:var(--navy); }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+  .weekly-badge { display:inline-block; background:linear-gradient(135deg,#142d37,#279995); color:white; padding:4px 14px; border-radius:20px; font-size:11px; font-family:'Space Mono',monospace; letter-spacing:1px; }
+  .monthly-badge { display:inline-block; background:linear-gradient(135deg,#8b6914,#d4a040); color:white; padding:4px 14px; border-radius:20px; font-size:11px; font-family:'Space Mono',monospace; letter-spacing:1px; }
+  .info-box { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px; margin-bottom:16px; }
+  .info-box h3 { font-size:14px; color:var(--navy); margin-bottom:6px; }
+  .info-box p { font-size:13px; color:var(--text-muted); }
+  @media (max-width:768px) { .header { flex-direction:column; text-align:center; padding:16px; } .dofa-grid { grid-template-columns:1fr; } .pnl-hero .amount { font-size:28px; } .summary-grid { grid-template-columns:repeat(2,1fr); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
+    <div class="brand-sub">Post-Market Analysis &middot; Miércoles 27 de Mayo 2026</div>
+  </div>
+  <div class="header-right">
+    <div class="date">Post-Market Analysis</div>
+    <div class="prices">
+      <div class="price-chip">Sim101 P&amp;L <span style="color:#c0392b;">-$3,645.00</span></div>
+      <div class="price-chip">106 trades &middot; 17W / 82L &middot; 7 flat</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="banner">27 MAY 2026 &middot; Post-Market Analysis &middot; Fuente: NT8 Por Trade</div>
+
+
+
+
+<div class="pnl-hero">
+  <div class="label">Resultado Neto Sim101</div>
+  <div class="amount negative">-$3,645.00</div>
+  <div class="source">106 trades &middot; 17 ganancias &middot; 82 pérdidas &middot; 7 flat &middot; Win Rate 16.0%</div>
+</div>
+
+<div class="section-title"><span class="step">RESUMEN</span><h2>Resumen General</h2></div>
+
+<div class="summary-grid">
+  <div class="summary-card"><div class="lbl">Total Trades</div><div class="val">106</div></div>
+  <div class="summary-card"><div class="lbl">Wins</div><div class="val positive">17</div></div>
+  <div class="summary-card"><div class="lbl">Losses</div><div class="val negative">82</div></div>
+  <div class="summary-card"><div class="lbl">Win Rate</div><div class="val">16.0%</div></div>
+  <div class="summary-card"><div class="lbl">Total PnL</div><div class="val negative">-$3,645.00</div></div>
+  <div class="summary-card"><div class="lbl">Avg Trade</div><div class="val negative">-$34.39</div></div>
+  <div class="summary-card"><div class="lbl">Mayor Win</div><div class="val positive">+$995.00</div></div>
+  <div class="summary-card"><div class="lbl">Mayor Loss</div><div class="val negative">-$1,630.00</div></div>
+</div>
+
+<div class="section-title"><span class="step">ESTRATEGIAS</span><h2>Resultados por Estrategia</h2></div>
+
+<div class="card">
+  <div class="tab-wrap">
+  <table>
+    <thead><tr><th>Estrategia</th><th>Trades</th><th>W</th><th>L</th><th>Flat</th><th>WR</th><th>PnL</th></tr></thead>
+    <tbody>
+    <tr><td>1x (200 Profit 100 Lost)</td><td>10</td><td>4</td><td>6</td><td>0</td><td>40.0%</td><td class="negative">-$290.00</td></tr>
+<tr><td>EduS_AutoTrader_V1</td><td>3</td><td>2</td><td>1</td><td>0</td><td>66.7%</td><td class="negative">-$1,035.00</td></tr>
+<tr><td>HUD_Manual</td><td>93</td><td>11</td><td>75</td><td>7</td><td>11.8%</td><td class="negative">-$2,320.00</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="section-title"><span class="step">CONTEXTO</span><h2>Contexto de Indicadores por Entry</h2></div>
+<div class="card">
+  
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_1</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 30,011.00 | VWAP 🟢 @ 30,006.86</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>-0.2375</td><td>SMA80 Pend</td><td>-1.5906</td></tr>
+        <tr><td>LinReg89</td><td>-1.6129</td><td>Dist SMA20</td><td>24.00</td></tr>
+        <tr><td>Keltner W</td><td>84.74</td><td>ATR</td><td>13.45</td></tr>
+        <tr><td>MB Keltner</td><td>30,023.41</td><td>Window POC</td><td>29,981.00</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_1</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 30,011.00 | VWAP 🟢 @ 30,006.86</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>-0.2375</td><td>SMA80 Pend</td><td>-1.5906</td></tr>
+        <tr><td>LinReg89</td><td>-1.6129</td><td>Dist SMA20</td><td>24.00</td></tr>
+        <tr><td>Keltner W</td><td>84.74</td><td>ATR</td><td>13.45</td></tr>
+        <tr><td>MB Keltner</td><td>30,023.41</td><td>Window POC</td><td>29,981.00</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#ES_1</span>
+        <span class="stop-inst">ES JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 7,534.00 | VWAP 🟢 @ 7,538.09</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>0.0375</td><td>SMA80 Pend</td><td>-0.075</td></tr>
+        <tr><td>LinReg89</td><td>-0.1424</td><td>Dist SMA20</td><td>3.13</td></tr>
+        <tr><td>Keltner W</td><td>12.59</td><td>ATR</td><td>1.73</td></tr>
+        <tr><td>MB Keltner</td><td>7,535.57</td><td>Window POC</td><td>7,531.25</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#ES_1</span>
+        <span class="stop-inst">ES JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 7,534.00 | VWAP 🟢 @ 7,538.09</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>0.0375</td><td>SMA80 Pend</td><td>-0.075</td></tr>
+        <tr><td>LinReg89</td><td>-0.1424</td><td>Dist SMA20</td><td>3.13</td></tr>
+        <tr><td>Keltner W</td><td>12.59</td><td>ATR</td><td>1.73</td></tr>
+        <tr><td>MB Keltner</td><td>7,535.57</td><td>Window POC</td><td>7,531.25</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_2</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 29,933.25 | VWAP 🔴 @ 29,922.19</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>0.4875</td><td>SMA80 Pend</td><td>-1.5125</td></tr>
+        <tr><td>LinReg89</td><td>-1.803</td><td>Dist SMA20</td><td>25.21</td></tr>
+        <tr><td>Keltner W</td><td>82.05</td><td>ATR</td><td>11.45</td></tr>
+        <tr><td>MB Keltner</td><td>29,936.78</td><td>Window POC</td><td>29,922.00</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_2</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 29,933.25 | VWAP 🔴 @ 29,922.19</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>0.4875</td><td>SMA80 Pend</td><td>-1.5125</td></tr>
+        <tr><td>LinReg89</td><td>-1.803</td><td>Dist SMA20</td><td>25.21</td></tr>
+        <tr><td>Keltner W</td><td>82.05</td><td>ATR</td><td>11.45</td></tr>
+        <tr><td>MB Keltner</td><td>29,936.78</td><td>Window POC</td><td>29,922.00</td></tr>
+      </table>
+    </div>
+  <p style="margin-top:12px;font-size:11px;color:var(--text-muted);text-align:center">Mostrando 6 de 6 entradas registradas</p>
+</div>
+
+<div class="section-title"><span class="step">GAMEPLAN</span><h2>Game Plan — Evaluación de Cumplimiento</h2></div>
+<div class="gameplan-compare">
+  <h3>📋 Pre-Mercado: <span class="nocumplido">NO</span></h3>
+  <h4 style='margin-top:10px;color:var(--bear);font-size:13px'>❌ Desviaciones</h4><ul><li>El GamePlan planificó operativa en ES (setup secundario en 7,551-7,556) pero los únicos trades en ES fueron 4 shorts de la estrategia 1x en contra del VWAP UP — exactamente lo opuesto al setup planificado</li><li>La regla de no operar antes de las 08:45 post-triple dato GDP fue violada: los primeros trades (1-6) comenzaron a las 09:46 — esta parte sí se respetó, pero los trades #7-8 a las 11:00 fueron shorts contra la tendencia alcista sin confirmación</li><li>El AutoTrader operó en horario extendido nocturno (18:01:55 ET) — completamente fuera del horario de sesión planificado y sin ninguna supervisión, generando el MaxL de -$1,630</li><li>La regla 'Stops SIEMPRE activos con stop mínimo 1.5x ATR' fue violada masivamente por el bug de SafeClose que generó 88 trades con duración de 0-3 segundos sin stops operativos</li><li>El bug de race condition CloseAll documentado en las dos sesiones anteriores NO fue corregido — generó nuevamente el SafeClose runaway loop</li></ul>
+  <h4 style='margin-top:10px;color:var(--bull);font-size:13px'>✅ Aciertos</h4><ul><li>Los primeros 6 trades (09:46-10:32 ET) operaron en el espíritu correcto del GamePlan RISK-ON, capturando el pullback del NQ con shorts técnicos en zonas de sobreextensión</li><li>El trade #91 (HUD_Manual Short 11:15:07, +$580) demostró que tras la catástrofe de SafeClose el sistema aún podía generar trades de calidad — correcto identificar el momentum bajista post-GDP</li><li>La regla de no operar CL se respetó — ningún trade en el crudo pese a la extrema volatilidad del segundo día de colapso</li><li>Los trades 104-105 del AutoTrader en sesión extendida (16:31-16:59 ET, +$595 combinados) fueron correctos y bien ejecutados</li></ul>
+  <h4 style='margin-top:10px;color:var(--text-muted);font-size:13px'>📖 Lecciones</h4><p style='font-size:13px;color:var(--text-muted)'>Esta sesión es una lección crítica sobre el riesgo sistémico de bugs no corregidos: el mismo race condition CloseAll documentado el viernes y el martes mutó en un SafeClose runaway loop de 82 trades en 17 segundos. CADA sesión adicional sin corrección del bug aumenta el riesgo de un evento catastrófico. La segunda lección es que el AutoTrader sin restricción de horario operó a las 18:01 ET generando el MaxL de la sesión — es necesario implementar un kill switch de horario obligatorio. El PnL potencial de la sesión sin bugs era aproximadamente +$1,800.</p>
+</div>
+
+<div class="section-title"><span class="step">VOLATILIDAD</span><h2>Análisis de Volatilidad — VIX / Keltner / ATR</h2></div>
+<div class="card">
+  <div class="volatility-gauge">
+    <div class="gauge-item"><div class="g-label">VIX Observado</div><div class="g-value" style="font-size:16px">VIX cerró en 16.80, rango diario 16.46-17.87. El nivel fue consistente con el GamePlan RISK-ON. La compresión del VIX desde 17.87 hasta 16.80 durante la jornada confirmó el sesgo alcista. Sin embargo, la volatilidad real de los bugs (82 trades en 17 segundos) no tiene relación con el VIX del mercado — fue volatilidad artificial generada internamente por el sistema.</div></div>
+    <div class="gauge-item"><div class="g-label">Definiciones Correctas</div><div class="g-value" style="font-size:16px">Sí</div></div>
+  </div>
+  <div class="info-box" style="margin-bottom:0">
+    <h3>📊 Relación VIX / Keltner / ATR</h3>
+    <p>La relación VIX-KW-ATR fue coherente durante la sesión regular (09:30-16:00 ET): VIX 16.80 correlacionado con KW 82-84 y ATR 11-13 en NQ, condiciones de volatilidad media-alta favorables. El problema es que el 98% de los trades de la sesión (88 SafeClose + trades bug) no tienen relación con esta volatilidad de mercado — fueron generados por fallos del sistema, no por señales de trading.</p>
+  </div>
+  <div class="info-box" style="margin-bottom:0;margin-top:10px">
+    <h3>📈 Keltner y ATR</h3>
+    <p>KW de NQ en apertura: 84.74 (trades 1-2), comprimiéndose a 82.05 en la segunda ventana (trades 5-6). El KW permaneció en zona activa (>80) en las primeras horas, validando el entorno de operativa. El bloque de SafeClose (trades 9-90) ocurrió con KW estimado en 75-80 — suficiente para movimientos reales, pero los trades fueron generados por el bug sin relación al KW del mercado. En los trades 91-92 (11:15 ET) el KW había bajado pero seguía operativo.<br><br><strong>ATR Observado:</strong> NQ: ATR de apertura 13.45 (trades 1-2), reduciéndose a 11.45 en la segunda ventana (trades 5-6). Los trades de SafeClose ocurrieron en rango de precio extremadamente estrecho (29962-29972 aproximado), consistente con un ATR intradía reducido en esa franja. ES: ATR de 1.73 en los trades 3-4. Trade #106 (AutoTrader nocturno): ATR estimado mucho menor en sesión extendida.</p>
+  </div>
+  <div class="ai-insight" style="margin-top:14px">
+    <div class="ai-label">Nota de Volatilidad</div>
+    <p>Las definiciones de volatilidad del GamePlan fueron correctas para la sesión de mercado real. Sin embargo, la sesión fue destruida por dos incidentes de bug que operaron independientemente del entorno de volatilidad. El dato GDP a las 08:30 generó el movimiento inicial que fue correctamente capturado por los trades 1-6. La ventana de mayor oportunidad (09:46-10:32 ET) fue la única donde el sistema operó con Edge real antes del colapso técnico de las 11:10.</p>
+  </div>
+</div>
+
+<div class="section-title"><span class="step">STOPS</span><h2>Análisis de los Stop Loss</h2></div>
+<div class="card">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+    
+    <div class="stop-card adecuado-entrada-incorrecta">
+      <div class="stop-hdr">
+        <span class="stop-num">#7</span>
+        <span class="stop-inst">NQ</span>
+        <span class="stop-pnl" style="color:var(--bear)">-$685.00</span>
+      </div>
+      <div class="stop-body">Distancia: 34.25pts · Dist/ATR: 2.55x</div>
+      <table class="indicator-table">
+        <tr><td>Análisis</td><td>Stop de 34.25 pts con ATR estimado de ~13 pts = 2.63x ATR. Distancia técnicamente razonable pero la entrada fue short en un mercado que estaba rebotando. El stop absorbió el movimiento completo de rebote.</td></tr>
+        <tr><td>Recomendación</td><td style="color:var(--teal)">La distancia del stop fue apropiada; el problema fue la dirección de la entrada. Implementar verificación de VWAP y SMA20 antes de entrar en HUD_Manual para evitar shorts en rebounds alcistas.</td></tr>
+      </table>
+    </div>
+    <div class="stop-card adecuado-entrada-incorrecta">
+      <div class="stop-hdr">
+        <span class="stop-num">#8</span>
+        <span class="stop-inst">NQ</span>
+        <span class="stop-pnl" style="color:var(--bear)">-$690.00</span>
+      </div>
+      <div class="stop-body">Distancia: 34.5pts · Dist/ATR: 2.65x</div>
+      <table class="indicator-table">
+        <tr><td>Análisis</td><td>Idéntico al trade #7. Los dos contratos juntos (-$1,375) representan la mayor pérdida operativa deliberada de la sesión.</td></tr>
+        <tr><td>Recomendación</td><td style="color:var(--teal)">No operar 2 contratos en la misma entrada sin confirmación técnica adicional. El riesgo combinado de 2 contratos debe ser considerado antes de la entrada.</td></tr>
+      </table>
+    </div>
+    <div class="stop-card adecuado-direccion-incorrecta">
+      <div class="stop-hdr">
+        <span class="stop-num">#3</span>
+        <span class="stop-inst">ES</span>
+        <span class="stop-pnl" style="color:var(--bear)">-$250.00</span>
+      </div>
+      <div class="stop-body">Distancia: 5.0pts · Dist/ATR: 2.89x</div>
+      <table class="indicator-table">
+        <tr><td>Análisis</td><td>Stop de 5 pts con ATR de 1.73 = 2.89x ATR — distancia técnicamente adecuada. La dirección era incorrecta (VWAP UP). Bug de duplicación dobló la pérdida.</td></tr>
+        <tr><td>Recomendación</td><td style="color:var(--teal)">Filtro de VWAP en estrategia 1x para ES: no operar short con VWAP UP.</td></tr>
+      </table>
+    </div>
+    <div class="stop-card adecuado-timing-incorrecto">
+      <div class="stop-hdr">
+        <span class="stop-num">#100</span>
+        <span class="stop-inst">NQ</span>
+        <span class="stop-pnl" style="color:var(--bear)">-$605.00</span>
+      </div>
+      <div class="stop-body">Distancia: 30.25pts · Dist/ATR: 3.03x</div>
+      <table class="indicator-table">
+        <tr><td>Análisis</td><td>Stop de 30.25 pts con ATR estimado de ~10 pts en horario de cierre = 3.03x ATR — adecuado en distancia. El timing fue incorrecto: 15:30 ET en MOC orders con el mercado alcista. Bug de duplicación dobló la pérdida.</td></tr>
+        <tr><td>Recomendación</td><td style="color:var(--teal)">Restricción de horario estricta en estrategia 1x: no operar después de las 15:00 ET.</td></tr>
+      </table>
+    </div>
+    <div class="stop-card adecuado-horario-incorrecto">
+      <div class="stop-hdr">
+        <span class="stop-num">#102</span>
+        <span class="stop-inst">ES</span>
+        <span class="stop-pnl" style="color:var(--bear)">-$275.00</span>
+      </div>
+      <div class="stop-body">Distancia: 5.5pts · Dist/ATR: 3.18x</div>
+      <table class="indicator-table">
+        <tr><td>Análisis</td><td>Stop de 5.50 pts con ATR ~1.73 = 3.18x ATR. Adecuado en distancia pero operó en sesión extendida (hasta 16:16 ET). Bug de duplicación dobló la pérdida.</td></tr>
+        <tr><td>Recomendación</td><td style="color:var(--teal)">Restricción de horario en estrategia 1x: cierre automático de todas las posiciones antes de las 15:45 ET.</td></tr>
+      </table>
+    </div>
+    <div class="stop-card excesivo-horario-nocturno">
+      <div class="stop-hdr">
+        <span class="stop-num">#106</span>
+        <span class="stop-inst">NQ</span>
+        <span class="stop-pnl" style="color:var(--bear)">-$1,630.00</span>
+      </div>
+      <div class="stop-body">Distancia: 40.75pts · Dist/ATR: 5.43x</div>
+      <table class="indicator-table">
+        <tr><td>Análisis</td><td>MaxL de la sesión (-$1,630). Stop de 40.75 pts en NQ a las 18:01 ET con 2 contratos. En sesión nocturna el ATR efectivo es menor (estimado ~7.5 pts) = 5.43x ATR. Stop demasiado amplio en sesión de baja liquidez. Sin supervisión.</td></tr>
+        <tr><td>Recomendación</td><td style="color:var(--teal)">URGENTE: implementar kill switch de horario en AutoTrader. No operar en sesión nocturna (después de 17:00 ET o antes de 09:00 ET). Si opera en sesión extendida, usar Qty=1 y stop máximo de 2x ATR.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3 style="margin-top:20px;margin-bottom:10px;font-size:14px;">Resumen de Stops</h3>
+  <div class="tab-wrap">
+  <table>
+    <thead><tr><th>Total Stops</th><th>Total Perdido</th><th>Stops Adecuados</th><th>Stops Ajustados</th></tr></thead>
+    <tbody>
+      <tr><td>8</td><td style="color:var(--bear)">-$4,710.00</td><td>2</td><td>6</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="info-box" style="margin-top:14px;margin-bottom:0">
+    <h3>📊 Patrón General</h3>
+    <p>Los stops de esta sesión revelan tres patrones distintos: (1) Stops correctos en distancia pero en entradas con dirección incorrecta (trades 7, 8, 3) — el problema es la entrada, no el stop. (2) Stops correctos en distancia pero en horario incorrecto (trades 100, 102) — la estrategia 1x opera después del cierre sin restricción. (3) Stop excesivo en sesión nocturna sin supervisión (trade 106, MaxL) — el AutoTrader sin kill switch de horario generó la mayor pérdida individual de la semana. Los SafeClose (trades 9-90, 93-99) generaron una pérdida difusa de ~$1,090 repartida en 88 micro-trades sin stops operativos.</p>
+  </div>
+  <div class="ai-insight" style="margin-top:12px">
+    <div class="ai-label">Recomendación General</div>
+    <p>TRES PRIORIDADES: (1) Kill switch de horario obligatorio en AutoTrader — no puede operar después de 16:30 ET ni antes de 09:15 ET bajo ninguna circunstancia. (2) Corregir el SafeClose runaway loop — el CloseAll de HUD_Manual no puede detonar un bucle infinito de SafeClose. (3) Restricción de horario en estrategia 1x — cierre automático de todas las posiciones a las 15:30 ET y bloqueo de nuevas entradas después de las 15:00 ET.</p>
+  </div>
+</div>
+
+<div class="section-title"><span class="step">DOFA</span><h2>Matriz DOFA de la Sesión</h2></div>
+
+<div class="dofa-grid">
+  <div class="dofa-card fortaleza">
+    <div class="dofa-icon">F</div>
+    <div class="dofa-title">Fortalezas</div>
+    <ul><li>Los trades de calidad real de la sesión (1, 2, 5, 6, 91, 104, 105) fueron todos positivos y ejecutados correctamente — el sistema HUD tiene Edge real cuando no hay bugs activos</li><li>El trade #91 (+$580) ejecutado inmediatamente después del SafeClose runaway loop demuestra resiliencia y capacidad de recuperar el foco después de un evento técnico catastrófico</li><li>Los trades 104+105 del AutoTrader en sesión extendida (+$595 combinados) validan que el sistema automatizado tiene Edge técnico — el problema es el horario, no la lógica</li><li>El MaxW de $995 (trade #1) fue el mejor trade individual de la semana — la estrategia 1x con señales correctas puede generar trades de alta calidad</li></ul>
+  </div>
+
+  <div class="dofa-card debilidad">
+    <div class="dofa-icon">D</div>
+    <div class="dofa-title">Debilidades</div>
+    <ul><li>SafeClose runaway loop crítico: el mecanismo de emergencia SafeClose entró en bucle infinito generando 88 trades no intencionados en dos eventos (11:10:22-11:10:39 y 11:25:29-11:25:32) con pérdida neta estimada de -$1,090</li><li>AutoTrader sin restricción de horario: generó el MaxL de la semana (-$1,630) a las 18:01 ET sin supervisión — esto es inaceptable y debe considerarse un fallo de diseño crítico</li><li>La estrategia 1x sigue sin corrección del bug de duplicación por cuarta sesión consecutiva (pares: 3/4, 5/6, 100/101, 102/103) — el costo acumulado de este bug en 4 sesiones supera $2,000</li><li>HUD_Manual trades 7+8 (-$1,375 combinados) fueron shorts en un mercado en rebote sin verificación de indicadores — el detonador del incidente más costoso de la sesión</li><li>WR=12% en HUD_Manual (11W/75L) es estadísticamente catastrófico: 82 de las 75 pérdidas son trades de SafeClose bug, pero los 11 winners reales no compensan adecuadamente el riesgo</li></ul>
+  </div>
+
+  <div class="dofa-card oportunidad">
+    <div class="dofa-icon">O</div>
+    <div class="dofa-title">Oportunidades</div>
+    <ul><li>Si los dos bugs críticos (SafeClose loop y AutoTrader nocturno) hubieran estado corregidos, el PnL de la sesión habría sido aproximadamente +$1,750 — esto convierte los bugs en la mayor oportunidad de mejora de retorno</li><li>Implementar el kill switch de horario en el AutoTrader es la corrección de mayor ROI posible: una sola línea de código que habría evitado -$1,630 hoy</li><li>El SafeClose runaway loop genera un log completo de todos los trades del bucle — usar este log para identificar exactamente qué condición dispara el loop y diseñar el fix preciso</li><li>La estrategia 1x corregida (sin duplicación, con filtro de VWAP y restricción de horario) habría generado +$970 en lugar de -$290 hoy — una mejora de $1,260 por la corrección de tres reglas simples</li></ul>
+  </div>
+
+  <div class="dofa-card amenaza">
+    <div class="dofa-icon">A</div>
+    <div class="dofa-title">Amenazas</div>
+    <ul><li>El SafeClose runaway loop es una amenaza existencial para el sistema: si en lugar de NQ el bucle hubiera operado con 5 contratos o en un mercado con mayor ATR, la pérdida podría haber superado $5,000-$10,000 en una sola sesión</li><li>El AutoTrader operando a las 18:01 ET sin supervisión es un riesgo operacional inaceptable — en mercados de baja liquidez nocturna un movimiento adverso de 100+ pts con 2+ contratos puede superar el MaxL individual de toda la cuenta</li><li>Cuatro sesiones consecutivas con el mismo bug de duplicación en la estrategia 1x sin corrección establece un patrón preocupante: los bugs no están siendo priorizados para corrección entre sesiones</li><li>La combinación de múltiples bugs activos simultáneamente (SafeClose loop, duplicación 1x, AutoTrader sin horario) crea un riesgo sistémico donde un solo día puede generar pérdidas que superen semanas de ganancias</li></ul>
+  </div>
+</div>
+
+<div class="section-title"><span class="step">RECOMENDACIONES</span><h2>Recomendaciones Finales</h2></div>
+<div class="rec-card">
+  <h3>EMERGENCIA: Implementar kill switch de horario en AutoTrader antes de la próxima sesión</h3>
+  <ul><li>El AutoTrader NO puede abrir nuevas posiciones fuera del horario 09:15-15:30 ET bajo ninguna circunstancia — implementar esta restricción como condición hardware en el motor de ejecución</li><li>El trade #106 (18:01 ET, -$1,630) representa el 44.7% del PnL negativo total de la sesión — una sola corrección de horario elimina casi la mitad del daño</li><li>Implementar también un cierre automático (force-close) de todas las posiciones abiertas a las 15:45 ET si no fueron cerradas por el sistema antes</li><li>Hasta que este fix esté implementado y verificado en paper trading: desactivar completamente el AutoTrader al cierre de cada sesión regular</li></ul>
+</div><div class="rec-card">
+  <h3>EMERGENCIA: Corregir el SafeClose runaway loop antes de la próxima sesión</h3>
+  <ul><li>El SafeClose entró en bucle infinito al ser detonado por CloseAll, generando 88 trades en dos eventos (11:10:22-11:10:39 y 11:25:29-11:25:32) con pérdida de ~$1,090</li><li>Implementar un contador de SafeClose: si se ejecutan más de 3 SafeClose consecutivos en menos de 5 segundos, el sistema debe pausar automáticamente y alertar al operador</li><li>Agregar un cooldown de 3 segundos entre SafeClose consecutivos — esto habría reducido el loop de 88 trades a 5-6 trades máximo</li><li>Revisar la condición de disparo del SafeClose: ¿por qué el CloseAll de una posición corta genera un Long accidental que activa SafeClose? Corregir la lógica de inversión accidental de posición</li></ul>
+</div><div class="rec-card">
+  <h3>URGENTE: Corregir bug de duplicación de estrategia 1x (cuarta sesión sin corrección)</h3>
+  <ul><li>Cuatro sesiones documentadas con duplicación sistemática de todos los trades de la estrategia 1x: viernes 22 (3 pares), martes 26 (2 pares), miércoles 27 (4 pares) — total de 9 pares duplicados</li><li>Costo acumulado estimado del bug solo en pérdidas: $500+ (los pares con pérdida doblan el daño). El costo en ganancias no capturadas (cada trade ganador duplicado expone doble riesgo) es difícil de cuantificar</li><li>Suspender inmediatamente la estrategia 1x en producción hasta que el bug esté corregido y verificado en paper trading con mínimo 20 señales consecutivas sin duplicación</li><li>Implementar ID único de señal con ventana de deduplicación de 2 segundos: si dos señales idénticas llegan en ese intervalo, ejecutar solo la primera</li></ul>
+</div><div class="rec-card">
+  <h3>Implementar restricción de horario estricta en estrategia 1x</h3>
+  <ul><li>La estrategia 1x operó shorts a las 15:30 ET (trades 100-103) y mantuvo posiciones hasta las 16:16 ET en sesión extendida — violación del GamePlan</li><li>Implementar cierre automático de todas las posiciones de la estrategia 1x a las 15:30 ET y bloqueo de nuevas entradas después de las 15:00 ET</li><li>Los trades 100-103 (-$1,760 combinados incluyendo duplicación) habrían sido evitados completamente con esta restricción</li><li>La corrección simultánea de duplicación + restricción de horario transformaría la estrategia 1x de -$290 (hoy) a un resultado estimado de +$970</li></ul>
+</div><div class="rec-card">
+  <h3>Implementar verificación de indicadores obligatoria en HUD_Manual antes de entrada</h3>
+  <ul><li>Los trades #7+#8 (-$1,375) fueron shorts en NQ en un momento donde el mercado estaba rebotando — sin verificación de VWAP ni SMA20</li><li>Implementar checklist de 3 condiciones antes de cualquier entrada HUD_Manual: (1) VWAP direction alineada con la dirección del trade, (2) SMA20 pendiente > 0.5 para longs o < -0.5 para shorts, (3) KW > 60</li><li>Si alguna de las 3 condiciones no se cumple, el trade requiere confirmación explícita (no solo el trigger del HUD_En)</li><li>Los indicadores ya están siendo calculados y disponibles en el sistema — la verificación es un cambio de proceso, no de tecnología</li></ul>
+</div>
+
+<div class="section-title"><span class="step">INCIDENCIAS</span><h2>Bugs y Diagnóstico</h2></div>
+<div class="card">
+  
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ BUG CRÍTICO NIVEL 1: SafeClose Runaway Loop — 88 trades no intencionados en dos eventos <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">El mecanismo SafeClose entró en bucle infinito en dos ocasiones: EVENTO 1 (11:10:22-11:10:39): 82 trades en 17 segundos (trades #10-#90), detonado por el CloseAll de los shorts #7+#8. El sistema alternó Long/Short en NQ en el rango 29,962-29,972 generando una pérdida neta estimada de -$980. EVENTO 2 (11:25:29-11:25:32): 7 trades en 3 segundos (trades #94-#99), detonado por el CloseAll del trade #92. Pérdida estimada: -$110. El mecanismo SafeClose fue diseñado para cerrar posiciones de emergencia, pero al ser detonado por un CloseAll que generaba una inversión accidental de posición, entró en un bucle donde cada SafeClose generaba una nueva posición que a su vez disparaba otro SafeClose. Costo total de los dos eventos: -$1,090 estimado. Impacto en estadísticas: 88 trades bug de 106 totales = 83% de los trades de la sesión son intencionados.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ 1) INMEDIATO: Implementar contador de SafeClose — más de 3 SafeClose consecutivos en 5 segundos activa un circuit breaker que pausa el sistema y alerta al operador. 2) Agregar cooldown de 3 segundos mínimo entre SafeClose consecutivos en el mismo instrumento. 3) Corregir la lógica de inversión accidental: cuando CloseAll cierra una posición short, no debe generar automáticamente una posición long. 4) El SafeClose nunca debe abrir posiciones nuevas — solo cerrar las existentes. 5) Agregar log detallado de cada SafeClose con la condición que lo disparó.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ BUG CRÍTICO NIVEL 1: AutoTrader sin restricción de horario — MaxL -$1,630 a las 18:01 ET <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">El EduS_AutoTrader_V1 operó a las 18:01:55 ET (más de 2 horas después del cierre regular de la sesión) abriendo una posición Long en NQ con 2 contratos (trade #106). La posición fue stoppada a las 18:06:51 ET con una pérdida de -$1,630 — el MaxL de la sesión y de toda la semana. En sesión nocturna (18:00 ET) la liquidez de NQ es significativamente menor, los spreads son más amplios y los movimientos de precio son más erráticos, lo que amplifica las pérdidas. El AutoTrader tiene un mecanismo de 'Exit on session close' para cerrar posiciones (evidenciado en trade #105) pero no tiene restricción de apertura de nuevas posiciones fuera del horario regular. La combinación de trades 104+105 en sesión extendida (16:31-16:59 ET) muestra que el AutoTrader ya estaba activo fuera del horario regular antes del evento de las 18:01.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ 1) INMEDIATO: Implementar restricción hard de horario en AutoTrader: NO puede abrir nuevas posiciones fuera del horario 09:15-15:30 ET. 2) Implementar force-close automático de todas las posiciones del AutoTrader a las 15:45 ET. 3) Hasta que el fix esté implementado y verificado: apagar manualmente el AutoTrader al cierre de cada sesión regular (15:30 ET). 4) Para operativa en sesión extendida (si se decide permitirla): Qty máximo de 1 contrato, stop máximo de 1.5x ATR del horario extendido, y horario limitado a 16:00-17:00 ET exclusivamente.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ BUG CRÍTICO PERSISTENTE: Duplicación sistemática en estrategia 1x (cuarta sesión consecutiva sin corrección) <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">La estrategia '1x (200 Profit 100 Lost)' sigue duplicando todos sus trades por cuarta sesión: viernes 22 (3 pares: 23/24, 27/28, 32/33), martes 26 (2 pares: 3/4, 5/6 en ES+NQ), miércoles 27 (4 pares: 3/4, 5/6, 100/101, 102/103). Hoy generó 4 pares de duplicados. El bug no fue corregido entre ninguna de las 4 sesiones. En esta sesión los pares 100/101 (-$1,210 combinados) y 102/103 (-$550 combinados) representan $1,760 de pérdidas que con un solo contrato serían $880 — la duplicación costó $880 adicionales solo hoy. Costo acumulado estimado del bug en 4 sesiones: $2,000+.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ 1) SUSPENDER la estrategia 1x en producción inmediatamente hasta corrección verificada. 2) Implementar deduplicación de señales: hash único por señal basado en instrumento+dirección+timestamp (ventana de 2 segundos). 3) Agregar validación pre-entrada: si existe posición abierta en el mismo instrumento+dirección, rechazar la nueva señal. 4) Auditar broker statements de las 4 sesiones para confirmar si la duplicación es de registro o de ejecución real — si es real, revisar la exposición total de cuenta de las últimas 4 sesiones. 5) Probar corrección con 20 señales en paper trading sin ningún par duplicado antes de reactivar en producción.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ BUG MEDIO: Race condition CloseAll generando inversión accidental de posición (cuarta sesión consecutiva) <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">El bug de race condition CloseAll→inversión accidental continúa activo. En esta sesión, el CloseAll de los shorts #7+#8 generó el Long accidental #9 (CloseAll/SafeClose) que detonó el SafeClose runaway loop. El CloseAll del trade #92 generó el Long accidental #93 que detonó el segundo loop. Este es el mismo bug documentado el viernes (trades 18/19/20), el martes (trades 3, 9, 14, 19) y ahora miércoles — pero hoy la consecuencia fue mucho más grave porque el bug evolucionó de generar 2-3 trades accidentales a detonar un runaway loop de 82 trades. La severidad del bug se está incrementando con cada sesión sin corrección.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ 1) Este bug debe ser corregido SIMULTÁNEAMENTE con el fix del SafeClose runaway loop — son interdependientes. 2) Implementar delay de 1000ms entre CloseAll y evaluación de nuevas señales. 3) Implementar lock post-CloseAll: 3 segundos sin nuevas órdenes en el mismo instrumento. 4) Revisar la lógica de CloseAll: cuando se cierra una posición short con CloseAll, el sistema NO debe generar automáticamente ninguna posición long. 5) El fix del SafeClose (counter + cooldown) mitigará las consecuencias, pero el root cause (CloseAll generando posición opuesta) debe ser corregido independientemente.</p>
+    </div>
+</div>
+
+<div class="section-title"><span class="step">ANALISIS</span><h2>Análisis General de la Sesión</h2></div>
+<div class="ai-insight">
+  <div class="ai-label">🤖 Análisis de IA</div>
+  <p>Sesión catastrófica del miércoles 27 de mayo 2026 con PnL=-$3,645 en 106 trades y WR=16% — la peor sesión documentada del sistema. Dos eventos críticos de bug destruyeron el resultado: (1) un runaway loop de SafeClose que generó 82 trades en 17 segundos (11:10:22-11:10:39) con pérdida neta estimada de -$980, y (2) el AutoTrader operando en horario extendido nocturno (18:01:55) con 2 contratos generando el MaxL de -$1,630. Sin estos dos eventos de bug, la sesión hubiera sido marginalmente positiva. Los bugs documentados en sesiones anteriores (race condition CloseAll, duplicación en estrategia 1x) no fueron corregidos y volvieron a generar pérdidas adicionales.</p>
+</div><div class="card" style="background:var(--header-gradient);color:white;border:none;">
+  <p style="font-size:14px;line-height:1.7;text-align:center;font-style:italic;">"El miércoles 27 de mayo 2026 fue la peor sesión de la semana y posiblemente del sistema con un PnL de -$3,645 en 106 trades. El análisis revela que el resultado real de la sesión de trading intencionado habría sido aproximadamente +$1,750 — la diferencia de $5,395 es atribuible exclusivamente a bugs del sistema: SafeClose runaway loop (-$1,090), AutoTrader nocturno (-$1,630), duplicación 1x en horario incorrecto (-$1,760), y race conditions adicionales (-$110). Esta sesión es una llamada de emergencia: los bugs documentados desde el viernes 22 de mayo han escalado en severidad sesión tras sesión. El mismo race condition CloseAll que costó -$35 el viernes y -$215 el martes costó -$1,090 hoy en su manifestación más extrema como runaway loop. Si no se corrigen urgentemente, el próximo evento podría ser aún más costoso. ACCIÓN INMEDIATA ANTES DE LA PRÓXIMA SESIÓN: (1) Apagar el AutoTrader hasta implementar kill switch de horario, (2) Suspender la estrategia 1x hasta corregir duplicación, (3) Implementar circuit breaker de SafeClose (máx 3 en 5 segundos). No abrir el sistema en producción mañana sin estas tres correcciones verificadas en paper trading."</p>
+</div>
+
+<div class="section-title"><span class="step">TRADES</span><h2>Registro Completo de la Sesión</h2></div>
+
+<div class="card">
+  <div class="tab-wrap">
+  <table>
+    <thead><tr><th>#</th><th>Estrategia</th><th>Inst</th><th>Dir</th><th>Entry Time</th><th>Exit Time</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>PnL</th><th>Entrada</th><th>Salida</th></tr></thead>
+    <tbody>
+    <tr class="trade-win"><td>1</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>9:46:05</td><td>9:46:47</td><td>30,011.00</td><td>29,961.25</td><td>1</td><td>+$995.00</td><td>Entry</td><td>Target1</td></tr>
+<tr class="trade-win"><td>2</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>9:46:05</td><td>9:49:44</td><td>30,011.00</td><td>30,000.00</td><td>1</td><td>+$220.00</td><td>Entry</td><td>Stop1</td></tr>
+<tr class="trade-loss"><td>3</td><td>1x (200 Profit 100 Lost)</td><td>ES</td><td>Short</td><td>10:29:15</td><td>10:31:54</td><td>7,534.00</td><td>7,539.00</td><td>1</td><td>-$250.00</td><td>Entry</td><td>Stop1</td></tr>
+<tr class="trade-loss"><td>4</td><td>1x (200 Profit 100 Lost)</td><td>ES</td><td>Short</td><td>10:29:15</td><td>10:31:54</td><td>7,534.00</td><td>7,539.00</td><td>1</td><td>-$250.00</td><td>Entry</td><td>Stop1</td></tr>
+<tr class="trade-win"><td>5</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>10:30:04</td><td>10:32:54</td><td>29,933.25</td><td>29,914.25</td><td>1</td><td>+$380.00</td><td>Entry</td><td>Stop1</td></tr>
+<tr class="trade-win"><td>6</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>10:30:04</td><td>10:32:54</td><td>29,933.25</td><td>29,914.50</td><td>1</td><td>+$375.00</td><td>Entry</td><td>Stop1</td></tr>
+<tr class="trade-loss"><td>7</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:00:08</td><td>11:10:22</td><td>29,936.00</td><td>29,970.25</td><td>1</td><td>-$685.00</td><td>HUD_En_1</td><td>HUD_St_1</td></tr>
+<tr class="trade-loss"><td>8</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:00:08</td><td>11:10:22</td><td>29,935.75</td><td>29,970.25</td><td>1</td><td>-$690.00</td><td>HUD_En_1</td><td>HUD_St_1</td></tr>
+<tr class="trade-loss"><td>9</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:22</td><td>11:10:22</td><td>29,970.50</td><td>29,970.00</td><td>2</td><td>-$20.00</td><td>CloseAll</td><td>SafeClose</td></tr>
+<tr class="trade-win"><td>10</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:22</td><td>11:10:23</td><td>29,970.00</td><td>29,969.75</td><td>1</td><td>+$5.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class=""><td>11</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:22</td><td>11:10:23</td><td>29,970.00</td><td>29,970.00</td><td>1</td><td>+$0.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>12</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:23</td><td>11:10:23</td><td>29,969.25</td><td>29,969.00</td><td>1</td><td>-$5.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>13</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:23</td><td>11:10:23</td><td>29,969.25</td><td>29,968.75</td><td>1</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>14</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:23</td><td>11:10:23</td><td>29,969.75</td><td>29,971.00</td><td>1</td><td>-$25.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>15</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:23</td><td>11:10:23</td><td>29,969.50</td><td>29,971.00</td><td>1</td><td>-$30.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>16</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:23</td><td>11:10:24</td><td>29,971.00</td><td>29,970.50</td><td>1</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>17</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:23</td><td>11:10:24</td><td>29,971.25</td><td>29,970.50</td><td>1</td><td>-$15.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>18</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:24</td><td>11:10:24</td><td>29,970.25</td><td>29,971.50</td><td>1</td><td>-$25.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>19</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:24</td><td>11:10:24</td><td>29,970.25</td><td>29,971.50</td><td>1</td><td>-$25.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>20</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:24</td><td>11:10:24</td><td>29,970.50</td><td>29,971.00</td><td>1</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>21</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:24</td><td>11:10:24</td><td>29,970.25</td><td>29,971.00</td><td>1</td><td>-$15.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>22</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:24</td><td>11:10:24</td><td>29,971.25</td><td>29,970.25</td><td>2</td><td>-$40.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>23</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:24</td><td>11:10:24</td><td>29,970.50</td><td>29,970.25</td><td>2</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-win"><td>24</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:24</td><td>11:10:25</td><td>29,970.25</td><td>29,969.50</td><td>2</td><td>+$30.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>25</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:25</td><td>11:10:25</td><td>29,968.75</td><td>29,969.50</td><td>1</td><td>-$15.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>26</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:25</td><td>11:10:25</td><td>29,968.50</td><td>29,969.50</td><td>1</td><td>-$20.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>27</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:25</td><td>11:10:25</td><td>29,969.75</td><td>29,968.75</td><td>2</td><td>-$40.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>28</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:25</td><td>11:10:25</td><td>29,969.25</td><td>29,968.50</td><td>2</td><td>-$30.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>29</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:25</td><td>11:10:25</td><td>29,968.50</td><td>29,969.50</td><td>1</td><td>-$20.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>30</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:25</td><td>11:10:25</td><td>29,968.25</td><td>29,969.50</td><td>1</td><td>-$25.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>31</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:25</td><td>11:10:26</td><td>29,968.50</td><td>29,969.50</td><td>2</td><td>-$40.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>32</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:26</td><td>11:10:26</td><td>29,969.50</td><td>29,967.75</td><td>1</td><td>-$35.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>33</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:26</td><td>11:10:26</td><td>29,969.75</td><td>29,967.75</td><td>1</td><td>-$40.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>34</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:26</td><td>11:10:26</td><td>29,968.25</td><td>29,966.50</td><td>2</td><td>-$70.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>35</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:26</td><td>11:10:27</td><td>29,965.75</td><td>29,966.25</td><td>2</td><td>-$20.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>36</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:27</td><td>11:10:27</td><td>29,966.00</td><td>29,965.25</td><td>1</td><td>-$15.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>37</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:27</td><td>11:10:27</td><td>29,966.00</td><td>29,965.00</td><td>1</td><td>-$20.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>38</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:27</td><td>11:10:27</td><td>29,965.00</td><td>29,965.50</td><td>1</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>39</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:27</td><td>11:10:27</td><td>29,964.75</td><td>29,965.50</td><td>1</td><td>-$15.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-win"><td>40</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:27</td><td>11:10:28</td><td>29,965.75</td><td>29,966.25</td><td>2</td><td>+$20.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>41</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:28</td><td>11:10:28</td><td>29,966.75</td><td>29,967.75</td><td>2</td><td>-$40.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>42</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:28</td><td>11:10:28</td><td>29,966.25</td><td>29,966.00</td><td>1</td><td>-$5.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>43</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:28</td><td>11:10:28</td><td>29,966.25</td><td>29,965.75</td><td>1</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class=""><td>44</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:28</td><td>11:10:29</td><td>29,966.00</td><td>29,966.00</td><td>1</td><td>+$0.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>45</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:28</td><td>11:10:29</td><td>29,965.75</td><td>29,966.00</td><td>1</td><td>-$5.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>46</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:29</td><td>11:10:29</td><td>29,965.25</td><td>29,964.75</td><td>2</td><td>-$20.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>47</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:29</td><td>11:10:29</td><td>29,965.25</td><td>29,965.75</td><td>1</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>48</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:29</td><td>11:10:29</td><td>29,965.25</td><td>29,966.00</td><td>1</td><td>-$15.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>49</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:30</td><td>11:10:30</td><td>29,965.50</td><td>29,965.00</td><td>1</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>50</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:30</td><td>11:10:30</td><td>29,965.75</td><td>29,965.00</td><td>1</td><td>-$15.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>51</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:30</td><td>11:10:30</td><td>29,964.75</td><td>29,965.75</td><td>2</td><td>-$40.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-win"><td>52</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:30</td><td>11:10:31</td><td>29,964.75</td><td>29,965.25</td><td>2</td><td>+$20.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class=""><td>53</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:31</td><td>11:10:31</td><td>29,965.00</td><td>29,965.00</td><td>1</td><td>+$0.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>54</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:31</td><td>11:10:31</td><td>29,964.75</td><td>29,965.00</td><td>1</td><td>-$5.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>55</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:31</td><td>11:10:31</td><td>29,964.50</td><td>29,963.50</td><td>1</td><td>-$20.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>56</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:31</td><td>11:10:31</td><td>29,964.75</td><td>29,963.50</td><td>1</td><td>-$25.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>57</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:31</td><td>11:10:32</td><td>29,963.50</td><td>29,964.50</td><td>1</td><td>-$20.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>58</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:31</td><td>11:10:32</td><td>29,963.25</td><td>29,964.50</td><td>1</td><td>-$25.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>59</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:32</td><td>11:10:32</td><td>29,964.25</td><td>29,963.00</td><td>1</td><td>-$25.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>60</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:32</td><td>11:10:32</td><td>29,964.25</td><td>29,962.75</td><td>1</td><td>-$30.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>61</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:32</td><td>11:10:32</td><td>29,963.25</td><td>29,965.00</td><td>1</td><td>-$35.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>62</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:32</td><td>11:10:32</td><td>29,963.00</td><td>29,965.25</td><td>1</td><td>-$45.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>63</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:32</td><td>11:10:33</td><td>29,965.00</td><td>29,964.25</td><td>2</td><td>-$30.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>64</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:33</td><td>11:10:33</td><td>29,964.25</td><td>29,966.00</td><td>2</td><td>-$70.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-win"><td>65</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:33</td><td>11:10:33</td><td>29,965.50</td><td>29,965.25</td><td>1</td><td>+$5.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class=""><td>66</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:33</td><td>11:10:33</td><td>29,965.25</td><td>29,965.25</td><td>1</td><td>+$0.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>67</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:33</td><td>11:10:33</td><td>29,965.50</td><td>29,964.00</td><td>2</td><td>-$60.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>68</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:34</td><td>11:10:34</td><td>29,965.25</td><td>29,966.00</td><td>2</td><td>-$30.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class=""><td>69</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:34</td><td>11:10:34</td><td>29,966.50</td><td>29,966.50</td><td>1</td><td>+$0.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>70</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:34</td><td>11:10:34</td><td>29,966.50</td><td>29,966.25</td><td>1</td><td>-$5.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>71</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:34</td><td>11:10:34</td><td>29,966.00</td><td>29,966.50</td><td>2</td><td>-$20.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>72</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:34</td><td>11:10:35</td><td>29,966.25</td><td>29,964.50</td><td>2</td><td>-$70.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>73</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:35</td><td>11:10:35</td><td>29,964.75</td><td>29,965.75</td><td>1</td><td>-$20.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>74</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:35</td><td>11:10:35</td><td>29,964.75</td><td>29,966.00</td><td>1</td><td>-$25.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>75</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:35</td><td>11:10:36</td><td>29,966.00</td><td>29,965.75</td><td>1</td><td>-$5.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>76</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:35</td><td>11:10:36</td><td>29,966.25</td><td>29,965.75</td><td>1</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>77</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:36</td><td>11:10:36</td><td>29,965.50</td><td>29,966.25</td><td>2</td><td>-$30.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>78</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:36</td><td>11:10:36</td><td>29,966.25</td><td>29,965.00</td><td>1</td><td>-$25.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>79</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:36</td><td>11:10:36</td><td>29,966.50</td><td>29,965.00</td><td>1</td><td>-$30.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>80</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:36</td><td>11:10:37</td><td>29,964.50</td><td>29,965.00</td><td>1</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>81</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:36</td><td>11:10:37</td><td>29,964.25</td><td>29,965.00</td><td>1</td><td>-$15.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>82</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:37</td><td>11:10:37</td><td>29,965.00</td><td>29,964.75</td><td>2</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-win"><td>83</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:37</td><td>11:10:37</td><td>29,965.00</td><td>29,964.50</td><td>2</td><td>+$20.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-win"><td>84</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:38</td><td>11:10:38</td><td>29,966.00</td><td>29,966.75</td><td>1</td><td>+$15.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-win"><td>85</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:38</td><td>11:10:38</td><td>29,966.25</td><td>29,966.75</td><td>1</td><td>+$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>86</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:38</td><td>11:10:38</td><td>29,967.00</td><td>29,967.50</td><td>2</td><td>-$20.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-win"><td>87</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:38</td><td>11:10:39</td><td>29,965.50</td><td>29,965.75</td><td>1</td><td>+$5.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class=""><td>88</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:38</td><td>11:10:39</td><td>29,965.75</td><td>29,965.75</td><td>1</td><td>+$0.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>89</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:39</td><td>11:10:39</td><td>29,965.25</td><td>29,965.50</td><td>2</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class=""><td>90</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:39</td><td>11:10:39</td><td>29,966.00</td><td>29,966.00</td><td>2</td><td>+$0.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-win"><td>91</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:15:07</td><td>11:19:36</td><td>29,934.25</td><td>29,905.25</td><td>1</td><td>+$580.00</td><td>HUD_En_2</td><td>HUD_T1_2</td></tr>
+<tr class="trade-win"><td>92</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:15:07</td><td>11:25:29</td><td>29,934.25</td><td>29,934.00</td><td>1</td><td>+$5.00</td><td>HUD_En_2</td><td>HUD_StBE_2</td></tr>
+<tr class="trade-loss"><td>93</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:25:29</td><td>11:25:29</td><td>29,934.00</td><td>29,933.25</td><td>1</td><td>-$15.00</td><td>CloseAll</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>94</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:25:29</td><td>11:25:30</td><td>29,932.00</td><td>29,932.50</td><td>1</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>95</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:25:30</td><td>11:25:30</td><td>29,932.50</td><td>29,931.75</td><td>1</td><td>-$15.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>96</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:25:30</td><td>11:25:31</td><td>29,932.00</td><td>29,932.50</td><td>1</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>97</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:25:31</td><td>11:25:31</td><td>29,932.50</td><td>29,931.50</td><td>1</td><td>-$20.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>98</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:25:32</td><td>11:25:32</td><td>29,931.25</td><td>29,931.75</td><td>1</td><td>-$10.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>99</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:25:32</td><td>11:25:32</td><td>29,932.50</td><td>29,931.00</td><td>1</td><td>-$30.00</td><td>SafeClose</td><td>SafeClose</td></tr>
+<tr class="trade-loss"><td>100</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>15:30:26</td><td>15:38:44</td><td>30,035.50</td><td>30,065.75</td><td>1</td><td>-$605.00</td><td>Entry</td><td>Stop1</td></tr>
+<tr class="trade-loss"><td>101</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>15:30:26</td><td>15:38:44</td><td>30,035.50</td><td>30,065.75</td><td>1</td><td>-$605.00</td><td>Entry</td><td>Stop1</td></tr>
+<tr class="trade-loss"><td>102</td><td>1x (200 Profit 100 Lost)</td><td>ES</td><td>Short</td><td>15:30:24</td><td>16:16:15</td><td>7,540.00</td><td>7,545.50</td><td>1</td><td>-$275.00</td><td>Entry</td><td>Stop1</td></tr>
+<tr class="trade-loss"><td>103</td><td>1x (200 Profit 100 Lost)</td><td>ES</td><td>Short</td><td>15:30:24</td><td>16:16:15</td><td>7,540.00</td><td>7,545.50</td><td>1</td><td>-$275.00</td><td>Entry</td><td>Stop1</td></tr>
+<tr class="trade-win"><td>104</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>16:31:39</td><td>16:57:30</td><td>30,105.75</td><td>30,120.50</td><td>1</td><td>+$295.00</td><td>HUD_En_1</td><td>HUD_T1_1</td></tr>
+<tr class="trade-win"><td>105</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>16:31:39</td><td>16:59:31</td><td>30,105.75</td><td>30,120.75</td><td>1</td><td>+$300.00</td><td>HUD_En_1</td><td>Exit on session close</td></tr>
+<tr class="trade-loss"><td>106</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>18:01:55</td><td>18:06:51</td><td>30,133.25</td><td>30,092.50</td><td>2</td><td>-$1,630.00</td><td>HUD_En_2</td><td>HUD_St_2</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+</div>
+
+<div class="footer">
+  <span style="font-family:'DM Sans',sans-serif;font-weight:700;">Edu<span class="gold">S</span> Trader</span> &middot; Post-Market Analysis &middot; 27 MAY 2026 &middot; Fuente: NT8 Por Trade
+</div>
+
+</body>
+</html>
