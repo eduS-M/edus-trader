@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduS Trader — Post-Market Analysis | 29 MAY 2026</title>
+<title>EduS Trader — Post-Market Analysis | 25-29 MAY 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -27,18 +27,18 @@
   .container { max-width:1200px; margin:0 auto; padding:24px 20px; }
   .banner { border-radius:var(--radius); overflow:hidden; margin-bottom:28px; height:60px; background:var(--header-gradient); display:flex; align-items:center; justify-content:center; color:white; font-family:'Space Mono',monospace; font-size:13px; letter-spacing:2px; text-transform:uppercase; }
   .section-title { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
-  .section-title .step { background:var(--navy); color:white; font-family:'Space Mono',monospace; font-size:9px; padding:2px 10px; border-radius:20px; letter-spacing:1px; }
+  .section-title .step { background:var(--navy); color:white; font-family:'Space Mono',monospace; font-size:9px; padding:2px 10px; border-radius:20px; letter-spacing:1px; flex-shrink:0; }
   .section-title h2 { font-size:18px; font-weight:600; color:var(--navy); }
   .card { background:var(--surface); border-radius:var(--radius); padding:20px; margin-bottom:20px; box-shadow:var(--shadow); border:1px solid var(--border); }
   .pnl-hero { text-align:center; padding:32px; background:linear-gradient(135deg,#e6f5f4,#f0faf9); border-radius:var(--radius); margin-bottom:20px; border:2px solid var(--teal); }
   .pnl-hero .label { font-family:'Space Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; }
-  .pnl-hero .amount { font-size:42px; font-weight:700; color:var(--bull); margin-top:4px; }
+  .pnl-hero .amount { font-size:42px; font-weight:700; color:var(--bull); margin-top:4px; overflow:hidden; text-overflow:ellipsis; }
   .pnl-hero .amount.negative { color:var(--bear); }
   .pnl-hero .source { font-size:11px; color:var(--text-muted); margin-top:8px; }
   .summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin-bottom:20px; }
-  .summary-card { background:var(--surface); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); border:1px solid var(--border); text-align:center; }
+  .summary-card { background:var(--surface); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); border:1px solid var(--border); text-align:center; overflow:hidden; }
   .summary-card .lbl { font-family:'Space Mono',monospace; font-size:9px; color:var(--text-muted); letter-spacing:1.5px; text-transform:uppercase; }
-  .summary-card .val { font-size:24px; font-weight:700; margin-top:4px; }
+  .summary-card .val { font-size:24px; font-weight:700; margin-top:4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .positive { color:var(--bull); }
   .negative { color:var(--bear); }
   table { width:100%; border-collapse:collapse; font-size:12px; }
@@ -46,6 +46,9 @@
   td { padding:6px 8px; border-bottom:1px solid var(--border); }
   tr.trade-win td:last-child { color:var(--bull); font-weight:600; }
   tr.trade-loss td:last-child { color:var(--bear); font-weight:600; }
+  .zone-badge { display:inline-block; font-size:10px; padding:1px 8px; border-radius:10px; font-family:'Space Mono',monospace; }
+  .zone-badge.identified { background:var(--bull-bg); color:var(--bull); }
+  .zone-badge.manual { background:#fef3e2; color:#8b6914; }
   .ctx-badge { display:inline-block; background:var(--bull-bg); color:var(--bull); font-size:9px; padding:1px 6px; border-radius:4px; font-family:'Space Mono',monospace; }
   .stop-card { border-radius:var(--radius); padding:14px 16px; margin-bottom:12px; }
   .stop-card.tight-stop { background:#fdf0ee; border-left:4px solid #e74c3c; }
@@ -85,7 +88,7 @@
   .volatility-gauge { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
   .gauge-item { flex:1; min-width:140px; background:var(--surface); border-radius:var(--radius); padding:14px; border:1px solid var(--border); text-align:center; }
   .gauge-item .g-label { font-family:'Space Mono',monospace; font-size:9px; color:var(--text-muted); letter-spacing:1.5px; text-transform:uppercase; }
-  .gauge-item .g-value { font-size:20px; font-weight:700; margin-top:2px; }
+  .gauge-item .g-value { font-size:20px; font-weight:700; margin-top:2px; overflow:hidden; text-overflow:ellipsis; }
   .gauge-item .g-sub { font-size:10px; color:var(--text-muted); margin-top:2px; }
   .gameplan-compare { background:var(--surface); border-radius:var(--radius); padding:18px; border-left:4px solid var(--gold); margin-bottom:20px; box-shadow:var(--shadow); }
   .gameplan-compare h3 { font-size:14px; color:var(--navy); margin-bottom:8px; }
@@ -107,7 +110,27 @@
   .info-box { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px; margin-bottom:16px; }
   .info-box h3 { font-size:14px; color:var(--navy); margin-bottom:6px; }
   .info-box p { font-size:13px; color:var(--text-muted); }
-  @media (max-width:768px) { .header { flex-direction:column; text-align:center; padding:16px; } .dofa-grid { grid-template-columns:1fr; } .pnl-hero .amount { font-size:28px; } .summary-grid { grid-template-columns:repeat(2,1fr); } }
+
+  .edus-account-badge { display:inline-block; padding:3px 12px; border-radius:12px; font-size:11px; font-family:'Space Mono',monospace; margin-right:6px; margin-bottom:6px; }
+  .edus-account-badge.positive { background:var(--bull-bg); color:var(--bull); }
+  .edus-account-badge.negative { background:var(--bear-bg); color:var(--bear); }
+
+  .chart-wrap { position:relative; width:100%; height:280px; margin:16px 0; }
+  #pnlChart { width:100%; height:100%; }
+
+  .plan-card { background:var(--surface); border-left:4px solid #4a7dc9; border-radius:var(--radius); padding:14px 18px; margin-bottom:10px; box-shadow:var(--shadow); }
+  .plan-card h3 { font-size:13px; color:var(--navy); margin-bottom:4px; font-weight:600; }
+  .plan-card p { font-size:12px; color:var(--text-muted); line-height:1.5; }
+
+  .nav-back { transition:opacity 0.2s; }
+  .nav-back:hover { opacity:0.7; }
+
+  .info-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px; }
+  .info-card .info-label { font-family:'Space Mono',monospace; font-size:9px; color:var(--text-muted); letter-spacing:1px; text-transform:uppercase; }
+  .info-card .info-value { font-size:16px; font-weight:700; margin-top:2px; }
+  .info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin-bottom:16px; }
+
+  @media (max-width:768px) { .header { flex-direction:column; text-align:center; padding:16px; } .dofa-grid { grid-template-columns:1fr; } .pnl-hero .amount { font-size:28px; } .summary-grid { grid-template-columns:repeat(2,1fr); } .chart-wrap { height:200px; } }
 </style>
 </head>
 <body>
@@ -115,41 +138,160 @@
 <div class="header">
   <div class="header-left">
     <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
-    <div class="brand-sub">CIERRE SEMANAL &middot; Viernes 29 de Mayo 2026</div>
+    <div class="brand-sub">CIERRE SEMANAL &middot; Semana del 25 al 29 de Mayo 2026</div>
   </div>
   <div class="header-right">
     <div class="date">CIERRE SEMANAL</div>
     <div class="prices">
-      <div class="price-chip">Sim101 P&amp;L <span style="color:#279995;">+$0.00</span></div>
-      <div class="price-chip">0 trades &middot; 0W / 0L</div>
+      <div class="price-chip">Sim101 P&amp;L <span style="color:#279995;">+$2,637.50</span></div>
+      <div class="price-chip">195 trades &middot; 62W / 125L &middot; 8 flat</div>
     </div>
   </div>
 </div>
 
 <div class="container">
 
-<div class="banner">29 MAY 2026 &middot; CIERRE SEMANAL &middot; Fuente: NT8 Por Trade</div>
+<a href="javascript:history.back()" class="nav-back" style="display:inline-flex;align-items:center;gap:6px;color:var(--teal);text-decoration:none;font-size:13px;margin-bottom:16px;font-family:DM Sans,sans-serif">← Volver</a>
+
+<div class="banner">25-29 MAY 2026 &middot; CIERRE SEMANAL &middot; Fuente: NinjaTrader 8</div>
 
 <div class="weekly-badge" style="margin-bottom:16px">📅 CIERRE SEMANAL 25 MAY - 29 MAY 2026</div>
 
 
 <div class="pnl-hero">
   <div class="label">Resultado Neto Sim101</div>
-  <div class="amount positive">+$0.00</div>
-  <div class="source">0 trades &middot; 0 ganancias &middot; 0 pérdidas &middot; 0 flat &middot; Win Rate 0.0%</div>
+  <div class="amount positive">+$2,637.50</div>
+  <div class="source"><span class="edus-account-badge positive">Sim101: +$2,637.50</span> </div>
+  <div class="source">195 trades &middot; 62 ganancias &middot; 125 pérdidas &middot; 8 flat &middot; Win Rate 31.8%</div>
 </div>
 
 <div class="section-title"><span class="step">RESUMEN</span><h2>Resumen General</h2></div>
 
 <div class="summary-grid">
-  <div class="summary-card"><div class="lbl">Total Trades</div><div class="val">0</div></div>
-  <div class="summary-card"><div class="lbl">Wins</div><div class="val positive">0</div></div>
-  <div class="summary-card"><div class="lbl">Losses</div><div class="val negative">0</div></div>
-  <div class="summary-card"><div class="lbl">Win Rate</div><div class="val">0.0%</div></div>
-  <div class="summary-card"><div class="lbl">Total PnL</div><div class="val positive">+$0.00</div></div>
-  <div class="summary-card"><div class="lbl">Avg Trade</div><div class="val positive">+$0.00</div></div>
-  <div class="summary-card"><div class="lbl">Mayor Win</div><div class="val positive">+$0.00</div></div>
-  <div class="summary-card"><div class="lbl">Mayor Loss</div><div class="val negative">+$0.00</div></div>
+  <div class="summary-card"><div class="lbl">Total Trades</div><div class="val">195</div></div>
+  <div class="summary-card"><div class="lbl">Wins</div><div class="val positive">62</div></div>
+  <div class="summary-card"><div class="lbl">Losses</div><div class="val negative">125</div></div>
+  <div class="summary-card"><div class="lbl">Win Rate</div><div class="val">31.8%</div></div>
+  <div class="summary-card"><div class="lbl">Total PnL</div><div class="val positive">+$2,637.50</div></div>
+  <div class="summary-card"><div class="lbl">Avg Trade</div><div class="val positive">+$13.53</div></div>
+  <div class="summary-card"><div class="lbl">Mayor Win</div><div class="val positive">+$2,540.00</div></div>
+  <div class="summary-card"><div class="lbl">Mayor Loss</div><div class="val negative">-$1,670.00</div></div>
+</div>
+
+<!-- PnL CHART -->
+<div class="section-title"><span class="step">CURVA</span><h2>Curva de PnL por Trade</h2></div>
+<div class="card">
+  <div class="chart-wrap">
+    <canvas id="pnlChart"></canvas>
+  </div>
+</div>
+
+<script>
+(function() {
+  var data = [{"t": 1, "pnl": 735.0, "cum": 735.0}, {"t": 2, "pnl": 1160.0, "cum": 1895.0}, {"t": 3, "pnl": -150.0, "cum": 1745.0}, {"t": 4, "pnl": 210.0, "cum": 1955.0}, {"t": 5, "pnl": 20.0, "cum": 1975.0}, {"t": 6, "pnl": -190.0, "cum": 1785.0}, {"t": 7, "pnl": 110.0, "cum": 1895.0}, {"t": 8, "pnl": 10.0, "cum": 1905.0}, {"t": 9, "pnl": -65.0, "cum": 1840.0}, {"t": 10, "pnl": -100.0, "cum": 1740.0}, {"t": 11, "pnl": -140.0, "cum": 1600.0}, {"t": 12, "pnl": 585.0, "cum": 2185.0}, {"t": 13, "pnl": 400.0, "cum": 2585.0}, {"t": 14, "pnl": -20.0, "cum": 2565.0}, {"t": 15, "pnl": 245.0, "cum": 2810.0}, {"t": 16, "pnl": 100.0, "cum": 2910.0}, {"t": 17, "pnl": 0.0, "cum": 2910.0}, {"t": 18, "pnl": 170.0, "cum": 3080.0}, {"t": 19, "pnl": 10.0, "cum": 3090.0}, {"t": 20, "pnl": 995.0, "cum": 4085.0}, {"t": 21, "pnl": 220.0, "cum": 4305.0}, {"t": 22, "pnl": -250.0, "cum": 4055.0}, {"t": 23, "pnl": -250.0, "cum": 3805.0}, {"t": 24, "pnl": 380.0, "cum": 4185.0}, {"t": 25, "pnl": 375.0, "cum": 4560.0}, {"t": 26, "pnl": -685.0, "cum": 3875.0}, {"t": 27, "pnl": -690.0, "cum": 3185.0}, {"t": 28, "pnl": -20.0, "cum": 3165.0}, {"t": 29, "pnl": 5.0, "cum": 3170.0}, {"t": 30, "pnl": 0.0, "cum": 3170.0}, {"t": 31, "pnl": -5.0, "cum": 3165.0}, {"t": 32, "pnl": -10.0, "cum": 3155.0}, {"t": 33, "pnl": -25.0, "cum": 3130.0}, {"t": 34, "pnl": -30.0, "cum": 3100.0}, {"t": 35, "pnl": -10.0, "cum": 3090.0}, {"t": 36, "pnl": -15.0, "cum": 3075.0}, {"t": 37, "pnl": -25.0, "cum": 3050.0}, {"t": 38, "pnl": -25.0, "cum": 3025.0}, {"t": 39, "pnl": -10.0, "cum": 3015.0}, {"t": 40, "pnl": -15.0, "cum": 3000.0}, {"t": 41, "pnl": -40.0, "cum": 2960.0}, {"t": 42, "pnl": -10.0, "cum": 2950.0}, {"t": 43, "pnl": 30.0, "cum": 2980.0}, {"t": 44, "pnl": -15.0, "cum": 2965.0}, {"t": 45, "pnl": -20.0, "cum": 2945.0}, {"t": 46, "pnl": -40.0, "cum": 2905.0}, {"t": 47, "pnl": -30.0, "cum": 2875.0}, {"t": 48, "pnl": -20.0, "cum": 2855.0}, {"t": 49, "pnl": -25.0, "cum": 2830.0}, {"t": 50, "pnl": -40.0, "cum": 2790.0}, {"t": 51, "pnl": -35.0, "cum": 2755.0}, {"t": 52, "pnl": -40.0, "cum": 2715.0}, {"t": 53, "pnl": -70.0, "cum": 2645.0}, {"t": 54, "pnl": -20.0, "cum": 2625.0}, {"t": 55, "pnl": -15.0, "cum": 2610.0}, {"t": 56, "pnl": -20.0, "cum": 2590.0}, {"t": 57, "pnl": -10.0, "cum": 2580.0}, {"t": 58, "pnl": -15.0, "cum": 2565.0}, {"t": 59, "pnl": 20.0, "cum": 2585.0}, {"t": 60, "pnl": -40.0, "cum": 2545.0}, {"t": 61, "pnl": -5.0, "cum": 2540.0}, {"t": 62, "pnl": -10.0, "cum": 2530.0}, {"t": 63, "pnl": 0.0, "cum": 2530.0}, {"t": 64, "pnl": -5.0, "cum": 2525.0}, {"t": 65, "pnl": -20.0, "cum": 2505.0}, {"t": 66, "pnl": -10.0, "cum": 2495.0}, {"t": 67, "pnl": -15.0, "cum": 2480.0}, {"t": 68, "pnl": -10.0, "cum": 2470.0}, {"t": 69, "pnl": -15.0, "cum": 2455.0}, {"t": 70, "pnl": -40.0, "cum": 2415.0}, {"t": 71, "pnl": 20.0, "cum": 2435.0}, {"t": 72, "pnl": 0.0, "cum": 2435.0}, {"t": 73, "pnl": -5.0, "cum": 2430.0}, {"t": 74, "pnl": -20.0, "cum": 2410.0}, {"t": 75, "pnl": -25.0, "cum": 2385.0}, {"t": 76, "pnl": -20.0, "cum": 2365.0}, {"t": 77, "pnl": -25.0, "cum": 2340.0}, {"t": 78, "pnl": -25.0, "cum": 2315.0}, {"t": 79, "pnl": -30.0, "cum": 2285.0}, {"t": 80, "pnl": -35.0, "cum": 2250.0}, {"t": 81, "pnl": -45.0, "cum": 2205.0}, {"t": 82, "pnl": -30.0, "cum": 2175.0}, {"t": 83, "pnl": -70.0, "cum": 2105.0}, {"t": 84, "pnl": 5.0, "cum": 2110.0}, {"t": 85, "pnl": 0.0, "cum": 2110.0}, {"t": 86, "pnl": -60.0, "cum": 2050.0}, {"t": 87, "pnl": -30.0, "cum": 2020.0}, {"t": 88, "pnl": 0.0, "cum": 2020.0}, {"t": 89, "pnl": -5.0, "cum": 2015.0}, {"t": 90, "pnl": -20.0, "cum": 1995.0}, {"t": 91, "pnl": -70.0, "cum": 1925.0}, {"t": 92, "pnl": -20.0, "cum": 1905.0}, {"t": 93, "pnl": -25.0, "cum": 1880.0}, {"t": 94, "pnl": -5.0, "cum": 1875.0}, {"t": 95, "pnl": -10.0, "cum": 1865.0}, {"t": 96, "pnl": -30.0, "cum": 1835.0}, {"t": 97, "pnl": -25.0, "cum": 1810.0}, {"t": 98, "pnl": -30.0, "cum": 1780.0}, {"t": 99, "pnl": -10.0, "cum": 1770.0}, {"t": 100, "pnl": -15.0, "cum": 1755.0}, {"t": 101, "pnl": -10.0, "cum": 1745.0}, {"t": 102, "pnl": 20.0, "cum": 1765.0}, {"t": 103, "pnl": 15.0, "cum": 1780.0}, {"t": 104, "pnl": 10.0, "cum": 1790.0}, {"t": 105, "pnl": -20.0, "cum": 1770.0}, {"t": 106, "pnl": 5.0, "cum": 1775.0}, {"t": 107, "pnl": 0.0, "cum": 1775.0}, {"t": 108, "pnl": -10.0, "cum": 1765.0}, {"t": 109, "pnl": 0.0, "cum": 1765.0}, {"t": 110, "pnl": 580.0, "cum": 2345.0}, {"t": 111, "pnl": 5.0, "cum": 2350.0}, {"t": 112, "pnl": -15.0, "cum": 2335.0}, {"t": 113, "pnl": -10.0, "cum": 2325.0}, {"t": 114, "pnl": -15.0, "cum": 2310.0}, {"t": 115, "pnl": -10.0, "cum": 2300.0}, {"t": 116, "pnl": -20.0, "cum": 2280.0}, {"t": 117, "pnl": -10.0, "cum": 2270.0}, {"t": 118, "pnl": -30.0, "cum": 2240.0}, {"t": 119, "pnl": -605.0, "cum": 1635.0}, {"t": 120, "pnl": -605.0, "cum": 1030.0}, {"t": 121, "pnl": -275.0, "cum": 755.0}, {"t": 122, "pnl": -275.0, "cum": 480.0}, {"t": 123, "pnl": 295.0, "cum": 775.0}, {"t": 124, "pnl": 300.0, "cum": 1075.0}, {"t": 125, "pnl": -1630.0, "cum": -555.0}, {"t": 126, "pnl": 45.0, "cum": -510.0}, {"t": 127, "pnl": 20.0, "cum": -490.0}, {"t": 128, "pnl": -300.0, "cum": -790.0}, {"t": 129, "pnl": -305.0, "cum": -1095.0}, {"t": 130, "pnl": 250.0, "cum": -845.0}, {"t": 131, "pnl": 25.0, "cum": -820.0}, {"t": 132, "pnl": -375.0, "cum": -1195.0}, {"t": 133, "pnl": 755.0, "cum": -440.0}, {"t": 134, "pnl": 1380.0, "cum": 940.0}, {"t": 135, "pnl": 2540.0, "cum": 3480.0}, {"t": 136, "pnl": 680.0, "cum": 4160.0}, {"t": 137, "pnl": 200.0, "cum": 4360.0}, {"t": 138, "pnl": 1055.0, "cum": 5415.0}, {"t": 139, "pnl": 337.5, "cum": 5752.5}, {"t": 140, "pnl": 540.0, "cum": 6292.5}, {"t": 141, "pnl": 535.0, "cum": 6827.5}, {"t": 142, "pnl": -1670.0, "cum": 5157.5}, {"t": 143, "pnl": -500.0, "cum": 4657.5}, {"t": 144, "pnl": 170.0, "cum": 4827.5}, {"t": 145, "pnl": 112.5, "cum": 4940.0}, {"t": 146, "pnl": 375.0, "cum": 5315.0}, {"t": 147, "pnl": 685.0, "cum": 6000.0}, {"t": 148, "pnl": 330.0, "cum": 6330.0}, {"t": 149, "pnl": 325.0, "cum": 6655.0}, {"t": 150, "pnl": 150.0, "cum": 6805.0}, {"t": 151, "pnl": 145.0, "cum": 6950.0}, {"t": 152, "pnl": -500.0, "cum": 6450.0}, {"t": 153, "pnl": -500.0, "cum": 5950.0}, {"t": 154, "pnl": -360.0, "cum": 5590.0}, {"t": 155, "pnl": -360.0, "cum": 5230.0}, {"t": 156, "pnl": -200.0, "cum": 5030.0}, {"t": 157, "pnl": -390.0, "cum": 4640.0}, {"t": 158, "pnl": -390.0, "cum": 4250.0}, {"t": 159, "pnl": 145.0, "cum": 4395.0}, {"t": 160, "pnl": 145.0, "cum": 4540.0}, {"t": 161, "pnl": 830.0, "cum": 5370.0}, {"t": 162, "pnl": 1005.0, "cum": 6375.0}, {"t": 163, "pnl": 345.0, "cum": 6720.0}, {"t": 164, "pnl": 25.0, "cum": 6745.0}, {"t": 165, "pnl": -400.0, "cum": 6345.0}, {"t": 166, "pnl": -405.0, "cum": 5940.0}, {"t": 167, "pnl": -300.0, "cum": 5640.0}, {"t": 168, "pnl": -112.5, "cum": 5527.5}, {"t": 169, "pnl": -112.5, "cum": 5415.0}, {"t": 170, "pnl": -185.0, "cum": 5230.0}, {"t": 171, "pnl": -190.0, "cum": 5040.0}, {"t": 172, "pnl": -740.0, "cum": 4300.0}, {"t": 173, "pnl": 945.0, "cum": 5245.0}, {"t": 174, "pnl": 840.0, "cum": 6085.0}, {"t": 175, "pnl": -365.0, "cum": 5720.0}, {"t": 176, "pnl": -370.0, "cum": 5350.0}, {"t": 177, "pnl": -495.0, "cum": 4855.0}, {"t": 178, "pnl": -500.0, "cum": 4355.0}, {"t": 179, "pnl": -350.0, "cum": 4005.0}, {"t": 180, "pnl": -365.0, "cum": 3640.0}, {"t": 181, "pnl": -370.0, "cum": 3270.0}, {"t": 182, "pnl": -370.0, "cum": 2900.0}, {"t": 183, "pnl": -370.0, "cum": 2530.0}, {"t": 184, "pnl": -350.0, "cum": 2180.0}, {"t": 185, "pnl": 312.5, "cum": 2492.5}, {"t": 186, "pnl": 50.0, "cum": 2542.5}, {"t": 187, "pnl": -365.0, "cum": 2177.5}, {"t": 188, "pnl": -365.0, "cum": 1812.5}, {"t": 189, "pnl": 835.0, "cum": 2647.5}, {"t": 190, "pnl": 985.0, "cum": 3632.5}, {"t": 191, "pnl": -150.0, "cum": 3482.5}, {"t": 192, "pnl": -162.5, "cum": 3320.0}, {"t": 193, "pnl": -335.0, "cum": 2985.0}, {"t": 194, "pnl": -335.0, "cum": 2650.0}, {"t": 195, "pnl": -12.5, "cum": 2637.5}];
+  if (!data || data.length === 0) return;
+  var canvas = document.getElementById('pnlChart');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var dpr = window.devicePixelRatio || 1;
+  var rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.scale(dpr, dpr);
+  var w = rect.width, h = rect.height;
+  var pad = {top: 20, bottom: 30, left: 50, right: 20};
+  var plotW = w - pad.left - pad.right;
+  var plotH = h - pad.top - pad.bottom;
+  var cumVals = data.map(function(d) { return d.cum; });
+  var minV = Math.min(0, Math.min.apply(null, cumVals));
+  var maxV = Math.max(0, Math.max.apply(null, cumVals));
+  var range = maxV - minV || 1;
+  var n = data.length;
+  var xScale = function(i) { return pad.left + (i / (n - 1 || 1)) * plotW; };
+  var yScale = function(v) { return pad.top + plotH - ((v - minV) / range) * plotH; };
+  ctx.clearRect(0, 0, w, h);
+  ctx.strokeStyle = '#e0dbd0';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  var zeroY = yScale(0);
+  ctx.beginPath(); ctx.moveTo(pad.left, zeroY); ctx.lineTo(w - pad.right, zeroY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#7a7468';
+  ctx.font = '10px Space Mono';
+  ctx.textAlign = 'right';
+  ctx.fillText('$' + Math.round(minV).toLocaleString(), pad.left - 4, yScale(minV) + 3);
+  ctx.fillText('$0', pad.left - 4, zeroY + 3);
+  ctx.fillText('$' + Math.round(maxV).toLocaleString(), pad.left - 4, yScale(maxV) + 3);
+  var grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + plotH);
+  grad.addColorStop(0, 'rgba(39, 153, 149, 0.3)');
+  grad.addColorStop(0.5, 'rgba(39, 153, 149, 0.05)');
+  grad.addColorStop(1, 'rgba(192, 57, 43, 0.3)');
+  ctx.beginPath();
+  data.forEach(function(d, i) {
+    var x = xScale(i), y = yScale(d.cum);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.lineTo(xScale(n - 1), zeroY);
+  ctx.lineTo(xScale(0), zeroY);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.beginPath();
+  data.forEach(function(d, i) {
+    var x = xScale(i), y = yScale(d.cum);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = '#142d37';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  data.forEach(function(d, i) {
+    if (i % Math.max(1, Math.floor(n / 15)) !== 0 && i !== n - 1) return;
+    var x = xScale(i);
+    ctx.fillStyle = '#7a7468';
+    ctx.font = '9px Space Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText('#' + d.t, x, h - 4);
+  });
+  var last = data[n - 1];
+  ctx.fillStyle = last.cum >= 0 ? '#279995' : '#c0392b';
+  ctx.font = 'bold 11px Space Mono';
+  ctx.textAlign = 'left';
+  ctx.fillText('$' + Math.round(last.cum).toLocaleString(), xScale(n - 1) + 6, yScale(last.cum) + 3);
+})();
+</script>
+
+<!-- MULTI-ACCOUNT COMPARISON -->
+<div id="multi-account-section" style="display:0">
+<div class="section-title"><span class="step">CUENTAS</span><h2>Comparativa por Cuenta</h2></div>
+<div class="card">
+  <div class="tab-wrap">
+    <table>
+      <thead><tr><th>Cuenta</th><th>Trades</th><th>W</th><th>L</th><th>WR</th><th>PnL</th><th>Puntos por Mercado</th></tr></thead>
+      <tbody>
+      <tr><td>Sim101</td><td>195</td><td>62</td><td>125</td><td>32%</td><td class='positive'>+$2,637.50</td><td>+232.5 ptos NQ · -40.2 ptos ES</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- FUNDED ACCOUNT -->
+<div id="fondeo-section" style="display:0">
+<div class="section-title"><span class="step">FONDEO</span><h2>Evaluación de Cuenta Fondeada</h2></div>
+<div class="card">
+  <div class="info-grid">
+    <div class="info-card"><div class="info-label">Balance</div><div class="info-value" style="color:var(--teal)">—</div></div>
+    <div class="info-card"><div class="info-label">Drawdown</div><div class="info-value" style="color:var(--bear)">— (—)</div></div>
+    <div class="info-card"><div class="info-label">Días Restantes</div><div class="info-value">—</div></div>
+    <div class="info-card"><div class="info-label">Objetivo</div><div class="info-value" style="color:var(--gold)">—</div></div>
+  </div>
+  <div class="ai-insight" style="margin-bottom:0">
+    <div class="ai-label">Evaluación</div>
+    <p>No disponible.</p>
+  </div>
+</div>
 </div>
 
 <div class="section-title"><span class="step">ESTRATEGIAS</span><h2>Resultados por Estrategia</h2></div>
@@ -159,10 +301,147 @@
   <table>
     <thead><tr><th>Estrategia</th><th>Trades</th><th>W</th><th>L</th><th>Flat</th><th>WR</th><th>PnL</th></tr></thead>
     <tbody>
-    <tr><td colspan="7" style="color:var(--text-muted);text-align:center">Sin datos de estrategias.</td></tr>
+    <tr><td>HUD_Manual</td><td>158</td><td>46</td><td>104</td><td>8</td><td>29.1%</td><td class="positive">+$5,247.50</td></tr>
+<tr><td>2x (60 Profit 30 Lost)</td><td>2</td><td>0</td><td>2</td><td>0</td><td>0.0%</td><td class="negative">-$225.00</td></tr>
+<tr><td>1x (200 Profit 100 Lost)</td><td>19</td><td>8</td><td>11</td><td>0</td><td>42.1%</td><td class="negative">-$1,070.00</td></tr>
+<tr><td>EduS_AutoTrader_V1</td><td>16</td><td>8</td><td>8</td><td>0</td><td>50.0%</td><td class="negative">-$1,315.00</td></tr>
     </tbody>
   </table>
   </div>
+</div>
+
+<div class="section-title"><span class="step">CONTEXTO</span><h2>Contexto de Indicadores por Entry</h2></div>
+<div class="card">
+  
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_1</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🟢 Long</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 29,913.50 | VWAP 🟢 @ 29,884.74</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>1.8</td><td>SMA80 Pend</td><td>0.2281</td></tr>
+        <tr><td>LinReg89</td><td>0.1162</td><td>Dist SMA20</td><td>5.56</td></tr>
+        <tr><td>Keltner W</td><td>70.54</td><td>ATR</td><td>9.55</td></tr>
+        <tr><td>MB Keltner</td><td>29,872.68</td><td>Window POC</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_2</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 29,971.25 | VWAP 🟢 @ 29,906.71</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>1.675</td><td>SMA80 Pend</td><td>1.0469</td></tr>
+        <tr><td>LinReg89</td><td>1.099</td><td>Dist SMA20</td><td>29.08</td></tr>
+        <tr><td>Keltner W</td><td>64.85</td><td>ATR</td><td>8.11</td></tr>
+        <tr><td>MB Keltner</td><td>29,905.88</td><td>Window POC</td><td>29,961.75</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_1</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🟢 Long</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 29,994.00 | VWAP 🟢 @ 29,961.71</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>2.1375</td><td>SMA80 Pend</td><td>0.7438</td></tr>
+        <tr><td>LinReg89</td><td>0.3</td><td>Dist SMA20</td><td>17.94</td></tr>
+        <tr><td>Keltner W</td><td>79.52</td><td>ATR</td><td>10.71</td></tr>
+        <tr><td>MB Keltner</td><td>29,957.98</td><td>Window POC</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_1</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🟢 Long</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 29,994.25 | VWAP 🟢 @ 29,961.71</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>2.1375</td><td>SMA80 Pend</td><td>0.7438</td></tr>
+        <tr><td>LinReg89</td><td>0.3</td><td>Dist SMA20</td><td>18.19</td></tr>
+        <tr><td>Keltner W</td><td>79.52</td><td>ATR</td><td>10.71</td></tr>
+        <tr><td>MB Keltner</td><td>29,957.98</td><td>Window POC</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_2</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 29,994.75 | VWAP 🟢 @ 29,996.37</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>0.6125</td><td>SMA80 Pend</td><td>0.7</td></tr>
+        <tr><td>LinReg89</td><td>0.732</td><td>Dist SMA20</td><td>-3.28</td></tr>
+        <tr><td>Keltner W</td><td>72.32</td><td>ATR</td><td>10.34</td></tr>
+        <tr><td>MB Keltner</td><td>29,996.42</td><td>Window POC</td><td>29,996.50</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_1</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 30,079.00 | VWAP 🔴 @ 30,030.18</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>1.8</td><td>SMA80 Pend</td><td>0.9437</td></tr>
+        <tr><td>LinReg89</td><td>0.8287</td><td>Dist SMA20</td><td>25.13</td></tr>
+        <tr><td>Keltner W</td><td>61.32</td><td>ATR</td><td>8.93</td></tr>
+        <tr><td>MB Keltner</td><td>30,030.22</td><td>Window POC</td><td>30,068.25</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_1</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 30,069.75 | VWAP 🟢 @ 30,050.91</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>1.05</td><td>SMA80 Pend</td><td>1.05</td></tr>
+        <tr><td>LinReg89</td><td>1.1556</td><td>Dist SMA20</td><td>-0.63</td></tr>
+        <tr><td>Keltner W</td><td>55.50</td><td>ATR</td><td>7.41</td></tr>
+        <tr><td>MB Keltner</td><td>30,047.57</td><td>Window POC</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_1</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 30,069.25 | VWAP 🟢 @ 30,050.91</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>1.05</td><td>SMA80 Pend</td><td>1.05</td></tr>
+        <tr><td>LinReg89</td><td>1.1556</td><td>Dist SMA20</td><td>-1.13</td></tr>
+        <tr><td>Keltner W</td><td>55.50</td><td>ATR</td><td>7.41</td></tr>
+        <tr><td>MB Keltner</td><td>30,047.57</td><td>Window POC</td><td>—</td></tr>
+      </table>
+    </div>
+  <p style="margin-top:12px;font-size:11px;color:var(--text-muted);text-align:center">Mostrando 8 de 60 entradas registradas</p>
 </div>
 
 
@@ -179,14 +458,216 @@
 
 
 
+
+
+<!-- PLAN DE MEJORAS -->
+<div class="section-title"><span class="step">MEJORAS</span><h2>Plan de Mejoras</h2></div>
+<div class="card">
+  <div class="info-box" style="text-align:center;color:var(--text-muted)">No hay plan de mejoras registrado para esta sesión.</div>
+</div>
+
 <div class="section-title"><span class="step">TRADES</span><h2>Registro Completo de la Sesión</h2></div>
 
 <div class="card">
   <div class="tab-wrap">
   <table>
-    <thead><tr><th>#</th><th>Estrategia</th><th>Inst</th><th>Dir</th><th>Entry Time</th><th>Exit Time</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>PnL</th><th>Entrada</th><th>Salida</th></tr></thead>
+    <thead><tr><th>#</th><th>Estrategia</th><th>Inst</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>PnL</th><th>Zona</th><th>Exit Name</th><th>Cuenta</th></tr></thead>
     <tbody>
-    <tr><td colspan="12" style="color:var(--text-muted);text-align:center">Sin trades registrados.</td></tr>
+    <tr class="trade-win"><td>1</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>9:44:03</td><td>9:45:23</td><td>29,913.50</td><td>29,950.25</td><td>1</td><td>+$735.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_1</span></td><td>HUD_T1_1</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>2</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>9:44:03</td><td>9:46:30</td><td>29,913.50</td><td>29,971.50</td><td>1</td><td>+$1,160.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_1</span></td><td>HUD_T2_1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>3</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>9:46:31</td><td>9:46:54</td><td>29,971.25</td><td>29,978.75</td><td>1</td><td>-$150.00</td><td><span class="zone-badge manual">Manual</span></td><td>Close</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>4</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>9:46:53</td><td>9:47:39</td><td>29,978.25</td><td>29,967.75</td><td>1</td><td>+$210.00</td><td><span class="zone-badge manual">Manual</span></td><td>Target1</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>5</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>9:47:18</td><td>9:48:15</td><td>29,974.00</td><td>29,973.00</td><td>1</td><td>+$20.00</td><td><span class="zone-badge manual">Manual</span></td><td>Target1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>6</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>9:48:09</td><td>9:48:31</td><td>29,969.00</td><td>29,978.50</td><td>1</td><td>-$190.00</td><td><span class="zone-badge manual">Manual</span></td><td>Entry</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>7</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>9:58:53</td><td>10:12:10</td><td>29,994.00</td><td>29,999.50</td><td>1</td><td>+$110.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_1</span></td><td>HUD_T1_1</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>8</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>9:58:53</td><td>10:13:10</td><td>29,994.25</td><td>29,994.75</td><td>1</td><td>+$10.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_1</span></td><td>HUD_St_1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>9</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>10:13:10</td><td>10:13:17</td><td>29,994.75</td><td>29,998.00</td><td>1</td><td>-$65.00</td><td><span class="zone-badge manual">Manual</span></td><td>Close</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>10</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>10:13:17</td><td>10:13:43</td><td>29,997.50</td><td>30,002.50</td><td>1</td><td>-$100.00</td><td><span class="zone-badge manual">Manual</span></td><td>Target1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>11</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>10:13:34</td><td>10:14:03</td><td>30,001.25</td><td>30,008.25</td><td>1</td><td>-$140.00</td><td><span class="zone-badge manual">Manual</span></td><td>Entry</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>12</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:22:31</td><td>10:25:13</td><td>30,049.75</td><td>30,079.00</td><td>1</td><td>+$585.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_1</span></td><td>HUD_T1_1</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>13</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:22:31</td><td>10:28:45</td><td>30,049.75</td><td>30,069.75</td><td>1</td><td>+$400.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_1</span></td><td>HUD_St_1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>14</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>10:28:45</td><td>10:28:50</td><td>30,069.25</td><td>30,070.25</td><td>1</td><td>-$20.00</td><td><span class="zone-badge manual">Manual</span></td><td>Close</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>15</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>10:28:50</td><td>10:29:12</td><td>30,070.25</td><td>30,058.00</td><td>1</td><td>+$245.00</td><td><span class="zone-badge manual">Manual</span></td><td>Entry</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>16</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:41:17</td><td>10:42:13</td><td>30,108.25</td><td>30,113.25</td><td>1</td><td>+$100.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_1</span></td><td>HUD_T1_1</td><td>Sim101</td></tr>
+<tr class=""><td>17</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:41:17</td><td>10:42:39</td><td>30,108.25</td><td>30,108.25</td><td>1</td><td>+$0.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_1</span></td><td>HUD_St_1</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>18</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>10:42:39</td><td>10:43:07</td><td>30,108.50</td><td>30,100.00</td><td>1</td><td>+$170.00</td><td><span class="zone-badge manual">Manual</span></td><td>Entry</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>19</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>10:45:37</td><td>10:45:42</td><td>30,103.50</td><td>30,103.00</td><td>1</td><td>+$10.00</td><td><span class="zone-badge manual">Manual</span></td><td>Close</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>1</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>9:46:05</td><td>9:46:47</td><td>30,011.00</td><td>29,961.25</td><td>1</td><td>+$995.00</td><td><span class="zone-badge manual">Manual</span></td><td>Target1</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>2</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>9:46:05</td><td>9:49:44</td><td>30,011.00</td><td>30,000.00</td><td>1</td><td>+$220.00</td><td><span class="zone-badge manual">Manual</span></td><td>Stop1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>3</td><td>1x (200 Profit 100 Lost)</td><td>ES</td><td>Short</td><td>10:29:15</td><td>10:31:54</td><td>7,534.00</td><td>7,539.00</td><td>1</td><td>-$250.00</td><td><span class="zone-badge manual">Manual</span></td><td>Stop1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>4</td><td>1x (200 Profit 100 Lost)</td><td>ES</td><td>Short</td><td>10:29:15</td><td>10:31:54</td><td>7,534.00</td><td>7,539.00</td><td>1</td><td>-$250.00</td><td><span class="zone-badge manual">Manual</span></td><td>Stop1</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>5</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>10:30:04</td><td>10:32:54</td><td>29,933.25</td><td>29,914.25</td><td>1</td><td>+$380.00</td><td><span class="zone-badge manual">Manual</span></td><td>Stop1</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>6</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>10:30:04</td><td>10:32:54</td><td>29,933.25</td><td>29,914.50</td><td>1</td><td>+$375.00</td><td><span class="zone-badge manual">Manual</span></td><td>Stop1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>7</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:00:08</td><td>11:10:22</td><td>29,936.00</td><td>29,970.25</td><td>1</td><td>-$685.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_1</span></td><td>HUD_St_1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>8</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:00:08</td><td>11:10:22</td><td>29,935.75</td><td>29,970.25</td><td>1</td><td>-$690.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_1</span></td><td>HUD_St_1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>9</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:22</td><td>11:10:22</td><td>29,970.50</td><td>29,970.00</td><td>2</td><td>-$20.00</td><td><span class="zone-badge manual">Manual</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>10</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:22</td><td>11:10:23</td><td>29,970.00</td><td>29,969.75</td><td>1</td><td>+$5.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class=""><td>11</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:22</td><td>11:10:23</td><td>29,970.00</td><td>29,970.00</td><td>1</td><td>+$0.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>12</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:23</td><td>11:10:23</td><td>29,969.25</td><td>29,969.00</td><td>1</td><td>-$5.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>13</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:23</td><td>11:10:23</td><td>29,969.25</td><td>29,968.75</td><td>1</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>14</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:23</td><td>11:10:23</td><td>29,969.75</td><td>29,971.00</td><td>1</td><td>-$25.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>15</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:23</td><td>11:10:23</td><td>29,969.50</td><td>29,971.00</td><td>1</td><td>-$30.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>16</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:23</td><td>11:10:24</td><td>29,971.00</td><td>29,970.50</td><td>1</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>17</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:23</td><td>11:10:24</td><td>29,971.25</td><td>29,970.50</td><td>1</td><td>-$15.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>18</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:24</td><td>11:10:24</td><td>29,970.25</td><td>29,971.50</td><td>1</td><td>-$25.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>19</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:24</td><td>11:10:24</td><td>29,970.25</td><td>29,971.50</td><td>1</td><td>-$25.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>20</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:24</td><td>11:10:24</td><td>29,970.50</td><td>29,971.00</td><td>1</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>21</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:24</td><td>11:10:24</td><td>29,970.25</td><td>29,971.00</td><td>1</td><td>-$15.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>22</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:24</td><td>11:10:24</td><td>29,971.25</td><td>29,970.25</td><td>2</td><td>-$40.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>23</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:24</td><td>11:10:24</td><td>29,970.50</td><td>29,970.25</td><td>2</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>24</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:24</td><td>11:10:25</td><td>29,970.25</td><td>29,969.50</td><td>2</td><td>+$30.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>25</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:25</td><td>11:10:25</td><td>29,968.75</td><td>29,969.50</td><td>1</td><td>-$15.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>26</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:25</td><td>11:10:25</td><td>29,968.50</td><td>29,969.50</td><td>1</td><td>-$20.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>27</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:25</td><td>11:10:25</td><td>29,969.75</td><td>29,968.75</td><td>2</td><td>-$40.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>28</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:25</td><td>11:10:25</td><td>29,969.25</td><td>29,968.50</td><td>2</td><td>-$30.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>29</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:25</td><td>11:10:25</td><td>29,968.50</td><td>29,969.50</td><td>1</td><td>-$20.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>30</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:25</td><td>11:10:25</td><td>29,968.25</td><td>29,969.50</td><td>1</td><td>-$25.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>31</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:25</td><td>11:10:26</td><td>29,968.50</td><td>29,969.50</td><td>2</td><td>-$40.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>32</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:26</td><td>11:10:26</td><td>29,969.50</td><td>29,967.75</td><td>1</td><td>-$35.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>33</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:26</td><td>11:10:26</td><td>29,969.75</td><td>29,967.75</td><td>1</td><td>-$40.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>34</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:26</td><td>11:10:26</td><td>29,968.25</td><td>29,966.50</td><td>2</td><td>-$70.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>35</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:26</td><td>11:10:27</td><td>29,965.75</td><td>29,966.25</td><td>2</td><td>-$20.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>36</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:27</td><td>11:10:27</td><td>29,966.00</td><td>29,965.25</td><td>1</td><td>-$15.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>37</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:27</td><td>11:10:27</td><td>29,966.00</td><td>29,965.00</td><td>1</td><td>-$20.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>38</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:27</td><td>11:10:27</td><td>29,965.00</td><td>29,965.50</td><td>1</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>39</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:27</td><td>11:10:27</td><td>29,964.75</td><td>29,965.50</td><td>1</td><td>-$15.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>40</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:27</td><td>11:10:28</td><td>29,965.75</td><td>29,966.25</td><td>2</td><td>+$20.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>41</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:28</td><td>11:10:28</td><td>29,966.75</td><td>29,967.75</td><td>2</td><td>-$40.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>42</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:28</td><td>11:10:28</td><td>29,966.25</td><td>29,966.00</td><td>1</td><td>-$5.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>43</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:28</td><td>11:10:28</td><td>29,966.25</td><td>29,965.75</td><td>1</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class=""><td>44</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:28</td><td>11:10:29</td><td>29,966.00</td><td>29,966.00</td><td>1</td><td>+$0.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>45</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:28</td><td>11:10:29</td><td>29,965.75</td><td>29,966.00</td><td>1</td><td>-$5.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>46</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:29</td><td>11:10:29</td><td>29,965.25</td><td>29,964.75</td><td>2</td><td>-$20.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>47</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:29</td><td>11:10:29</td><td>29,965.25</td><td>29,965.75</td><td>1</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>48</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:29</td><td>11:10:29</td><td>29,965.25</td><td>29,966.00</td><td>1</td><td>-$15.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>49</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:30</td><td>11:10:30</td><td>29,965.50</td><td>29,965.00</td><td>1</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>50</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:30</td><td>11:10:30</td><td>29,965.75</td><td>29,965.00</td><td>1</td><td>-$15.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>51</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:30</td><td>11:10:30</td><td>29,964.75</td><td>29,965.75</td><td>2</td><td>-$40.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>52</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:30</td><td>11:10:31</td><td>29,964.75</td><td>29,965.25</td><td>2</td><td>+$20.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class=""><td>53</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:31</td><td>11:10:31</td><td>29,965.00</td><td>29,965.00</td><td>1</td><td>+$0.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>54</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:31</td><td>11:10:31</td><td>29,964.75</td><td>29,965.00</td><td>1</td><td>-$5.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>55</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:31</td><td>11:10:31</td><td>29,964.50</td><td>29,963.50</td><td>1</td><td>-$20.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>56</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:31</td><td>11:10:31</td><td>29,964.75</td><td>29,963.50</td><td>1</td><td>-$25.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>57</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:31</td><td>11:10:32</td><td>29,963.50</td><td>29,964.50</td><td>1</td><td>-$20.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>58</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:31</td><td>11:10:32</td><td>29,963.25</td><td>29,964.50</td><td>1</td><td>-$25.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>59</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:32</td><td>11:10:32</td><td>29,964.25</td><td>29,963.00</td><td>1</td><td>-$25.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>60</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:32</td><td>11:10:32</td><td>29,964.25</td><td>29,962.75</td><td>1</td><td>-$30.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>61</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:32</td><td>11:10:32</td><td>29,963.25</td><td>29,965.00</td><td>1</td><td>-$35.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>62</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:32</td><td>11:10:32</td><td>29,963.00</td><td>29,965.25</td><td>1</td><td>-$45.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>63</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:32</td><td>11:10:33</td><td>29,965.00</td><td>29,964.25</td><td>2</td><td>-$30.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>64</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:33</td><td>11:10:33</td><td>29,964.25</td><td>29,966.00</td><td>2</td><td>-$70.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>65</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:33</td><td>11:10:33</td><td>29,965.50</td><td>29,965.25</td><td>1</td><td>+$5.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class=""><td>66</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:33</td><td>11:10:33</td><td>29,965.25</td><td>29,965.25</td><td>1</td><td>+$0.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>67</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:33</td><td>11:10:33</td><td>29,965.50</td><td>29,964.00</td><td>2</td><td>-$60.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>68</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:34</td><td>11:10:34</td><td>29,965.25</td><td>29,966.00</td><td>2</td><td>-$30.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class=""><td>69</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:34</td><td>11:10:34</td><td>29,966.50</td><td>29,966.50</td><td>1</td><td>+$0.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>70</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:34</td><td>11:10:34</td><td>29,966.50</td><td>29,966.25</td><td>1</td><td>-$5.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>71</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:34</td><td>11:10:34</td><td>29,966.00</td><td>29,966.50</td><td>2</td><td>-$20.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>72</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:34</td><td>11:10:35</td><td>29,966.25</td><td>29,964.50</td><td>2</td><td>-$70.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>73</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:35</td><td>11:10:35</td><td>29,964.75</td><td>29,965.75</td><td>1</td><td>-$20.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>74</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:35</td><td>11:10:35</td><td>29,964.75</td><td>29,966.00</td><td>1</td><td>-$25.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>75</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:35</td><td>11:10:36</td><td>29,966.00</td><td>29,965.75</td><td>1</td><td>-$5.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>76</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:35</td><td>11:10:36</td><td>29,966.25</td><td>29,965.75</td><td>1</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>77</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:36</td><td>11:10:36</td><td>29,965.50</td><td>29,966.25</td><td>2</td><td>-$30.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>78</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:36</td><td>11:10:36</td><td>29,966.25</td><td>29,965.00</td><td>1</td><td>-$25.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>79</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:36</td><td>11:10:36</td><td>29,966.50</td><td>29,965.00</td><td>1</td><td>-$30.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>80</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:36</td><td>11:10:37</td><td>29,964.50</td><td>29,965.00</td><td>1</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>81</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:36</td><td>11:10:37</td><td>29,964.25</td><td>29,965.00</td><td>1</td><td>-$15.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>82</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:37</td><td>11:10:37</td><td>29,965.00</td><td>29,964.75</td><td>2</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>83</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:37</td><td>11:10:37</td><td>29,965.00</td><td>29,964.50</td><td>2</td><td>+$20.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>84</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:38</td><td>11:10:38</td><td>29,966.00</td><td>29,966.75</td><td>1</td><td>+$15.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>85</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:38</td><td>11:10:38</td><td>29,966.25</td><td>29,966.75</td><td>1</td><td>+$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>86</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:38</td><td>11:10:38</td><td>29,967.00</td><td>29,967.50</td><td>2</td><td>-$20.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>87</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:38</td><td>11:10:39</td><td>29,965.50</td><td>29,965.75</td><td>1</td><td>+$5.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class=""><td>88</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:38</td><td>11:10:39</td><td>29,965.75</td><td>29,965.75</td><td>1</td><td>+$0.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>89</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:10:39</td><td>11:10:39</td><td>29,965.25</td><td>29,965.50</td><td>2</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class=""><td>90</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:10:39</td><td>11:10:39</td><td>29,966.00</td><td>29,966.00</td><td>2</td><td>+$0.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>91</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:15:07</td><td>11:19:36</td><td>29,934.25</td><td>29,905.25</td><td>1</td><td>+$580.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_2</span></td><td>HUD_T1_2</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>92</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:15:07</td><td>11:25:29</td><td>29,934.25</td><td>29,934.00</td><td>1</td><td>+$5.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_2</span></td><td>HUD_StBE_2</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>93</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:25:29</td><td>11:25:29</td><td>29,934.00</td><td>29,933.25</td><td>1</td><td>-$15.00</td><td><span class="zone-badge manual">Manual</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>94</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:25:29</td><td>11:25:30</td><td>29,932.00</td><td>29,932.50</td><td>1</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>95</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:25:30</td><td>11:25:30</td><td>29,932.50</td><td>29,931.75</td><td>1</td><td>-$15.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>96</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:25:30</td><td>11:25:31</td><td>29,932.00</td><td>29,932.50</td><td>1</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>97</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:25:31</td><td>11:25:31</td><td>29,932.50</td><td>29,931.50</td><td>1</td><td>-$20.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>98</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:25:32</td><td>11:25:32</td><td>29,931.25</td><td>29,931.75</td><td>1</td><td>-$10.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>99</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:25:32</td><td>11:25:32</td><td>29,932.50</td><td>29,931.00</td><td>1</td><td>-$30.00</td><td><span class="zone-badge identified" title="Zona identificada">SafeClose</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>100</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>15:30:26</td><td>15:38:44</td><td>30,035.50</td><td>30,065.75</td><td>1</td><td>-$605.00</td><td><span class="zone-badge manual">Manual</span></td><td>Stop1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>101</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Short</td><td>15:30:26</td><td>15:38:44</td><td>30,035.50</td><td>30,065.75</td><td>1</td><td>-$605.00</td><td><span class="zone-badge manual">Manual</span></td><td>Stop1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>102</td><td>1x (200 Profit 100 Lost)</td><td>ES</td><td>Short</td><td>15:30:24</td><td>16:16:15</td><td>7,540.00</td><td>7,545.50</td><td>1</td><td>-$275.00</td><td><span class="zone-badge manual">Manual</span></td><td>Stop1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>103</td><td>1x (200 Profit 100 Lost)</td><td>ES</td><td>Short</td><td>15:30:24</td><td>16:16:15</td><td>7,540.00</td><td>7,545.50</td><td>1</td><td>-$275.00</td><td><span class="zone-badge manual">Manual</span></td><td>Stop1</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>104</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>16:31:39</td><td>16:57:30</td><td>30,105.75</td><td>30,120.50</td><td>1</td><td>+$295.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_1</span></td><td>HUD_T1_1</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>105</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>16:31:39</td><td>16:59:31</td><td>30,105.75</td><td>30,120.75</td><td>1</td><td>+$300.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_1</span></td><td>Exit on session close</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>106</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>18:01:55</td><td>18:06:51</td><td>30,133.25</td><td>30,092.50</td><td>2</td><td>-$1,630.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_2</span></td><td>HUD_St_2</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>1</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>0:01:16</td><td>0:48:22</td><td>29,783.25</td><td>29,785.50</td><td>1</td><td>+$45.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_T1_5</span></td><td>HUD_En_6</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>2</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>0:22:34</td><td>0:48:22</td><td>29,784.50</td><td>29,785.50</td><td>1</td><td>+$20.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_StBE_5</span></td><td>HUD_En_6</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>3</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:22:20</td><td>10:34:15</td><td>30,140.00</td><td>30,125.00</td><td>1</td><td>-$300.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_St_6</span></td><td>HUD_En_1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>4</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:22:20</td><td>10:34:15</td><td>30,140.25</td><td>30,125.00</td><td>1</td><td>-$305.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_St_6</span></td><td>HUD_En_1</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>5</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>10:31:48</td><td>10:36:58</td><td>7,559.25</td><td>7,554.25</td><td>1</td><td>+$250.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_1</span></td><td>HUD_T1_1</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>6</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>10:31:48</td><td>10:40:39</td><td>7,559.25</td><td>7,558.75</td><td>1</td><td>+$25.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_1</span></td><td>HUD_StBE_1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>7</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>10:46:40</td><td>10:49:56</td><td>7,554.00</td><td>7,557.75</td><td>2</td><td>-$375.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_2</span></td><td>HUD_St_2</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>8</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:37:39</td><td>10:56:45</td><td>30,145.00</td><td>30,182.75</td><td>1</td><td>+$755.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_St_1</span></td><td>HUD_T1_2</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>9</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:37:39</td><td>11:01:32</td><td>30,145.25</td><td>30,214.25</td><td>1</td><td>+$1,380.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_St_1</span></td><td>HUD_T2_2</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>10</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:40:30</td><td>11:15:29</td><td>30,148.50</td><td>30,212.00</td><td>2</td><td>+$2,540.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_2</span></td><td>HUD_St_3</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>11</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:14:17</td><td>11:26:46</td><td>30,231.00</td><td>30,265.00</td><td>1</td><td>+$680.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_3</span></td><td>HUD_T1_4</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>12</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>11:20:53</td><td>11:27:12</td><td>7,569.50</td><td>7,573.50</td><td>1</td><td>+$200.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_3</span></td><td>HUD_T1_3</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>13</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:14:17</td><td>11:34:46</td><td>30,231.00</td><td>30,283.75</td><td>1</td><td>+$1,055.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_3</span></td><td>HUD_T2_4</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>14</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>11:20:53</td><td>11:36:19</td><td>7,569.50</td><td>7,576.25</td><td>1</td><td>+$337.50</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_3</span></td><td>HUD_T2_3</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>15</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:17:01</td><td>11:44:51</td><td>30,234.50</td><td>30,261.50</td><td>1</td><td>+$540.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_4</span></td><td>HUD_St_5</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>16</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:17:01</td><td>11:44:51</td><td>30,234.50</td><td>30,261.25</td><td>1</td><td>+$535.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_4</span></td><td>HUD_St_5</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>17</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:38:41</td><td>12:02:47</td><td>30,289.00</td><td>30,247.25</td><td>2</td><td>-$1,670.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_5</span></td><td>HUD_St_6</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>18</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>11:56:14</td><td>12:03:12</td><td>7,576.25</td><td>7,571.25</td><td>2</td><td>-$500.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_4</span></td><td>HUD_St_4</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>19</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:51:10</td><td>12:17:56</td><td>30,276.25</td><td>30,284.75</td><td>1</td><td>+$170.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_6</span></td><td>HUD_T1_7</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>20</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>12:05:35</td><td>12:17:56</td><td>7,574.75</td><td>7,577.00</td><td>1</td><td>+$112.50</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_5</span></td><td>HUD_T1_5</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>21</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>12:05:35</td><td>12:24:27</td><td>7,574.75</td><td>7,582.25</td><td>1</td><td>+$375.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_5</span></td><td>HUD_T2_5</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>22</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>11:51:10</td><td>12:24:43</td><td>30,276.25</td><td>30,310.50</td><td>1</td><td>+$685.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_6</span></td><td>HUD_StBE_7</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>23</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>12:05:41</td><td>12:33:51</td><td>30,268.00</td><td>30,284.50</td><td>1</td><td>+$330.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_7</span></td><td>HUD_St_8</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>24</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>12:05:41</td><td>12:33:51</td><td>30,268.00</td><td>30,284.25</td><td>1</td><td>+$325.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_7</span></td><td>HUD_St_8</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>25</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>12:26:41</td><td>13:57:34</td><td>30,309.50</td><td>30,317.00</td><td>1</td><td>+$150.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_8</span></td><td>HUD_St_2</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>26</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>12:26:41</td><td>13:57:34</td><td>30,309.50</td><td>30,316.75</td><td>1</td><td>+$145.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_8</span></td><td>HUD_St_2</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>27</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>13:55:11</td><td>14:17:18</td><td>30,333.00</td><td>30,308.00</td><td>1</td><td>-$500.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_2</span></td><td>HUD_St_5</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>28</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>13:55:11</td><td>14:17:18</td><td>30,333.00</td><td>30,308.00</td><td>1</td><td>-$500.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_2</span></td><td>HUD_St_5</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>29</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>14:16:56</td><td>14:35:08</td><td>30,319.25</td><td>30,301.25</td><td>1</td><td>-$360.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_5</span></td><td>HUD_St_6</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>30</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>14:16:56</td><td>14:35:08</td><td>30,319.25</td><td>30,301.25</td><td>1</td><td>-$360.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_5</span></td><td>HUD_St_6</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>31</td><td>EduS_AutoTrader_V1</td><td>ES</td><td>Long</td><td>14:17:16</td><td>14:35:10</td><td>7,580.25</td><td>7,578.25</td><td>2</td><td>-$200.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_2</span></td><td>HUD_St_2</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>32</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>14:24:30</td><td>14:46:18</td><td>30,318.50</td><td>30,299.00</td><td>1</td><td>-$390.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_6</span></td><td>HUD_En_8</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>33</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>14:24:30</td><td>14:46:18</td><td>30,318.50</td><td>30,299.00</td><td>1</td><td>-$390.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_6</span></td><td>HUD_En_8</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>34</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>14:51:22</td><td>15:13:03</td><td>30,290.00</td><td>30,297.25</td><td>1</td><td>+$145.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_St_8</span></td><td>HUD_En_11</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>35</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>14:51:22</td><td>15:13:04</td><td>30,290.00</td><td>30,297.25</td><td>1</td><td>+$145.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_St_8</span></td><td>HUD_En_11</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>36</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>15:15:24</td><td>15:49:29</td><td>30,283.00</td><td>30,324.50</td><td>1</td><td>+$830.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_T1_11</span></td><td>HUD_St_14</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>37</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>15:17:13</td><td>15:49:29</td><td>30,274.25</td><td>30,324.50</td><td>1</td><td>+$1,005.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_T2_11</span></td><td>HUD_St_14</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>1</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>9:54:36</td><td>9:57:11</td><td>30,496.00</td><td>30,513.25</td><td>1</td><td>+$345.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_2</span></td><td>HUD_T1_2</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>2</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>9:54:36</td><td>9:57:49</td><td>30,496.00</td><td>30,497.25</td><td>1</td><td>+$25.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_2</span></td><td>HUD_StBE_2</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>3</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:02:58</td><td>10:04:28</td><td>30,525.00</td><td>30,505.00</td><td>1</td><td>-$400.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_9</span></td><td>HUD_St_9</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>4</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:02:58</td><td>10:04:28</td><td>30,525.00</td><td>30,504.75</td><td>1</td><td>-$405.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_9</span></td><td>HUD_St_9</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>5</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>10:07:14</td><td>10:08:38</td><td>7,608.00</td><td>7,605.00</td><td>2</td><td>-$300.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_2</span></td><td>HUD_St_2</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>6</td><td>2x (60 Profit 30 Lost)</td><td>ES</td><td>Long</td><td>10:32:32</td><td>10:32:50</td><td>7,595.00</td><td>7,592.75</td><td>1</td><td>-$112.50</td><td><span class="zone-badge manual">Manual</span></td><td>Stop1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>7</td><td>2x (60 Profit 30 Lost)</td><td>ES</td><td>Long</td><td>10:32:33</td><td>10:32:50</td><td>7,595.00</td><td>7,592.75</td><td>1</td><td>-$112.50</td><td><span class="zone-badge manual">Manual</span></td><td>Stop2</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>8</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>10:32:35</td><td>10:33:22</td><td>30,399.00</td><td>30,408.25</td><td>1</td><td>-$185.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_2</span></td><td>HUD_St_2</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>9</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>10:32:35</td><td>10:33:22</td><td>30,399.00</td><td>30,408.50</td><td>1</td><td>-$190.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_2</span></td><td>HUD_St_2</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>10</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>10:35:43</td><td>10:36:06</td><td>30,409.75</td><td>30,391.25</td><td>2</td><td>-$740.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_3</span></td><td>HUD_St_3</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>11</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>10:41:46</td><td>10:43:46</td><td>30,356.50</td><td>30,309.25</td><td>1</td><td>+$945.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_5</span></td><td>HUD_T1_5</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>12</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>10:41:46</td><td>10:44:16</td><td>30,356.50</td><td>30,314.50</td><td>1</td><td>+$840.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_5</span></td><td>HUD_StBE_5</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>13</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>10:46:59</td><td>10:48:18</td><td>30,291.50</td><td>30,309.75</td><td>1</td><td>-$365.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_6</span></td><td>HUD_St_6</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>14</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>10:46:59</td><td>10:48:18</td><td>30,291.50</td><td>30,310.00</td><td>1</td><td>-$370.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_6</span></td><td>HUD_St_6</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>15</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Long</td><td>10:54:29</td><td>10:54:45</td><td>30,351.25</td><td>30,326.50</td><td>1</td><td>-$495.00</td><td><span class="zone-badge manual">Manual</span></td><td>Stop1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>16</td><td>1x (200 Profit 100 Lost)</td><td>NQ</td><td>Long</td><td>10:54:29</td><td>10:54:45</td><td>30,351.25</td><td>30,326.25</td><td>1</td><td>-$500.00</td><td><span class="zone-badge manual">Manual</span></td><td>Stop1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>17</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>11:41:31</td><td>11:43:13</td><td>7,601.00</td><td>7,597.50</td><td>2</td><td>-$350.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_6</span></td><td>HUD_St_6</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>18</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:49:15</td><td>11:50:10</td><td>30,377.75</td><td>30,396.00</td><td>1</td><td>-$365.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_34</span></td><td>HUD_St_34</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>19</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:49:15</td><td>11:50:10</td><td>30,377.75</td><td>30,396.25</td><td>1</td><td>-$370.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_34</span></td><td>HUD_St_34</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>20</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>12:16:39</td><td>12:18:38</td><td>30,432.75</td><td>30,414.25</td><td>1</td><td>-$370.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_40</span></td><td>HUD_St_40</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>21</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>12:16:39</td><td>12:18:38</td><td>30,432.75</td><td>30,414.25</td><td>1</td><td>-$370.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_40</span></td><td>HUD_St_40</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>22</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>12:31:44</td><td>12:31:48</td><td>7,599.75</td><td>7,596.25</td><td>2</td><td>-$350.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_8</span></td><td>HUD_St_8</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>23</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>12:32:04</td><td>12:37:16</td><td>7,600.00</td><td>7,606.25</td><td>1</td><td>+$312.50</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_9</span></td><td>HUD_T1_9</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>24</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>12:32:04</td><td>12:50:03</td><td>7,600.00</td><td>7,601.00</td><td>1</td><td>+$50.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_9</span></td><td>HUD_StBE_9</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>25</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>12:46:54</td><td>12:51:48</td><td>30,420.00</td><td>30,401.75</td><td>1</td><td>-$365.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_46</span></td><td>HUD_St_46</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>26</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>12:46:55</td><td>12:51:48</td><td>30,420.00</td><td>30,401.75</td><td>1</td><td>-$365.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_46</span></td><td>HUD_St_46</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>27</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>13:39:49</td><td>13:54:58</td><td>30,366.50</td><td>30,324.75</td><td>1</td><td>+$835.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_67</span></td><td>HUD_T1_67</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>28</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>13:39:49</td><td>13:57:28</td><td>30,366.50</td><td>30,317.25</td><td>1</td><td>+$985.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_67</span></td><td>HUD_StBE_67</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>29</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>14:15:42</td><td>14:20:04</td><td>7,587.75</td><td>7,590.75</td><td>1</td><td>-$150.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_13</span></td><td>HUD_St_13</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>30</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>14:15:42</td><td>14:20:04</td><td>7,587.75</td><td>7,591.00</td><td>1</td><td>-$162.50</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_13</span></td><td>HUD_St_13</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>31</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>14:36:24</td><td>14:45:32</td><td>30,383.00</td><td>30,366.25</td><td>1</td><td>-$335.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_69</span></td><td>HUD_St_69</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>32</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>14:36:24</td><td>14:45:32</td><td>30,383.00</td><td>30,366.25</td><td>1</td><td>-$335.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_69</span></td><td>HUD_St_69</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>33</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>16:00:12</td><td>16:00:13</td><td>7,597.50</td><td>7,597.25</td><td>1</td><td>-$12.50</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_14</span></td><td>CloseAll</td><td>Sim101</td></tr>
     </tbody>
   </table>
   </div>
@@ -195,7 +676,7 @@
 </div>
 
 <div class="footer">
-  <span style="font-family:'DM Sans',sans-serif;font-weight:700;">Edu<span class="gold">S</span> Trader</span> &middot; CIERRE SEMANAL &middot; 29 MAY 2026 &middot; Fuente: NT8 Por Trade
+  <a href="javascript:history.back()" class="nav-back" style="display:inline-flex;align-items:center;gap:6px;color:var(--teal);text-decoration:none;font-size:13px;margin-bottom:16px;font-family:DM Sans,sans-serif">← Volver</a> &middot; <span style="font-family:'DM Sans',sans-serif;font-weight:700;">Edu<span class="gold">S</span> Trader</span> &middot; CIERRE SEMANAL &middot; 25-29 MAY 2026 &middot; Fuente: NinjaTrader 8
 </div>
 
 </body>
