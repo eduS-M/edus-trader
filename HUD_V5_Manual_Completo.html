@@ -263,7 +263,19 @@
     <a href="#sec10-flujo" class="toc-h3">Flujo de Ejecucion</a>
   </div>
   <div class="toc-section">
-    <a href="#sec11" class="toc-h2">11. EduSAutoTrader V1</a>
+    <a href="#sec11" class="toc-h2">11. EduS_AutoTrader V1</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec12" class="toc-h2">12. Recomendaciones por Mercado</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec13" class="toc-h2">13. Estados de la Señal (CSV)</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec14" class="toc-h2">14. Glosario de Términos</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec15" class="toc-h2">15. Preguntas Frecuentes</a>
   </div>
 </nav>
 
@@ -939,6 +951,88 @@
 </ul>
 </div>
 
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec12">
+<div class="section-header"><span class="num">SECCION 12</span><h2>Recomendaciones por Mercado</h2></div>
+
+<div class="card">
+<p>El comportamiento de los filtros y propiedades criticas varia segun la volatilidad intrinseca de cada mercado. Estas son las recomendaciones operativas para los activos principales:</p>
+<table>
+  <thead><tr><th>Mercado</th><th>Propiedad / Configuración</th><th>Recomendación</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>ES (S&P 500)</strong></td>
+      <td><code>StopPct</code><br><code>ToleranciaBM_ATR</code></td>
+      <td>Al ser mas pesado, los stops pueden ajustarse via % mas facilmente. Usar <strong>0.5</strong> en Tolerancia BM, ya que respeta muy bien los canales.</td>
+    </tr>
+    <tr>
+      <td><strong>NQ (Nasdaq)</strong></td>
+      <td><code>StopMaxDolares</code><br><code>ToleranciaBM_ATR</code></td>
+      <td>Extrema volatilidad intradiaria. Se sugiere fijar <code>StopMaxDolares</code> (ej. $150-$200) y usar una Tolerancia BM mas laxa (<strong>1.0 a 1.5</strong>) por los constantes falsos rompimientos.</td>
+    </tr>
+    <tr>
+      <td><strong>CL (Petroleo)</strong></td>
+      <td><code>UsarFiltroHTF</code><br><code>ZoneAmarilla</code></td>
+      <td>Altamente tendencial tras romper rangos. Activar el Filtro HTF (ej. 15 min) es vital. La zona amarilla (B/B+) suele dar excelentes trades de continuacion.</td>
+    </tr>
+    <tr>
+      <td><strong>GC (Oro)</strong></td>
+      <td><code>UsarFiltroPocs</code><br><code>LimitCancelCooldownBarras</code></td>
+      <td>Muy respetuoso de los niveles institucionales historicos. Activar el Filtro de POCs. Usar <strong>3 a 5 barras</strong> de cooldown para evitar cancelaciones prematuras en retrocesos lentos.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec13">
+<div class="section-header"><span class="num">SECCION 13</span><h2>Estados del Ciclo de Vida de la Señal (CSV)</h2></div>
+
+<p>A partir de la actualizacion reciente (Fix #9), el registro CSV (<code>senales-v5.csv</code>) mapea el ciclo de vida <strong>real</strong> de cada trade. Las señales pasan por distintos estados:</p>
+<div class="card info">
+<ul>
+  <li style="margin-bottom:8px"><strong>PENDIENTE:</strong> El HUD V5 detecta convergencia y "envia la orden Limit". El precio de entrada se fija pero la orden no se ha llenado (ej. esperando que el precio retroceda al nivel exacto + ATR).</li>
+  <li style="margin-bottom:8px"><strong>ABRE (FILL):</strong> El precio toco exactamente el nivel de entrada limite. El trade esta oficialmente <strong>dentro del mercado</strong>.</li>
+  <li style="margin-bottom:8px"><strong>CIERRE:</strong> La orden activa alcanzo su Target (T1/T2) o su Stop Loss. Cierra el ciclo de un trade ABIERTO.</li>
+  <li><strong>CANCELADA:</strong> La orden estuvo PENDIENTE, pero antes de ser llenada se invalidó (ej. el semaforo cambio a ROJO, expiró el cooldown de barras, o se cerro manualmente). La orden no causo perdida ni ganancia.</li>
+</ul>
+</div>
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec14">
+<div class="section-header"><span class="num">SECCION 14</span><h2>Glosario de Términos (Para Juniors)</h2></div>
+
+<div class="card">
+<ul>
+  <li style="margin-bottom:6px"><strong>ATR (Average True Range):</strong> Mide cuanto se mueve el precio en promedio. Si el ATR es alto, el mercado esta violento. Sirve para medir "que tan lejos" es normal que llegue el precio.</li>
+  <li style="margin-bottom:6px"><strong>AVWAP (Anchored VWAP):</strong> Es como un iman. Es el precio promedio al que los institucionales han comprado/vendido desde un punto importante. Cuando el precio se aleja mucho, tiende a volver a este iman.</li>
+  <li style="margin-bottom:6px"><strong>LinReg (Regresión Lineal):</strong> Una linea que muestra la tendencia "real" matematicamente. A diferencia de las medias moviles que se curvan, la regresion lineal dice "la linea recta apunta hacia arriba o abajo".</li>
+  <li style="margin-bottom:6px"><strong>Banda Media (BM) de Keltner:</strong> Es el "centro de gravedad" del precio. El mercado oscila como un elastico alrededor de esta banda media.</li>
+  <li style="margin-bottom:6px"><strong>R:R (Risk/Reward):</strong> Cuanto arriesgas para ganar cuanto. Un R:R de 1:2 significa que arriesgas $50 para ganar $100. El HUD solo entra si la operacion tiene al menos un R:R logico.</li>
+  <li style="margin-bottom:6px"><strong>POC (Point of Control):</strong> El precio exacto donde ocurrio la mayor cantidad de transacciones (volumen) en el dia. Es como un "muro" donde el precio suele detenerse.</li>
+  <li><strong>Limit Order vs Market Order:</strong> <em>Market</em> es entrar ya, al precio que sea. <em>Limit</em> es poner una trampa: "solo entro si el precio retrocede y cae a este nivel exacto". El HUD + AutoTrader usa Limits agresivos.</li>
+</ul>
+</div>
+</div>
+
+<!-- ────────────────────────────────────────────── -->
+<div class="section" id="sec15">
+<div class="section-header"><span class="num">SECCION 15</span><h2>Preguntas Frecuentes (FAQ) y Troubleshooting</h2></div>
+
+<div class="card">
+<ul>
+  <li style="margin-bottom:12px"><strong>¿Por qué el HUD no envía señales a veces, aunque vea que el mercado baja/sube?</strong><br>
+  Posiblemente el semáforo está en "2/4" o "1/4", o estás en un Escenario Extremo y los filtros lo están bloqueando para protegerte de falsos rompimientos. El sistema prioriza no perder sobre intentar ganar siempre.</li>
+  <li style="margin-bottom:12px"><strong>¿Por qué mi orden se marcó como CANCELADA en el CSV?</strong><br>
+  El precio retrocedió a la zona y la orden se colocó (PENDIENTE), pero el precio de entrada no se llenó antes de que la señal se invalidara (por ejemplo, por cruzar la ventana de Cooldown de Limit, o cambiar la tendencia de fondo).</li>
+  <li><strong>¿Escucho el sonido de Alerta de vez en cuando sin ver un popup, por qué?</strong><br>
+  El HUD V5 hace sonar el archivo (<code>green zone.wav</code> o <code>in zone.wav</code>) cuando el precio entra físicamente en la banda de la zona activa en tiempo real, para advertirte de una potencial entrada. (Asegúrate de que las rutas de los audios sean correctas en la configuración).</li>
+</ul>
+</div>
 </div>
 
 <!-- ────────────────────────────────────────────── -->
