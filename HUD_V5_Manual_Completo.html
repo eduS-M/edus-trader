@@ -508,14 +508,80 @@
 
 <p>Cuando el semaforo esta en 3/4 o 4/4, el HUD V5 monitorea 7 zonas de entrada posibles. Cada zona representa un nivel tecnico especifico donde el precio puede retroceder para ofrecer una entrada de baja riesgo:</p>
 
-<div class="zone-grid">
-  <div class="zone-item"><div class="z-name">A / A+</div><div class="z-desc">Retroceso al AVWAP. La zona mas importante. Entrada institucional cuando el precio vuelve al valor justo. A = precio dentro de 0.5x ATR de la linea. A+ = precio separado mas de 0.5x ATR del lado correcto.</div></div>
-  <div class="zone-item"><div class="z-name">LR / LR+</div><div class="z-desc">Retroceso a la Linea de Regresion 89. Entrada estadistica cuando el precio vuelve a la media de 89 periodos. LR = tocando la linea. LR+ = separado de la linea en direccion de la tendencia.</div></div>
-  <div class="zone-item"><div class="z-name">20 / 20+</div><div class="z-desc">Retroceso a SMA20. Entrada de momentum cuando el precio corrige a la media de corto plazo. La SMA80 no necesita estar en la direccion correcta para esta zona.</div></div>
-  <div class="zone-item"><div class="z-name">80 / 80+</div><div class="z-desc">Retroceso a SMA80. Entrada de continuacion de tendencia cuando el precio corrige profundamente a la media de 80 periodos. La LinReg89 debe estar plana o a favor, nunca en contra.</div></div>
-  <div class="zone-item"><div class="z-name">M1 / M1+</div><div class="z-desc">Primer rebote en la Banda Media del Keltner. Entrada de mean reversion cuando el precio toca la MB por primera vez. La SMA80 no necesita estar en la direccion correcta.</div></div>
-  <div class="zone-item"><div class="z-name">M2 / M2+</div><div class="z-desc">Segundo rebote consecutivo en la MB del Keltner. Indica que la MB esta actuando como soporte/resistencia firme. Entrada de mayor probabilidad que M1.</div></div>
-  <div class="zone-item"><div class="z-name">M3 / M3+</div><div class="z-desc">Tercer rebote consecutivo. La MB es un nivel de alta confiabilidad. Entrada de alta probabilidad. Si el tercer rebote falla, la MB probablemente se rompera.</div></div>
+<div style="overflow-x:auto">
+  <table class="param-table" style="width:100%; border-collapse:collapse; margin-bottom:15px; font-size:13px; text-align:left;">
+    <thead>
+      <tr style="background:rgba(0,0,0,0.05);">
+        <th style="padding:10px;">Zona</th>
+        <th style="padding:10px;text-align:center;">Ranking</th>
+        <th style="padding:10px;">Nivel de Entrada</th>
+        <th style="padding:10px;">Semáforo</th>
+        <th style="padding:10px;">Filtros y Condiciones Adicionales</th>
+        <th style="padding:10px;">Lógica del Setup</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #eee;">
+        <td style="padding:10px;"><strong>A / A+</strong></td>
+        <td style="padding:10px;text-align:center;font-weight:bold;">1 <span style="font-size:10px;color:var(--text-muted);">(Máx)</span></td>
+        <td style="padding:10px;">AVWAP</td>
+        <td style="padding:10px;color:#2ecc71;font-weight:bold;">Verde (3/4 ó 4/4)</td>
+        <td style="padding:10px;font-size:12px;">- SMA 20 y 80 alineadas a favor<br>- LinReg 89 alineada o plana</td>
+        <td style="padding:10px;font-size:12px;">Retroceso al precio promedio del día. Zona de equilibrio principal con máxima probabilidad.</td>
+      </tr>
+      <tr style="border-bottom:1px solid #eee;">
+        <td style="padding:10px;"><strong>LR / LR+</strong></td>
+        <td style="padding:10px;text-align:center;font-weight:bold;">2</td>
+        <td style="padding:10px;">LinReg 89</td>
+        <td style="padding:10px;color:#2ecc71;font-weight:bold;">Verde (3/4 ó 4/4)</td>
+        <td style="padding:10px;font-size:12px;">- SMA 20 y 80 alineadas a favor<br>- <strong>LinReg activamente alineada</strong> (NO plana)</td>
+        <td style="padding:10px;font-size:12px;">Retroceso a la media estadística. Requiere momentum claro en la pendiente.</td>
+      </tr>
+      <tr style="border-bottom:1px solid #eee;">
+        <td style="padding:10px;"><strong>20 / 20+</strong></td>
+        <td style="padding:10px;text-align:center;font-weight:bold;">3</td>
+        <td style="padding:10px;">SMA 20</td>
+        <td style="padding:10px;color:#2ecc71;font-weight:bold;">Verde (3/4 ó 4/4)</td>
+        <td style="padding:10px;font-size:12px;">- <strong>Cruce SMA20/80 vigente</strong> a favor<br>- LinReg 89 a favor<br>- SMA 20 dentro Keltner con &ge;1.1x ATR al borde</td>
+        <td style="padding:10px;font-size:12px;">Primer retroceso tras cambio de régimen (cruce) sin estar sobrextendido.</td>
+      </tr>
+      <tr style="border-bottom:1px solid #eee;">
+        <td style="padding:10px;"><strong>80 / 80+</strong></td>
+        <td style="padding:10px;text-align:center;font-weight:bold;">4</td>
+        <td style="padding:10px;">SMA 80</td>
+        <td style="padding:10px;color:#2ecc71;font-weight:bold;">Verde (3/4 ó 4/4)</td>
+        <td style="padding:10px;font-size:12px;">- LinReg 89 alineada o plana<br>- SMA 80 en la <strong>mitad interior</strong> del Keltner</td>
+        <td style="padding:10px;font-size:12px;">Soporte dinámico profundo. Válida incluso si la SMA rápida cruzó en contra.</td>
+      </tr>
+      <tr style="border-bottom:1px solid #eee;">
+        <td style="padding:10px;"><strong>M1 / M1+</strong></td>
+        <td style="padding:10px;text-align:center;font-weight:bold;">5</td>
+        <td style="padding:10px;">Banda Media Keltner</td>
+        <td style="padding:10px;color:var(--text-muted);font-style:italic;">Depende del cruce</td>
+        <td style="padding:10px;font-size:12px;">- <strong>1º Retroceso</strong> a BM post-cruce<br>- Cruce SMA20/80 a favor<br>- LinReg 89 a favor (debajo/encima BM)</td>
+        <td style="padding:10px;font-size:12px;">Mejor retroceso al centro del canal de volatilidad.</td>
+      </tr>
+      <tr style="border-bottom:1px solid #eee;">
+        <td style="padding:10px;"><strong>M2 / M2+</strong></td>
+        <td style="padding:10px;text-align:center;font-weight:bold;">6</td>
+        <td style="padding:10px;">Banda Media Keltner</td>
+        <td style="padding:10px;color:var(--text-muted);font-style:italic;">Depende del cruce</td>
+        <td style="padding:10px;font-size:12px;">- <strong>&ge;2º Retroceso</strong> a BM<br>- Cruce SMA20/80 a favor<br>- LinReg 89 a favor y <strong>ya superó precio</strong></td>
+        <td style="padding:10px;font-size:12px;">Retroceso maduro cuando el precio ya ha cruzado la regresión lineal.</td>
+      </tr>
+      <tr>
+        <td style="padding:10px;"><strong>M3 / M3+</strong></td>
+        <td style="padding:10px;text-align:center;font-weight:bold;">7 <span style="font-size:10px;color:var(--text-muted);">(Min)</span></td>
+        <td style="padding:10px;">Banda Media Keltner</td>
+        <td style="padding:10px;color:var(--text-muted);font-style:italic;">Depende del cruce</td>
+        <td style="padding:10px;font-size:12px;">- <strong>&ge;3º Retroceso</strong> a BM<br>- Cruce SMA20/80 a favor<br>- <strong>LinReg 89 PLANA</strong> y ya superó precio</td>
+        <td style="padding:10px;font-size:12px;">Mercado en fase de fatiga. Última oportunidad antes del cambio de tendencia.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="card info">
+<p><strong>Sistema de Resolución de Conflictos (Ranking):</strong> Cuando el mercado retrocede rápidamente, múltiples zonas pueden activarse en la misma barra. El sistema dirime el conflicto eligiendo automáticamente la zona de <strong>mayor ranking</strong> (número menor): <code>A(1) > LR(2) > 20(3) > 80(4) > M1(5) > M2(6) > M3(7)</code>.</p>
 </div>
 
 <h4>Diferencia entre zona con y sin "+"</h4>
