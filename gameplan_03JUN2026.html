@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — Daily Strategic Game Plan | 3 JUN 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #142d37;
+    --navy-dark: #0d1f26;
+    --teal: #279995;
+    --gold: #b38665;
+    --gold-light: #d4a982;
+    --bg: #f2f0eb;
+    --surface: #ffffff;
+    --surface2: #f8f6f0;
+    --border: #e0dbd0;
+    --text: #1a1814;
+    --text-muted: #7a7468;
+    --bull: #279995;
+    --bull-bg: #e6f5f4;
+    --bear: #c0392b;
+    --bear-bg: #fdf0ee;
+    --chop: #b38665;
+    --chop-bg: #f6efe8;
+    --shadow: 0 2px 20px rgba(13,31,38,0.10);
+    --radius: 10px;
+    --header-gradient: linear-gradient(135deg, #142d37 0%, #034649 100%);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .header {
+    background: var(--header-gradient);
+    color: white;
+    padding: 24px 40px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 1;
+  }
+  .header-left .logo-img {
+    height: 68px;
+    width: auto;
+    display: block;
+  }
+  .header-left .brand {
+    display: flex;
+    flex-direction: column;
+  }
+  .header-left .brand-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: white;
+    line-height: 1;
+  }
+  .header-left .brand-name .gold {
+    color: var(--gold);
+  }
+  .header-left .brand-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--gold-light);
+    letter-spacing: 3px;
+    margin-top: 2px;
+    text-transform: uppercase;
+  }
+  .header-right {
+    text-align: right;
+    z-index: 1;
+  }
+  .header-right .date {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .header-right .time {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 2px;
+  }
+  .header-right .prices {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  .price-chip {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(179,134,101,0.35);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: white;
+  }
+  .price-chip span { color: var(--gold-light); font-weight: 700; }
+  .price-chip .chg-pos { color: var(--teal); }
+  .price-chip .chg-neg { color: #e87373; }
+  .vix-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 4px;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+  }
+  .vix-bajo { background: rgba(39,153,149,0.25); color: #6bcfcb; }
+  .vix-media { background: rgba(179,134,101,0.25); color: var(--gold-light); }
+  .vix-alta { background: rgba(224,130,50,0.25); color: #f5a623; }
+  .vix-extrema { background: rgba(224,82,82,0.25); color: #f07070; }
+  .vix-super { background: rgba(180,40,40,0.35); color: #ff5050; }
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    margin-top: 36px;
+    position: relative;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    margin-left: 4px;
+  }
+  .section-title .step {
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 1.5px;
+    border: 1px solid rgba(179,134,101,0.3);
+  }
+  .section-title h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--navy);
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead tr { background: var(--navy); color: white; }
+  thead th {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    color: var(--gold-light);
+  }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody td { padding: 10px 14px; font-size: 13px; vertical-align: top; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Space Mono', monospace;
+  }
+  .badge-high { background: var(--bear-bg); color: var(--bear); }
+  .badge-med  { background: var(--chop-bg); color: var(--chop); }
+  .badge-low  { background: var(--bull-bg); color: var(--bull); }
+  .sentiment-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .sentiment-bar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 5px;
+  }
+  .sentiment-bar.s-risk-on::before { background: var(--bull); }
+  .sentiment-bar.s-risk-off::before { background: var(--bear); }
+  .sentiment-bar.s-mixed::before { background: var(--gold); }
+  .sentiment-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .sentiment-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+  }
+  .sentiment-value.s-risk-on { color: var(--bull); }
+  .sentiment-value.s-risk-off { color: var(--bear); }
+  .sentiment-value.s-mixed { color: var(--gold); }
+  .sentiment-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    flex: 1;
+    border-left: 1px solid var(--border);
+    padding-left: 20px;
+  }
+  .sentiment-desc strong { color: var(--text); }
+  .zones-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .zone-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .zone-header {
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 2px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .zone-header .ticker { color: white; font-family: 'DM Sans', sans-serif; font-size: 13px; letter-spacing: 0; }
+  .zone-header .price-ref {
+    margin-left: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+  }
+  .zone-body { padding: 12px 16px; }
+  .zone-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .zone-row:last-child { border-bottom: none; }
+  .zone-row .label { color: var(--text-muted); font-size: 12px; }
+  .zone-row .value {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .value-res { color: var(--bear); }
+  .value-sup { color: var(--bull); }
+  .value-poc { color: var(--navy); }
+  .value-neutral { color: var(--text); }
+  .zone-type {
+    font-size: 9px;
+    font-family: 'Space Mono', monospace;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 4px;
+  }
+  .type-hvn { background: var(--bull-bg); color: var(--bull); }
+  .type-lvn { background: var(--bear-bg); color: var(--bear); }
+  .type-poc { background: #e8edf7; color: var(--navy); }
+  .zone-note {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-left: 3px solid var(--gold);
+    padding: 8px 12px;
+    line-height: 1.5;
+  }
+  .zone-note strong { color: var(--navy); }
+  .prob-bar-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .prob-bar-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--bull), var(--gold), var(--bear));
+  }
+  .prob-bar-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .prob-bar {
+    height: 16px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+  }
+  .prob-segment-bull { background: var(--bull); }
+  .prob-segment-bear { background: var(--bear); }
+  .prob-segment-chop { background: var(--gold); }
+  .prob-labels {
+    display: flex;
+    margin-top: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+  }
+  .prob-lbl { display: flex; align-items: center; gap: 5px; margin-right: 18px; }
+  .prob-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .scenarios-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .scenario-card {
+    border-radius: var(--radius);
+    border: 1.5px solid;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .scenario-card.bull { border-color: var(--bull); }
+  .scenario-card.bear { border-color: var(--bear); }
+  .scenario-card.chop { border-color: var(--gold); }
+  .scenario-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .scenario-card.bull .scenario-header { background: var(--bull-bg); }
+  .scenario-card.bear .scenario-header { background: var(--bear-bg); }
+  .scenario-card.chop .scenario-header { background: var(--chop-bg); }
+  .scenario-icon { font-size: 20px; }
+  .scenario-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 1.5px;
+  }
+  .scenario-card.bull .scenario-label { color: var(--bull); }
+  .scenario-card.bear .scenario-label { color: var(--bear); }
+  .scenario-card.chop .scenario-label { color: var(--gold); }
+  .scenario-prob {
+    margin-left: auto;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+  }
+  .scenario-card.bull .scenario-prob { color: var(--bull); }
+  .scenario-card.bear .scenario-prob { color: var(--bear); }
+  .scenario-card.chop .scenario-prob { color: var(--gold); }
+  .scenario-body {
+    background: var(--surface);
+    padding: 14px 16px;
+  }
+  .scenario-body-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .scenario-row { margin-bottom: 8px; }
+  .scenario-row .s-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+  .scenario-row .s-value {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .targets-grid {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .target-group-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+  }
+  .target-list { display: flex; gap: 4px; flex-wrap: wrap; }
+  .target-chip {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .bull .target-chip { background: var(--bull-bg); color: var(--bull); }
+  .bear .target-chip { background: var(--bear-bg); color: var(--bear); }
+  .chop .target-chip { background: var(--chop-bg); color: var(--gold); }
+  .scenario-note {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 8px 10px;
+    border-radius: 6px;
+    line-height: 1.5;
+    border-left: 3px solid var(--gold);
+  }
+  .scenario-note strong { color: var(--text); }
+  .mag7-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .mag7-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 8px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .mag7-chip .ticker {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .mag7-chip .price { font-size: 13px; font-weight: 600; margin-top: 4px; }
+  .mag7-chip .change {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    margin-top: 2px;
+    font-weight: 700;
+  }
+  .mag7-chip .bias-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    margin: 6px auto 0;
+  }
+  .pos { color: var(--bull); }
+  .neg { color: var(--bear); }
+  .neu { color: var(--gold); }
+  .dot-pos { background: var(--bull); }
+  .dot-neg { background: var(--bear); }
+  .dot-neu { background: var(--gold); }
+  .directional-summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--teal);
+  }
+  .directional-summary .icon { font-size: 20px; flex-shrink: 0; }
+  .directional-summary strong { color: var(--navy); }
+  .setup-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .setup-header {
+    background: var(--gold);
+    color: var(--navy-dark);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    padding: 10px 18px;
+  }
+  .setup-body { padding: 16px 18px; }
+  .setup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .setup-item .s-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .setup-item .s-value {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .highlight-level {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .alert-strip {
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .alert-strip .icon { font-size: 20px; flex-shrink: 0; }
+  .alert-strip.alert-info { background: #eef3fb; border: 1px solid #7da8d8; }
+  .alert-strip.alert-success { background: var(--bull-bg); border: 1px solid var(--teal); }
+  .alert-strip.alert-danger { background: var(--bear-bg); border: 1px solid var(--bear); }
+  .alert-strip.alert-warning { background: var(--chop-bg); border: 1px solid var(--gold); }
+  .mover-row-pos td:nth-child(2) { color: var(--bull); font-weight: 700; }
+  .mover-row-neg td:nth-child(2) { color: var(--bear); font-weight: 700; }
+  .banner-divider {
+    width: 100%;
+    height: 80px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: -8px 0 24px;
+    position: relative;
+    box-shadow: var(--shadow);
+  }
+  .banner-divider img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .banner-divider .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(20,45,55,0.85) 0%, rgba(3,70,73,0.6) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .banner-divider .overlay span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 8px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .footer {
+    background: var(--header-gradient);
+    color: rgba(255,255,255,0.4);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-align: center;
+    padding: 18px;
+    letter-spacing: 1px;
+    margin-top: 40px;
+    border-top: 3px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .footer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  .footer strong { color: var(--gold-light); }
+  .footer .brand-ft {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--gold-light);
+  }
+  .footer .brand-ft .gold { color: var(--gold); }
+  @media (max-width: 768px) {
+    .zones-grid { grid-template-columns: 1fr; }
+    .scenarios-grid { grid-template-columns: 1fr; }
+    .mag7-grid { grid-template-columns: repeat(4, 1fr); }
+    .header { flex-direction: column; gap: 14px; align-items: flex-start; }
+    .header-right { text-align: left; width: 100%; }
+    .header-right .prices { justify-content: flex-start; }
+    .setup-grid { grid-template-columns: 1fr; }
+    .scenario-body-inner { grid-template-columns: 1fr; }
+    .targets-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <img class="logo-img" src="/assets/logo.png" alt="EduS Trader" onerror="this.style.display='none'">
+    <div class="brand">
+      <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
+      <div class="brand-sub">Daily Strategic Game Plan &middot; Mesa de Dinero</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="date">MIÉRCOLES 3 DE JUNIO 2026</div>
+    <div class="time">09:20 AM ET &middot; PRE-MARKET</div>
+    <div class="prices">
+      <div class="price-chip">ES <span>7,609.75</span> <span class="chg-pos">+0.33%</span></div>
+      <div class="price-chip">NQ <span>30,733.75</span> <span class="chg-pos">+1.44%</span></div>
+      <div class="price-chip">CL <span>96.12</span> <span class="chg-pos">+9.59%</span></div>
+      <div class="price-chip">GC <span>4,494.00</span> <span class="chg-neg">-1.12%</span></div>
+      <div class="price-chip">VIX <span>16.19</span> <span class="vix-badge vix-bajo">Bajo</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="banner-divider">
+  <img src="/banner.png" alt="" onerror="this.style.display='none'">
+  <div class="overlay"><span>3 JUN 2026 &middot; Game Plan</span></div>
+</div>
+
+<div class="section-title">
+  <span class="step">PASO 01</span>
+  <h2>Sentimiento Global &amp; Fundamentales</h2>
+</div>
+
+<div class="sentiment-bar s-mixed">
+  <div>
+    <div class="sentiment-label">Global Sentiment</div>
+    <div class="sentiment-value s-mixed">VIGILANTE / ENERGÍA EN SHOCK</div>
+  </div>
+  <div class="sentiment-desc">
+    El mercado opera en modo mixto con una divergencia notable: NQ lidera con +1.35% impulsado por tecnología, mientras CL explota +9.83% generando un shock de suministro energético sin precedente reciente. GC cede -1.47% desde el high de 4,627 sugiriendo fortaleza del dólar o profit-taking institucional. ES consolida con ganancias moderadas de +0.25%. VIX en 16.16 refleja calma relativa en renta variable a pesar de la turbulencia extrema en commodities.
+  </div>
+</div>
+
+<div class="alert-strip alert-warning">
+    <div class="icon">🚨</div>
+    <div>
+      <strong>CL +9.83%: Shock de Oferta en Petróleo WTI</strong>
+      El crudo WTI registra un movimiento extremo de casi +10% en sesión con rango 86.35-97.00. Este tipo de movimiento apunta a evento geopolítico mayor, reducción sorpresa de producción OPEC+, o cierre de infraestructura crítica. Impacto directo en expectativas de inflación, costos operativos y posible reacción del Fed. PRIORIDAD: esperar confirmación EIA 10:30 ET antes de cualquier operación en CL. No perseguir el movimiento.
+    </div>
+  </div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>HORA ET</th>
+        <th>DATO / EVENTO</th>
+        <th>IMPACTO</th>
+        <th>CONSENSO</th>
+        <th>NOTA DE LIQUIDEZ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+          <td><strong>08:15</strong></td>
+          <td style="color:var(--text)">ADP Employment Change (Mayo)</td>
+          <td><span class="badge badge-high">ALTO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">+155K empleos</td>
+          <td style="color:var(--text-muted);font-size:12px">Previo: +167K. Precursor clave del NFP de viernes. Spreads bid-ask se amplían en ES y NQ en los 2 min previos. Evitar órdenes abiertas desde 08:10.</td>
+        </tr>
+<tr>
+          <td><strong>09:45</strong></td>
+          <td style="color:var(--text)">S&P Global Services PMI Final (Mayo)</td>
+          <td><span class="badge badge-med">MEDIO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">53.8</td>
+          <td style="color:var(--text-muted);font-size:12px">Lectura final vs preliminar de 53.5. Datos sobre 50 son expansivos. Impacto menor si confirma la lectura preliminar. Vigilar componente de precios pagados en contexto de CL alto.</td>
+        </tr>
+<tr>
+          <td><strong>10:00</strong></td>
+          <td style="color:var(--text)">ISM Services PMI (Mayo)</td>
+          <td><span class="badge badge-high">ALTO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">51.5</td>
+          <td style="color:var(--text-muted);font-size:12px">El componente de precios pagados cobra relevancia crítica con CL en zona de 96-97. Lectura por encima de 53 podría renovar presiones inflacionarias y ajustar expectativas del Fed hacia pausa o alza.</td>
+        </tr>
+<tr>
+          <td><strong>10:00</strong></td>
+          <td style="color:var(--text)">Factory Orders (Abril)</td>
+          <td><span class="badge badge-med">MEDIO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">+0.7% m/m</td>
+          <td style="color:var(--text-muted);font-size:12px">Previo: +1.2%. Datos de demanda manufacturera. Impacto secundario frente al ISM Services. Se publica de forma simultánea, duplicando el spike de volatilidad en la ventana de las 10:00.</td>
+        </tr>
+<tr>
+          <td><strong>10:30</strong></td>
+          <td style="color:var(--text)">EIA Crude Oil Inventories</td>
+          <td><span class="badge badge-low">EXTREMO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">-1.8M barriles</td>
+          <td style="color:var(--text-muted);font-size:12px">CRÍTICO con CL ya +9.83%. Un dato bajista (caída mayor a -2.5M) podría extender el rally hacia 98-100. Un dato alcista (build inesperado > +1M) desencadenaría reversión violenta tipo Automatic Reaction. NO operar CL en los 10 minutos previos y esperar 2-3 min post-publicación antes de entrar.</td>
+        </tr>
+<tr>
+          <td><strong>13:00</strong></td>
+          <td style="color:var(--text)">Fed Williams habla (NY Fed)</td>
+          <td><span class="badge badge-med">MEDIO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">Sin cambios en retórica esperados</td>
+          <td style="color:var(--text-muted);font-size:12px">El contexto de CL puede forzar comentarios sobre inflación energética y su impacto en la política monetaria. Escuchar señales sobre timing de recortes o pausa extendida.</td>
+        </tr>
+<tr>
+          <td><strong>15:00</strong></td>
+          <td style="color:var(--text)">Fed Beige Book</td>
+          <td><span class="badge badge-med">MEDIO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">Crecimiento económico moderado</td>
+          <td style="color:var(--text-muted);font-size:12px">Publicación semestral del Fed con condiciones regionales. Relevancia alta si menciona presiones de costos energéticos post-spike CL. Posible spike de volatilidad en los 15 min post-publicación.</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="alert-strip alert-info">
+    <div class="icon">⚠️</div>
+    <div>
+      <strong>Triple Dato Macro Comprimido: ADP + ISM + EIA en ventana 08:15-10:30</strong>
+      Convergencia de datos de alto impacto en menos de 2.5 horas. ADP Employment a las 08:15, ISM Services a las 10:00 y EIA Crude Inventories a las 10:30. Reducir tamaño de posición antes de cada publicación. El dato EIA cobra relevancia extrema dado el shock previo de CL.
+    </div>
+  </div>
+
+<div class="section-title">
+  <span class="step">PASO 02</span>
+  <h2>Análisis Estructural — Zonas Clave</h2>
+</div>
+
+<div class="zones-grid">
+  <div class="zone-card">
+      <div class="zone-header">
+        <span>ES</span>
+        <span class="ticker">S&P 500 E-mini · 610 Tick</span>
+        <span class="price-ref">Ref: 7,604.25</span>
+      </div>
+      <div class="zone-body">
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">RESISTENCIAS</div>
+        <div class="zone-row"><span class="label">Pre-High / High de Sesión <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">7,632.25</span></div>
+<div class="zone-row"><span class="label">Extensión Proyectada 1.27x <span class="zone-type type-ext">EXT</span></span><span class="value value-res">7,648.50</span></div>
+<div class="zone-row"><span class="label">Nivel Psicológico <span class="zone-type type-psych">PSYCH</span></span><span class="value value-res">7,650.00</span></div>
+<div class="zone-row"><span class="label">Target Swing Mayor <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">7,675.00</span></div>
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px">SOPORTES</div>
+        <div class="zone-row"><span class="label">onPOC Sesión <span class="zone-type type-poc">POC</span></span><span class="value value-sup">7,598.75</span></div>
+<div class="zone-row"><span class="label">AVWAP Daily <span class="zone-type type-vwap">VWAP</span></span><span class="value value-sup">7,588.00</span></div>
+<div class="zone-row"><span class="label">Pre-Low / Low de Sesión <span class="zone-type type-lvn">LVN</span></span><span class="value value-sup">7,576.25</span></div>
+<div class="zone-row"><span class="label">Soporte Estructural Mayor <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">7,558.50</span></div>
+        <div class="zone-note"><strong>Wyckoff / Market Profile:</strong> ES opera en fase de Re-Acumulación dentro del rango pre-market 7,576-7,632. El cierre en 7,604.25 posiciona al precio en la zona media-alta del rango, justo por encima del POC estimado de sesión en 7,598-7,600. Estructura Wyckoff de Testing Supply: si el precio no puede superar 7,632 con volumen real en el cash open, anticipar rotación hacia el AVWAP Daily en 7,588. Para la sesión cash, el ORB de los primeros 5 minutos (09:30-09:35) será determinante. Un Upthrust por encima de 7,632 sin volumen proporcional equivale a señal de debilidad distribuida. Un Spring por debajo de 7,576 seguido de cierre fuerte y volumen indicaría re-acumulación. Bias neutral-alcista mientras el precio se mantenga sobre 7,576 con cierre por encima del POC de 7,598.</div>
+      </div>
+    </div>
+<div class="zone-card">
+      <div class="zone-header">
+        <span>NQ</span>
+        <span class="ticker">Nasdaq 100 E-mini · 377 Tick</span>
+        <span class="price-ref">Ref: 30,706.25</span>
+      </div>
+      <div class="zone-body">
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">RESISTENCIAS</div>
+        <div class="zone-row"><span class="label">Pre-High / High de Sesión <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">30,799.00</span></div>
+<div class="zone-row"><span class="label">Nivel Redondo Psicológico <span class="zone-type type-psych">PSYCH</span></span><span class="value value-res">30,850.00</span></div>
+<div class="zone-row"><span class="label">Proyección Extensión 1.27x <span class="zone-type type-ext">EXT</span></span><span class="value value-res">30,925.00</span></div>
+<div class="zone-row"><span class="label">Target Redondo Mayor <span class="zone-type type-psych">PSYCH</span></span><span class="value value-res">31,000.00</span></div>
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px">SOPORTES</div>
+        <div class="zone-row"><span class="label">onPOC Sesión Estimado <span class="zone-type type-poc">POC</span></span><span class="value value-sup">30,620.00</span></div>
+<div class="zone-row"><span class="label">AVWAP Daily <span class="zone-type type-vwap">VWAP</span></span><span class="value value-sup">30,575.00</span></div>
+<div class="zone-row"><span class="label">Zona de Demanda Institucional <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">30,450.00</span></div>
+<div class="zone-row"><span class="label">Pre-Low / Low de Sesión <span class="zone-type type-lvn">LVN</span></span><span class="value value-sup">30,265.75</span></div>
+        <div class="zone-note"><strong>Wyckoff / Market Profile:</strong> NQ lidera el mercado con +1.35% mostrando momentum alcista sostenido en el rango de sesión de 30,265-30,799. La amplitud de 533 puntos indica participación institucional significativa. El precio en 30,706 posiciona a NQ en el percentil 83 del rango de sesión, señal clara de fortaleza compradora. Estructura de Sign of Strength activa: el rally desde el low de 30,265 con cierre cerca de máximos sugiere acumulación completada y fase de Markup en progreso. Resistencia clave en 30,799 (Pre-High); ruptura sostenida con volumen confirma extensión hacia 31,000. Soporte crítico: 30,450 (zona de demanda institucional comprobada). Bias alcista mientras 30,450 actúe como soporte. Riesgo principal: reversión desde 30,799 si el shock de CL se reinterpreta como headwind inflacionario para tecnología de largo plazo.</div>
+      </div>
+    </div>
+<div class="zone-card">
+      <div class="zone-header">
+        <span>CL</span>
+        <span class="ticker">Crude Oil WTI · Continuo</span>
+        <span class="price-ref">Ref: 96.33</span>
+      </div>
+      <div class="zone-body">
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">RESISTENCIAS</div>
+        <div class="zone-row"><span class="label">High de Sesión <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">97.00</span></div>
+<div class="zone-row"><span class="label">Nivel Psicológico <span class="zone-type type-psych">PSYCH</span></span><span class="value value-res">98.00</span></div>
+<div class="zone-row"><span class="label">Resistencia Semanal Clave <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">99.50</span></div>
+<div class="zone-row"><span class="label">Nivel 100 Gran Psicológico <span class="zone-type type-psych">PSYCH</span></span><span class="value value-res">100.00</span></div>
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px">SOPORTES</div>
+        <div class="zone-row"><span class="label">AVWAP de Sesión <span class="zone-type type-vwap">VWAP</span></span><span class="value value-sup">93.80</span></div>
+<div class="zone-row"><span class="label">Zona de Consolidación Pre-Spike <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">92.50</span></div>
+<div class="zone-row"><span class="label">50% Retroceso Rango Sesión <span class="zone-type type-fib">FIB</span></span><span class="value value-sup">91.67</span></div>
+<div class="zone-row"><span class="label">Origen del Spike / Pre-Low <span class="zone-type type-lvn">LVN</span></span><span class="value value-sup">86.35</span></div>
+        <div class="zone-note"><strong>Wyckoff / Market Profile:</strong> CL en modo Shock Event con un movimiento unidireccional de +9.83% (rango de sesión: 86.35-97.00). Este tipo de spike rara vez se sostiene sin retroceso significativo. La estructura Wyckoff apunta a un Buying Climax potencial: volumen extremo, vela de rango extendido, cierre en 96.33 cerca del high de 97.00 pero sin alcanzarlo. Probabilidad alta de Automatic Reaction (AR) seguida de Secondary Test en las próximas sesiones. La clave para hoy es el dato EIA a las 10:30. Si inventarios confirman caída de suministro mayor a -2.5M barriles, segunda ola alcista hacia 98-100 es plausible. Si inventarios sorprenden con build, la Automatic Reaction puede llevar el precio a 91.67-93.00 en pocas horas. El gap de apertura desde el nivel pre-spike (~87.50) crea zona de imbalance que históricamente se rellena. No perseguir longs en 96-97 sin catalizador EIA confirmado.</div>
+      </div>
+    </div>
+<div class="zone-card">
+      <div class="zone-header">
+        <span>GC</span>
+        <span class="ticker">Gold · Continuo</span>
+        <span class="price-ref">Ref: 4,477.70</span>
+      </div>
+      <div class="zone-body">
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">RESISTENCIAS</div>
+        <div class="zone-row"><span class="label">AVWAP / Precio de Apertura <span class="zone-type type-vwap">VWAP</span></span><span class="value value-res">4,490.89</span></div>
+<div class="zone-row"><span class="label">Zona de Oferta Identificada <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">4,520.00</span></div>
+<div class="zone-row"><span class="label">50% Retroceso del Rango <span class="zone-type type-fib">FIB</span></span><span class="value value-res">4,547.15</span></div>
+<div class="zone-row"><span class="label">Pre-High / High de Sesión <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">4,627.10</span></div>
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px">SOPORTES</div>
+        <div class="zone-row"><span class="label">Mínimo de Sesión <span class="zone-type type-lvn">LVN</span></span><span class="value value-sup">4,467.20</span></div>
+<div class="zone-row"><span class="label">Soporte Estructural Inmediato <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">4,450.00</span></div>
+<div class="zone-row"><span class="label">POC Semanal Estimado <span class="zone-type type-poc">POC</span></span><span class="value value-sup">4,420.00</span></div>
+<div class="zone-row"><span class="label">Soporte Mayor de Estructura <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">4,380.00</span></div>
+        <div class="zone-note"><strong>Wyckoff / Market Profile:</strong> GC muestra una sesión de Distribution o Profit-Taking institucional masivo desde el spike de 4,627. La caída desde el high hasta el cierre en 4,477.70 representa una corrección de -3.22% desde máximos, con el precio cerrando muy cerca del low de sesión de 4,467.20. Estructura Wyckoff de Upthrust After Distribution (UTAD): el rally a 4,627 fue rechazado con agresividad inusual, sugiriendo distribución institucional activa. El contexto de dólar potencialmente más fuerte (impulsado por el spike de CL y expectativas de inflación) presiona a GC hacia el lado bajista. Soporte crítico: 4,467 (low de sesión); quiebre y cierre por debajo activa objetivo hacia 4,420-4,380. La divergencia GC bajando mientras CL sube es señal de alerta: si GC no puede rebotar con CL alto, confirma fortaleza del dólar. Bias bajista para la sesión mientras el precio permanezca bajo el AVWAP de apertura en 4,490.</div>
+      </div>
+    </div>
+</div>
+
+<div class="alert-strip alert-info">
+    <div class="icon">📊</div>
+    <div>
+      <strong>Contexto Market Profile / Wyckoff:</strong><br>
+      <strong>ES:</strong> ES opera en fase de Re-Acumulación dentro del rango pre-market 7,576-7,632. El cierre en 7,604.25 posiciona al precio en la zona media-alta del rango, justo por encima del POC estimado de sesión en 7,598-7,600. Estructura Wyckoff de Testing Supply: si el precio no puede superar 7,632 con volumen real en el cash open, anticipar rotación hacia el AVWAP Daily en 7,588. Para la sesión cash, el ORB de los primeros 5 minutos (09:30-09:35) será determinante. Un Upthrust por encima de 7,632 sin volumen proporcional equivale a señal de debilidad distribuida. Un Spring por debajo de 7,576 seguido de cierre fuerte y volumen indicaría re-acumulación. Bias neutral-alcista mientras el precio se mantenga sobre 7,576 con cierre por encima del POC de 7,598.<br><strong>NQ:</strong> NQ lidera el mercado con +1.35% mostrando momentum alcista sostenido en el rango de sesión de 30,265-30,799. La amplitud de 533 puntos indica participación institucional significativa. El precio en 30,706 posiciona a NQ en el percentil 83 del rango de sesión, señal clara de fortaleza compradora. Estructura de Sign of Strength activa: el rally desde el low de 30,265 con cierre cerca de máximos sugiere acumulación completada y fase de Markup en progreso. Resistencia clave en 30,799 (Pre-High); ruptura sostenida con volumen confirma extensión hacia 31,000. Soporte crítico: 30,450 (zona de demanda institucional comprobada). Bias alcista mientras 30,450 actúe como soporte. Riesgo principal: reversión desde 30,799 si el shock de CL se reinterpreta como headwind inflacionario para tecnología de largo plazo.<br><strong>CL:</strong> CL en modo Shock Event con un movimiento unidireccional de +9.83% (rango de sesión: 86.35-97.00). Este tipo de spike rara vez se sostiene sin retroceso significativo. La estructura Wyckoff apunta a un Buying Climax potencial: volumen extremo, vela de rango extendido, cierre en 96.33 cerca del high de 97.00 pero sin alcanzarlo. Probabilidad alta de Automatic Reaction (AR) seguida de Secondary Test en las próximas sesiones. La clave para hoy es el dato EIA a las 10:30. Si inventarios confirman caída de suministro mayor a -2.5M barriles, segunda ola alcista hacia 98-100 es plausible. Si inventarios sorprenden con build, la Automatic Reaction puede llevar el precio a 91.67-93.00 en pocas horas. El gap de apertura desde el nivel pre-spike (~87.50) crea zona de imbalance que históricamente se rellena. No perseguir longs en 96-97 sin catalizador EIA confirmado.<br><strong>GC:</strong> GC muestra una sesión de Distribution o Profit-Taking institucional masivo desde el spike de 4,627. La caída desde el high hasta el cierre en 4,477.70 representa una corrección de -3.22% desde máximos, con el precio cerrando muy cerca del low de sesión de 4,467.20. Estructura Wyckoff de Upthrust After Distribution (UTAD): el rally a 4,627 fue rechazado con agresividad inusual, sugiriendo distribución institucional activa. El contexto de dólar potencialmente más fuerte (impulsado por el spike de CL y expectativas de inflación) presiona a GC hacia el lado bajista. Soporte crítico: 4,467 (low de sesión); quiebre y cierre por debajo activa objetivo hacia 4,420-4,380. La divergencia GC bajando mientras CL sube es señal de alerta: si GC no puede rebotar con CL alto, confirma fortaleza del dólar. Bias bajista para la sesión mientras el precio permanezca bajo el AVWAP de apertura en 4,490.
+    </div>
+  </div>
+
+<div class="section-title">
+  <span class="step">PASO 03</span>
+  <h2>Matriz de Escenarios — Plan de Batalla</h2>
+</div>
+
+<div class="prob-bar-container">
+  <div class="prob-bar-title">Distribución de Probabilidades Estimadas</div>
+  <div class="prob-bar">
+    <div class="prob-segment-bull" style="width:45%"></div>
+    <div class="prob-segment-chop" style="width:35%"></div>
+    <div class="prob-segment-bear" style="width:20%"></div>
+  </div>
+  <div class="prob-labels">
+    <div class="prob-lbl"><div class="prob-dot dot-pos"></div> Alcista 45%</div>
+    <div class="prob-lbl"><div class="prob-dot dot-neu"></div> Lateral 35%</div>
+    <div class="prob-lbl"><div class="prob-dot dot-neg"></div> Bajista 20%</div>
+  </div>
+</div>
+
+<div class="scenarios-grid">
+  <div class="scenario-card bull">
+    <div class="scenario-header">
+      <span class="scenario-icon">🟢</span>
+      <div>
+        <div class="scenario-label">ESCENARIO A — ALCISTA</div>
+        <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--bull)">Bullish Case</div>
+      </div>
+      <div class="scenario-prob">45%</div>
+    </div>
+    <div class="scenario-body">
+      <div class="scenario-body-inner">
+        <div class="scenario-row">
+          <div class="s-label">Trigger / Condición</div>
+          <div class="s-value">ES rompe y cierra sobre 7,632 con volumen real en el cash open. NQ confirma ruptura de 30,799 con momentum. ADP supera 170K y ISM Services por encima de 53. EIA muestra caída de inventarios mayor a -2.5M barriles confirmando el shock de suministro. CL extiende hacia 98-100.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Estrategia</div>
+          <div class="s-value">Long ES en pullback a 7,615-7,620 post-ruptura confirmada de 7,632. Long NQ en retroceso al POC 30,620-30,640 buscando 31,000. En CL, esperar confirmación EIA y entrar en primer pullback hacia 94.50-95.00 post-dato. GC: evitar longs hasta cierre sobre 4,520 con volumen.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Invalidación</div>
+          <div class="s-value" style="color:var(--bear)">ES falla en romper 7,632 con volumen o cierra por debajo de 7,576. NQ no logra superar 30,799 en el primer intento y revierte. EIA inventarios muestran build mayor a +1M barriles. ISM Services cae por debajo de 50 indicando contracción.</div>
+        </div>
+      </div>
+      <div class="targets-grid"><div class="target-group"><div class="target-group-label">ES</div><div class="target-list"><span class="target-chip">T1: 7,648.50</span><span class="target-chip">T2: 7,675.00</span></div></div> <div class="target-group"><div class="target-group-label">NQ</div><div class="target-list"><span class="target-chip">T1: 30,925.00</span><span class="target-chip">T2: 31,000.00</span></div></div> <div class="target-group"><div class="target-group-label">CL</div><div class="target-list"><span class="target-chip">T1: 98.00</span><span class="target-chip">T2: 100.00</span></div></div> <div class="target-group"><div class="target-group-label">GC</div><div class="target-list"><span class="target-chip">T1: 4,520.00</span><span class="target-chip">T2: 4,550.00</span></div></div></div>
+      <div class="scenario-note" style="background:rgba(77,186,118,0.05)"><strong>Nota:</strong> Escenario de mayor probabilidad. El liderazgo de NQ y la calma del VIX en 16 favorecen al bull. Reducir tamaño al 60% del normal en CL por volatilidad extrema post-shock. El riesgo clave es que el spike de CL sea reinterpretado como señal inflacionaria que paraliza al Fed en cortes de tasas.</div>
+    </div>
+  </div>
+<div class="scenario-card bear">
+    <div class="scenario-header">
+      <span class="scenario-icon">🔴</span>
+      <div>
+        <div class="scenario-label">ESCENARIO B — BAJISTA</div>
+        <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--bear)">Bearish Case</div>
+      </div>
+      <div class="scenario-prob">20%</div>
+    </div>
+    <div class="scenario-body">
+      <div class="scenario-body-inner">
+        <div class="scenario-row">
+          <div class="s-label">Trigger / Condición</div>
+          <div class="s-value">ADP decepciona con menos de 100K empleos. ISM Services cae por debajo de 50 señalando contracción. EIA muestra build sorpresa de inventarios mayor a +2M barriles. CL revierte violentamente desde 97 hacia 91-92 en Automatic Reaction. ES quiebra debajo de 7,576 con cierre bajo ese nivel. Liquidación de riesgo generalizada con VIX superando 19.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Estrategia</div>
+          <div class="s-value">Short ES en rechazo de 7,632 con stop en 7,650 buscando 7,558. Short CL post-EIA si hay build sorpresa, entrada en consolidación bajo 94.00. Reducir toda exposición long en NQ. GC podría actuar como hedge si el dólar cede en el flight-to-quality.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Invalidación</div>
+          <div class="s-value" style="color:var(--bear)">ES mantiene soporte en 7,576 con cierre sobre 7,600 en el cash open. CL no rompe por debajo de 94.00 post-EIA. ADP supera 150K confirmando mercado laboral sólido. ISM Services por encima de 52.</div>
+        </div>
+      </div>
+      <div class="targets-grid"><div class="target-group"><div class="target-group-label">ES</div><div class="target-list"><span class="target-chip">T1: 7,558.50</span><span class="target-chip">T2: 7,528.00</span></div></div> <div class="target-group"><div class="target-group-label">NQ</div><div class="target-list"><span class="target-chip">T1: 30,265.75</span><span class="target-chip">T2: 30,050.00</span></div></div> <div class="target-group"><div class="target-group-label">CL</div><div class="target-list"><span class="target-chip">T1: 93.00</span><span class="target-chip">T2: 91.67</span></div></div> <div class="target-group"><div class="target-group-label">GC</div><div class="target-list"><span class="target-chip">T1: 4,550.00</span><span class="target-chip">T2: 4,620.00</span></div></div></div>
+      <div class="scenario-note" style="background:rgba(224,82,82,0.05)"><strong>Nota:</strong> Escenario de menor probabilidad pero impacto asimétrico elevado. El shock de CL puede generar un fear trade si el mercado lo reinterpreta como señal stagflacionaria. Gestión de riesgo estricta obligatoria: stops automáticos en cada posición sin excepción.</div>
+    </div>
+  </div>
+<div class="scenario-card chop">
+    <div class="scenario-header">
+      <span class="scenario-icon">🟡</span>
+      <div>
+        <div class="scenario-label">ESCENARIO C — LATERAL</div>
+        <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--chop)">Chop / Rango</div>
+      </div>
+      <div class="scenario-prob">35%</div>
+    </div>
+    <div class="scenario-body">
+      <div class="scenario-body-inner">
+        <div class="scenario-row">
+          <div class="s-label">Trigger / Condición</div>
+          <div class="s-value">Datos macro en línea con el consenso sin sorpresas significativas. CL consolida entre 93.00-97.00 post-EIA sin extensión clara. ES oscila en rango 7,576-7,632 sin ruptura decisiva. NQ contiene entre 30,450-30,799. VIX se mantiene entre 15 y 17.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Estrategia</div>
+          <div class="s-value">Fade the extremes: Long ES en soporte 7,576-7,582 con target 7,620. Short ES en resistencia 7,630-7,632 con target 7,598. Mismo approach en NQ usando los extremos del rango. En CL evitar operaciones intraday hasta claridad total post-EIA. GC scalp en rango 4,467-4,520 con stops ajustados.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Invalidación</div>
+          <div class="s-value" style="color:var(--chop)">Ruptura limpia de 7,632 en ES con volumen activa el escenario bull. Quiebre sostenido de 7,576 activa el escenario bear. CL con movimiento mayor a 2.5% en cualquier dirección post-EIA rompe el rango e invalida el chop.</div>
+        </div>
+      </div>
+      <div class="targets-grid"><div class="target-group"><div class="target-group-label">ES</div><div class="target-list"><span class="target-chip">T1 Long: 7,620.00</span><span class="target-chip">T1 Short: 7,580.00</span></div></div> <div class="target-group"><div class="target-group-label">NQ</div><div class="target-list"><span class="target-chip">T1 Long: 30,750.00</span><span class="target-chip">T1 Short: 30,420.00</span></div></div> <div class="target-group"><div class="target-group-label">CL</div><div class="target-list"><span class="target-chip">T1: 93.00 - 96.50</span></div></div> <div class="target-group"><div class="target-group-label">GC</div><div class="target-list"><span class="target-chip">T1: 4,470.00 - 4,520.00</span></div></div></div>
+      <div class="scenario-note" style="background:rgba(138,108,0,0.05)"><strong>Regla crítica:</strong> Con triple dato macro en ventana comprimida y shock de CL sin resolver, el chop es el escenario más probable en las primeras 2 horas de trading. La mejor estrategia hasta las 10:45 post-EIA es observar y no operar. Liquidez real llegará después de las 10:45.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-title">
+  <span class="step">PASO 04</span>
+  <h2>Contexto Corporativo — Market Breadth</h2>
+</div>
+
+<div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:10px;">4.1 &middot; Las 7 Magníficas — Sesgo Direccional</div>
+
+<div class="mag7-grid">
+  <div class="mag7-chip">
+        <div class="ticker">AAPL</div>
+        <div class="price" style="font-size:12px">$228.40</div>
+        <div class="change up">+0.8%</div>
+        <div class="bias-dot dot-up"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">MSFT</div>
+        <div class="price" style="font-size:12px">$512.75</div>
+        <div class="change up">+1.2%</div>
+        <div class="bias-dot dot-up"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">GOOGL</div>
+        <div class="price" style="font-size:12px">$218.90</div>
+        <div class="change up">+1.6%</div>
+        <div class="bias-dot dot-up"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">AMZN</div>
+        <div class="price" style="font-size:12px">$249.35</div>
+        <div class="change up">+0.9%</div>
+        <div class="bias-dot dot-up"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">NVDA</div>
+        <div class="price" style="font-size:12px">$172.50</div>
+        <div class="change up">+2.4%</div>
+        <div class="bias-dot dot-up"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">META</div>
+        <div class="price" style="font-size:12px">$688.20</div>
+        <div class="change up">+1.1%</div>
+        <div class="bias-dot dot-up"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">TSLA</div>
+        <div class="price" style="font-size:12px">$342.80</div>
+        <div class="change down">-1.3%</div>
+        <div class="bias-dot dot-down"></div>
+      </div>
+</div>
+
+<div class="directional-summary">
+    <div class="icon">🧭</div>
+    <div><strong>Sesgo Mag 7:</strong> Sesgo alcista claro en 6 de 7 Mag7, con NVDA liderando con +2.4% impulsando el subsector IA/semiconductores y contribuyendo directamente al rally de NQ. TSLA diverge negativamente con -1.3%, posiblemente afectado por el encarecimiento de energía derivado del spike de CL +9.83%, que comprime márgenes de manufactura de EVs y refuerza la narrativa de costos al alza en la industria. La amplitud es positiva para tecnología de alto crecimiento pero el shock energético introduce riesgo de rotación sectorial desde growth hacia energy y materiales.</div>
+  </div>
+
+<div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:10px;">4.2 &middot; Top Movers S&amp;P 500 — 3 JUN 2026</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>TICKER</th>
+        <th>% CAMBIO</th>
+        <th>VOL. RELATIVO</th>
+        <th>CAUSA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="mover-row-pos">
+          <td><strong>XOM</strong></td>
+          <td>+7.2%</td>
+          <td style="font-size:12px">4.8x</td>
+          <td style="font-size:12px">Beneficiario directo del spike de CL +9.83%. Revisión alcista de precio objetivo por parte de Goldman Sachs. Flujo institucional masivo hacia sector energético. Estimados de FCF 2026 revisados al alza con crudo sobre 95.</td>
+        </tr>
+<tr class="mover-row-pos">
+          <td><strong>CVX</strong></td>
+          <td>+5.8%</td>
+          <td style="font-size:12px">3.5x</td>
+          <td style="font-size:12px">Segundo beneficiario del shock petrolero. Compras de momentum institucional. Fortaleza del sector energético integrado con crudo en zona de 96-97.</td>
+        </tr>
+<tr class="mover-row-pos">
+          <td><strong>NVDA</strong></td>
+          <td>+2.4%</td>
+          <td style="font-size:12px">2.1x</td>
+          <td style="font-size:12px">Continuación del momentum en IA y semiconductores. Reportes de nuevos contratos de data center con hyperscalers. Principal driver del liderazgo de NQ en la sesión.</td>
+        </tr>
+<tr class="mover-row-neg">
+          <td><strong>TSLA</strong></td>
+          <td>-1.3%</td>
+          <td style="font-size:12px">1.6x</td>
+          <td style="font-size:12px">Presión por encarecimiento de costos energéticos de manufactura y preocupaciones sobre márgenes con energía al alza. Rotación de capital desde EV hacia sector energético tradicional.</td>
+        </tr>
+<tr class="mover-row-neg">
+          <td><strong>GLD</strong></td>
+          <td>-1.5%</td>
+          <td style="font-size:12px">2.2x</td>
+          <td style="font-size:12px">Profit-taking masivo desde highs de 4,627 en GC. Fortaleza del dólar correlacionada con el spike energético e inflación importada. Liquidación de hedges de inflación ante expectativas de datos laborales positivos.</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section-title">
+  <span class="step">PASO 05</span>
+  <h2>Estrategia Operativa — Mesa &lt; 11:30 AM ET</h2>
+</div>
+
+<div class="setup-box">
+    <div class="setup-header">⚡ SETUP PRIMARIO — Long NQ en Retroceso al POC de Sesión 30,620</div>
+    <div class="setup-body">
+      <div class="setup-item">
+        <div class="s-label">Descripción</div>
+        <div class="s-value">Con NQ mostrando la mayor fortaleza relativa de la sesión (+1.35%) y estructura de Sign of Strength activa, el setup primario es long en el primer retroceso al POC estimado de sesión en 30,600-30,625. El nivel coincide con la zona media del rango pre-market y se aproxima al AVWAP diario en 30,575. Entrada únicamente si: (1) ES mantiene soporte sobre 7,576, (2) los datos ADP e ISM no sorprenden negativamente, (3) NQ no está en caída libre sino en retroceso ordenado con volumen decreciente.</div>
+      </div>
+      <div class="setup-grid"><div class="setup-item"><div class="s-label">Zona de Entrada</div><div class="s-value" style="font-weight:600">30,600 - 30,625</div></div><div class="setup-item"><div class="s-label">Stop</div><div class="s-value" style="font-weight:600">30,520 (bajo AVWAP Daily 30,575)</div></div><div class="setup-item"><div class="s-label">Target T1</div><div class="s-value" style="font-weight:600">30,799 (Pre-High de Sesión)</div></div><div class="setup-item"><div class="s-label">Target T2</div><div class="s-value" style="font-weight:600">30,925 (Extensión 1.27x)</div></div><div class="setup-item"><div class="s-label">R:R T1</div><div class="s-value" style="font-weight:600">1:2.3</div></div><div class="setup-item"><div class="s-label">R:R T2</div><div class="s-value" style="font-weight:600">1:3.9</div></div><div class="setup-item"><div class="s-label">Probabilidad</div><div class="s-value" style="font-weight:600">Alta en contexto bull confirmado</div></div><div class="setup-item"><div class="s-label">Tamaño Recomendado</div><div class="s-value" style="font-weight:600">70% normal pre-datos macro; 100% post-ISM 10:00</div></div></div>
+    </div>
+  </div>
+<div class="setup-box">
+    <div class="setup-header">⚡ SETUP SECUNDARIO — CL Post-EIA: Long o Short según Dato de Inventarios</div>
+    <div class="setup-body">
+      <div class="setup-item">
+        <div class="s-label">Descripción</div>
+        <div class="s-value">El setup en CL se activa ÚNICAMENTE después del dato EIA a las 10:30. No operar CL antes de ese momento dado el rango extremo ya registrado de 86.35-97.00 y el riesgo de reversión violenta. Tras el dato: si inventarios confirman caída de suministro mayor a -2M barriles, buscar long en primer pullback a 94.50-95.00. Si inventarios sorprenden con build mayor a +1M barriles, esperar consolidación bajo 94.00 para short con target 91.67-92.50.</div>
+      </div>
+      <div class="setup-grid"><div class="setup-item"><div class="s-label">Condición Long</div><div class="s-value" style="font-weight:600">EIA menor a -2M barriles + precio sobre 95.00</div></div><div class="setup-item"><div class="s-label">Zona Entry Long</div><div class="s-value" style="font-weight:600">94.50 - 95.00 (pullback post-EIA)</div></div><div class="setup-item"><div class="s-label">Stop Long</div><div class="s-value" style="font-weight:600">93.40</div></div><div class="setup-item"><div class="s-label">Target Long T1</div><div class="s-value" style="font-weight:600">97.00</div></div><div class="setup-item"><div class="s-label">Target Long T2</div><div class="s-value" style="font-weight:600">99.50</div></div><div class="setup-item"><div class="s-label">Condición Short</div><div class="s-value" style="font-weight:600">EIA mayor a +1M barriles + precio bajo 94.00</div></div><div class="setup-item"><div class="s-label">Zona Entry Short</div><div class="s-value" style="font-weight:600">93.80 - 94.20</div></div><div class="setup-item"><div class="s-label">Stop Short</div><div class="s-value" style="font-weight:600">95.30</div></div><div class="setup-item"><div class="s-label">Target Short T1</div><div class="s-value" style="font-weight:600">91.67</div></div><div class="setup-item"><div class="s-label">R:R Mínimo</div><div class="s-value" style="font-weight:600">1:2 en ambas direcciones</div></div><div class="setup-item"><div class="s-label">Nota Operativa</div><div class="s-value" style="font-weight:600">Esperar 2-3 min post-EIA antes de entrar. Spreads ampliados.</div></div></div>
+    </div>
+  </div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>HORA ET</th>
+        <th>ZONA CRÍTICA</th>
+        <th>ACCIÓN RECOMENDADA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+          <td><strong>08:00 - 08:14</strong></td>
+          <td><span class="badge badge-low">PRE-ADP: Reducir Exposición</span></td>
+          <td style="font-size:12px">Cerrar o reducir posiciones abiertas overnight. No iniciar posiciones nuevas. Spreads en proceso de ampliación.</td>
+        </tr>
+<tr>
+          <td><strong>08:15</strong></td>
+          <td><span class="badge badge-low">DATO ADP EMPLOYMENT: Volatilidad Spike</span></td>
+          <td style="font-size:12px">Observar reacción inicial. Esperar mínimo 3-5 minutos antes de operar. El primer movimiento post-dato suele ser engañoso y se revierte.</td>
+        </tr>
+<tr>
+          <td><strong>09:00 - 09:30</strong></td>
+          <td><span class="badge badge-low">PRE-CASH OPEN: Evaluación de Estructura</span></td>
+          <td style="font-size:12px">Identificar posición de ES y NQ vs POC y AVWAP. Confirmar niveles de soporte y resistencia del día. Preparar setups definidos con levels claros.</td>
+        </tr>
+<tr>
+          <td><strong>09:30 - 09:45</strong></td>
+          <td><span class="badge badge-low">CASH OPEN: Alta Volatilidad Inicial</span></td>
+          <td style="font-size:12px">Observar las primeras 2-3 velas de 5 minutos. El ORB (Opening Range Breakout) se define en 09:30-09:35. No operar contra el impulso del ORB inicial.</td>
+        </tr>
+<tr>
+          <td><strong>09:55 - 10:05</strong></td>
+          <td><span class="badge badge-low">ISM SERVICES + FACTORY ORDERS: Doble Impacto</span></td>
+          <td style="font-size:12px">Reducir o cerrar posiciones abiertas. Publicación simultánea de dos datos duplica el spike de volatilidad esperado. No tener posiciones abiertas a las 09:58.</td>
+        </tr>
+<tr>
+          <td><strong>10:20 - 10:40</strong></td>
+          <td><span class="badge badge-low">EIA CRUDE INVENTORIES: ZONA CRÍTICA</span></td>
+          <td style="font-size:12px">CERRAR POSICIONES EN CL obligatorio antes de las 10:25. Para ES y NQ reducir tamaño al 50%. Esperar 3 minutos post-publicación antes de cualquier operación.</td>
+        </tr>
+<tr>
+          <td><strong>10:45 - 12:00</strong></td>
+          <td><span class="badge badge-low">VENTANA OPERATIVA PRIMARIA del Día</span></td>
+          <td style="font-size:12px">Con todos los datos publicados y CL con dirección definida, buscar setups A+ en NQ y ES. Aplicar el plan primario de long en retroceso si el sesgo se confirma alcista.</td>
+        </tr>
+<tr>
+          <td><strong>12:00 - 13:00</strong></td>
+          <td><span class="badge badge-low">ALMUERZO NY: Liquidez Reducida</span></td>
+          <td style="font-size:12px">Reducir actividad. Movimientos de menor calidad y mayor riesgo de falsos breakouts. Vigilar Fed Williams a las 13:00 para posible spike.</td>
+        </tr>
+<tr>
+          <td><strong>15:00 - 15:30</strong></td>
+          <td><span class="badge badge-low">FED BEIGE BOOK + Cierre Europa</span></td>
+          <td style="font-size:12px">Posible spike de volatilidad si el Beige Book menciona presiones energéticas. Activar trailing stops en posiciones abiertas. Última ventana de calidad antes del cierre.</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="alert-strip alert-success">
+    <div class="icon">✅</div>
+    <div>
+      <strong>Reglas de la Mesa — 3 JUN 2026:</strong><br>
+            1. STOP SIEMPRE ACTIVO antes de entrar a cualquier posición: sin excepciones y sin negociaciones<br>      2. NO operar CL antes del dato EIA 10:30: el movimiento de +9.83% hace el riesgo inmanejable previo al dato<br>      3. Reducir tamaño al 50% en los 5 minutos previos a cualquier dato clasificado como ALTO o EXTREMO<br>      4. El primer movimiento post-dato macro suele ser una trampa: esperar 2-3 minutos de confirmación antes de entrar<br>      5. No agregar a posiciones perdedoras: si el setup falla, salir y reanalizar desde cero<br>      6. Máximo 3 trades por sesión: priorizar calidad sobre cantidad en días de alta volatilidad macro<br>      7. Si se pierden 2 trades consecutivos: pausa obligatoria de 30 minutos para resetear el foco mental<br>      8. GC: No buscar longs hasta cierre sobre el AVWAP de apertura 4,490.89 con al menos 2 velas de confirmación<br>      9. R:R mínimo de 1:2 en todos los setups del día: si el nivel no cumple esta relación, el trade no califica<br>      10. Revisar y ajustar trailing stops en posiciones abiertas antes del Beige Book a las 15:00<br>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <span class="brand-ft">Edu<span class="gold">S</span> Trader</span> &middot; DAILY STRATEGIC GAME PLAN &middot; 3 JUN 2026 &middot; 09:20 AM ET PRE-MARKET<br>
+  Este documento es solo para uso interno de la mesa de dinero. No constituye asesoramiento financiero.<br>
+  ES JUN26 &middot; NQ JUN26 &middot; CL JUL26 &middot; GC JUN26
+</div>
+
+</body>
+</html>
