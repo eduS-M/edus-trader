@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — Post-Market Analysis | 2 JUN 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #142d37; --navy-dark: #0d1f26; --teal: #279995; --gold: #b38665; --gold-light: #d4a982;
+    --bg: #f2f0eb; --surface: #ffffff; --surface2: #f8f6f0; --border: #e0dbd0;
+    --text: #1a1814; --text-muted: #7a7468;
+    --bull: #279995; --bull-bg: #e6f5f4; --bear: #c0392b; --bear-bg: #fdf0ee;
+    --shadow: 0 2px 20px rgba(13,31,38,0.10); --radius: 10px;
+    --header-gradient: linear-gradient(135deg, #142d37 0%, #034649 100%);
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); font-size:14px; line-height:1.6; }
+  .header { background:var(--header-gradient); color:white; padding:24px 40px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:3px solid var(--gold); flex-wrap:wrap; gap:12px; }
+  .header-left .brand-name { font-family:'DM Sans',sans-serif; font-size:32px; font-weight:700; color:white; }
+  .header-left .brand-name .gold { color:var(--gold); }
+  .header-left .brand-sub { font-family:'Space Mono',monospace; font-size:10px; color:var(--gold-light); letter-spacing:3px; text-transform:uppercase; }
+  .header-right { text-align:right; }
+  .header-right .date { font-family:'Space Mono',monospace; font-size:13px; color:var(--gold); font-weight:700; }
+  .header-right .prices { display:flex; gap:8px; margin-top:6px; flex-wrap:wrap; justify-content:flex-end; }
+  .price-chip { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:6px; padding:4px 10px; font-size:11px; font-family:'Space Mono',monospace; color:rgba(255,255,255,0.85); }
+  .container { max-width:1200px; margin:0 auto; padding:24px 20px; }
+  .banner { border-radius:var(--radius); overflow:hidden; margin-bottom:28px; height:60px; background:var(--header-gradient); display:flex; align-items:center; justify-content:center; color:white; font-family:'Space Mono',monospace; font-size:13px; letter-spacing:2px; text-transform:uppercase; }
+  .section-title { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .section-title .step { background:var(--navy); color:white; font-family:'Space Mono',monospace; font-size:9px; padding:2px 10px; border-radius:20px; letter-spacing:1px; flex-shrink:0; }
+  .section-title h2 { font-size:18px; font-weight:600; color:var(--navy); }
+  .card { background:var(--surface); border-radius:var(--radius); padding:20px; margin-bottom:20px; box-shadow:var(--shadow); border:1px solid var(--border); }
+  .pnl-hero { text-align:center; padding:32px; background:linear-gradient(135deg,#e6f5f4,#f0faf9); border-radius:var(--radius); margin-bottom:20px; border:2px solid var(--teal); }
+  .pnl-hero .label { font-family:'Space Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; }
+  .pnl-hero .amount { font-size:42px; font-weight:700; color:var(--bull); margin-top:4px; overflow:hidden; text-overflow:ellipsis; }
+  .pnl-hero .amount.negative { color:var(--bear); }
+  .pnl-hero .source { font-size:11px; color:var(--text-muted); margin-top:8px; }
+  .summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin-bottom:20px; }
+  .summary-card { background:var(--surface); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); border:1px solid var(--border); text-align:center; overflow:hidden; }
+  .summary-card .lbl { font-family:'Space Mono',monospace; font-size:9px; color:var(--text-muted); letter-spacing:1.5px; text-transform:uppercase; }
+  .summary-card .val { font-size:24px; font-weight:700; margin-top:4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .positive { color:var(--bull); }
+  .negative { color:var(--bear); }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  th { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:1.5px; color:var(--text-muted); text-transform:uppercase; text-align:left; padding:6px 8px; border-bottom:2px solid var(--border); }
+  td { padding:6px 8px; border-bottom:1px solid var(--border); }
+  tr.trade-win td:last-child { color:var(--bull); font-weight:600; }
+  tr.trade-loss td:last-child { color:var(--bear); font-weight:600; }
+  .zone-badge { display:inline-block; font-size:10px; padding:1px 8px; border-radius:10px; font-family:'Space Mono',monospace; }
+  .zone-badge.identified { background:var(--bull-bg); color:var(--bull); }
+  .zone-badge.manual { background:#fef3e2; color:#8b6914; }
+  .ctx-badge { display:inline-block; background:var(--bull-bg); color:var(--bull); font-size:9px; padding:1px 6px; border-radius:4px; font-family:'Space Mono',monospace; }
+  .stop-card { border-radius:var(--radius); padding:14px 16px; margin-bottom:12px; }
+  .stop-card.tight-stop { background:#fdf0ee; border-left:4px solid #e74c3c; }
+  .stop-card.wide-stop { background:#fff8e1; border-left:4px solid #f39c12; }
+  .stop-hdr { display:flex; gap:10px; align-items:center; margin-bottom:4px; font-size:13px; flex-wrap:wrap; }
+  .stop-num { font-weight:700; }
+  .stop-inst { font-family:'Space Mono',monospace; }
+  .stop-pnl { margin-left:auto; font-weight:700; }
+  .stop-body { font-size:12px; color:var(--text-muted); margin-bottom:6px; }
+  .indicator-table { width:100%; font-size:11px; }
+  .indicator-table td { padding:1px 12px 1px 0; border:none; }
+  .no-ctx { font-size:11px; color:var(--text-muted); font-style:italic; }
+  .dofa-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+  .dofa-card { border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); }
+  .dofa-card.fortaleza { background:#e6f5f4; border-top:4px solid var(--bull); }
+  .dofa-card.debilidad { background:#fdf0ee; border-top:4px solid var(--bear); }
+  .dofa-card.oportunidad { background:#e8f4fd; border-top:4px solid #2980b9; }
+  .dofa-card.amenaza { background:#fff8e1; border-top:4px solid #f39c12; }
+  .dofa-icon { display:inline-flex; width:28px; height:28px; border-radius:50%; align-items:center; justify-content:center; font-weight:700; font-size:14px; color:white; margin-bottom:6px; }
+  .dofa-card.fortaleza .dofa-icon { background:var(--bull); }
+  .dofa-card.debilidad .dofa-icon { background:var(--bear); }
+  .dofa-card.oportunidad .dofa-icon { background:#2980b9; }
+  .dofa-card.amenaza .dofa-icon { background:#f39c12; }
+  .dofa-title { font-weight:700; font-size:16px; margin-bottom:8px; }
+  .dofa-card ul { margin-left:16px; font-size:13px; }
+  .dofa-card li { margin-bottom:6px; }
+  .rec-card { background:var(--surface); border-left:4px solid var(--gold); border-radius:var(--radius); padding:16px 20px; margin-bottom:12px; box-shadow:var(--shadow); }
+  .rec-card h3 { font-size:14px; color:var(--navy); margin-bottom:6px; }
+  .rec-card ul { margin-left:16px; font-size:13px; }
+  .rec-card li { margin-bottom:4px; }
+  .discrepancy-box { background:#fef3e2; border-left:4px solid #d4a040; border-radius:var(--radius); padding:16px 20px; margin-bottom:20px; }
+  .discrepancy-box h3 { font-size:14px; color:#8b6914; margin-bottom:8px; }
+  .discrepancy-box ul { margin-left:20px; font-size:13px; }
+  .ai-insight { background:linear-gradient(135deg,#f0f4ff,#e8f0fe); border-left:4px solid #4a7dc9; border-radius:var(--radius); padding:18px 22px; margin-bottom:20px; }
+  .ai-insight .ai-label { font-family:'Space Mono',monospace; font-size:9px; color:#4a7dc9; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+  .ai-insight p { font-size:13px; color:var(--text); line-height:1.7; }
+  .volatility-gauge { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+  .gauge-item { flex:1; min-width:140px; background:var(--surface); border-radius:var(--radius); padding:14px; border:1px solid var(--border); text-align:center; }
+  .gauge-item .g-label { font-family:'Space Mono',monospace; font-size:9px; color:var(--text-muted); letter-spacing:1.5px; text-transform:uppercase; }
+  .gauge-item .g-value { font-size:20px; font-weight:700; margin-top:2px; overflow:hidden; text-overflow:ellipsis; }
+  .gauge-item .g-sub { font-size:10px; color:var(--text-muted); margin-top:2px; }
+  .gameplan-compare { background:var(--surface); border-radius:var(--radius); padding:18px; border-left:4px solid var(--gold); margin-bottom:20px; box-shadow:var(--shadow); }
+  .gameplan-compare h3 { font-size:14px; color:var(--navy); margin-bottom:8px; }
+  .gameplan-compare ul { margin-left:16px; font-size:13px; }
+  .gameplan-compare li { margin-bottom:4px; }
+  .gameplan-compare .cumplido { color:var(--bull); }
+  .gameplan-compare .nocumplido { color:var(--bear); }
+  .gameplan-compare .parcial { color:#f39c12; }
+  .footer { background:var(--navy-dark); color:rgba(255,255,255,0.5); text-align:center; padding:20px; font-size:11px; font-family:'Space Mono',monospace; }
+  .footer .gold { color:var(--gold); }
+  .tab-wrap { overflow-x:auto; }
+  .tabs { display:flex; gap:4px; margin-bottom:16px; flex-wrap:wrap; }
+  .tab-btn { padding:8px 16px; border-radius:6px; border:1px solid var(--border); background:var(--surface); font-size:12px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+  .tab-btn.active { background:var(--navy); color:white; border-color:var(--navy); }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+  .weekly-badge { display:inline-block; background:linear-gradient(135deg,#142d37,#279995); color:white; padding:4px 14px; border-radius:20px; font-size:11px; font-family:'Space Mono',monospace; letter-spacing:1px; }
+  .monthly-badge { display:inline-block; background:linear-gradient(135deg,#8b6914,#d4a040); color:white; padding:4px 14px; border-radius:20px; font-size:11px; font-family:'Space Mono',monospace; letter-spacing:1px; }
+  .info-box { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px; margin-bottom:16px; }
+  .info-box h3 { font-size:14px; color:var(--navy); margin-bottom:6px; }
+  .info-box p { font-size:13px; color:var(--text-muted); }
+
+  .edus-account-badge { display:inline-block; padding:3px 12px; border-radius:12px; font-size:11px; font-family:'Space Mono',monospace; margin-right:6px; margin-bottom:6px; }
+  .edus-account-badge.positive { background:var(--bull-bg); color:var(--bull); }
+  .edus-account-badge.negative { background:var(--bear-bg); color:var(--bear); }
+
+  .chart-wrap { position:relative; width:100%; height:280px; margin:16px 0; }
+  #pnlChart { width:100%; height:100%; }
+
+  .plan-card { background:var(--surface); border-left:4px solid #4a7dc9; border-radius:var(--radius); padding:14px 18px; margin-bottom:10px; box-shadow:var(--shadow); }
+  .plan-card h3 { font-size:13px; color:var(--navy); margin-bottom:4px; font-weight:600; }
+  .plan-card p { font-size:12px; color:var(--text-muted); line-height:1.5; }
+
+  .nav-back { transition:opacity 0.2s; }
+  .nav-back:hover { opacity:0.7; }
+
+  .info-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px; }
+  .info-card .info-label { font-family:'Space Mono',monospace; font-size:9px; color:var(--text-muted); letter-spacing:1px; text-transform:uppercase; }
+  .info-card .info-value { font-size:16px; font-weight:700; margin-top:2px; }
+  .info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin-bottom:16px; }
+
+  @media (max-width:768px) { .header { flex-direction:column; text-align:center; padding:16px; } .dofa-grid { grid-template-columns:1fr; } .pnl-hero .amount { font-size:28px; } .summary-grid { grid-template-columns:repeat(2,1fr); } .chart-wrap { height:200px; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
+    <div class="brand-sub">Post-Market Analysis &middot; Martes 2 de Junio 2026</div>
+  </div>
+  <div class="header-right">
+    <div class="date">Post-Market Analysis</div>
+    <div class="prices">
+      <div class="price-chip">Sim101 P&amp;L <span style="color:#279995;">+$2,980.00</span></div>
+      <div class="price-chip">4 trades &middot; 4W / 0L</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<a href="javascript:history.back()" class="nav-back" style="display:inline-flex;align-items:center;gap:6px;color:var(--teal);text-decoration:none;font-size:13px;margin-bottom:16px;font-family:DM Sans,sans-serif">← Volver</a>
+
+<div class="banner">2 JUN 2026 &middot; Post-Market Analysis &middot; Fuente: NinjaTrader 8</div>
+
+
+
+
+<div class="pnl-hero">
+  <div class="label">Resultado Neto Sim101</div>
+  <div class="amount positive">+$2,980.00</div>
+  <div class="source"><span class="edus-account-badge positive">Sim101: +$2,980.00</span> </div>
+  <div class="source">4 trades &middot; 4 ganancias &middot; 0 pérdidas &middot; 0 flat &middot; Win Rate 100.0%</div>
+</div>
+
+<div class="section-title"><span class="step">RESUMEN</span><h2>Resumen General</h2></div>
+
+<div class="summary-grid">
+  <div class="summary-card"><div class="lbl">Total Trades</div><div class="val">4</div></div>
+  <div class="summary-card"><div class="lbl">Wins</div><div class="val positive">4</div></div>
+  <div class="summary-card"><div class="lbl">Losses</div><div class="val negative">0</div></div>
+  <div class="summary-card"><div class="lbl">Win Rate</div><div class="val">100.0%</div></div>
+  <div class="summary-card"><div class="lbl">Total PnL</div><div class="val positive">+$2,980.00</div></div>
+  <div class="summary-card"><div class="lbl">Avg Trade</div><div class="val positive">+$745.00</div></div>
+  <div class="summary-card"><div class="lbl">Mayor Win</div><div class="val positive">+$895.00</div></div>
+  <div class="summary-card"><div class="lbl">Mayor Loss</div><div class="val negative">+$605.00</div></div>
+</div>
+
+<!-- PnL CHART -->
+<div class="section-title"><span class="step">CURVA</span><h2>Curva de PnL por Trade</h2></div>
+<div class="card">
+  <div class="chart-wrap">
+    <canvas id="pnlChart"></canvas>
+  </div>
+</div>
+
+<script>
+(function() {
+  var data = [{"t": 1, "pnl": 635.0, "cum": 635.0}, {"t": 2, "pnl": 845.0, "cum": 1480.0}, {"t": 3, "pnl": 605.0, "cum": 2085.0}, {"t": 4, "pnl": 895.0, "cum": 2980.0}];
+  if (!data || data.length === 0) return;
+  var canvas = document.getElementById('pnlChart');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var dpr = window.devicePixelRatio || 1;
+  var rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.scale(dpr, dpr);
+  var w = rect.width, h = rect.height;
+  var pad = {top: 20, bottom: 30, left: 50, right: 20};
+  var plotW = w - pad.left - pad.right;
+  var plotH = h - pad.top - pad.bottom;
+  var cumVals = data.map(function(d) { return d.cum; });
+  var minV = Math.min(0, Math.min.apply(null, cumVals));
+  var maxV = Math.max(0, Math.max.apply(null, cumVals));
+  var range = maxV - minV || 1;
+  var n = data.length;
+  var xScale = function(i) { return pad.left + (i / (n - 1 || 1)) * plotW; };
+  var yScale = function(v) { return pad.top + plotH - ((v - minV) / range) * plotH; };
+  ctx.clearRect(0, 0, w, h);
+  ctx.strokeStyle = '#e0dbd0';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  var zeroY = yScale(0);
+  ctx.beginPath(); ctx.moveTo(pad.left, zeroY); ctx.lineTo(w - pad.right, zeroY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#7a7468';
+  ctx.font = '10px Space Mono';
+  ctx.textAlign = 'right';
+  ctx.fillText('$' + Math.round(minV).toLocaleString(), pad.left - 4, yScale(minV) + 3);
+  ctx.fillText('$0', pad.left - 4, zeroY + 3);
+  ctx.fillText('$' + Math.round(maxV).toLocaleString(), pad.left - 4, yScale(maxV) + 3);
+  var grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + plotH);
+  grad.addColorStop(0, 'rgba(39, 153, 149, 0.3)');
+  grad.addColorStop(0.5, 'rgba(39, 153, 149, 0.05)');
+  grad.addColorStop(1, 'rgba(192, 57, 43, 0.3)');
+  ctx.beginPath();
+  data.forEach(function(d, i) {
+    var x = xScale(i), y = yScale(d.cum);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.lineTo(xScale(n - 1), zeroY);
+  ctx.lineTo(xScale(0), zeroY);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.beginPath();
+  data.forEach(function(d, i) {
+    var x = xScale(i), y = yScale(d.cum);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = '#142d37';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  data.forEach(function(d, i) {
+    if (i % Math.max(1, Math.floor(n / 15)) !== 0 && i !== n - 1) return;
+    var x = xScale(i);
+    ctx.fillStyle = '#7a7468';
+    ctx.font = '9px Space Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText('#' + d.t, x, h - 4);
+  });
+  var last = data[n - 1];
+  ctx.fillStyle = last.cum >= 0 ? '#279995' : '#c0392b';
+  ctx.font = 'bold 11px Space Mono';
+  ctx.textAlign = 'left';
+  ctx.fillText('$' + Math.round(last.cum).toLocaleString(), xScale(n - 1) + 6, yScale(last.cum) + 3);
+})();
+</script>
+
+<!-- MULTI-ACCOUNT COMPARISON -->
+<div id="multi-account-section" style="display:0">
+<div class="section-title"><span class="step">CUENTAS</span><h2>Comparativa por Cuenta</h2></div>
+<div class="card">
+  <div class="tab-wrap">
+    <table>
+      <thead><tr><th>Cuenta</th><th>Trades</th><th>W</th><th>L</th><th>WR</th><th>PnL</th><th>Puntos por Mercado</th></tr></thead>
+      <tbody>
+      <tr><td>Sim101</td><td>4</td><td>4</td><td>0</td><td>100%</td><td class='positive'>+$2,980.00</td><td>+149.0 ptos NQ</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- FUNDED ACCOUNT -->
+<div id="fondeo-section" style="display:0">
+<div class="section-title"><span class="step">FONDEO</span><h2>Evaluación de Cuenta Fondeada</h2></div>
+<div class="card">
+  <div class="info-grid">
+    <div class="info-card"><div class="info-label">Balance</div><div class="info-value" style="color:var(--teal)">—</div></div>
+    <div class="info-card"><div class="info-label">Drawdown</div><div class="info-value" style="color:var(--bear)">— (—)</div></div>
+    <div class="info-card"><div class="info-label">Días Restantes</div><div class="info-value">—</div></div>
+    <div class="info-card"><div class="info-label">Objetivo</div><div class="info-value" style="color:var(--gold)">—</div></div>
+  </div>
+  <div class="ai-insight" style="margin-bottom:0">
+    <div class="ai-label">Evaluación</div>
+    <p>No disponible.</p>
+  </div>
+</div>
+</div>
+
+<div class="section-title"><span class="step">ESTRATEGIAS</span><h2>Resultados por Estrategia</h2></div>
+
+<div class="card">
+  <div class="tab-wrap">
+  <table>
+    <thead><tr><th>Estrategia</th><th>Trades</th><th>W</th><th>L</th><th>Flat</th><th>WR</th><th>PnL</th></tr></thead>
+    <tbody>
+    <tr><td>EduS_AutoTrader_V1</td><td>4</td><td>4</td><td>0</td><td>0</td><td>100.0%</td><td class="positive">+$2,980.00</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="section-title"><span class="step">CONTEXTO</span><h2>Contexto de Indicadores por Entry</h2></div>
+<div class="card">
+  
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_1</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 30,467.50 | VWAP 🔴 @ 30,465.44</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>-0.6625</td><td>SMA80 Pend</td><td>-1.3469</td></tr>
+        <tr><td>LinReg89</td><td>-1.6273</td><td>Dist SMA20</td><td>12.40</td></tr>
+        <tr><td>Keltner W</td><td>100.94</td><td>ATR</td><td>15.59</td></tr>
+        <tr><td>MB Keltner</td><td>30,486.86</td><td>Window POC</td><td>30,455.75</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_1</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 30,467.50 | VWAP 🔴 @ 30,465.44</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>-0.6625</td><td>SMA80 Pend</td><td>-1.3469</td></tr>
+        <tr><td>LinReg89</td><td>-1.6273</td><td>Dist SMA20</td><td>12.40</td></tr>
+        <tr><td>Keltner W</td><td>100.94</td><td>ATR</td><td>15.59</td></tr>
+        <tr><td>MB Keltner</td><td>30,486.86</td><td>Window POC</td><td>30,455.75</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#ES_1</span>
+        <span class="stop-inst">ES JUN26</span>
+        <span>🔴 Short</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 7,589.00 | VWAP 🔴 @ 7,598.35</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>-0.375</td><td>SMA80 Pend</td><td>-0.3219</td></tr>
+        <tr><td>LinReg89</td><td>-0.3701</td><td>Dist SMA20</td><td>-1.69</td></tr>
+        <tr><td>Keltner W</td><td>19.72</td><td>ATR</td><td>3.07</td></tr>
+        <tr><td>MB Keltner</td><td>7,596.56</td><td>Window POC</td><td>7,607.00</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_1</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🟢 Long</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 30,670.75 | VWAP 🟢 @ 30,661.32</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>0.0625</td><td>SMA80 Pend</td><td>0.4031</td></tr>
+        <tr><td>LinReg89</td><td>0.6892</td><td>Dist SMA20</td><td>-6.38</td></tr>
+        <tr><td>Keltner W</td><td>48.08</td><td>ATR</td><td>6.73</td></tr>
+        <tr><td>MB Keltner</td><td>30,663.12</td><td>Window POC</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_2</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🟢 Long</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 30,702.00 | VWAP 🟢 @ 30,691.08</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>0.2</td><td>SMA80 Pend</td><td>0.45</td></tr>
+        <tr><td>LinReg89</td><td>0.4814</td><td>Dist SMA20</td><td>0.20</td></tr>
+        <tr><td>Keltner W</td><td>48.14</td><td>ATR</td><td>6.95</td></tr>
+        <tr><td>MB Keltner</td><td>30,691.12</td><td>Window POC</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="stop-card wide-stop" style="background:var(--surface);border-left:4px solid var(--teal);margin-bottom:8px;">
+      <div class="stop-hdr">
+        <span class="stop-num">#NQ_2</span>
+        <span class="stop-inst">NQ JUN26</span>
+        <span>🟢 Long</span>
+        <span class="ctx-badge">Entry</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Setup_Manual</span>
+      </div>
+      <div class="stop-body">Entry 30,702.00 | VWAP 🟢 @ 30,691.08</div>
+      <table class="indicator-table">
+        <tr><td>SMA20 Pend</td><td>0.2</td><td>SMA80 Pend</td><td>0.45</td></tr>
+        <tr><td>LinReg89</td><td>0.4814</td><td>Dist SMA20</td><td>0.20</td></tr>
+        <tr><td>Keltner W</td><td>48.14</td><td>ATR</td><td>6.95</td></tr>
+        <tr><td>MB Keltner</td><td>30,691.12</td><td>Window POC</td><td>—</td></tr>
+      </table>
+    </div>
+  <p style="margin-top:12px;font-size:11px;color:var(--text-muted);text-align:center">Mostrando 6 de 6 entradas registradas</p>
+</div>
+
+
+
+
+
+
+
+<div class="section-title"><span class="step">SEÑALES</span><h2>Señales HUD V5 — Correlación con Ejecuciones</h2></div>
+<div class="card">
+  
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #279995;">
+        <div style="font-size:24px;font-weight:700;color:#279995;">19791</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Señales emitidas</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #27ae60;">
+        <div style="font-size:24px;font-weight:700;color:#27ae60;">2</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ejecutadas <span style="color:#27ae60;font-weight:600;">(0%)</span></div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #e67e22;">
+        <div style="font-size:24px;font-weight:700;color:#e67e22;">19789</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ignoradas</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #c0392b;">
+        <div style="font-size:24px;font-weight:700;color:#c0392b;">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Fuera de señal</div>
+      </div>
+    </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+    <div>
+      <h3 style="font-size:13px;color:var(--text-muted);margin:0 0 10px">⚠️ Señales ignoradas que ganaron</h3>
+      <table style='width:100%;font-size:12px;border-collapse:collapse;'><thead><tr style='color:var(--text-muted);border-bottom:1px solid var(--border);'><th style='padding:6px;text-align:left'>SignalID</th><th>Mercado</th><th>Dir</th><th>Hora</th><th>Zona</th><th>Resultado</th><th>Entrada</th><th>T1</th></tr></thead><tbody><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>625500c3</td><td style='padding:5px;'>ES JUN26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>09:06:04</td><td style='padding:5px;'>LR</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>6,519.50</td><td style='padding:5px;'>6,531.59</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>9ce1fb1f</td><td style='padding:5px;'>ES JUN26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>09:54:09</td><td style='padding:5px;'>LR+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>6,546.75</td><td style='padding:5px;'>6,555.97</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>cd3ab3fe</td><td style='padding:5px;'>ES JUN26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>09:54:54</td><td style='padding:5px;'>LR+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>6,550.75</td><td style='padding:5px;'>6,559.67</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>f98f48c5</td><td style='padding:5px;'>NQ JUN26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>10:06:04</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>23,885.00</td><td style='padding:5px;'>23,940.12</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>e39762a3</td><td style='padding:5px;'>ES JUN26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>10:06:07</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>6,555.50</td><td style='padding:5px;'>6,564.66</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>84ebf810</td><td style='padding:5px;'>NQ JUN26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>10:07:52</td><td style='padding:5px;'>LR+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>23,926.25</td><td style='padding:5px;'>23,978.97</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>aed23037</td><td style='padding:5px;'>ES JUN26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>10:28:40</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>6,567.75</td><td style='padding:5px;'>6,576.74</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>deb67be1</td><td style='padding:5px;'>ES JUN26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>10:30:56</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>6,568.25</td><td style='padding:5px;'>6,577.12</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>25ebd23e</td><td style='padding:5px;'>NQ JUN26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>10:31:02</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>23,963.50</td><td style='padding:5px;'>24,020.06</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>92e6c415</td><td style='padding:5px;'>ES JUN26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>10:32:08</td><td style='padding:5px;'>LR+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>6,570.25</td><td style='padding:5px;'>6,579.26</td></tr></tbody></table>
+    </div>
+    <div>
+      <h3 style="font-size:13px;color:var(--text-muted);margin:0 0 10px">🚫 Trades ejecutados sin señal activa</h3>
+      <p style='color:var(--text-muted);font-size:12px;margin:0'>Todos los trades ejecutados correspondían a señales activas.</p>
+    </div>
+  </div>
+  
+</div>
+
+<div class="section-title"><span class="step">CONTEXTO</span><h2>Validación de Contexto por Trade</h2></div>
+<div class="card">
+  
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #8e44ad;">
+        <div style="font-size:22px;font-weight:700;color:#8e44ad;">4</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Trades validados</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #27ae60;">
+        <div style="font-size:22px;font-weight:700;color:#27ae60;">4 <span style="font-size:13px;">(100%)</span></div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Contexto OK</div>
+        <div style="font-size:11px;font-weight:600;color:#27ae60;margin-top:3px;">+$2,980.00</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #e67e22;">
+        <div style="font-size:22px;font-weight:700;color:#e67e22;">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Contexto Mixto/No OK</div>
+        <div style="font-size:11px;font-weight:600;color:#27ae60;margin-top:3px;">+$0.00</div>
+      </div>
+    </div>
+  <div style="overflow-x:auto;">
+    <table style="width:100%;font-size:12px;border-collapse:collapse;">
+      <thead><tr style="color:var(--text-muted);border-bottom:1px solid var(--border);">
+        <th style="padding:6px;text-align:left">Trade#</th>
+        <th>Inst</th><th>Dir</th><th>VWAP</th><th>SMA</th><th>ATR</th>
+        <th>Contexto</th><th>P&L</th><th>Nota IA</th>
+      </tr></thead>
+      <tbody><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">1</td>
+          <td style="padding:6px;">NQ</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 6.73</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$635.00</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">2</td>
+          <td style="padding:6px;">NQ</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 6.73</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$845.00</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">3</td>
+          <td style="padding:6px;">NQ</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 6.95</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$605.00</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">4</td>
+          <td style="padding:6px;">NQ</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 6.95</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$895.00</td>
+          <td style='padding:6px;'></td>
+        </tr></tbody>
+    </table></div>
+</div>
+
+
+
+
+
+
+
+<!-- PLAN DE MEJORAS -->
+<div class="section-title"><span class="step">MEJORAS</span><h2>Plan de Mejoras</h2></div>
+<div class="card">
+  <div class="info-box" style="text-align:center;color:var(--text-muted)">No hay plan de mejoras registrado para esta sesión.</div>
+</div>
+
+<div class="section-title"><span class="step">TRADES</span><h2>Registro Completo de la Sesión</h2></div>
+
+<div class="card">
+  <div class="tab-wrap">
+  <table>
+    <thead><tr><th>#</th><th>Estrategia</th><th>Inst</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>PnL</th><th>Zona</th><th>Exit Name</th><th>Cuenta</th></tr></thead>
+    <tbody>
+    <tr class="trade-win"><td>1</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>15:27:54</td><td>15:48:10</td><td>30,670.75</td><td>30,702.50</td><td>1</td><td>+$635.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_3</span></td><td>HUD_T1_3</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>2</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>15:27:54</td><td>15:53:45</td><td>30,670.75</td><td>30,713.00</td><td>1</td><td>+$845.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_3</span></td><td>HUD_T2_3</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>3</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>15:54:53</td><td>16:04:17</td><td>30,702.00</td><td>30,732.25</td><td>1</td><td>+$605.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_4</span></td><td>HUD_T1_4</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>4</td><td>EduS_AutoTrader_V1</td><td>NQ</td><td>Long</td><td>15:54:53</td><td>16:05:04</td><td>30,702.00</td><td>30,746.75</td><td>1</td><td>+$895.00</td><td><span class="zone-badge identified" title="Zona identificada">HUD_En_4</span></td><td>HUD_T2_4</td><td>Sim101</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+</div>
+
+<div class="footer">
+  <a href="javascript:history.back()" class="nav-back" style="display:inline-flex;align-items:center;gap:6px;color:var(--teal);text-decoration:none;font-size:13px;margin-bottom:16px;font-family:DM Sans,sans-serif">← Volver</a> &middot; <span style="font-family:'DM Sans',sans-serif;font-weight:700;">Edu<span class="gold">S</span> Trader</span> &middot; Post-Market Analysis &middot; 2 JUN 2026 &middot; Fuente: NinjaTrader 8
+</div>
+
+</body>
+</html>
