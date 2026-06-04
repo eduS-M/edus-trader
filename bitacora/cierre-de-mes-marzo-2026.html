@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cierre de Mes — Marzo 2026 · EduS Trader</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fff;--bg2:#f5f4f0;--bg3:#eeecea;
+  --text:#1a1a18;--text2:#5f5e5a;--text3:#888780;
+  --border:rgba(0,0,0,0.10);--border2:rgba(0,0,0,0.20);
+  --green:#3b6d11;--green-bg:#eaf3de;
+  --red:#a32d2d;--red-bg:#fcebeb;
+  --amber:#854f0b;--amber-bg:#faeeda;
+  --blue:#185fa5;--blue-bg:#e6f1fb;
+  --r-md:8px;--r-lg:12px;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1e1e1c;--bg2:#272724;--bg3:#2e2e2b;
+    --text:#e8e6e0;--text2:#9c9a92;--text3:#6e6d67;
+    --border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.18);
+    --green:#8fb85a;--green-bg:rgba(99,153,34,0.14);
+    --red:#e87878;--red-bg:rgba(226,75,74,0.14);
+    --amber:#f0b060;--amber-bg:rgba(239,159,39,0.14);
+    --blue:#6aaee8;--blue-bg:rgba(55,138,221,0.14);
+  }
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text)}
+nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:0.5px solid var(--border2);padding:0 1.5rem;display:flex;align-items:center;overflow-x:auto}
+nav .brand{font-size:13px;font-weight:500;padding:14px 0;margin-right:20px;white-space:nowrap}
+nav a{font-size:12px;color:var(--text3);text-decoration:none;padding:15px 11px;border-bottom:2px solid transparent;white-space:nowrap}
+nav a.active,nav a:hover{color:var(--text)}
+nav a.active{border-bottom-color:var(--text);font-weight:500}
+.page{max-width:980px;margin:0 auto;padding:2rem 1.5rem 5rem}
+h2{font-size:20px;font-weight:500;margin-bottom:4px}
+.sub{font-size:12px;color:var(--text3);margin-bottom:1.5rem}
+.sdiv{height:0.5px;background:var(--border2);margin:2.5rem 0 2rem}
+.slabel{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:.8rem}
+.slabel .n{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--bg2);border:0.5px solid var(--border2);font-size:10px;font-weight:500}
+.sub-title{font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);margin:1.3rem 0 .6rem}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.kpi{background:var(--bg2);border-radius:var(--r-md);padding:12px 14px}
+.kpi-label{font-size:11px;color:var(--text3);margin-bottom:3px}
+.kpi-value{font-size:22px;font-weight:500}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.pos{color:var(--green)} .neg{color:var(--red)} .neu{color:var(--text3)}
+.pnl-pos{color:var(--green);font-weight:500} .pnl-neg{color:var(--red);font-weight:500}
+.alert{border-radius:var(--r-md);padding:12px 14px;font-size:12px;margin-bottom:10px}
+.alert.success{background:var(--green-bg);border:0.5px solid rgba(99,153,34,.35)}
+.alert.danger{background:var(--red-bg);border:0.5px solid rgba(226,75,74,.35)}
+.alert.warning{background:var(--amber-bg);border:0.5px solid rgba(239,159,39,.35)}
+.alert.info{background:var(--blue-bg);border:0.5px solid rgba(55,138,221,.35)}
+.alert-title{font-weight:500;margin-bottom:3px}
+.alert.success .alert-title{color:var(--green)} .alert.danger .alert-title{color:var(--red)}
+.alert.warning .alert-title{color:var(--amber)} .alert.info .alert-title{color:var(--blue)}
+.icard{background:var(--bg2);border-radius:var(--r-md);padding:12px 14px;margin-bottom:8px;border-left:3px solid transparent}
+.icard.crit{border-left-color:var(--red)} .icard.warn{border-left-color:var(--amber)}
+.icard.good{border-left-color:var(--green)} .icard.info{border-left-color:var(--blue)}
+.icard-title{font-size:13px;font-weight:500;margin-bottom:4px}
+.icard-text{font-size:12px;color:var(--text2);line-height:1.65}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{font-size:10px;color:var(--text3);font-weight:500;padding:5px 10px;border-bottom:0.5px solid var(--border2);text-align:left}
+.tbl td{padding:7px 10px;border-bottom:0.5px solid var(--border)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr.win td{background:rgba(99,153,34,.03)} .tbl tr.loss td{background:rgba(226,75,74,.03)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chart-wrap{position:relative;width:100%}
+.dofa-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dofa-card{border-radius:var(--r-lg);padding:16px 18px;border:0.5px solid var(--border2)}
+.dofa-card.F{background:rgba(99,153,34,.06);border-color:rgba(99,153,34,.3)}
+.dofa-card.D{background:rgba(226,75,74,.06);border-color:rgba(226,75,74,.3)}
+.dofa-card.O{background:rgba(55,138,221,.06);border-color:rgba(55,138,221,.3)}
+.dofa-card.A{background:rgba(239,159,39,.06);border-color:rgba(239,159,39,.3)}
+.dofa-title{font-size:13px;font-weight:500;margin-bottom:8px}
+.dofa-title.F{color:var(--green)} .dofa-title.D{color:var(--red)}
+.dofa-title.O{color:var(--blue)} .dofa-title.A{color:var(--amber)}
+.dofa-item{font-size:12px;color:var(--text2);padding:4px 0 4px 12px;border-bottom:0.5px solid var(--border);line-height:1.5;position:relative}
+.dofa-item::before{content:'·';position:absolute;left:0;color:var(--text3)}
+.dofa-item:last-child{border-bottom:none}
+.rule-item{font-size:12px;color:var(--text2);padding:6px 0;border-bottom:0.5px solid var(--border);line-height:1.5}
+.rule-item:last-child{border-bottom:none}
+.prog-wrap{background:var(--border);border-radius:3px;height:6px;margin-top:4px;overflow:hidden}
+.prog{height:6px;border-radius:3px}
+.month-banner{background:linear-gradient(135deg,var(--bg2) 0%,var(--bg3) 100%);border:0.5px solid var(--border2);border-radius:var(--r-lg);padding:24px 28px;margin-bottom:1.5rem}
+.banner-tag{font-size:11px;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.banner-title{font-size:28px;font-weight:500;margin-bottom:6px}
+.banner-sub{font-size:13px;color:var(--text2);line-height:1.7}
+.day-row{display:grid;grid-template-columns:85px 80px 70px 68px 50px 55px 1fr;gap:4px;padding:7px 12px;font-size:12px;border-bottom:0.5px solid var(--border);align-items:center}
+.day-row.hdr{font-size:10px;color:var(--text3);font-weight:500}
+.day-row:last-child{border-bottom:none}
+.yt-block{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r-lg);padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:2rem}
+.yt-icon{width:40px;height:40px;border-radius:50%;background:#c0392b;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.yt-icon svg{width:18px;height:18px;fill:#fff}
+.yt-btn{display:inline-block!important;background:#c0392b!important;color:#fff!important;font-size:12px;font-weight:600;padding:9px 18px;border-radius:var(--r-md);text-decoration:none!important}
+.burned-banner{background:linear-gradient(135deg,rgba(163,45,45,.1),rgba(163,45,45,.04));border:1px solid rgba(163,45,45,.4);border-radius:var(--r-lg);padding:16px 20px;margin-bottom:14px;display:flex;align-items:flex-start;gap:14px}
+.burned-icon{font-size:26px;flex-shrink:0;margin-top:2px}
+.burned-title{font-size:14px;font-weight:500;color:var(--red);margin-bottom:4px}
+.burned-sub{font-size:12px;color:var(--text2);line-height:1.6}
+footer{text-align:center;font-size:11px;color:var(--text3);padding:2rem 1rem 3rem;border-top:0.5px solid var(--border);margin-top:2rem}
+@media(max-width:600px){.dofa-grid,.two-col{grid-template-columns:1fr}.day-row{grid-template-columns:75px 68px 65px 62px;}.day-row>*:nth-child(5),.day-row>*:nth-child(6),.day-row>*:nth-child(7){display:none}}
+</style>
+</head>
+<body>
+<nav>
+  <span class="brand">📊 EduS Trader</span>
+  <a href="#resumen" class="active">Resumen</a>
+  <a href="#sim">Sim</a>
+  <a href="#fondeo">Fondeo Activo</a>
+  <a href="#quemada">Cuenta Quemada</a>
+  <a href="#indicadores">Indicadores</a>
+  <a href="#dofa">DOFA</a>
+  <a href="#reglas">Reglas</a>
+</nav>
+
+<div class="page">
+
+<!-- ═══════ BANNER ═══════ -->
+<div id="resumen" style="scroll-margin-top:52px">
+  <div class="month-banner">
+    <div class="banner-tag">Cierre de Mes · EduS Trader</div>
+    <div class="banner-title">📅 Marzo 2026 — Cierre Completo</div>
+    <div class="banner-sub">
+      Sim101 (ES + MNQ) · Cuenta Fondeo Activa /MESM26+/ESM26 · Cuenta de Prueba Quemada (/MNQM26+/ESM26)<br>
+      El mes con más datos, más lecciones y el primer evento de régimen extremo (VIX 31 el 30 Mar)
+    </div>
+  </div>
+
+  <div class="sub-title">Resumen global — 3 cuentas</div>
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">Sim — P&L estimado</div>
+      <div class="kpi-value pos">~+$1,352</div>
+      <div class="kpi-sub">23–30 Mar documentado</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Fondeo activo — Gross</div>
+      <div class="kpi-value neg">-$1,442.50</div>
+      <div class="kpi-sub">11 sesiones · 74 trades</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Fondeo activo — Net</div>
+      <div class="kpi-value neg">-$1,753.50</div>
+      <div class="kpi-sub">Incl. comisiones -$311</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Cuenta prueba — Net</div>
+      <div class="kpi-value neg">-$783.75</div>
+      <div class="kpi-sub">18 sesiones (Feb–Mar) · quemada 9 Mar</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Comisiones fondeo</div>
+      <div class="kpi-value neg">-$311</div>
+      <div class="kpi-sub">~$4.20/trade promedio</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Saldo fondeo activo</div>
+      <div class="kpi-value" style="font-size:18px">$48,246.50</div>
+      <div class="kpi-sub">Inicio $50,000 · DD min $48,000</div>
+    </div>
+  </div>
+
+  <div class="alert warning">
+    <div class="alert-title">Corrección importante: 19 Mar fue -$210 (gross), NO +$377.50</div>
+    <div style="color:var(--text2)">El análisis anterior reconstruyó el 19 Mar como +$377.50 por error al parear órdenes del CSV de la plataforma. El broker confirma: <strong>-$210.00 (gross) / -$285.00 (neto)</strong>. Esto cambia el P&L total del fondeo de -$855 a <strong>-$1,442.50 gross / -$1,753.50 neto</strong>. Todos los datos de este reporte usan los números reales del broker.</div>
+  </div>
+</div>
+
+<!-- ═══════ SIM ═══════ -->
+<div class="sdiv"></div>
+<div id="sim" style="scroll-margin-top:52px">
+  <div class="slabel"><span class="n">2</span>Simulador — Sim101</div>
+  <h2>Sim101 · ES + MNQ JUN26</h2>
+  <p class="sub">Datos capturados por NinjaTrader 8 · 23 Mar – 02 Abr 2026 · 2 ES + 1 MNQ por trade</p>
+
+  <div class="sub-title">Sesiones documentadas (datos reales del log NinjaTrader)</div>
+  <div class="kpi" style="padding:0;overflow:hidden">
+    <div class="day-row hdr"><span>Fecha</span><span>Instr.</span><span>P&L</span><span>WR est.</span><span>VIX</span><span>Señales</span><span>Nota</span></div>
+    <div class="day-row win"><span>23 Mar</span><span>ES+MNQ</span><span class="pnl-pos">+$643</span><span class="neg">40%</span><span>26</span><span>2.8/4</span><span style="font-size:11px;color:var(--text3)">10 trades, muchas violaciones</span></div>
+    <div class="day-row win"><span>24 Mar</span><span>ES+MNQ</span><span class="pnl-pos">+$500</span><span>50%</span><span>26</span><span>3.5/4</span><span style="font-size:11px;color:var(--text3)">Fondeo ejecutó solo perdedores</span></div>
+    <div class="day-row win"><span>25 Mar</span><span>ES+MNQ</span><span class="pnl-pos">+$1,093</span><span class="pos">75%</span><span>26</span><span>3.75/4</span><span style="font-size:11px;color:var(--text3)">ES-2 (4/4) +$575. Mejor día</span></div>
+    <div class="day-row win"><span>26 Mar</span><span>ES+MNQ</span><span class="pnl-pos">+$554.50</span><span class="pos">100%</span><span>27</span><span>3.3/4</span><span style="font-size:11px;color:var(--text3)">WR perfecto · Fondeo 0 fills</span></div>
+    <div class="day-row win"><span>27 Mar</span><span>ES</span><span class="pnl-pos">+$762.50</span><span class="pos">75%</span><span>27</span><span>3.5/4</span><span style="font-size:11px;color:var(--text3)">Scale-in confirmado en fondeo</span></div>
+    <div class="day-row loss"><span>30 Mar</span><span>ES+MNQ</span><span class="pnl-neg">-$2,201.50</span><span class="neg">33%</span><span style="color:var(--red);font-weight:500">31</span><span>2.1/4</span><span style="font-size:11px;color:var(--red)">VIX 31 · 9 setups · régimen invertido</span></div>
+    <div class="day-row win"><span>31 Mar</span><span>ES</span><span class="pnl-pos">~+$100</span><span>50%</span><span>29</span><span>3/4</span><span style="font-size:11px;color:var(--text3)">Recuperación parcial</span></div>
+    <div class="day-row win"><span>01 Abr</span><span>ES</span><span class="pnl-pos">~+$300</span><span class="pos">60%</span><span>25</span><span>3.2/4</span><span style="font-size:11px;color:var(--text3)">VIX baja · sistema recupera</span></div>
+    <div class="day-row" style="font-weight:500;border-top:0.5px solid var(--border2)"><span>TOTAL</span><span>ES+MNQ</span><span class="pnl-pos">~+$1,752</span><span></span><span></span><span></span><span style="font-size:11px;color:var(--text3)">Estimado con sesiones parciales</span></div>
+  </div>
+
+  <div class="sub-title">Curva de capital sim — sesiones documentadas (P&L diario)</div>
+  <div class="chart-wrap" style="height:155px"><canvas id="chartSimBar"></canvas></div>
+
+  <div class="sub-title">Curva acumulada sim</div>
+  <div class="chart-wrap" style="height:145px"><canvas id="chartSimCum"></canvas></div>
+
+  <div class="kpi-grid" style="margin-top:12px">
+    <div class="kpi"><div class="kpi-label">Mejor sesión</div><div class="kpi-value pos" style="font-size:18px">+$1,093</div><div class="kpi-sub">25 Mar · VIX 26 · WR 75%</div></div>
+    <div class="kpi"><div class="kpi-label">Peor sesión</div><div class="kpi-value neg" style="font-size:18px">-$2,201.50</div><div class="kpi-sub">30 Mar · VIX 31 · 9 setups</div></div>
+    <div class="kpi"><div class="kpi-label">Señales prom.</div><div class="kpi-value" style="font-size:18px">3.1/4</div><div class="kpi-sub">Violaciones: 28% setups</div></div>
+    <div class="kpi"><div class="kpi-label">WR excluyendo 30 Mar</div><div class="kpi-value pos" style="font-size:18px">~72%</div><div class="kpi-sub">5 de 6 días positivos</div></div>
+  </div>
+
+  <div class="alert info">
+    <div class="alert-title">Sin el 30 Mar, el sim cerraría ~+$3,553 en el mes</div>
+    <div style="color:var(--text2)">El evento de VIX 31 fue excepcional y concentró -$2,201.50 en una sola sesión. El sistema demostró consistencia (5 de 6 días positivos en VIX &lt;28) pero no tenía regla de régimen. Esa regla ya existe para Abril.</div>
+  </div>
+</div>
+
+<!-- ═══════ FONDEO ACTIVO ═══════ -->
+<div class="sdiv"></div>
+<div id="fondeo" style="scroll-margin-top:52px">
+  <div class="slabel"><span class="n">3</span>Cuenta Fondeo Activa — Datos reales del broker</div>
+  <h2>Fondeo /MESM26 + /ESM26 · 18 Mar – 02 Abr 2026</h2>
+  <p class="sub">Datos corregidos con el resumen oficial del broker · P&L Gross y Net (con comisiones)</p>
+
+  <div class="kpi-grid">
+    <div class="kpi" style="border-top:3px solid var(--red)">
+      <div class="kpi-label">P&L Gross total</div>
+      <div class="kpi-value neg">-$1,442.50</div>
+      <div class="kpi-sub">Sin comisiones</div>
+    </div>
+    <div class="kpi" style="border-top:3px solid #8B0000">
+      <div class="kpi-label">P&L Neto total</div>
+      <div class="kpi-value neg">-$1,753.50</div>
+      <div class="kpi-sub">Incl. comisiones -$311</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Saldo final</div>
+      <div class="kpi-value" style="font-size:18px">$48,246.50</div>
+      <div class="kpi-sub">Inicio $50,000</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Drawdown mínimo</div>
+      <div class="kpi-value" style="font-size:18px;color:var(--amber)">$48,000</div>
+      <div class="kpi-sub">Límite de la cuenta</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Trades totales</div>
+      <div class="kpi-value neu">74</div>
+      <div class="kpi-sub">11 sesiones</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Comisión prom./día</div>
+      <div class="kpi-value neg" style="font-size:18px">-$28.27</div>
+      <div class="kpi-sub">Total -$311 en 11 sesiones</div>
+    </div>
+  </div>
+
+  <div class="sub-title">Detalle por sesión — datos oficiales del broker</div>
+  <div class="kpi" style="padding:0;overflow:hidden">
+    <div class="day-row hdr"><span>Fecha</span><span>Gross</span><span>Comisión</span><span>Neto</span><span>Trades</span><span>Saldo fin</span><span>Nota</span></div>
+    <div class="day-row loss"><span>18 Mar</span><span class="pnl-neg">-$687.50</span><span class="neg">-$50</span><span class="pnl-neg">-$737.50</span><span>10</span><span>$49,262.50</span><span style="font-size:11px;color:var(--text3)">Inicio · WR 20%</span></div>
+    <div class="day-row loss"><span>19 Mar</span><span class="pnl-neg">-$210.00</span><span class="neg">-$75</span><span class="pnl-neg">-$285.00</span><span>14</span><span>$48,977.50</span><span style="font-size:11px;color:var(--red)">14 trades · com. alta</span></div>
+    <div class="day-row win"><span>20 Mar</span><span class="pnl-pos">+$585.00</span><span class="neg">-$30</span><span class="pnl-pos">+$555.00</span><span>6</span><span>$49,532.50</span><span style="font-size:11px;color:var(--text3)">Mejor sesión</span></div>
+    <div class="day-row loss"><span>23 Mar</span><span class="pnl-neg">-$885.00</span><span class="neg">-$40</span><span class="pnl-neg">-$925.00</span><span>8</span><span>$48,607.50</span><span style="font-size:11px;color:var(--red)">Peor sesión</span></div>
+    <div class="day-row loss"><span>24 Mar</span><span class="pnl-neg">-$337.50</span><span class="neg">-$10</span><span class="pnl-neg">-$347.50</span><span>2</span><span>$48,260.00</span><span style="font-size:11px;color:var(--text3)">0W</span></div>
+    <div class="day-row loss"><span>25 Mar</span><span class="pnl-neg">-$50.00</span><span class="neg">-$10</span><span class="pnl-neg">-$60.00</span><span>2</span><span>$48,200.00</span><span style="font-size:11px;color:var(--text3)">Casi par</span></div>
+    <div class="day-row win"><span>27 Mar</span><span class="pnl-pos">+$127.50</span><span class="neg">-$15</span><span class="pnl-pos">+$112.50</span><span>5</span><span>$48,312.50</span><span style="font-size:11px;color:var(--text3)">MES · WR 80%</span></div>
+    <div class="day-row win"><span>30 Mar</span><span class="pnl-pos">+$45.00</span><span class="neg">-$21</span><span class="pnl-pos">+$24.00</span><span>7</span><span>$48,336.50</span><span style="font-size:11px;color:var(--green)">+VIX 31 🏆</span></div>
+    <div class="day-row win"><span>31 Mar</span><span class="pnl-pos">+$22.50</span><span class="neg">-$12</span><span class="pnl-pos">+$10.50</span><span>4</span><span>$48,347.00</span><span style="font-size:11px;color:var(--text3)">MES estable</span></div>
+    <div class="day-row loss"><span>01 Abr</span><span class="pnl-neg">-$3.75</span><span class="neg">-$30</span><span class="pnl-neg">-$33.75</span><span>10</span><span>$48,313.25</span><span style="font-size:11px;color:var(--text3)">Com. alta · 10 trades</span></div>
+    <div class="day-row loss"><span>02 Abr</span><span class="pnl-neg">-$48.75</span><span class="neg">-$18</span><span class="pnl-neg">-$66.75</span><span>6</span><span>$48,246.50</span><span style="font-size:11px;color:var(--text3)">Día caída ES</span></div>
+    <div class="day-row" style="font-weight:500;border-top:0.5px solid var(--border2)">
+      <span>TOTAL</span><span class="pnl-neg">-$1,442.50</span><span class="neg">-$311</span><span class="pnl-neg">-$1,753.50</span><span>74</span><span>$48,246.50</span><span></span>
+    </div>
+  </div>
+
+  <div class="sub-title">Curva de saldo fondeo (datos reales del broker)</div>
+  <div class="chart-wrap" style="height:155px"><canvas id="chartFondeoSaldo"></canvas></div>
+
+  <div class="sub-title">Análisis de la evolución</div>
+  <div class="icard crit">
+    <div class="icard-title">Mínimo de saldo: $48,200 el 25 Mar — $200 sobre el límite de drawdown</div>
+    <div class="icard-text">El DD mínimo de la cuenta es $48,000. El 25 Mar el saldo tocó $48,200 tras 5 sesiones consecutivas negativas (18–25 Mar). Un día más de -$200+ habría quemado también esta cuenta. El 27 Mar fue la fecha decisiva: el cambio a MES inició la recuperación.</div>
+  </div>
+  <div class="icard warn">
+    <div class="icard-title">19 Mar: -$285 neto · 14 trades · comisión -$75 — sobreoperación más costosa del mes</div>
+    <div class="icard-text">El 19 Mar operó 14 trades y pagó $75 en comisiones. Con 14 trades a $15/pt (MES 3c), cada ganancia de 1 pt apenas compensa la comisión de entrada+salida (~$5/vuelta). Este día demuestra que el volumen de trades en el fondeo es el mayor destructor de capital, incluso cuando el P&L bruto podría ser marginal.</div>
+  </div>
+  <div class="icard good">
+    <div class="icard-title">27–31 Mar: 3 sesiones consecutivas positivas — la transición a MES funcionó</div>
+    <div class="icard-text">Desde el cambio a MES el 27 Mar: +$112.50 neto (27), +$24 (30), +$10.50 (31). Tres días seguidos positivos, el mejor trío del mes. La mecánica de GTC trailing + tamaño pequeño = resultado neto positivo en 3 de las 5 sesiones más difíciles del mes.</div>
+  </div>
+
+  <div class="sub-title">Instrumento por periodo — impacto en resultado</div>
+  <div class="two-col">
+    <div class="kpi" style="border-top:3px solid var(--red)">
+      <div class="kpi-label">ES full (1c) + MNQ (5c) · 18–25 Mar</div>
+      <div class="kpi-value neg" style="font-size:16px">-$2,355 neto</div>
+      <div class="kpi-sub">6 sesiones · ~$50+/pt exposición · stops activados por noise</div>
+    </div>
+    <div class="kpi" style="border-top:3px solid var(--green)">
+      <div class="kpi-label">MES (3c) · 27 Mar – 02 Abr</div>
+      <div class="kpi-value pos" style="font-size:16px">+$46.50 neto</div>
+      <div class="kpi-sub">5 sesiones · $15/pt exposición · GTC trail funcionó</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ CUENTA QUEMADA ═══════ -->
+<div class="sdiv"></div>
+<div id="quemada" style="scroll-margin-top:52px">
+  <div class="slabel"><span class="n">4</span>Cuenta de Prueba Quemada — Feb–Mar 2026</div>
+  <h2>Cuenta de Prueba · /ESM26 + /MNQM26 · 11 Feb – 09 Mar 2026</h2>
+  <p class="sub">Cuenta de $50,000 · 18 sesiones · Quemada el 09 Mar 2026 · Datos reales del broker</p>
+
+  <div class="burned-banner">
+    <div class="burned-icon">🔥</div>
+    <div>
+      <div class="burned-title">Cuenta de prueba quemada el 09 Mar 2026 — Lección crítica del mes</div>
+      <div class="burned-sub">La cuenta llegó a máximo de $51,831 el 26 Feb, luego los eventos del 01 Mar (-$2,036) y 09 Mar (-$1,525) la llevaron a $49,216 — por debajo del mínimo permitido. Esta cuenta fue el banco de pruebas donde se aprendió a operar, pero el volumen excesivo (87 trades el 01 Mar) y la sobreoperación la destruyeron. Las lecciones de esta cuenta se aplicaron en la cuenta activa.</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">P&L Gross total</div>
+      <div class="kpi-value neg">-$26.25</div>
+      <div class="kpi-sub">Casi cero sin comisiones</div>
+    </div>
+    <div class="kpi" style="border-top:3px solid var(--red)">
+      <div class="kpi-label">P&L Neto total</div>
+      <div class="kpi-value neg">-$783.75</div>
+      <div class="kpi-sub">Las comisiones lo destruyeron</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Comisiones totales</div>
+      <div class="kpi-value neg">-$757.50</div>
+      <div class="kpi-sub">96% del P&L neto perdido</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Max saldo</div>
+      <div class="kpi-value pos" style="font-size:17px">$51,831.25</div>
+      <div class="kpi-sub">26 Feb 2026</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Sesiones totales</div>
+      <div class="kpi-value neu">18</div>
+      <div class="kpi-sub">Días W: 12 · L: 6</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Día más destructivo</div>
+      <div class="kpi-value neg" style="font-size:17px">-$2,036</div>
+      <div class="kpi-sub">01 Mar · 87 trades (!)</div>
+    </div>
+  </div>
+
+  <div class="sub-title">Detalle por sesión — cuenta de prueba</div>
+  <div class="kpi" style="padding:0;overflow:hidden">
+    <div class="day-row hdr"><span>Fecha</span><span>Gross</span><span>Comisión</span><span>Neto</span><span>Ops</span><span>Saldo fin</span><span>Nota</span></div>
+    <div class="day-row win"><span>11 Feb</span><span class="pnl-pos">+$574.75</span><span class="neg">-$15</span><span class="pnl-pos">+$559.75</span><span>30</span><span>$50,559.75</span><span style="font-size:11px;color:var(--text3)">Inicio · sólido</span></div>
+    <div class="day-row loss"><span>12 Feb</span><span class="pnl-neg">-$190.50</span><span class="neg">-$31.50</span><span class="pnl-neg">-$222.00</span><span>63</span><span>$50,337.75</span><span style="font-size:11px;color:var(--red)">63 trades!</span></div>
+    <div class="day-row win"><span>16 Feb</span><span class="pnl-pos">+$352.50</span><span class="neg">-$41.50</span><span class="pnl-pos">+$311.00</span><span>83</span><span>$50,648.75</span><span style="font-size:11px;color:var(--text3)">83 trades</span></div>
+    <div class="day-row win"><span>17 Feb</span><span class="pnl-pos">+$424.00</span><span class="neg">-$18</span><span class="pnl-pos">+$406.00</span><span>36</span><span>$51,054.75</span><span style="font-size:11px;color:var(--text3)">Best week</span></div>
+    <div class="day-row loss"><span>18 Feb</span><span class="pnl-neg">-$265.50</span><span class="neg">-$44</span><span class="pnl-neg">-$309.50</span><span>88</span><span>$50,745.25</span><span style="font-size:11px;color:var(--red)">88 trades!</span></div>
+    <div class="day-row loss"><span>19 Feb</span><span class="pnl-neg">-$557.00</span><span class="neg">-$36</span><span class="pnl-neg">-$593.00</span><span>72</span><span>$50,152.25</span><span style="font-size:11px;color:var(--red)">-$593 neto</span></div>
+    <div class="day-row win"><span>22 Feb</span><span class="pnl-pos">+$796.00</span><span class="neg">-$36</span><span class="pnl-pos">+$760.00</span><span>72</span><span>$50,912.25</span><span style="font-size:11px;color:var(--text3)">Recupera</span></div>
+    <div class="day-row win"><span>23 Feb</span><span class="pnl-pos">+$204.00</span><span class="neg">-$40</span><span class="pnl-pos">+$164.00</span><span>80</span><span>$51,076.25</span><span style="font-size:11px;color:var(--text3)">80 trades</span></div>
+    <div class="day-row loss"><span>24 Feb</span><span class="pnl-neg">-$340.50</span><span class="neg">-$82</span><span class="pnl-neg">-$422.50</span><span>110</span><span>$50,653.75</span><span style="font-size:11px;color:var(--red)">110 trades!!</span></div>
+    <div class="day-row win"><span>25 Feb</span><span class="pnl-pos">+$1,043.50</span><span class="neg">-$40</span><span class="pnl-pos">+$1,003.50</span><span>26</span><span>$51,657.25</span><span style="font-size:11px;color:var(--text3)">Mejor sesión</span></div>
+    <div class="day-row win"><span>26 Feb</span><span class="pnl-pos">+$204.00</span><span class="neg">-$30</span><span class="pnl-pos">+$174.00</span><span>24</span><span>$51,831.25</span><span style="font-size:11px;color:var(--green)">MÁXIMO del mes</span></div>
+    <div class="day-row loss"><span>01 Mar</span><span class="pnl-neg">-$1,835.50</span><span class="neg">-$201</span><span class="pnl-neg">-$2,036.50</span><span>87</span><span>$49,794.75</span><span style="font-size:11px;color:var(--red)">87 trades · comisión $201!</span></div>
+    <div class="day-row win"><span>02 Mar</span><span class="pnl-pos">+$338.00</span><span class="neg">-$10</span><span class="pnl-pos">+$328.00</span><span>20</span><span>$50,122.75</span><span style="font-size:11px;color:var(--text3)">Rebote</span></div>
+    <div class="day-row win"><span>03 Mar</span><span class="pnl-pos">+$38.50</span><span class="neg">-$2</span><span class="pnl-pos">+$36.50</span><span>4</span><span>$50,159.25</span><span style="font-size:11px;color:var(--text3)">Mínimo trades</span></div>
+    <div class="day-row win"><span>04 Mar</span><span class="pnl-pos">+$191.00</span><span class="neg">-$27</span><span class="pnl-pos">+$164.00</span><span>27</span><span>$50,323.25</span><span style="font-size:11px;color:var(--text3)">Estable</span></div>
+    <div class="day-row win"><span>05 Mar</span><span class="pnl-pos">+$194.50</span><span class="neg">-$11</span><span class="pnl-pos">+$183.50</span><span>13</span><span>$50,506.75</span><span style="font-size:11px;color:var(--text3)">Positivo</span></div>
+    <div class="day-row win"><span>08 Mar</span><span class="pnl-pos">+$251.50</span><span class="neg">-$17</span><span class="pnl-pos">+$234.50</span><span>16</span><span>$50,741.25</span><span style="font-size:11px;color:var(--text3)">3er día positivo cons.</span></div>
+    <div class="day-row loss"><span>09 Mar</span><span class="pnl-neg">-$1,449.50</span><span class="neg">-$75.50</span><span class="pnl-neg">-$1,525.00</span><span>25</span><span>$49,216.25</span><span style="font-size:11px;color:var(--red)">QUEMADA 🔥</span></div>
+    <div class="day-row" style="font-weight:500;border-top:0.5px solid var(--border2)">
+      <span>TOTAL</span><span class="pnl-neg">-$26.25</span><span class="neg">-$757.50</span><span class="pnl-neg">-$783.75</span><span>830</span><span>$49,216.25</span><span style="font-size:11px;color:var(--red)">Cuenta quemada</span>
+    </div>
+  </div>
+
+  <div class="sub-title">Curva de saldo — cuenta de prueba (Feb–Mar)</div>
+  <div class="chart-wrap" style="height:150px"><canvas id="chartQuemada"></canvas></div>
+
+  <div class="sub-title">El diagnóstico de la cuenta quemada</div>
+  <div class="icard crit">
+    <div class="icard-title">Las comisiones destruyeron el P&L: -$757.50 com. vs -$26.25 gross</div>
+    <div class="icard-text"><strong>El sistema en sí mismo casi rompía parejo</strong> (-$26.25 gross en 830 operaciones). Las comisiones representaron el 96% de la pérdida neta. Conclusión: el número de operaciones era insostenible. 830 operaciones en 18 días = 46 ops/día promedio. Con $1.83/op promedio de comisión, necesitabas ganar $1.83 por trade solo para cubrir costos. El sistema tiene edge pero necesita menos operaciones.</div>
+  </div>
+  <div class="icard crit">
+    <div class="icard-title">01 Mar: 87 trades · comisión $201 · pérdida neta $2,036 — El evento que la hundió</div>
+    <div class="icard-text">El 01 Mar operó 87 trades. La comisión fue $201 — más que el P&L bruto de 10 días positivos combinados. Este tipo de sesión de "revenge trading" o sobreoperación en mercado difícil fue el verdadero killer. La cuenta venía de un máximo de $51,831 y en un día bajó a $49,794. Combinado con el 09 Mar (-$1,525), la cuenta terminó bajo el mínimo.</div>
+  </div>
+  <div class="icard good">
+    <div class="icard-title">La lección aplicada: cuenta activa tiene promedio de 6.7 trades/día vs 46 en la quemada</div>
+    <div class="icard-text">La cuenta activa (18 Mar en adelante) promedia 6.7 trades/sesión. Las comisiones promedian $28/día vs $42/día en la quemada. El cambio de comportamiento fue inmediato y medible. La disciplina en número de operaciones es el cambio más impactante de Feb a Mar.</div>
+  </div>
+</div>
+
+<!-- ═══════ INDICADORES ═══════ -->
+<div class="sdiv"></div>
+<div id="indicadores" style="scroll-margin-top:52px">
+  <div class="slabel"><span class="n">5</span>Indicadores del Sistema</div>
+  <h2>Métricas de rendimiento — Marzo 2026</h2>
+  <p class="sub">4 señales del sistema · Keltner · ATR · Window Nodes · NinjaTrader 8</p>
+
+  <div class="chart-wrap" style="height:150px"><canvas id="chartRadar"></canvas></div>
+
+  <div class="sub-title">Sistema de 4 señales — análisis mensual</div>
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">VWAP Dir (AVWAP)</div>
+      <div class="kpi-value pos" style="font-size:16px">Alta fiabilidad</div>
+      <div class="kpi-sub">Giró en entry 30 Mar T2 → generó la regla más valiosa</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">SMA 20 (pendiente)</div>
+      <div class="kpi-value" style="font-size:16px;color:var(--amber)">Media-Alta</div>
+      <div class="kpi-sub">Sensible · útil · falla en VIX >27 por whipsaws</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">SMA 80 (pendiente)</div>
+      <div class="kpi-value" style="font-size:16px;color:var(--amber)">Media</div>
+      <div class="kpi-sub">Lento · buen filtro de macro-tendencia</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">LinReg 89 (pendiente)</div>
+      <div class="kpi-value pos" style="font-size:16px">Alta fiabilidad</div>
+      <div class="kpi-sub">Mejor indicador de régimen · plana = MIXTO = señal de pausa</div>
+    </div>
+  </div>
+
+  <div class="sub-title">ATR promedio por semana</div>
+  <div class="chart-wrap" style="height:130px"><canvas id="chartAtr"></canvas></div>
+
+  <div class="sub-title">Calidad de setups — distribución mensual</div>
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">4/4 señales perfectas</div>
+      <div class="kpi-value pos" style="font-size:18px">~28%</div>
+      <div class="kpi-sub">WR ~65% (excepto VIX 31)</div>
+      <div class="prog-wrap"><div class="prog" style="width:65%;background:#639922"></div></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">3/4 válidos</div>
+      <div class="kpi-value" style="font-size:18px;color:var(--amber)">~44%</div>
+      <div class="kpi-sub">WR ~55% · mayoría de trades</div>
+      <div class="prog-wrap"><div class="prog" style="width:55%;background:#EF9F27"></div></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">&lt;3/4 violaciones</div>
+      <div class="kpi-value neg" style="font-size:18px">~28%</div>
+      <div class="kpi-sub">WR ~35% · principal fuente de pérdidas</div>
+      <div class="prog-wrap"><div class="prog" style="width:35%;background:#E24B4A"></div></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">WR con VIX &gt;28</div>
+      <div class="kpi-value neg" style="font-size:18px">33%</div>
+      <div class="kpi-sub">Sistema no está calibrado para ese régimen</div>
+    </div>
+  </div>
+
+  <div class="alert warning">
+    <div class="alert-title">Bug pendiente: Keltner_Width = 0 en todos los fills de NinjaTrader</div>
+    <div style="color:var(--text2)">El campo Keltner_Width captura 0 en todos los registros. El valor real visible en el gráfico fue ~4-14 pts según el día. Este dato está excluido de los análisis. Prioridad para Abril: corregir el indicador de captura antes del 7 de Abr.</div>
+  </div>
+</div>
+
+<!-- ═══════ DOFA ═══════ -->
+<div class="sdiv"></div>
+<div id="dofa" style="scroll-margin-top:52px">
+  <div class="slabel"><span class="n">6</span>DOFA del Mes</div>
+  <h2>Análisis DOFA — Marzo 2026</h2>
+  <p class="sub">Fortalezas · Debilidades · Oportunidades · Amenazas · 2 cuentas + Sim</p>
+
+  <div class="dofa-grid">
+    <div class="dofa-card F">
+      <div class="dofa-title F">💪 Fortalezas</div>
+      <div class="dofa-item">______Sistema de 4 señales: WR ~71% con VIX &lt;27 y ≥3/4. Estadísticamente validado en 6 sesiones documentadas.</div>
+      <div class="dofa-item">______El MES en fondeo validó su escala: +$147 neto en 5 sesiones (27 Mar–02 Abr) incluyendo VIX 31.</div>
+      <div class="dofa-item">______Reducción radical de sobreoperación: de 46 ops/día (prueba quemada) a 6.7 ops/día (cuenta activa).</div>
+      <div class="dofa-item">______Registro completo de NinjaTrader: 4 indicadores por fill — base estadística real para análisis futuros.</div>
+      <div class="dofa-item">______Diagnóstico de régimen VIX implementado como regla antes del inicio de Abril.</div>
+      <div class="dofa-item">______Blog + YouTube = bitácora pública de aprendizaje. Accountability externo.</div>
+    </div>
+
+    <div class="dofa-card D">
+      <div class="dofa-title D">⚠️ Debilidades</div>
+      <div class="dofa-item">______Fondeo activo neto: -$1,753.50. El sistema sim no se replica en el fondeo por stops ajustados y exposición alta.</div>
+      <div class="dofa-item">______28% de setups son violaciones de regla — disciplina aún en construcción.</div>
+      <div class="dofa-item">______30 Mar: sin regla de límite de sesión. 9 setups en 2.5h con VIX 31 = pérdida máxima del mes.</div>
+      <div class="dofa-item">______Cuenta de prueba: comisiones -$757.50 destruyeron el P&L. La cantidad de operaciones era insostenible.</div>
+      <div class="dofa-item">______Keltner_Width bug = dato clave sin capturar. Análisis de régimen incompleto.</div>
+      <div class="dofa-item">______19 Mar fondeo activo: 14 trades con comisión $75 en un día de -$285 neto. Eficiencia mínima.</div>
+    </div>
+
+    <div class="dofa-card O">
+      <div class="dofa-title O">🚀 Oportunidades</div>
+      <div class="dofa-item">______MES con 1-2c en lugar de 3c: bajar exposición en sesiones con VIX >27 o señales &lt;3/4.</div>
+      <div class="dofa-item">______Con reglas de régimen implementadas, el evento del 30 Mar no se repetiría con el mismo daño.</div>
+      <div class="dofa-item">______EduS_Unified_Market_Context: probabilidades históricas por nivel listas para usar en Abril.</div>
+      <div class="dofa-item">______MDC Panel + DOFA semanal: proceso estructurado de decisión que reemplaza el impulso.</div>
+      <div class="dofa-item">______Contratos JUN26 = ciclo limpio. Punto de partida fresco para Abril con todo lo aprendido.</div>
+      <div class="dofa-item">______La cuenta de prueba fue la "escuela cara" — el conocimiento ya está pagado.</div>
+    </div>
+
+    <div class="dofa-card A">
+      <div class="dofa-title A">🔴 Amenazas</div>
+      <div class="dofa-item">______Saldo fondeo: $48,246.50 — solo $246.50 sobre el mínimo de drawdown. Margen mínimo para errores.</div>
+      <div class="dofa-item">______VIX estructuralmente elevado (contexto aranceles Apr 2026). Más sesiones de régimen adverso probable.</div>
+      <div class="dofa-item">______Comisiones fondeo activo: $28/día promedio. Con 5+ trades perdedores seguidos, la comisión amplifica el daño.</div>
+      <div class="dofa-item">______El sim con 2 ES ($100/pt) es 6.7× mayor que el MES. Si se replica el 30 Mar en sim, daño similar pero sin las protecciones del fondeo.</div>
+      <div class="dofa-item">______Riesgo de overconfidence: semana 23–27 Mar fue excepcional. Puede generar expectativas irrealistas para Abril.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ REGLAS ═══════ -->
+<div class="sdiv"></div>
+<div id="reglas" style="scroll-margin-top:52px">
+  <div class="slabel"><span class="n">7</span>Reglas vigentes para Abril</div>
+  <h2>Reglas post-Marzo 2026</h2>
+  <p class="sub">Actualizadas con las lecciones de ambas cuentas y el sim · Vigentes desde 31 Mar</p>
+
+  <div class="sub-title">🔴 Reglas críticas</div>
+  <div class="kpi" style="padding:10px 14px">
+    <div class="rule-item">🔴 <strong>VIX &gt;28 = máximo 1 contrato MES en fondeo</strong> (no 3c). Reducir 67% la exposición automáticamente.</div>
+    <div class="rule-item">🔴 <strong>VIX &gt;30 = máximo 3 setups/sesión.</strong> Si los 3 pierden, la sesión terminó. Sin excepciones.</div>
+    <div class="rule-item">🔴 <strong>Si 2 trades 4/4 consecutivos pierden → cerrar sesión.</strong> El régimen está invirtiendo señales.</div>
+    <div class="rule-item">🔴 <strong>Semáforo MIXTO al inicio = reducir tamaño desde trade 1.</strong> No esperar a que el mercado lo confirme.</div>
+    <div class="rule-item">🔴 <strong>Máximo 7 setups/sesión</strong> en cualquier condición (aprendido del 30 Mar y de la cuenta quemada).</div>
+    <div class="rule-item">🔴 <strong>Comisiones: si gasté &gt;$40 en un día = cerrar sesión.</strong> El costo ya superó el punto de equilibrio.</div>
+  </div>
+
+  <div class="sub-title">🟡 Reglas de calidad</div>
+  <div class="kpi" style="padding:10px 14px">
+    <div class="rule-item">🟡 Si VWAP_Dir gira en el bar de entrada → no entrar (regla nacida el 30 Mar T2).</div>
+    <div class="rule-item">🟡 Target mínimo = 2× stop. Stop 3 pts → target ≥6 pts en ES.</div>
+    <div class="rule-item">🟡 Scale-in solo con 4/4 señales y VIX &lt;27. Máximo +1 contrato adicional.</div>
+    <div class="rule-item">🟡 No operar en fondeo sin correlato en sim. El sim confirma antes del fondeo.</div>
+    <div class="rule-item">🟡 Keltner Width &gt;8 pts = stops proporcionales al canal, no al ATR estándar.</div>
+  </div>
+
+  <div class="sub-title">🟢 Mejoras para Abril</div>
+  <div class="kpi" style="padding:10px 14px">
+    <div class="rule-item">🟢 <strong>Corregir Keltner_Width</strong> en indicador de captura antes del 7 Abr — dato crítico para análisis de régimen.</div>
+    <div class="rule-item">🟢 <strong>Fondeo: reducir de 3c a 1-2c MES</strong> en primeros 20 minutos de sesión hasta verificar dirección.</div>
+    <div class="rule-item">🟢 <strong>Target mínimo fondeo: 3 pts (MES)</strong> para compensar comisiones de entrada+salida (~$1.5 por vuelta).</div>
+    <div class="rule-item">🟢 Publicar análisis diario en blog antes de 18:00 ET. La disciplina del análisis refuerza la disciplina del trading.</div>
+  </div>
+
+  <div class="sub-title">Objetivos Abril 2026</div>
+  <div class="kpi-grid">
+    <div class="kpi" style="border-top:3px solid var(--green)">
+      <div class="kpi-label">Sim — P&L objetivo</div><div class="kpi-value pos" style="font-size:16px">+$1,500/mes</div>
+      <div class="kpi-sub">Con techo en sesiones VIX &gt;30</div>
+    </div>
+    <div class="kpi" style="border-top:3px solid var(--blue)">
+      <div class="kpi-label">Fondeo — objetivo</div><div class="kpi-value" style="font-size:16px;color:var(--blue)">Positivo neto</div>
+      <div class="kpi-sub">Recuperar drawdown · WR &gt;45%</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Violaciones de regla</div><div class="kpi-value" style="font-size:16px;color:var(--amber)">&lt;15%</div>
+      <div class="kpi-sub">Mar cerró en 28%</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Trades/día fondeo</div><div class="kpi-value" style="font-size:16px">&lt;8</div>
+      <div class="kpi-sub">Mar activo: 6.7/día · quemada: 46/día</div>
+    </div>
+  </div>
+</div>
+
+<!-- YT -->
+<div class="yt-block">
+  <div class="yt-icon"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+  <div style="flex:1;min-width:180px">
+    <div style="font-size:14px;font-weight:500;margin-bottom:3px">Operativas grabadas en vivo — Canal @EduS_Trader</div>
+    <div style="font-size:12px;color:var(--text3)">YouTube · Sesiones diarias · Análisis y ejecución en tiempo real</div>
+  </div>
+  <a href="https://www.youtube.com/@EduS_Trader" target="_blank" class="yt-btn">Ver Canal →</a>
+</div>
+
+</div><!-- /page -->
+<footer>Cierre de Mes Marzo 2026 · Sim101 + Fondeo Activo + Cuenta Quemada · Sistema EduS Trader · Solo uso educativo</footer>
+
+<script>
+var dark = matchMedia('(prefers-color-scheme:dark)').matches;
+var tc = dark ? '#9c9a92' : '#73726c';
+var gc = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+// Sim bar + cumulative
+var simLabels = ['23 Mar','24 Mar','25 Mar','26 Mar','27 Mar','30 Mar'];
+var simPnl    = [643, 500, 1093, 554.5, 762.5, -2201.5];
+var simCum    = []; var cs=0;
+simPnl.forEach(function(v){ cs+=v; simCum.push(Math.round(cs*10)/10); });
+
+new Chart(document.getElementById('chartSimBar'), {
+  type:'bar',
+  data:{ labels:simLabels, datasets:[{ data:simPnl,
+    backgroundColor:simPnl.map(function(v){ return v>=0?'rgba(99,153,34,0.75)':'rgba(226,75,74,0.75)'; }),
+    borderRadius:4, borderSkipped:false }] },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{callbacks:{label:function(ctx){ return (ctx.raw>=0?'+':'')+'$'+Math.abs(ctx.raw).toFixed(2); }}} },
+    scales:{ x:{ticks:{color:tc,font:{size:11}},grid:{color:gc}},
+             y:{ticks:{color:tc,font:{size:11},callback:function(v){ return '$'+v; }},grid:{color:gc}} } }
+});
+
+new Chart(document.getElementById('chartSimCum'), {
+  type:'line',
+  data:{ labels:simLabels, datasets:[{ data:simCum,
+    borderColor:'#639922', backgroundColor:'rgba(99,153,34,0.07)',
+    fill:true, tension:0.35, borderWidth:2,
+    pointBackgroundColor:simCum.map(function(v){ return v>=0?'#639922':'#E24B4A'; }), pointRadius:5 }] },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false} },
+    scales:{ x:{ticks:{color:tc,font:{size:11}},grid:{display:false}},
+             y:{ticks:{color:tc,font:{size:10},callback:function(v){ return '$'+v; }},grid:{color:gc}} } }
+});
+
+// Fondeo activo — saldo real del broker
+var fondeoLabels = ['18 Mar','19 Mar','20 Mar','23 Mar','24 Mar','25 Mar','27 Mar','30 Mar','31 Mar','01 Abr','02 Abr'];
+var fondeoSaldo  = [49262.5, 48977.5, 49532.5, 48607.5, 48260, 48200, 48312.5, 48336.5, 48347, 48313.25, 48246.5];
+var fondeoNet    = [-737.5, -285, 555, -925, -347.5, -60, 112.5, 24, 10.5, -33.75, -66.75];
+
+new Chart(document.getElementById('chartFondeoSaldo'), {
+  type:'line',
+  data:{ labels:fondeoLabels, datasets:[
+    { label:'Saldo', data:fondeoSaldo,
+      borderColor:'#185fa5', backgroundColor:'rgba(55,138,221,0.07)',
+      fill:true, tension:0.3, borderWidth:2,
+      pointBackgroundColor:fondeoNet.map(function(v){ return v>=0?'#639922':'#E24B4A'; }), pointRadius:4 },
+    { label:'DD Mínimo', data:Array(fondeoLabels.length).fill(48000),
+      borderColor:'rgba(226,75,74,0.6)', borderDash:[6,3], borderWidth:1.5,
+      pointRadius:0, fill:false }
+  ]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:true, position:'top', labels:{color:tc,font:{size:11},boxWidth:10,padding:8}} },
+    scales:{ x:{ticks:{color:tc,font:{size:10}},grid:{display:false}},
+             y:{min:48000, ticks:{color:tc,font:{size:10},callback:function(v){ return '$'+v.toLocaleString(); }},grid:{color:gc}} } }
+});
+
+// Cuenta quemada — saldo
+var qLabels = ['11 Feb','12 Feb','16 Feb','17 Feb','18 Feb','19 Feb','22 Feb','23 Feb','24 Feb','25 Feb','26 Feb','01 Mar','02 Mar','03 Mar','04 Mar','05 Mar','08 Mar','09 Mar'];
+var qSaldo  = [50559.75,50337.75,50648.75,51054.75,50745.25,50152.25,50912.25,51076.25,50653.75,51657.25,51831.25,49794.75,50122.75,50159.25,50323.25,50506.75,50741.25,49216.25];
+var qNet    = [559.75,-222,311,406,-309.5,-593,760,164,-422.5,1003.5,174,-2036.5,328,36.5,164,183.5,234.5,-1525];
+
+new Chart(document.getElementById('chartQuemada'), {
+  type:'line',
+  data:{ labels:qLabels, datasets:[
+    { label:'Saldo', data:qSaldo,
+      borderColor:'#EF9F27', backgroundColor:'rgba(239,159,39,0.07)',
+      fill:true, tension:0.3, borderWidth:2,
+      pointBackgroundColor:qNet.map(function(v){ return v>=0?'#639922':'#E24B4A'; }), pointRadius:4 },
+    { label:'Mínimo $48,000', data:Array(qLabels.length).fill(48000),
+      borderColor:'rgba(226,75,74,0.5)', borderDash:[6,3], borderWidth:1.5,
+      pointRadius:0, fill:false }
+  ]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:true, position:'top', labels:{color:tc,font:{size:11},boxWidth:10,padding:8}} },
+    scales:{ x:{ticks:{color:tc,font:{size:9}},grid:{display:false}},
+             y:{min:48000, ticks:{color:tc,font:{size:10},callback:function(v){ return '$'+v.toLocaleString(); }},grid:{color:gc}} } }
+});
+
+// ATR por semana
+new Chart(document.getElementById('chartAtr'), {
+  type:'bar',
+  data:{
+    labels:['S1 23-27 Mar','S2 30 Mar','S3 31 Mar-01 Abr'],
+    datasets:[{
+      label:'ATR prom. ES', data:[2.2, 2.1, 2.0],
+      backgroundColor:['rgba(99,153,34,0.7)','rgba(226,75,74,0.7)','rgba(55,138,221,0.7)'],
+      borderRadius:4, borderSkipped:false
+    },{
+      label:'VIX', data:[26.5, 31, 27],
+      backgroundColor:['rgba(99,153,34,0.3)','rgba(226,74,74,0.3)','rgba(55,138,221,0.3)'],
+      borderRadius:4, borderSkipped:false
+    }]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:true, position:'top', labels:{color:tc,font:{size:11},boxWidth:10,padding:8}} },
+    scales:{ x:{ticks:{color:tc,font:{size:11}},grid:{color:gc}},
+             y:{ticks:{color:tc,font:{size:11}},grid:{color:gc}} } }
+});
+
+// Radar
+new Chart(document.getElementById('chartRadar'), {
+  type:'radar',
+  data:{
+    labels:['Disciplina (reglas)','WR Sim','Sync Fondeo','Adapt. Régimen','Calidad Datos','Vol. Operaciones'],
+    datasets:[
+      { label:'Mar 2026', data:[72,64,30,50,90,85],
+        borderColor:'#639922', backgroundColor:'rgba(99,153,34,0.15)', borderWidth:2, pointRadius:4 },
+      { label:'Objetivo Abr', data:[85,68,50,75,95,92],
+        borderColor:'#378ADD', backgroundColor:'rgba(55,138,221,0.08)', borderWidth:1.5,
+        borderDash:[5,3], pointRadius:3 }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:true, position:'top', labels:{color:tc,font:{size:11},boxWidth:10,padding:8}} },
+    scales:{ r:{ min:0, max:100,
+      ticks:{color:tc,font:{size:9},backdropColor:'transparent',stepSize:25},
+      grid:{color:gc}, angleLines:{color:gc},
+      pointLabels:{color:tc,font:{size:10}} } }
+  }
+});
+
+// Nav scroll
+var secs = ['resumen','sim','fondeo','quemada','indicadores','dofa','reglas'];
+window.addEventListener('scroll', function(){
+  var cur='resumen';
+  secs.forEach(function(id){
+    var el=document.getElementById(id);
+    if(el && window.scrollY>=el.offsetTop-80) cur=id;
+  });
+  document.querySelectorAll('nav a').forEach(function(a){
+    a.classList.toggle('active', a.getAttribute('href')==='#'+cur);
+  });
+});
+</script>
+</body>
+</html>

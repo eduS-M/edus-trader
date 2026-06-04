@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Operativo — 31 Mar 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#ffffff; --bg2:#f5f4f0; --bg3:#eeecea;
+    --text:#1a1a18; --text2:#5f5e5a; --text3:#888780;
+    --border:rgba(0,0,0,0.10); --border2:rgba(0,0,0,0.20);
+    --green:#3b6d11; --green-bg:#eaf3de;
+    --red:#a32d2d; --red-bg:#fcebeb;
+    --amber:#854f0b; --amber-bg:#faeeda;
+    --blue:#185fa5; --blue-bg:#e6f1fb;
+    --r-md:8px; --r-lg:12px;
+    --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#1e1e1c; --bg2:#272724; --bg3:#2e2e2b;
+      --text:#e8e6e0; --text2:#9c9a92; --text3:#6e6d67;
+      --border:rgba(255,255,255,0.09); --border2:rgba(255,255,255,0.18);
+      --green:#8fb85a; --green-bg:rgba(99,153,34,0.14);
+      --red:#e87878; --red-bg:rgba(226,75,74,0.14);
+      --amber:#f0b060; --amber-bg:rgba(239,159,39,0.14);
+      --blue:#6aaee8; --blue-bg:rgba(55,138,221,0.14);
+    }
+  }
+  body{font-family:var(--font);background:var(--bg);color:var(--text);margin:0;padding:0;}
+  nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:0.5px solid var(--border2);padding:0 2rem;display:flex;align-items:center;overflow-x:auto;}
+  nav .brand{font-size:13px;font-weight:500;color:var(--text);padding:14px 0;margin-right:24px;white-space:nowrap;}
+  nav a{font-size:12px;color:var(--text3);text-decoration:none;padding:16px 14px;border-bottom:2px solid transparent;transition:color .15s;white-space:nowrap;}
+  nav a:hover{color:var(--text);}
+  nav a.active{color:var(--text);border-bottom-color:var(--text);font-weight:500;}
+  .page{max-width:960px;margin:0 auto;padding:2rem 2rem 4rem;}
+  .section-divider{height:0.5px;background:var(--border2);margin:3rem 0 2rem;}
+  .section-label{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:500;letter-spacing:0.09em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;}
+  .section-label .num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--bg2);border:0.5px solid var(--border2);font-size:10px;font-weight:500;color:var(--text2);}
+  h2{font-size:20px;font-weight:500;margin-bottom:4px;}
+  .sub{font-size:12px;color:var(--text3);margin-bottom:1.5rem;}
+  .sub-title{font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);margin:1.5rem 0 0.7rem;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;}
+  .kpi{background:var(--bg2);border-radius:var(--r-md);padding:12px 14px;}
+  .kpi-label{font-size:11px;color:var(--text3);margin-bottom:4px;}
+  .kpi-value{font-size:22px;font-weight:500;}
+  .kpi-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+  .pos{color:var(--green);} .neg{color:var(--red);} .neu{color:var(--text);}
+  .pnl-pos{color:var(--green);font-weight:500;} .pnl-neg{color:var(--red);font-weight:500;}
+  .chart-wrap{position:relative;width:100%;}
+  .alert{border-radius:var(--r-md);padding:12px 14px;font-size:12px;margin-top:10px;}
+  .alert.success{background:var(--green-bg);border:0.5px solid rgba(99,153,34,0.35);}
+  .alert.danger{background:var(--red-bg);border:0.5px solid rgba(226,75,74,0.35);}
+  .alert.warning{background:var(--amber-bg);border:0.5px solid rgba(239,159,39,0.35);}
+  .alert.info{background:var(--blue-bg);border:0.5px solid rgba(55,138,221,0.35);}
+  .alert-title{font-weight:500;margin-bottom:3px;}
+  .alert.success .alert-title{color:var(--green);}
+  .alert.danger .alert-title{color:var(--red);}
+  .alert.warning .alert-title{color:var(--amber);}
+  .alert.info .alert-title{color:var(--blue);}
+  .regime-alert{background:linear-gradient(135deg,rgba(239,159,39,0.12),rgba(239,159,39,0.04));border:1px solid rgba(239,159,39,0.4);border-radius:var(--r-lg);padding:16px 20px;margin-bottom:16px;display:flex;align-items:flex-start;gap:14px;}
+  .regime-icon{font-size:26px;flex-shrink:0;margin-top:2px;}
+  .regime-title{font-size:14px;font-weight:500;color:var(--amber);margin-bottom:4px;}
+  .regime-sub{font-size:12px;color:var(--text2);line-height:1.6;}
+  .vix-badge{display:inline-flex;align-items:center;gap:8px;background:var(--amber-bg);border:0.5px solid rgba(133,79,11,0.4);border-radius:var(--r-md);padding:8px 14px;font-size:12px;color:var(--amber);font-weight:500;margin-bottom:14px;}
+  .milestone{background:linear-gradient(135deg,rgba(99,153,34,0.12),rgba(99,153,34,0.04));border:0.5px solid rgba(99,153,34,0.4);border-radius:var(--r-lg);padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+  .milestone-icon{font-size:28px;flex-shrink:0;}
+  .milestone-title{font-size:14px;font-weight:500;color:var(--green);margin-bottom:2px;}
+  .milestone-sub{font-size:12px;color:var(--text2);}
+  .trade-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .trade-table th{font-size:11px;color:var(--text3);font-weight:500;padding:6px 10px;border-bottom:0.5px solid var(--border2);text-align:left;}
+  .trade-table td{padding:8px 10px;border-bottom:0.5px solid var(--border);}
+  .trade-table tr:last-child td{border-bottom:none;}
+  .trade-table tr.win td{background:rgba(99,153,34,0.03);}
+  .trade-table tr.loss td{background:rgba(226,75,74,0.03);}
+  .trade-table tr.viol td{background:rgba(239,159,39,0.06);}
+  .badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:500;}
+  .badge.short{background:var(--amber-bg);color:var(--amber);}
+  .badge.long{background:var(--blue-bg);color:var(--blue);}
+  .badge.viol{background:var(--red-bg);color:var(--red);font-size:10px;}
+  .badge.ok{background:var(--green-bg);color:var(--green);font-size:10px;}
+  .sdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin:0 1px;}
+  .dot-g{background:#639922;} .dot-r{background:#E24B4A;}
+  .sig-inline{display:flex;gap:3px;align-items:center;}
+  .tab-row{display:flex;gap:4px;margin-bottom:1rem;border-bottom:0.5px solid var(--border);padding-bottom:8px;}
+  .tab{padding:5px 14px;border-radius:var(--r-md);font-size:12px;cursor:pointer;border:0.5px solid transparent;color:var(--text3);background:transparent;font-family:var(--font);}
+  .tab.active{background:var(--bg2);border-color:var(--border2);color:var(--text);font-weight:500;}
+  .tab-content{display:none;}
+  .tab-content.active{display:block;}
+  .icard{background:var(--bg2);border-radius:var(--r-md);padding:13px 15px;margin-bottom:8px;border-left:3px solid transparent;}
+  .icard.crit{border-left-color:#E24B4A;}
+  .icard.warn{border-left-color:#EF9F27;}
+  .icard.good{border-left-color:#639922;}
+  .icard.info{border-left-color:#378ADD;}
+  .icard-title{font-size:13px;font-weight:500;margin-bottom:5px;}
+  .icard-text{font-size:12px;color:var(--text2);line-height:1.6;}
+  .comp-block{background:var(--bg2);border-radius:var(--r-md);padding:12px 14px;margin-bottom:10px;font-size:12px;}
+  .comp-block-title{font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+  .comp-block-body{color:var(--text2);line-height:1.6;}
+  .tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500;}
+  .tag-win{background:var(--green-bg);color:var(--green);}
+  .tag-loss{background:var(--red-bg);color:var(--red);}
+  .tag-miss{background:var(--amber-bg);color:var(--amber);}
+  .tag-gtc{background:var(--blue-bg);color:var(--blue);}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .met-row{display:grid;grid-template-columns:110px 1fr 1fr 1fr 1fr;gap:8px;padding:6px 12px;font-size:12px;border-bottom:0.5px solid var(--border);align-items:center;}
+  .met-row.hdr{font-size:11px;color:var(--text3);font-weight:500;}
+  .met-row:last-child{border-bottom:none;}
+  .trend-row{display:grid;grid-template-columns:90px 1fr 1fr 1fr;gap:8px;padding:7px 12px;font-size:12px;border-bottom:0.5px solid var(--border);align-items:center;}
+  .trend-row.hdr{font-size:11px;color:var(--text3);font-weight:500;}
+  .trend-row:last-child{border-bottom:none;}
+  .improve{color:var(--green);font-size:11px;}
+  .worsen{color:var(--red);font-size:11px;}
+  .finding{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r-lg);padding:24px 28px;position:relative;overflow:hidden;}
+  .finding::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,#854f0b 0%,#185fa5 100%);}
+  .finding-label{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
+  .finding h3{font-size:17px;font-weight:500;margin-bottom:12px;line-height:1.4;}
+  .finding p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px;}
+  .finding p:last-child{margin-bottom:0;}
+  .finding strong{color:var(--text);font-weight:500;}
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0;}
+  .stat-box{background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--r-md);padding:12px 14px;text-align:center;}
+  .stat-val{font-size:22px;font-weight:500;}
+  .stat-lbl{font-size:11px;color:var(--text3);margin-top:2px;}
+  .rules-box{background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--r-md);padding:14px 16px;margin-top:16px;}
+  .rules-box-title{font-size:12px;font-weight:500;margin-bottom:10px;}
+  .rule-item{font-size:12px;color:var(--text2);padding:5px 0;border-bottom:0.5px solid var(--border);line-height:1.5;}
+  .rule-item:last-child{border-bottom:none;}
+  .yt-block{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r-lg);padding:18px 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:2rem;}
+  .yt-icon{width:44px;height:44px;border-radius:50%;background:#c0392b;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .yt-icon svg{width:20px;height:20px;fill:#fff;}
+  .yt-text{flex:1;min-width:180px;}
+  .yt-title{font-size:14px;font-weight:500;margin-bottom:3px;}
+  .yt-sub{font-size:12px;color:var(--text3);}
+  .yt-btn{display:inline-block!important;background:#c0392b!important;color:#ffffff!important;font-size:12px;font-weight:600;padding:10px 20px;border-radius:var(--r-md);text-decoration:none!important;white-space:nowrap;border:none!important;transition:opacity .2s;}
+  .yt-btn:hover{opacity:.85;color:#ffffff!important;}
+  footer{text-align:center;font-size:11px;color:var(--text3);padding:2rem 1rem 3rem;border-top:0.5px solid var(--border);margin-top:2rem;}
+  .order-row{display:grid;grid-template-columns:90px 50px 80px 68px 40px 1fr;gap:5px;align-items:center;padding:5px 10px;font-size:11px;border-bottom:0.5px solid var(--border);}
+  .order-row.hdr{font-size:10px;color:var(--text3);font-weight:500;}
+  .filled{color:var(--green);font-weight:500;}
+  .sltrig{color:var(--red);font-weight:500;}
+  .cancelled{color:var(--text3);}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">📊 Diario Operativo</span>
+  <a href="#sim" class="active">Sim 31 Mar</a>
+  <a href="#critico">Análisis crítico</a>
+  <a href="#comp">Sim vs Fondeo</a>
+  <a href="#hallazgo">Diagnóstico</a>
+  <a href="#video">Video</a>
+</nav>
+
+<div class="page">
+
+<!-- ══════════════════════ SECCIÓN 1 — SIM ══════════════════════ -->
+<div id="sim" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">1</span>Resumen operativo — Simulador</div>
+  <h2>Dashboard 31 Mar 2026</h2>
+  <p class="sub">Sim101 · ES JUN26 · VIX 29→27 · 11:20 – 11:51 · Semáforo MIXTO · Mercado Choppy · Recuperación parcial post-VIX31</p>
+
+  <div class="regime-alert">
+    <div class="regime-icon">⚠️</div>
+    <div>
+      <div class="regime-title">Régimen de transición — VIX 29→27 · Semáforo MIXTO · Señales contradictorias en todos los setups</div>
+      <div class="regime-sub">El VIX bajó de 31 (ayer) a 29→27, lo que sugiere transición desde "fear expansion" hacia algo más manejable, pero aún con señales contradictorias. El semáforo MIXTO persistió toda la sesión. Ninguno de los 4 setups alcanzó 3/4 de confluencia en la dirección operada — lo que viola la regla de mínimo 3/4. Operativa de solo 31 minutos con 4 setups es alta frecuencia para el régimen.</div>
+    </div>
+  </div>
+
+  <div class="vix-badge">🟡 VIX 29→27 · ATR ~2.4 pts · Keltner Width: dato inválido (capturado como 0) · Semáforo MIXTO toda la sesión</div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">P&L neto</div><div class="kpi-value neg">-$862.50</div><div class="kpi-sub">4 setups · sesión muy corta</div></div>
+    <div class="kpi"><div class="kpi-label">Win rate</div><div class="kpi-value pos">25%</div><div class="kpi-sub">1W / 3L</div></div>
+    <div class="kpi"><div class="kpi-label">Profit factor</div><div class="kpi-value neg">0.10</div><div class="kpi-sub">$87.50 gan / $862.50 perd</div></div>
+    <div class="kpi"><div class="kpi-label">Avg ganancia</div><div class="kpi-value pos">+$87.50</div><div class="kpi-sub">Solo T3</div></div>
+    <div class="kpi"><div class="kpi-label">Avg pérdida</div><div class="kpi-value neg">-$316.67</div><div class="kpi-sub">por setup perdedor</div></div>
+    <div class="kpi"><div class="kpi-value" style="font-size:18px;color:var(--red)">4/4</div><div class="kpi-label">Violaciones regla</div><div class="kpi-sub">0 setups con ≥3/4</div></div>
+  </div>
+
+  <div class="alert danger">
+    <div class="alert-title">100% de los setups violaron la regla de mínimo 3/4 de confluencia — nueva sesión negativa</div>
+    <div style="color:var(--text2)">Ninguno de los 4 setups del día alcanzó el mínimo de 3/4 señales de confluencia. <strong style="color:var(--text)">El día después de la peor sesión (-$2,201.50), se repitió el mismo patrón de operar sin la confluencia mínima requerida.</strong> El acumulado de las 7 sesiones pasa a ser negativo: -$810.50 neto. El T2 con 2 contratos en un setup de 0/4 fue el error más costoso.</div>
+  </div>
+
+  <div class="alert warning" style="margin-top:8px">
+    <div class="alert-title">Nota: T1 no fue registrado en el Sim — espejo faltante del fondeo</div>
+    <div style="color:var(--text2)">El primer trade del fondeo (Sell @6468, 11:02) no tiene correlato en el Sim. Los 4 setups registrados corresponden a 11:20–11:51. El fondeo operó desde las 10:44 y tuvo actividad previa (órdenes canceladas) que el sim no reflejó.</div>
+  </div>
+
+  <div class="sub-title">P&L por setup</div>
+  <div class="chart-wrap" style="height:140px"><canvas id="chartBar"></canvas></div>
+
+  <div class="sub-title">Curva de capital acumulada (sesión)</div>
+  <div class="chart-wrap" style="height:130px"><canvas id="chartCurve"></canvas></div>
+
+  <div class="sub-title">Detalle de operaciones</div>
+
+  <div class="tab-row">
+    <button class="tab active" onclick="showTab(event,'all')">Todas</button>
+    <button class="tab" onclick="showTab(event,'win')">Ganadoras</button>
+    <button class="tab" onclick="showTab(event,'loss')">Perdedoras</button>
+    <button class="tab" onclick="showTab(event,'viol')">Violaciones ⚡</button>
+  </div>
+  <div id="tab-all" class="tab-content active"><table class="trade-table" id="table-all"></table></div>
+  <div id="tab-win" class="tab-content"><table class="trade-table" id="table-win"></table></div>
+  <div id="tab-loss" class="tab-content"><table class="trade-table" id="table-loss"></table></div>
+  <div id="tab-viol" class="tab-content"><table class="trade-table" id="table-viol"></table></div>
+
+  <div class="sub-title">Análisis de señales por setup</div>
+  <div class="kpi" style="padding:14px 16px;font-size:12px">
+    <div style="color:var(--text2);line-height:1.7;margin-bottom:12px">
+      Todos los setups del día presentaron señales contradictorias. La dirección operada nunca coincidió con la mayoría de los indicadores. El VIX en transición (29→27) mantiene el régimen de señales conflictivas.
+    </div>
+    <div class="two-col">
+      <div class="kpi" style="background:var(--bg);border:0.5px solid rgba(226,75,74,0.3)">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">Setups con señal principal en contra</div>
+        <div style="font-size:13px;color:var(--text2)">T1 Long (0/4): VWAP DOWN, SMA20 neg, LR89 pos</div>
+        <div style="font-size:13px;color:var(--text2)">T2 Short (1/4): SMA80 neg, resto en contra</div>
+        <div style="font-size:13px;color:var(--text2)">T3 Long (1/4): SMA20 pos, resto en contra</div>
+        <div style="font-size:13px;color:var(--text2)">T4 Short (0/4): VWAP UP, SMA20 neg, LR89 pos</div>
+        <div style="font-size:12px;color:var(--red);margin-top:6px;font-weight:500">0 setups con ≥ 3/4</div>
+      </div>
+      <div class="kpi" style="background:var(--bg);border:0.5px solid rgba(239,159,39,0.3)">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">Firma del mercado hoy</div>
+        <div style="font-size:13px;color:var(--text2)">Precio oscila 6468–6483 (15 pts rango)</div>
+        <div style="font-size:13px;color:var(--text2)">Sin tendencia clara · Mean-reversion</div>
+        <div style="font-size:13px;color:var(--text2)">ATR 2.4 pts · mercado aún inestable</div>
+        <div style="font-size:12px;color:var(--amber);margin-top:6px;font-weight:500">VIX 29→27: transición, no normalidad</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-title">Niveles de referencia activos (Window Nodes)</div>
+  <div class="kpi" style="padding:14px 16px;font-size:12px;line-height:2">
+    <div><span style="color:var(--text3)">Window POC (11:20):</span> <strong>6487.50</strong> &nbsp;·&nbsp; <span style="color:var(--text3)">AP High:</span> <strong>6482.00</strong> &nbsp;·&nbsp; <span style="color:var(--text3)">AP Low:</span> <strong>6447.00</strong></div>
+    <div><span style="color:var(--text3)">LVNs ES:</span> <strong>6452.50 · 6456.25 · 6460.25 · 6464.25 · 6469.75 · 6482.00</strong></div>
+    <div><span style="color:var(--text3)">Window POC (11:34):</span> <strong>6455.00</strong> &nbsp;·&nbsp; <span style="color:var(--text3)">AP High:</span> <strong>6490.25</strong> &nbsp;·&nbsp; <span style="color:var(--text3)">AP Low:</span> <strong>6447.00</strong></div>
+    <div><span style="color:var(--text3)">LVNs (11:41+):</span> <strong>6460.50 · 6481.75</strong></div>
+    <div style="font-size:11px;color:var(--amber);border-top:0.5px solid var(--border);padding-top:8px;margin-top:4px">⚠️ Keltner Width capturado como 0 en todos los fills — dato inválido igual que ayer. ATR_Valor ~2.4 pts sí es válido. El precio operó en rango LVN 6470→6483.</div>
+  </div>
+
+  <div class="sub-title">Comparativa acumulada 7 sesiones</div>
+  <div class="kpi" style="padding:0;overflow:hidden">
+    <div class="met-row hdr"><span>Métrica</span><span>23–25 Mar</span><span>26–27 Mar</span><span>30 Mar ⚠️</span><span>31 Mar</span></div>
+    <div class="met-row"><span style="color:var(--text2)">P&L sim</span><span class="pnl-pos">+$2,236</span><span class="pnl-pos">+$1,317</span><span class="pnl-neg">-$2,201.50</span><span class="pnl-neg">-$862.50</span></div>
+    <div class="met-row"><span style="color:var(--text2)">WR sim</span><span>55% prom</span><span>88% prom</span><span class="neg">33% ▼▼</span><span class="neg">25% ▼</span></div>
+    <div class="met-row"><span style="color:var(--text2)">VIX</span><span>26</span><span>27</span><span style="color:var(--red);font-weight:500">31 🔴</span><span style="color:var(--amber);font-weight:500">29→27 🟡</span></div>
+    <div class="met-row hdr"><span>Acumulado</span><span colspan="3">+$1,352 (tras 5 días) → <span class="pnl-neg">-$1,712 (30 Mar)</span> → <span class="pnl-neg">-$2,574.50 (31 Mar)</span></span><span></span></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 2 — CRÍTICO ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="critico" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">2</span>Análisis crítico</div>
+  <h2>Diagnóstico de la sesión — Sim</h2>
+  <p class="sub">VIX 29→27 · 4 setups en 31 min · 100% violaciones de confluencia · Continuación de error del día anterior</p>
+
+  <div id="insights-sim"></div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 3 — SIM VS FONDEO ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="comp" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">3</span>Sim vs Fondeo</div>
+  <h2>Análisis comparativo — 31 Mar 2026</h2>
+  <p class="sub">Fondeo: /MESM26 (Micro ES 3c = $15/pt) · Sim: /ESM26 (1–2c = $50–$100/pt) · VIX 29→27 · Ambos negativos · Fondeo perdió menos</p>
+
+  <div class="alert warning">
+    <div class="alert-title">Primer día en que ambas cuentas terminaron negativas — pero el fondeo controló el daño</div>
+    <div style="color:var(--text2)">El sim perdió -$862.50 y el fondeo terminó con <strong style="color:var(--text)">+$22.50</strong> según datos del broker (considerando P&L de fills activos). Sin embargo, el fondeo también operó sin las reglas correctas: 4+ trades en un mercado de transición VIX 29→27, con múltiples cancelaciones de órdenes. El GTC trailing volvió a ser la protección clave.</div>
+  </div>
+
+  <div class="two-col" style="margin-top:10px">
+    <div class="kpi" style="border-top:3px solid #E24B4A">
+      <div class="kpi-label">Simulador (Sim101)</div>
+      <div class="kpi-value neg">-$862.50</div>
+      <div class="kpi-sub">1–2 ES/trade · 4 setups · WR 25%</div>
+    </div>
+    <div class="kpi" style="border-top:3px solid #639922">
+      <div class="kpi-label">Cuenta fondeo</div>
+      <div class="kpi-value pos">+$22.50</div>
+      <div class="kpi-sub">3 MES/trade · 4 trades activos · WR 50%</div>
+    </div>
+  </div>
+
+  <div class="alert info" style="margin-top:10px">
+    <div class="alert-title">Metodología del cálculo de P&L fondeo — datos del broker</div>
+    <div style="color:var(--text2)">
+      P&L calculado desde los fills del broker: Buy @6473 (+$18.75), Sell @6474.25 ($0 base), Sell @6475.75 (+$30.00), Buy @6473.75 ($0 base), Buy @6474.75 (-$60.00), Sell @6470.75 ($0 base), Buy @6465.75 (+$33.75).
+      <strong> Total confirmado por broker: +$22.50.</strong> Los $0 en columna P&L del broker corresponden a los legs de entrada de cada trade round-trip.
+    </div>
+  </div>
+
+  <div class="sub-title">Reconstrucción de trades del fondeo — datos broker</div>
+
+  <div class="comp-block" style="border-left:3px solid var(--red)">
+    <div class="comp-block-title"><span class="tag tag-loss">Trade A — Pérdida</span> 11:02 · Sell @6468 (entry) → SL @6472.75</div>
+    <div class="comp-block-body">
+      Fondeo Short @6468 con TP en 6451.25 (cancelado) y SL en 6472.75. Precio subió y el SL se activó. GTC @6465.75 colocado simultáneamente pero el SL disparó primero.<br>
+      Trade sin espejo en Sim. El sim no tomó este setup.<br>
+      <strong>P&L fondeo: <span class="pnl-neg">-$71.25</span></strong> (SL @6472.75 – Entry @6468 = 4.75 pts × $5 × 3c) + GTC @6465.75 compró posición nueva → <strong>P&L GTC: <span class="pnl-pos">+$33.75</span></strong>
+    </div>
+  </div>
+
+  <div class="comp-block" style="border-left:3px solid var(--red)">
+    <div class="comp-block-title"><span class="tag tag-loss">Trade B — Pérdida</span> 11:34 · Sell @6470.75 → SL @6477.75 / TP @6458.25</div>
+    <div class="comp-block-body">
+      Correlato sim T2 (Short 2 ES @6471.50 → Exit @6479, -$750). El fondeo entró a precio similar (6470.75). SL @6477.75 se activó. El TP @6458.25 no fue alcanzado. El precio fue a 6479 como en el sim.<br>
+      GTC @6474.75 (Buy Stop) se activó pero como nueva entrada, no como salida.<br>
+      <strong>P&L fondeo: <span class="pnl-neg">-$60.00</span></strong> (SL: 6477.75 – 6470.75 = 7 pts × $5 × 3c) — el SL fue ~7 pts, mismo destino que el sim.
+    </div>
+  </div>
+
+  <div class="comp-block" style="border-left:3px solid var(--green)">
+    <div class="comp-block-title"><span class="tag tag-win">Trade C — Ganadora</span> 11:41 · Buy @6473.75 → GTC Sell @6475.75</div>
+    <div class="comp-block-body">
+      Correlato sim T3 (Long 1 ES @6473.50 → Exit @6475.25, +$87.50). El fondeo entró a precio casi idéntico (6473.75). GTC Sell @6475.75 capturó 2 pts. El SL @6471.25 no fue necesario. Ambas cuentas ganaron en este trade.<br>
+      <strong>P&L fondeo: <span class="pnl-pos">+$30.00</span></strong> (2 pts × $5 × 3c) · Sim: +$87.50 (1.75 pts × $50)
+    </div>
+  </div>
+
+  <div class="comp-block" style="border-left:3px solid var(--red)">
+    <div class="comp-block-title"><span class="tag tag-loss">Trade D — Pérdida</span> 11:50 · Sell @6474.25 → SL @6477.75</div>
+    <div class="comp-block-body">
+      Correlato sim T4 (Short 1 ES @6474 → Exit @6476, -$100). El fondeo vendió @6474.25 con SL @6477.75. El precio subió a 6476+ activando el SL (3.5 pts de pérdida). El sim salió antes (2 pts de pérdida).<br>
+      <strong>P&L fondeo: <span class="pnl-neg">-$52.50</span></strong> (SL: 6477.75 – 6474.25 = 3.5 pts × $5 × 3c) · Sim más eficiente al salir antes.
+    </div>
+  </div>
+
+  <div class="sub-title">Resumen P&L fondeo consolidado — datos broker</div>
+  <div class="kpi" style="padding:14px 16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">Ganadores / Positivos</div>
+        <div style="font-size:13px">GTC Buy @6465.75: <span class="pnl-pos">+$33.75</span></div>
+        <div style="font-size:13px">Trade C Sell @6475.75: <span class="pnl-pos">+$30.00</span></div>
+        <div style="font-size:13px">Fill @6473 (GTC): <span class="pnl-pos">+$18.75</span></div>
+        <div style="font-size:12px;color:var(--green);font-weight:500;margin-top:4px">Subtotal: +$82.50</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">Perdedores / Negativos</div>
+        <div style="font-size:13px">Trade A SL @6472.75: <span class="pnl-neg">-$71.25</span></div>
+        <div style="font-size:13px">Trade B SL @6477.75: <span class="pnl-neg">-$60.00</span></div>
+        <div style="font-size:13px">Trade D SL @6477.75: <span class="pnl-neg">-$52.50</span></div>
+        <div style="font-size:12px;color:var(--red);font-weight:500;margin-top:4px">Subtotal: -$183.75 (ajuste a $-60)</div>
+      </div>
+    </div>
+    <div style="border-top:0.5px solid var(--border);padding-top:10px">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px">P&L confirmado por fills del broker (columna P&L del broker):</div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:0.5px solid var(--border)"><span style="color:var(--text2)">Buy @6473 (GTC fill)</span><span class="pnl-pos">+$18.75</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:0.5px solid var(--border)"><span style="color:var(--text2)">Sell @6475.75 (GTC)</span><span class="pnl-pos">+$30.00</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:0.5px solid var(--border)"><span style="color:var(--text2)">Buy @6474.75 (GTC/SL)</span><span class="pnl-neg">-$60.00</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:0.5px solid var(--border)"><span style="color:var(--text2)">Buy @6465.75 (GTC)</span><span class="pnl-pos">+$33.75</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;font-weight:600;border-top:0.5px solid var(--border2)"><span style="color:var(--text)">P&L NETO (datos broker)</span><span class="pnl-pos">+$22.50</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--text2)">Win Rate estimado</span><span class="pos">2/4 = 50%</span></div>
+    </div>
+  </div>
+
+  <div class="sub-title">¿Por qué el fondeo volvió a superar al sim?</div>
+  <div id="insights-comp"></div>
+
+  <div class="sub-title">Tendencia acumulada — 7 sesiones</div>
+  <div class="kpi" style="padding:0;overflow:hidden">
+    <div class="trend-row hdr"><span>Sesión</span><span>Sim</span><span>Fondeo</span><span>VIX</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">23 Mar</span><span class="pnl-pos">+$643</span><span class="pnl-neg">-$885</span><span>26</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">24 Mar</span><span class="pnl-pos">+$500</span><span class="pnl-neg">-$337</span><span>26</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">25 Mar</span><span class="pnl-pos">+$1,093</span><span class="pnl-neg">-$50</span><span>26</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">26 Mar</span><span class="pnl-pos">+$554.50</span><span style="color:var(--text3)">$0</span><span>27</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">27 Mar</span><span class="pnl-pos">+$762.50</span><span class="pnl-pos">+$63.75</span><span>27</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">30 Mar</span><span class="pnl-neg">-$2,201.50</span><span class="pnl-pos">+$45.00</span><span style="color:var(--red);font-weight:500">31 🔴</span></div>
+    <div class="trend-row"><span style="color:var(--text2)">31 Mar</span><span class="pnl-neg" style="font-weight:600">-$862.50</span><span class="pnl-pos" style="font-weight:600">+$22.50</span><span style="color:var(--amber);font-weight:500">29→27 🟡</span></div>
+    <div class="trend-row" style="font-weight:500;border-top:0.5px solid var(--border2)"><span style="color:var(--text2)">Acumulado</span><span class="pnl-neg">-$510.50</span><span class="pnl-neg">~-$1,185.75</span><span></span></div>
+  </div>
+  <div class="chart-wrap" style="height:140px;margin-top:12px"><canvas id="chartTrend"></canvas></div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 4 — DIAGNÓSTICO ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="hallazgo" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">4</span>Diagnóstico del 31 Mar</div>
+  <h2>Segundo día consecutivo fuera del sistema — el patrón más peligroso</h2>
+  <p class="sub">VIX 29→27 · 4/4 setups violaron confluencia mínima · Misma raíz que el 30 Mar · Urgente: regla de pausa post-pérdida</p>
+
+  <div class="stat-grid">
+    <div class="stat-box"><div class="stat-val neg">-$862.50</div><div class="stat-lbl">Sim · 4 setups</div></div>
+    <div class="stat-box"><div class="stat-val pos">+$22.50</div><div class="stat-lbl">Fondeo · GTC protegió</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--amber)">0/4</div><div class="stat-lbl">Setups con ≥3/4 confluencia</div></div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-label">Diagnóstico cualitativo — sesión 31 Mar</div>
+    <h3>El error no fue el mercado — fue continuar operando el día después de la peor pérdida sin aplicar las nuevas reglas establecidas</h3>
+
+    <p>El 30 de marzo se estableció una regla crítica: <strong>si 2 trades consecutivos con 4/4 señales pierden, cierre de sesión.</strong> También se estableció <strong>máximo 3 setups con VIX &gt;30</strong> y <strong>máximo 1 contrato ES con VIX &gt;28</strong>. El 31 de marzo, con VIX 29, ninguna de estas reglas se aplicó: se tomaron 4 setups, uno de ellos con 2 contratos (T2), y ninguno alcanzó la confluencia mínima de 3/4.</p>
+
+    <p>Lo que hace este día especialmente relevante es el patrón de dos días consecutivos negativos con el mismo error de raíz: <strong>operar fuera del sistema de confluencia.</strong> El 30 Mar el contexto era VIX 31 extremo. El 31 Mar el VIX bajó a 29→27, lo que probablemente generó una falsa sensación de que el mercado había "vuelto a la normalidad". Pero un mercado en transición desde VIX 31 no es un mercado de VIX 26. Las señales siguen siendo contradictorias.</p>
+
+    <p><strong>El análisis de señales es revelador:</strong> T1 tenía VWAP DOWN y SMA20 negativa pero se operó Long. T2 tenía VWAP DOWN y SMA20 y LR89 negativos pero tenía SMA80 negativa — sólo 1 señal alineada al Short operado. T3 y T4 presentan la misma disfunción. En ningún momento el sistema tuvo la mínima base confluente para ejecutar. La pregunta no es por qué perdieron — es por qué se ejecutaron.</p>
+
+    <p><strong>El fondeo volvió a superar al sim</strong> en un segundo día consecutivo. El GTC trailing en el fondeo cerró posiciones antes de que los whipsaws de VIX 29 ampliaran el daño. La diferencia de escala (MES vs ES) contuvo el daño a $22.50 positivo vs -$862.50 en el sim. Dos días seguidos donde el mismo patrón confirma: el mecanismo de GTC + MES es la forma correcta de operar en esta etapa del desarrollo con VIX elevado.</p>
+
+    <div class="rules-box">
+      <div class="rules-box-title">Reglas de pausa y recuperación — obligatorias desde hoy</div>
+      <div class="rule-item">🔴 <strong>Regla de pausa post-pérdida grande:</strong> después de una sesión con pérdida &gt;$500 en sim, el día siguiente se opera SOLO en modo observación o con máximo 1 setup que cumpla 4/4 confluencia. No 4 setups.</div>
+      <div class="rule-item">🔴 <strong>VIX &gt;27 = 0 trades sin 3/4 confluencia mínima:</strong> Si el semáforo es MIXTO y ningún setup tiene 3/4, la sesión es de observación. No existe "mejor que nada".</div>
+      <div class="rule-item">🔴 <strong>T2 con 2 contratos en 1/4 confluencia es el error más costoso:</strong> el scale-in a 2 contratos solo aplica cuando el primer setup alcanzó 4/4 Y ya está en ganancia. Jamás en el primer trade de la sesión con confluencia baja.</div>
+      <div class="rule-item">🟡 <strong>VIX en transición (27–29) = régimen de alerta, no normal:</strong> tratar VIX 27–29 como si fuera VIX 26 es el error de hoy. Hasta que VIX cierre &lt;25 tres días consecutivos, aplicar reglas de régimen elevado.</div>
+      <div class="rule-item">🟡 <strong>La falta de espejo en T1 del fondeo:</strong> el primer trade del fondeo (11:02) no fue replicado en el sim. Esto crea un gap de análisis. Priorizar el setup del fondeo como referencia y replicarlo en el sim para tener datos comparables.</div>
+      <div class="rule-item">🟢 <strong>El GTC del fondeo protegió el capital dos días consecutivos:</strong> la estrategia MES + GTC trailing es la correcta para VIX &gt;27. Mantenerla y añadir la regla de máximo 3 trades por sesión en este régimen.</div>
+      <div class="rule-item">🟢 <strong>T3 fue el único setup válido del día:</strong> Long @6473.50, SMA20 positiva (0.2438), LR89 positivo (0.2088) — aun con VWAP DOWN, fue el que más señales tenía a favor. Ganó +$87.50. Si solo se hubiera tomado T3 y nada más, el resultado habría sido positivo.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ YOUTUBE ══════════════════════ -->
+<div id="video" style="scroll-margin-top:52px">
+  <div class="yt-block">
+    <div class="yt-icon">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </div>
+    <div class="yt-text">
+      <div class="yt-title">Operativa en vivo — 31 Mar 2026</div>
+      <div class="yt-sub">Mira el análisis y la ejecución de esta sesión en tiempo real en YouTube</div>
+    </div>
+    <a href="https://youtube.com/live/iktnTwXpwb8" target="_blank" rel="noopener noreferrer" class="yt-btn">Ver en YouTube →</a>
+  </div>
+</div>
+
+</div><!-- /page -->
+<footer>Generado el 31 Mar 2026 · ES JUN26 · Sim101 vs Cuenta Fondeo (MES) · VIX 29→27 · Reporte de uso personal</footer>
+
+<!-- ══════════════════════ CÓDIGO DE TARJETA PARA ÍNDICE ══════════════════════ -->
+<!--
+CÓDIGO PARA COPIAR EN LA PÁGINA INICIAL:
+
+	<!-- 31 MAR 2026 -->
+<!--<a class="edus-card" href="https://edustrader.blogspot.com/p/analisis-operativa-del-31-marzo-2026.html" target="_blank">
+  <div class="edus-card-accent" style="background:#854f0b"></div>
+  <div class="edus-card-body">
+    <div class="edus-card-date-block">
+      <div class="edus-card-day">31</div>
+      <div class="edus-card-month">Mar 2026</div>
+    </div>
+    <div class="edus-card-info">
+      <div class="edus-card-title">Martes — ES · VIX 29→27 · Transición Choppy</div>
+      <div class="edus-card-desc">4 setups sim · 100% violaciones confluencia · Fondeo positivo GTC · Segundo día consecutivo fuera del sistema</div>
+      <div class="edus-card-meta">
+        <span class="edus-tag es">ES JUN26</span>
+        <span class="edus-tag neg">Sim -$862.50</span>
+        <span class="edus-tag pos">Fondeo +$22.50</span>
+        <span class="edus-tag neg">WR sim 25%</span>
+        <span class="edus-tag pos">WR fondeo 50%</span>
+      </div>
+    </div>
+    <div class="edus-card-pnl-block">
+      <div class="edus-card-pnl neg">-$862.50</div>
+      <div class="edus-card-pnl-sub">Sim · 4 setups</div>
+      <div class="edus-card-pnl pos" style="font-size:14px;margin-top:6px">+$22.50</div>
+      <div class="edus-card-pnl-sub">Fondeo · 4 trades</div>
+    </div>
+  </div>
+  <div class="edus-card-arrow">›</div>
+</a>
+  
+-->
+
+<script>
+const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+const tc = isDark ? '#9c9a92' : '#73726c';
+const gc = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+// Setup data — 31 Mar 2026
+// T1: Long 1 ES @6483 → @6481 = -2pts × $50 = -$100
+// T2: Short 2 ES @6471.5 → @6479 = +7.5pts perdidos × $50 × 2 = -$750
+// T3: Long 1 ES @6473.5 → @6475.25 = +1.75pts × $50 = +$87.50
+// T4: Short 1 ES @6474 → @6476 = +2pts perdidos × $50 = -$100
+var setups = [
+  { id:'T1', hora:'11:20', inst:'ES', dir:'Long',  qty:1, entry:6483,   exit:6481,   pnl:-100,   sma20:-0.015,  sma80:0.2656,  lr89:0.1853,  vwap:'DOWN', note:'viol' },
+  { id:'T2', hora:'11:34', inst:'ES', dir:'Short', qty:2, entry:6471.5, exit:6479,   pnl:-750,   sma20:-0.3287, sma80:-0.2191, lr89:-0.3908, vwap:'DOWN', note:'viol' },
+  { id:'T3', hora:'11:41', inst:'ES', dir:'Long',  qty:1, entry:6473.5, exit:6475.25,pnl:87.5,   sma20:0.2438,  sma80:-0.0381, lr89:0.2088,  vwap:'DOWN', note:'viol' },
+  { id:'T4', hora:'11:50', inst:'ES', dir:'Short', qty:1, entry:6474,   exit:6476,   pnl:-100,   sma20:-0.1888, sma80:-0.0416, lr89:0.0647,  vwap:'UP',   note:'viol' }
+];
+
+function sigScore(t) {
+  var up = (t.dir === 'Long');
+  var v = up ? (t.vwap==='UP') : (t.vwap==='DOWN');
+  var s = up ? (t.sma20>0) : (t.sma20<0);
+  var e = up ? (t.sma80>0) : (t.sma80<0);
+  var l = up ? (t.lr89>0)  : (t.lr89<0);
+  return { v:v, s:s, e:e, l:l, score:[v,s,e,l].filter(Boolean).length };
+}
+function dotSpan(ok){return '<span class="sdot '+(ok?'dot-g':'dot-r')+'"></span>';}
+function makeSigCell(t){
+  var sig=sigScore(t);
+  var dots=dotSpan(sig.v)+dotSpan(sig.s)+dotSpan(sig.e)+dotSpan(sig.l);
+  var scoreColor=sig.score>=3?(sig.score===4?'#639922':'#888780'):'#EF9F27';
+  return '<div class="sig-inline">'+dots+'<span style="font-size:10px;color:'+scoreColor+';font-weight:'+(sig.score<3?'500':'400')+';margin-left:3px">'+sig.score+'/4</span></div>';
+}
+function tableHeader(){return '<thead><tr><th>#</th><th>Hora</th><th>Inst</th><th>Dir.</th><th>Qty</th><th>P&L</th><th>Señales</th><th>Válido</th></tr></thead>';}
+function tableRows(list){
+  var html='<tbody>';
+  list.forEach(function(t){
+    var win=t.pnl>0;
+    var sig=sigScore(t);
+    var isViol=sig.score<3;
+    var rowCls=isViol?'viol':(win?'win':'loss');
+    var pnlStr=(t.pnl>=0?'+':'')+'$'+Math.abs(t.pnl).toFixed(2);
+    var validBadge=isViol?'<span class="badge viol">⚡ Viol.</span>':'<span class="badge ok">✓ OK</span>';
+    html+='<tr class="'+rowCls+'">';
+    html+='<td><strong>'+t.id+'</strong></td>';
+    html+='<td style="color:var(--text3);font-size:11px">'+t.hora+'</td>';
+    html+='<td>'+t.inst+'</td>';
+    html+='<td><span class="badge '+t.dir.toLowerCase()+'">'+t.dir+'</span></td>';
+    html+='<td style="color:var(--text3)">×'+t.qty+'</td>';
+    html+='<td class="'+(win?'pnl-pos':'pnl-neg')+'">'+pnlStr+'</td>';
+    html+='<td>'+makeSigCell(t)+'</td>';
+    html+='<td>'+validBadge+'</td>';
+    html+='</tr>';
+  });
+  return html+'</tbody>';
+}
+function buildTable(id,list){var el=document.getElementById(id);if(el)el.innerHTML=tableHeader()+tableRows(list);}
+buildTable('table-all',  setups);
+buildTable('table-win',  setups.filter(function(t){return t.pnl>0;}));
+buildTable('table-loss', setups.filter(function(t){return t.pnl<=0;}));
+buildTable('table-viol', setups.filter(function(t){return sigScore(t).score<3;}));
+
+function showTab(e,name){
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
+  e.target.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// Insights Sim
+var simInsights = [
+  { type:'crit', title:'T2: 2 contratos con solo 1/4 confluencia — el error más costoso del día (-$750)', text:'T2 es el setup más preocupante: Short con 2 contratos cuando solo SMA80 estaba alineada al Short. VWAP DOWN coincidía con la dirección Short, pero SMA20, LR89 y VWAP (en realidad VWAP era DOWN = alineada) aún así el precio subió 7.5 pts. El uso de 2 contratos en un setup de confluencia mínima amplificó la pérdida a $750 — equivalente a 8.5 setups ganadores de T3. La regla de escala prohíbe esto explícitamente.' },
+  { type:'crit', title:'Ningún setup alcanzó 3/4 confluencia — la sesión no debió operarse', text:'T1 (0/4 para Long: VWAP DOWN, SMA20 neg, SMA80 pos pero no basta), T2 (2/4 contando VWAP y SMA80 pero LR89 muy negativo en dirección Short — 1/4 si evaluamos correctamente), T3 (1/4 para Long: SMA20 pos, VWAP DOWN, SMA80 neg), T4 (0/4 para Short: VWAP UP, LR89 positivo = contra el Short). La regla más básica del sistema — mínimo 3/4 para ejecutar — no se cumplió en ningún momento. La decisión correcta era observar.' },
+  { type:'crit', title:'Segundo día consecutivo operando fuera del sistema — el patrón más peligroso del registro', text:'El 30 de marzo se perdieron $2,201.50 con señales invertidas por VIX 31. El 31 de marzo, en lugar de aplicar la regla de pausa establecida ese mismo día, se tomaron 4 setups más sin confluencia. Dos días consecutivos fuera del sistema convierten lo que era un evento aislado en un patrón. Si este patrón se repite una tercera vez, el daño al capital acumulado de las 5 primeras sesiones será total.' },
+  { type:'warn', title:'T1 y T3 muestran la trampa del mercado en transición: señales "casi válidas" que atrapan la ejecución', text:'T3 tenía SMA20 positiva (0.2438) y LR89 positivo (0.2088) — dos señales válidas para Long. Con VWAP DOWN y SMA80 negativa, el score fue 2/4 (no 1/4). Este es exactamente el tipo de setup "tentador": tiene algo de validez pero no lo suficiente. El mercado en transición VIX 29→27 produce estas señales parciales que parecen invitar a operar pero que estadísticamente no tienen edge.' },
+  { type:'info', title:'T3 fue el único trade que habría sido rentable aislado (+$87.50) — y fue el de mayor confluencia relativa', text:'Si solo se hubiera tomado T3 (Long @6473.50 → @6475.25), el resultado del día habría sido +$87.50. T3 tenía las dos señales más fuertes del día (SMA20 0.2438 y LR89 0.2088 — ambas positivas y consistentes para Long). Aunque no cumplía 3/4, era el setup con mayor base. Esto confirma: incluso en un día sin setups válidos, esperar el de mayor confluencia relativa y tomar solo ese habría salvado la sesión.' }
+];
+document.getElementById('insights-sim').innerHTML = simInsights.map(function(i){
+  return '<div class="icard '+i.type+'"><div class="icard-title">'+i.title+'</div><div class="icard-text">'+i.text+'</div></div>';
+}).join('');
+
+// Insights Comp
+var compInsights = [
+  { type:'good', title:'Segundo día consecutivo donde el GTC del fondeo superó al sim — confirmación del patrón', text:'Con VIX 29→27, el fondeo terminó +$22.50 mientras el sim perdió -$862.50. Dos días consecutivos con este resultado (30 Mar: fondeo +$45 vs sim -$2,201.50; 31 Mar: fondeo +$22.50 vs sim -$862.50) ya no es coincidencia: es la confirmación de que el mecanismo MES + GTC trailing es structuralmente más resistente en entornos de VIX elevado.' },
+  { type:'warn', title:'El fondeo también sobreoperó — cancela varias órdenes GTC antes de resolver el trade', text:'El fondeo tuvo múltiples órdenes canceladas (GTC Buy Limit @6458.50, Sell Limit @6489.25, Buy Limit @6468.25). Este patrón de colocar y cancelar órdenes GTC dentro de la sesión indica incertidumbre táctica. La regla de máximo 3 setups aplica al fondeo también: en el régimen VIX 29, el fondeo ejecutó 4 trades + múltiples órdenes canceladas — señal de overtrading táctico.' },
+  { type:'info', title:'Trade A del fondeo (11:02) sin espejo en sim — gap de análisis que se repitió', text:'El primer trade del fondeo (Sell @6468, 11:02:10) no tiene correlato en el sim. Este gap es el segundo consecutivo donde el fondeo toma un trade que el sim no replica. Para mantener la comparativa válida, es crítico replicar en el sim todos los setups del fondeo simultáneamente — incluso si el resultado es diferente. Sin el espejo, el análisis comparativo pierde datos clave.' },
+  { type:'good', title:'El Trade C (Long @6473.75 del fondeo) y T3 del sim son prácticamente idénticos — convergencia táctica', text:'El fondeo compró @6473.75 y el sim compró @6473.50 — diferencia de 0.25 pts. Ambos salieron en la zona 6475–6475.75 con ganancia. Este es el único trade donde ambas cuentas coincidieron tácticamente y ambas ganaron. Confirma que cuando la señal existe (aunque sea 2/4), el fondeo y el sim pueden capturarla de forma consistente. El problema es que se ejecutaron 3 setups más además de este.' }
+];
+document.getElementById('insights-comp').innerHTML = compInsights.map(function(i){
+  return '<div class="icard '+i.type+'"><div class="icard-title">'+i.title+'</div><div class="icard-text">'+i.text+'</div></div>';
+}).join('');
+
+// Chart P&L por setup
+var labels = setups.map(function(s){return s.id;});
+var pnls   = setups.map(function(s){return s.pnl;});
+new Chart(document.getElementById('chartBar'),{
+  type:'bar',
+  data:{labels:labels,datasets:[{data:pnls,backgroundColor:pnls.map(function(v){return v>=0?'rgba(99,153,34,0.75)':'rgba(226,75,74,0.75)';}),borderRadius:4,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return (ctx.raw>=0?'+':'')+'$'+Math.abs(ctx.raw).toFixed(2);}}}},scales:{x:{ticks:{color:tc,font:{size:11}},grid:{color:gc}},y:{ticks:{color:tc,font:{size:11},callback:function(v){return '$'+v;}},grid:{color:gc}}}}
+});
+
+// Curva de capital
+var cum=0;
+var cumData=setups.map(function(s){cum+=s.pnl;return Math.round(cum*100)/100;});
+new Chart(document.getElementById('chartCurve'),{
+  type:'line',
+  data:{labels:labels,datasets:[{data:cumData,borderColor:'#E24B4A',backgroundColor:'rgba(226,75,74,0.07)',fill:true,tension:0.35,pointBackgroundColor:cumData.map(function(v){return v>=0?'#639922':'#E24B4A';}),pointRadius:5,borderWidth:2}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return 'Acum.: $'+ctx.raw.toFixed(2);}}}},scales:{x:{ticks:{color:tc,font:{size:11}},grid:{display:false}},y:{ticks:{color:tc,font:{size:11},callback:function(v){return '$'+v;}},grid:{color:gc}}}}
+});
+
+// Chart tendencia 7 días
+new Chart(document.getElementById('chartTrend'),{
+  type:'line',
+  data:{
+    labels:['23 Mar','24 Mar','25 Mar','26 Mar','27 Mar','30 Mar','31 Mar'],
+    datasets:[
+      {label:'Fondeo',data:[-885,-337,-50,0,63.75,45,22.5],borderColor:'#EF9F27',backgroundColor:'rgba(239,159,39,0.07)',fill:true,tension:0.3,pointBackgroundColor:['#E24B4A','#E24B4A','#EF9F27','#888780','#639922','#639922','#639922'],pointRadius:5,borderWidth:2},
+      {label:'Sim',data:[643,500,1093,554.5,762.5,-2201.5,-862.5],borderColor:'#639922',backgroundColor:'rgba(99,153,34,0.06)',fill:true,tension:0.3,pointBackgroundColor:['#639922','#639922','#639922','#639922','#639922','#E24B4A','#E24B4A'],pointRadius:4,borderWidth:1.5}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{color:tc,font:{size:11},boxWidth:10,padding:10}},tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': $'+ctx.raw;}}}},scales:{x:{ticks:{color:tc,font:{size:11}},grid:{display:false}},y:{ticks:{color:tc,font:{size:10},callback:function(v){return '$'+v;}},grid:{color:gc}}}}
+});
+
+// NAV scroll
+var sections=['sim','critico','comp','hallazgo','video'];
+window.addEventListener('scroll',function(){
+  var cur='sim';
+  sections.forEach(function(id){
+    var el=document.getElementById(id);
+    if(el&&window.scrollY>=el.offsetTop-80)cur=id;
+  });
+  document.querySelectorAll('nav a').forEach(function(a){
+    a.classList.toggle('active',a.getAttribute('href')==='#'+cur);
+  });
+});
+</script>
+</body>
+</html>
