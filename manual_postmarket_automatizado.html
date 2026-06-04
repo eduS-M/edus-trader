@@ -3,134 +3,199 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manual — Post-Market Automatizado | EduS Trader</title>
+<title>Manual — Post-Market Automatizado v2 | EduS Trader</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f5f7fa;--bg2:#ffffff;--bg3:#e8ecf2;
-  --text:#0f172a;--text2:#334155;--text3:#64748b;
-  --teal:#3dd6c0;--teal-bg:rgba(61,214,192,0.08);--teal-bd:rgba(61,214,192,0.25);
-  --green:#4dba76;--green-bg:rgba(77,186,118,0.08);--green-bd:rgba(77,186,118,0.25);
-  --red:#e05252;--red-bg:rgba(224,82,82,0.08);--red-bd:rgba(224,82,82,0.25);
-  --amber:#c9a84c;--amber-bg:rgba(201,168,76,0.08);--amber-bd:rgba(201,168,76,0.25);
-  --blue:#4a90d9;--blue-bg:rgba(74,144,217,0.08);--blue-bd:rgba(74,144,217,0.25);
-  --purple:#7c3aed;--purple-bg:rgba(124,58,237,0.08);--purple-bd:rgba(124,58,237,0.25);
-  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --mono:'Cascadia Code','Fira Code','JetBrains Mono',monospace;
+  --navy:#142d37;--navy-dark:#0d1f26;
+  --teal:#279995;--teal-bg:rgba(39,153,149,0.08);--teal-bd:rgba(39,153,149,0.25);
+  --gold:#b38665;--gold-light:#d4a982;
+  --bg:#f2f0eb;--bg2:#ffffff;--bg3:#f8f6f0;
+  --border:#e0dbd0;
+  --text:#1a1814;--text2:#3d3830;--text3:#7a7468;
+  --bull:#279995;--bull-bg:rgba(39,153,149,0.08);--bull-bd:rgba(39,153,149,0.25);
+  --bear:#c0392b;--bear-bg:rgba(192,57,43,0.08);--bear-bd:rgba(192,57,43,0.25);
+  --amber:#b38665;--amber-bg:rgba(179,134,101,0.08);--amber-bd:rgba(179,134,101,0.25);
+  --blue:#185fa5;--blue-bg:rgba(24,95,165,0.08);--blue-bd:rgba(24,95,165,0.25);
+  --header-gradient:linear-gradient(135deg,#142d37 0%,#034649 100%);
+  --mono:'Space Mono','Cascadia Code','Fira Code',monospace;
+  --shadow:0 2px 20px rgba(13,31,38,0.10);
+  --radius:10px;
 }
-body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6}
-.site-header{background:linear-gradient(135deg,#ffffff,#f1f5f9);border-bottom:0.5px solid var(--purple-bd);padding:0}
-.header-inner{max-width:1000px;margin:0 auto;padding:24px 24px 0;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.header-logo{width:48px;height:48px;background:var(--purple-bg);border:1.5px solid var(--purple-bd);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
-.header-text .brand{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--purple);font-weight:600}
-.header-text h1{font-size:22px;font-weight:700;color:var(--text);margin-bottom:2px}
-.header-text .version{font-size:11px;color:var(--text3);background:rgba(0,0,0,0.04);border:0.5px solid var(--purple-bd);padding:2px 8px;border-radius:4px}
-nav{max-width:1000px;margin:0 auto;padding:0 24px;display:flex;overflow-x:auto;gap:0;margin-top:12px}
-nav a{font-size:11px;color:var(--text3);text-decoration:none;padding:10px 14px;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s}
-nav a:hover{color:var(--text)}
-nav a.active{color:var(--purple);border-bottom-color:var(--purple);font-weight:600}
-.page{max-width:1000px;margin:0 auto;padding:2rem 24px 4rem}
-.section-divider{height:0.5px;background:rgba(0,0,0,0.1);margin:3rem 0 2rem}
-.section-label{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:0.8rem}
-.section-label .num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--bg3);border:0.5px solid rgba(0,0,0,0.12);font-size:9px;color:var(--purple)}
-h2{font-size:20px;font-weight:600;margin-bottom:4px;color:var(--text)}
-h3{font-size:15px;font-weight:600;margin:1.2rem 0 0.6rem;color:var(--teal);border-left:3px solid var(--teal);padding-left:10px}
+body{font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+
+/* ─── HEADER ─── */
+.site-header{background:var(--header-gradient);border-bottom:3px solid var(--gold);padding:0;position:relative;overflow:hidden}
+.site-header::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(179,134,101,0.07);pointer-events:none}
+.header-inner{max-width:1020px;margin:0 auto;padding:22px 28px 0;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.header-logo{height:52px;width:auto;display:block}
+.header-logo-fallback{width:52px;height:52px;background:rgba(255,255,255,0.1);border:1.5px solid rgba(179,134,101,0.4);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.header-text .brand{font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-light);font-weight:700}
+.header-text h1{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;color:white;margin-bottom:2px}
+.header-text .version{font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.4);border:0.5px solid rgba(179,134,101,0.3);background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:4px}
+
+/* ─── NAV ─── */
+nav{background:rgba(0,0,0,0.25);border-top:1px solid rgba(179,134,101,0.18)}
+nav .nav-inner{max-width:1020px;margin:0 auto;padding:0 28px;display:flex;overflow-x:auto;gap:0}
+nav a{font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.45);text-decoration:none;padding:11px 13px;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s;letter-spacing:0.05em}
+nav a:hover{color:rgba(255,255,255,0.85)}
+nav a.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:700}
+
+/* ─── LAYOUT ─── */
+.page{max-width:1020px;margin:0 auto;padding:2rem 28px 5rem}
+.section-divider{height:1px;background:linear-gradient(to right,var(--gold),transparent);margin:3rem 0 2rem}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:0.8rem}
+.section-label .num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--navy);color:var(--gold);font-size:10px;font-weight:700;border:1px solid rgba(179,134,101,0.35)}
+h2{font-family:'DM Sans',sans-serif;font-size:20px;font-weight:700;margin-bottom:4px;color:var(--navy)}
+h3{font-size:14px;font-weight:600;margin:1.4rem 0 0.6rem;color:var(--teal);border-left:3px solid var(--teal);padding-left:10px}
 h4{font-size:13px;font-weight:600;margin:0.8rem 0 0.4rem;color:var(--text2)}
-.sub{font-size:12px;color:var(--text3);margin-bottom:1.2rem;line-height:1.5}
-p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px}
+.sub{font-size:12px;color:var(--text3);margin-bottom:1.4rem;line-height:1.6}
+p{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:10px}
 p:last-child{margin-bottom:0}
 strong{color:var(--text);font-weight:600}
-code{font-family:var(--mono);background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:3px;font-size:0.9em;color:var(--text)}
-pre{background:#1e293b;color:#e2e8f0;font-family:var(--mono);font-size:12px;padding:14px 16px;border-radius:8px;overflow-x:auto;margin:10px 0;line-height:1.5}
-pre .c{color:#64748b}
-pre .k{color:#c084fc}
-pre .s{color:#86efac}
-pre .n{color:#e2e8f0}
-pre .o{color:#fca5a5}
-.card{background:var(--bg2);border:0.5px solid rgba(0,0,0,0.08);border-radius:10px;padding:16px 18px;margin-bottom:12px}
-.card-green{border-color:var(--green-bd);background:var(--green-bg)}
+code{font-family:var(--mono);background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:3px;font-size:0.88em;color:var(--navy)}
+pre{background:#1e293b;color:#e2e8f0;font-family:var(--mono);font-size:12px;padding:14px 16px;border-radius:8px;overflow-x:auto;margin:10px 0;line-height:1.6}
+pre .c{color:#64748b} pre .k{color:#c084fc} pre .s{color:#86efac} pre .n{color:#e2e8f0} pre .o{color:#fca5a5}
+
+/* ─── CARDS ─── */
+.card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card-green{border-color:var(--bull-bd);background:var(--bull-bg)}
 .card-amber{border-color:var(--amber-bd);background:var(--amber-bg)}
-.card-red{border-color:var(--red-bd);background:var(--red-bg)}
+.card-red{border-color:var(--bear-bd);background:var(--bear-bg)}
 .card-teal{border-color:var(--teal-bd);background:var(--teal-bg)}
 .card-blue{border-color:var(--blue-bd);background:var(--blue-bg)}
-.card-purple{border-color:var(--purple-bd);background:var(--purple-bg)}
-.card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
-.step-box{background:var(--bg2);border:0.5px solid rgba(0,0,0,0.08);border-radius:10px;padding:18px 20px;margin-bottom:14px;border-left:4px solid var(--purple)}
-.step-box .step-num{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px}
-.step-box .step-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px}
-.step-box p{font-size:13px;margin-bottom:6px}
+.card-navy{background:linear-gradient(135deg,rgba(20,45,55,0.06),rgba(3,70,73,0.04));border-color:rgba(20,45,55,0.20)}
+.card-title{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px;font-family:var(--mono);letter-spacing:0.05em;text-transform:uppercase}
+
+/* ─── STEP BOXES ─── */
+.step-box{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;border-left:4px solid var(--gold);box-shadow:var(--shadow)}
+.step-box .step-num{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.step-box .step-title{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:8px}
+
+/* ─── LISTS ─── */
 ul,ol{padding-left:20px;margin:8px 0 12px}
-li{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:4px}
+li{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:4px}
 li strong{color:var(--text)}
+
+/* ─── TABLES ─── */
 table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
-thead tr{background:var(--bg3)}
-th{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);padding:8px 12px;text-align:left;border-bottom:1px solid rgba(0,0,0,0.08)}
-td{padding:8px 12px;border-bottom:0.5px solid rgba(0,0,0,0.06);color:var(--text2)}
-tr:hover td{background:rgba(0,0,0,0.02)}
-.tag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:0.05em}
-.tag-green{background:var(--green-bg);color:var(--green);border:0.5px solid var(--green-bd)}
-.tag-red{background:var(--red-bg);color:var(--red);border:0.5px solid var(--red-bd)}
+thead tr{background:var(--navy)}
+th{font-family:var(--mono);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold-light);padding:8px 12px;text-align:left}
+td{padding:8px 12px;border-bottom:0.5px solid var(--border);color:var(--text2)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg3)}
+
+/* ─── TAGS ─── */
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.05em}
+.tag-green{background:var(--bull-bg);color:var(--bull);border:0.5px solid var(--bull-bd)}
+.tag-red{background:var(--bear-bg);color:var(--bear);border:0.5px solid var(--bear-bd)}
 .tag-amber{background:var(--amber-bg);color:var(--amber);border:0.5px solid var(--amber-bd)}
 .tag-blue{background:var(--blue-bg);color:var(--blue);border:0.5px solid var(--blue-bd)}
-.tag-purple{background:var(--purple-bg);color:var(--purple);border:0.5px solid var(--purple-bd)}
+.tag-navy{background:rgba(20,45,55,0.10);color:var(--navy);border:0.5px solid rgba(20,45,55,0.20)}
+
+/* ─── FLOW ─── */
 .flow-arrow{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin:16px 0;font-size:13px}
-.flow-step{background:var(--bg3);border-radius:6px;padding:6px 14px;font-size:11px;font-weight:500;color:var(--text2)}
+.flow-step{background:var(--bg3);border:0.5px solid var(--border);border-radius:6px;padding:6px 14px;font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text2)}
 .flow-arrow-sym{color:var(--text3);font-size:16px}
+.flow-step.hl{background:var(--teal-bg);color:var(--teal);border:0.5px solid var(--teal-bd)}
+
+/* ─── JSON FILE BADGES ─── */
+.json-badges{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.json-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:6px;border:1px solid}
+.json-badge.diario{background:var(--bull-bg);color:var(--bull);border-color:var(--bull-bd)}
+.json-badge.semanal{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd)}
+.json-badge.mensual{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)}
+
+/* ─── NEW SECTION HIGHLIGHT ─── */
+.new-badge{display:inline-block;background:linear-gradient(90deg,var(--gold),var(--gold-light));color:var(--navy);font-family:var(--mono);font-size:9px;font-weight:700;padding:1px 7px;border-radius:10px;letter-spacing:0.1em;vertical-align:middle;margin-left:6px}
+
+/* ─── DOFA PREVIEW ─── */
+.dofa-preview{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.dofa-mini{border-radius:8px;padding:10px 12px;font-size:12px}
+.dofa-mini.F{background:rgba(39,153,149,0.08);border:0.5px solid rgba(39,153,149,0.3)}
+.dofa-mini.D{background:rgba(192,57,43,0.08);border:0.5px solid rgba(192,57,43,0.3)}
+.dofa-mini.O{background:rgba(24,95,165,0.08);border:0.5px solid rgba(24,95,165,0.3)}
+.dofa-mini.A{background:rgba(179,134,101,0.08);border:0.5px solid rgba(179,134,101,0.3)}
+.dofa-mini-title{font-weight:700;margin-bottom:4px;font-size:11px}
+.dofa-mini.F .dofa-mini-title{color:var(--bull)}
+.dofa-mini.D .dofa-mini-title{color:var(--bear)}
+.dofa-mini.O .dofa-mini-title{color:var(--blue)}
+.dofa-mini.A .dofa-mini-title{color:var(--amber)}
+.dofa-mini p{font-size:11px;color:var(--text3);margin:0}
+
+/* ─── VOLATILITY SCENARIO PREVIEW ─── */
+.vc-preview{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.vc-mini{padding:8px 12px;border-radius:6px;font-family:var(--mono);font-size:10px;font-weight:700;border:1px solid}
+.vc-mini.baja  {background:var(--bull-bg);color:var(--bull);border-color:var(--bull-bd)}
+.vc-mini.media {background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)}
+.vc-mini.alta  {background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd)}
+.vc-mini.extrema{background:var(--bear-bg);color:var(--bear);border-color:var(--bear-bd)}
+
+/* ─── FOOTER ─── */
+footer{background:var(--header-gradient);color:rgba(255,255,255,0.35);font-family:var(--mono);font-size:10px;text-align:center;padding:18px;letter-spacing:1px;margin-top:2rem;border-top:3px solid var(--gold)}
+footer strong{color:var(--gold-light)}
+
 @media(max-width:640px){
   .page{padding:1rem 16px 3rem}
   h2{font-size:17px}
-  nav a{padding:8px 10px;font-size:10px}
+  nav a{padding:9px 10px;font-size:9px}
   pre{font-size:11px;padding:10px 12px}
   .header-inner{padding:16px 16px 0}
+  .dofa-preview{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
+<!-- ══════════ HEADER ══════════ -->
 <div class="site-header">
   <div class="header-inner">
-    <div class="header-logo">&#9881;</div>
+    <img class="header-logo" src="/assets/logo.png" alt="EduS Trader" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="header-logo-fallback" style="display:none">⚙️</div>
     <div class="header-text">
-      <div class="brand">EduS Trader</div>
-      <h1>Sistema Automatizado de Post-Market</h1>
-      <span class="version">v1.0 &middot; Mayo 2026</span>
+      <div class="brand">EduS Trader &middot; Documentación</div>
+      <h1>Sistema Post-Market Automatizado</h1>
+      <span class="version">v2.0 &middot; Junio 2026 &middot; HUD V5 + V5_VolatilityConfig</span>
     </div>
   </div>
   <nav>
-    <a href="#introduccion" class="active">Introduccion</a>
-    <a href="#arquitectura">Arquitectura</a>
-    <a href="#instalacion">Instalacion</a>
-    <a href="#configuracion">Configuracion</a>
-    <a href="#modos">Modos de Uso</a>
-    <a href="#flujo-completo">Flujo Completo</a>
-    <a href="#resultados">Resultados</a>
-    <a href="#comandos">Comandos</a>
-    <a href="#troubleshooting">Solucion de Problemas</a>
+    <div class="nav-inner">
+      <a href="#introduccion" class="active">Introducción</a>
+      <a href="#arquitectura">Arquitectura</a>
+      <a href="#nuevas-funciones">Novedades v2</a>
+      <a href="#instalacion">Instalación</a>
+      <a href="#configuracion">Configuración</a>
+      <a href="#modos">Modos de Uso</a>
+      <a href="#flujo-completo">Flujo Completo</a>
+      <a href="#resultados">Resultados</a>
+      <a href="#comandos">Comandos</a>
+      <a href="#troubleshooting">Solución de Problemas</a>
+    </div>
   </nav>
 </div>
 
 <div class="page">
 
-<!-- ═══════════════════ INTRODUCCION ═══════════════════ -->
-<div class="section-label"><span class="num">1</span>Introduccion</div>
-<h2 id="introduccion">Que es el Post-Market Automatizado?</h2>
-<p class="sub">Un sistema que analiza automaticamente los trades ejecutados durante la sesion de trading, los evalua contra las reglas del HUD V5, compara con el game plan del dia, y genera un informe post-market completo con matriz DOFA, analisis de stops y recomendaciones.</p>
+<!-- ══════════════════════ INTRODUCCION ══════════════════════ -->
+<div id="introduccion" style="scroll-margin-top:52px"></div>
+<div class="section-label"><span class="num">1</span>Introducción</div>
+<h2>¿Qué es el Post-Market Automatizado?</h2>
+<p class="sub">Un sistema que analiza automáticamente los trades ejecutados durante la sesión, los evalúa contra las reglas del HUD V5, compara con el game plan, y genera un informe post-market completo con DOFA, análisis de stops, validación de volatilidad contra V5_VolatilityConfig, gráficas de P&amp;L y curva de capital.</p>
 
 <div class="card card-teal">
-  <div class="card-title">Que hace?</div>
-  <p>Lee los archivos CSV exportados por NinjaTrader 8 desde la carpeta <code>Post-Mercado/{YYYYMMDD}/</code>, construye un prompt compacto con todos los trades y contexto de indicadores, lo envia a una IA (Groq, Gemini, Ollama, etc.), recibe un analisis JSON estructurado, genera un HTML profesional con estilo EduS Trader, y lo publica automaticamente en <strong>edustrader.pages.dev</strong> via git push. Tambien actualiza los menus laterales y la pagina de inicio con un resumen de la sesion.</p>
+  <div class="card-title">¿Qué hace?</div>
+  <p>Lee los archivos CSV exportados por NinjaTrader 8 desde la carpeta <code>Post-Mercado/{YYYYMMDD}/</code>, construye un prompt compacto con todos los trades, contexto de indicadores y validación de volatilidad contra <code>V5_VolatilityConfig.csv</code>, lo envía a una IA, recibe un análisis JSON estructurado, genera un HTML profesional con estilo EduS Trader (colores de marca, logo), y lo publica automáticamente en <strong>edustrader.pages.dev</strong> vía git push.</p>
 </div>
 
 <div class="card card-green">
-  <div class="card-title">Tipos de analisis soportados</div>
+  <div class="card-title">Tipos de análisis soportados</div>
   <table>
-    <thead>
-      <tr><th>Tipo</th><th>Descripcion</th><th>Frecuencia</th><th>Flag</th></tr>
-    </thead>
+    <thead><tr><th>Tipo</th><th>Descripción</th><th>Frecuencia</th><th>Flag</th><th>JSON Respuesta</th></tr></thead>
     <tbody>
-      <tr><td><strong>Diario</strong></td><td>Analisis de la sesion del dia</td><td>Diaria (lunes a viernes)</td><td><code>(por defecto)</code></td></tr>
-      <tr><td><strong>Cierre Semanal</strong></td><td>Resumen agregado de la semana con comparativa dia a dia</td><td>Viernes</td><td><code>--cierre-semanal</code></td></tr>
-      <tr><td><strong>Cierre Mensual</strong></td><td>Resumen agregado del mes con estadisticas y conclusiones</td><td>Ultimo dia del mes</td><td><code>--cierre-mensual</code></td></tr>
+      <tr><td><strong>Diario</strong></td><td>Análisis de la sesión del día</td><td>Lunes a viernes</td><td><code>(por defecto)</code></td><td><code>respuesta_postmarket.json</code></td></tr>
+      <tr><td><strong>Cierre Semanal</strong></td><td>Resumen agregado de la semana con comparativa día a día</td><td>Viernes</td><td><code>--cierre-semanal</code></td><td><code>respuesta_postmarket_semanal.json</code></td></tr>
+      <tr><td><strong>Cierre Mensual</strong></td><td>Resumen del mes con estadísticas y conclusiones</td><td>Último día del mes</td><td><code>--cierre-mensual</code></td><td><code>respuesta_postmarket_mensual.json</code></td></tr>
     </tbody>
   </table>
 </div>
@@ -138,9 +203,7 @@ tr:hover td{background:rgba(0,0,0,0.02)}
 <div class="card card-amber">
   <div class="card-title">Proveedores de IA soportados</div>
   <table>
-    <thead>
-      <tr><th>Proveedor</th><th>Costo</th><th>Modelo por defecto</th><th>Requiere</th></tr>
-    </thead>
+    <thead><tr><th>Proveedor</th><th>Costo</th><th>Modelo por defecto</th><th>Requiere</th></tr></thead>
     <tbody>
       <tr><td><strong>Groq</strong></td><td><span class="tag tag-green">GRATIS</span></td><td><code>llama-3.3-70b-versatile</code></td><td>API key (console.groq.com)</td></tr>
       <tr><td><strong>Gemini</strong></td><td><span class="tag tag-green">GRATIS</span></td><td><code>gemini-2.0-flash</code></td><td>API key (aistudio.google.com)</td></tr>
@@ -154,85 +217,164 @@ tr:hover td{background:rgba(0,0,0,0.02)}
 
 <div class="section-divider"></div>
 
-<!-- ═══════════════════ ARQUITECTURA ═══════════════════ -->
+<!-- ══════════════════════ ARQUITECTURA ══════════════════════ -->
+<div id="arquitectura" style="scroll-margin-top:52px"></div>
 <div class="section-label"><span class="num">2</span>Arquitectura</div>
-<h2 id="arquitectura">Como funciona el sistema</h2>
-<p class="sub">El flujo completo es una cadena de 4 pasos: desde los CSVs de NinjaTrader hasta la publicacion en la web.</p>
+<h2>¿Cómo funciona el sistema?</h2>
+<p class="sub">El flujo completo es una cadena de 5 pasos: desde los CSVs de NinjaTrader hasta la publicación en la web.</p>
 
-<div style="background:var(--bg2);border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:24px;margin:16px 0">
+<div class="card">
   <div class="flow-arrow">
     <span class="flow-step">1. CSV NT8</span>
     <span class="flow-arrow-sym">&rarr;</span>
-    <span class="flow-step">2. Prompt compacto + Gameplan</span>
+    <span class="flow-step">2. Prompt + V5Config</span>
     <span class="flow-arrow-sym">&rarr;</span>
-    <span class="flow-step">3. IA (Groq/Gemini/Ollama/etc)</span>
+    <span class="flow-step">3. IA (Groq/Gemini/etc)</span>
     <span class="flow-arrow-sym">&rarr;</span>
-    <span class="flow-step">4. HTML + git push</span>
+    <span class="flow-step">4. HTML + Charts</span>
     <span class="flow-arrow-sym">&rarr;</span>
-    <span class="flow-step" style="background:var(--teal-bg);color:var(--teal);border:0.5px solid var(--teal-bd)">edustrader.pages.dev</span>
+    <span class="flow-step hl">edustrader.pages.dev</span>
   </div>
-  <div style="margin-top:16px;font-size:12px;color:var(--text3);text-align:center">
-    Tiempo total estimado: 10-25 segundos (dependiendo del proveedor IA y cantidad de trades)
+  <div style="margin-top:12px;font-size:11px;color:var(--text3);text-align:center;font-family:var(--mono)">
+    Tiempo total estimado: 10–25 segundos (según proveedor IA y cantidad de trades)
   </div>
 </div>
 
 <h3>Estructura de Archivos</h3>
 <pre>
-eduSTrader - Local Free/
+EduSTrader - Local Free/
   Post-Mercado/
-    20260522/                       Carpeta con CSVs del dia (generado por NT8)
-      trades-NinjaTrader Grid *.csv     Trades por trade
-      EduS_TradesContext.csv            Contexto de indicadores por entry
-      Orders-NinjaTrader Grid *.csv     Ordenes ejecutadas
-      gameplan_20260522.json            Gameplan del dia (auto-cargado)
+    20260522/                          Carpeta con CSVs del día (generado por NT8)
+      trades-NinjaTrader Grid *.csv      Trades por operación
+      EduS_TradesContext.csv             Contexto de indicadores por entry
+      Orders-NinjaTrader Grid *.csv      Órdenes ejecutadas
+
+  V5_VolatilityConfig.csv              Config de escenarios de volatilidad (Baja/Media/Alta/Extrema)
 
   gameplan_system/
-    config.json                         Configuracion (API keys, rutas, providers)
-    template_postmarket.html            Template HTML del post-market
-    generar_postmarket.py               Script principal (&gt;1500 lineas)
-    generar_cierre_semanal.py           Wrapper para cierre semanal
-    generar_cierre_mensual.py           Wrapper para cierre mensual
-    INICIAR_POSTMARKET.bat              Acceso directo modo interactivo
-    INICIAR_POSTMARKET_AUTO.bat         Acceso directo modo automatico
-    prompt_postmarket_data.txt          (generado) Prompt enviado a la IA
-    respuesta_postmarket.json           (generado/generado manualmente) JSON de respuesta IA
+    config.json                          Configuración (API keys, rutas, providers, YouTube URL)
+    template_postmarket.html             Template HTML v2 (colores de marca + logo)
+    generar_postmarket.py                Script principal
+    generar_cierre_semanal.py            Wrapper para cierre semanal
+    generar_cierre_mensual.py            Wrapper para cierre mensual
+    INICIAR_POSTMARKET.bat               Acceso directo modo interactivo
+    INICIAR_POSTMARKET_AUTO.bat          Acceso directo modo automático
+    prompt_postmarket_data.txt           (generado) Prompt enviado a la IA
+    respuesta_postmarket.json            (generado/manual) JSON respuesta IA diario
+    respuesta_postmarket_semanal.json    (generado/manual) JSON respuesta IA semanal
+    respuesta_postmarket_mensual.json    (generado/manual) JSON respuesta IA mensual
 
-  GitHub/edus-trader/                   Repositorio de publicacion
-    postmarket_22MAY2026.html           HTML generado y publicado
-    index.html                          Pagina de inicio (con tarjeta resumen post-market)
-    members/index.html                  Sidebar JS (actualizado automaticamente)
-    members/portal/index.html           Sidebar HTML (actualizado automaticamente)
+  GitHub/edus-trader/
+    postmarket_22MAY2026.html            HTML generado y publicado
+    index.html                           Página de inicio (con tarjeta resumen)
+    members/index.html                   Sidebar JS (actualizado automáticamente)
 </pre>
-
-<h3>Template HTML - Secciones del Post-Market</h3>
-<p>El HTML generado contiene las siguientes secciones:</p>
-<ol>
-  <li><strong>RESUMEN:</strong> Tarjetas con total trades, wins, losses, win rate, PnL total, avg trade, mayor win, mayor loss.</li>
-  <li><strong>ESTRATEGIAS:</strong> Tabla desglosada por estrategia con trades, wins, losses, WR y PnL.</li>
-  <li><strong>CONTEXTO:</strong> Tablas de indicadores por entry (VWAP, SMA20, SMA80, Keltner, ATR, POC).</li>
-  <li><strong>VOLATILIDAD:</strong> Analisis de VIX, Keltner, ATR y si las definiciones del dia fueron correctas.</li>
-  <li><strong>GAMEPLAN:</strong> Evaluacion de cumplimiento del game plan del dia.</li>
-  <li><strong>STOPS:</strong> Analisis detallado de stops ejecutados con recomendaciones.</li>
-  <li><strong>DOFA:</strong> Matriz de fortalezas, debilidades, oportunidades y amenazas de la sesion.</li>
-  <li><strong>RECOMENDACIONES:</strong> Recomendaciones especificas y bugs/incidencias tecnicas.</li>
-  <li><strong>ANALISIS IA:</strong> Resumen ejecutivo y nota final generados por la IA.</li>
-  <li><strong>TABLA COMPLETA:</strong> Todos los trades con precios, horarios, estrategia y PnL.</li>
-</ol>
 
 <div class="section-divider"></div>
 
-<!-- ═══════════════════ INSTALACION ═══════════════════ -->
-<div class="section-label"><span class="num">3</span>Instalacion</div>
-<h2 id="instalacion">Requisitos y puesta en marcha</h2>
+<!-- ══════════════════════ NOVEDADES v2 ══════════════════════ -->
+<div id="nuevas-funciones" style="scroll-margin-top:52px"></div>
+<div class="section-label"><span class="num">3</span>Novedades v2 <span class="new-badge">NUEVO</span></div>
+<h2>¿Qué cambió respecto a la versión anterior?</h2>
+<p class="sub">La versión 2.0 incorpora cambios significativos en el diseño visual, la generación de prompts y el análisis de volatilidad.</p>
+
+<h3>🎨 Nuevo Diseño Visual — Colores de Marca</h3>
+<div class="card card-navy">
+  <p>El template HTML fue completamente rediseñado para <strong>coincidir exactamente con los colores de marca del GamePlan</strong>:</p>
+  <ul>
+    <li><strong>Header:</strong> Degradado institucional <code>#142d37 → #034649</code> con borde dorado <code>#b38665</code></li>
+    <li><strong>Logo:</strong> El mismo logo <code>/assets/logo.png</code> del GamePlan</li>
+    <li><strong>Tipografía:</strong> DM Sans + Space Mono + Bebas Neue (igual que el GamePlan)</li>
+    <li><strong>Nav sticky:</strong> 9 secciones ancladas (Resumen, GamePlan, Volatilidad, Trades, Señales, Diagnóstico, DOFA, Reglas, Video)</li>
+    <li><strong>Gráficas Chart.js:</strong> P&amp;L por trade (barras) + Curva de Capital (línea)</li>
+    <li><strong>Bloque YouTube:</strong> Enlace al canal configurado en <code>config.json → publishing.youtube_url</code></li>
+  </ul>
+</div>
+
+<h3>🔀 Tres Prompts Diferenciados (Diario / Semanal / Mensual)</h3>
+<div class="card">
+  <p>Antes había un solo prompt genérico. Ahora cada tipo de reporte tiene <strong>su propio prompt especializado</strong> que solicita secciones específicas al contexto temporal:</p>
+  <div class="json-badges">
+    <span class="json-badge diario">📄 respuesta_postmarket.json — DIARIO</span>
+    <span class="json-badge semanal">📅 respuesta_postmarket_semanal.json — SEMANAL</span>
+    <span class="json-badge mensual">📊 respuesta_postmarket_mensual.json — MENSUAL</span>
+  </div>
+  <p>El modo manual ahora te muestra exactamente el nombre del archivo correcto a guardar según el tipo de reporte que estés generando.</p>
+</div>
+
+<h3>📊 Validación V5_VolatilityConfig <span class="new-badge">NUEVO</span></h3>
+<div class="card card-teal">
+  <p>El sistema lee automáticamente <code>V5_VolatilityConfig.csv</code> y compara los valores reales observados (KeltnerWidth, ATR) contra los rangos definidos para cada escenario. Esta información se incluye en el prompt para que la IA pueda evaluar si:</p>
+  <ul>
+    <li>El <strong>escenario de volatilidad V5 activo</strong> fue correctamente identificado (Baja / Media / Alta / Extrema / SuperExtrema)</li>
+    <li>Los <strong>stops utilizados</strong> cumplían el <code>StopATRx</code> mínimo del escenario activo</li>
+    <li>Los <strong>targets</strong> cumplían el ratio RR mínimo del escenario</li>
+    <li>La estrategia está operando dentro de su <strong>lógica de diseño</strong></li>
+  </ul>
+  <p>El HTML muestra tarjetas por instrumento con el escenario detectado, el stop mínimo recomendado y el RR objetivo:</p>
+  <div class="vc-preview">
+    <span class="vc-mini baja">NQ — BAJA · KeltW [0, 80] · Stop min: 2×ATR</span>
+    <span class="vc-mini media">MES — MEDIA · KeltW [80, 150] · Stop min: 2.5×ATR</span>
+    <span class="vc-mini alta">ES — ALTA · KeltW [150, 250] · Stop min: 3×ATR</span>
+    <span class="vc-mini extrema">CL — EXTREMA · KeltW [250, ∞] · Stop min: 4×ATR</span>
+  </div>
+</div>
+
+<h3>🔍 Análisis Señales vs Trades con Zona y Motivo del Stop <span class="new-badge">NUEVO</span></h3>
+<div class="card">
+  <p>Cada trade ahora incluye la <strong>Zona de señal</strong> (A, M1, etc.) extraída del campo <code>EntryName</code> de NinjaTrader. El prompt instruye a la IA a analizar cada trade perdedor (Stop) e identificar el motivo:</p>
+  <ul>
+    <li>🔴 <strong>Cambio de indicador:</strong> VWAP giró, SMA cruzó, LR89 cambió dirección</li>
+    <li>🟡 <strong>Expansión de volatilidad:</strong> ATR creció, Keltner se amplió durante el trade</li>
+    <li>⚪ <strong>Stop demasiado ajustado:</strong> Stop inferior al mínimo del escenario V5 activo</li>
+    <li>🔵 <strong>Entrada fuera de zona:</strong> La zona de señal no era adecuada para el contexto</li>
+  </ul>
+</div>
+
+<h3>📋 DOFA Siempre Presente — Nuevo Estilo Visual <span class="new-badge">NUEVO</span></h3>
+<div class="card">
+  <p>La DOFA ahora se genera <strong>siempre</strong> en los tres tipos de reporte (diario, semanal, mensual). Además, el estilo visual se actualizó usando las tarjetas codificadas por letra y color:</p>
+  <div class="dofa-preview">
+    <div class="dofa-mini F"><div class="dofa-mini-title">✅ F — Fortalezas</div><p>Aspectos positivos reales observados en la sesión</p></div>
+    <div class="dofa-mini D"><div class="dofa-mini-title">⚠️ D — Debilidades</div><p>Aspectos concretos a mejorar identificados</p></div>
+    <div class="dofa-mini O"><div class="dofa-mini-title">🔵 O — Oportunidades</div><p>Áreas de mejora y oportunidades no aprovechadas</p></div>
+    <div class="dofa-mini A"><div class="dofa-mini-title">🔴 A — Amenazas</div><p>Riesgos identificados para sesiones futuras</p></div>
+  </div>
+</div>
+
+<h3>📄 Secciones del HTML Generado (v2)</h3>
+<div class="card card-green">
+  <ol>
+    <li><strong>RESUMEN:</strong> KPI grid (P&amp;L, WR, Avg Trade, Mayor Win/Loss, Trades) + badges de cuenta</li>
+    <li><strong>GRÁFICAS:</strong> P&amp;L por trade (barras) + Curva de Capital acumulada (Chart.js)</li>
+    <li><strong>GAMEPLAN vs MERCADO:</strong> Cumplimiento, desviaciones, aciertos y lecciones</li>
+    <li><strong>VOLATILIDAD V5:</strong> VIX, ATR, Keltner Width + validación contra V5_VolatilityConfig + Profit Factor</li>
+    <li><strong>DETALLE TRADES:</strong> Tabla completa con Zona de Señal + análisis IA por trade (zona, señales activas, motivo stop)</li>
+    <li><strong>SEÑALES vs TRADES:</strong> Correlación HUD V5 — señales ignoradas, trades fuera de señal, zonas A/M1/etc</li>
+    <li><strong>DIAGNÓSTICO:</strong> Análisis general + contexto de indicadores por entry</li>
+    <li><strong>ESTRATEGIAS:</strong> Tabla desglosada por estrategia</li>
+    <li><strong>DOFA:</strong> Matriz F/D/O/A siempre presente (diario, semanal, mensual)</li>
+    <li><strong>REGLAS POST-MERCADO:</strong> Recomendaciones con 🔴 Críticas / 🟡 Calidad / 🟢 Mejoras</li>
+    <li><strong>YOUTUBE:</strong> Enlace al canal EduS Trader</li>
+  </ol>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════ INSTALACION ══════════════════════ -->
+<div id="instalacion" style="scroll-margin-top:52px"></div>
+<div class="section-label"><span class="num">4</span>Instalación</div>
+<h2>Requisitos y puesta en marcha</h2>
 <p class="sub">El sistema funciona en Windows con Python 3.11+. No requiere servidor ni cuenta paga.</p>
 
 <h3>Requisitos del sistema</h3>
 <ul>
   <li>Windows 10/11</li>
   <li>Python 3.11 o superior</li>
-  <li>Conexion a internet (para API de IA y git push)</li>
+  <li>Conexión a internet (para API de IA y git push)</li>
   <li>Git instalado (para publicar en GitHub / Cloudflare Pages)</li>
   <li>NinjaTrader 8 configurado para exportar CSVs a <code>Post-Mercado/{YYYYMMDD}/</code></li>
+  <li><code>V5_VolatilityConfig.csv</code> presente en la raíz de <code>EduSTrader - Local Free/</code></li>
 </ul>
 
 <h3>Paso a paso</h3>
@@ -240,22 +382,18 @@ eduSTrader - Local Free/
 <div class="step-box">
   <div class="step-num">Paso 1</div>
   <div class="step-title">Verificar Python</div>
-  <p>Abre PowerShell y ejecuta:</p>
   <pre><span class="n">python</span> <span class="o">--</span><span class="n">version</span></pre>
-  <p>Debe mostrar <code>Python 3.11.x</code> o superior. Si no lo tienes, descargalo de <strong>python.org</strong>.</p>
+  <p>Debe mostrar <code>Python 3.11.x</code> o superior. Si no lo tienes, descárgalo de <strong>python.org</strong>.</p>
 </div>
 
 <div class="step-box">
   <div class="step-num">Paso 2</div>
   <div class="step-title">Instalar dependencias</div>
-  <pre><span class="n">cd</span> <span class="s">"eduSTrader - Local Free\gameplan_system"</span>
+  <pre><span class="n">cd</span> <span class="s">"EduSTrader - Local Free\gameplan_system"</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="n">openai</span> <span class="n">anthropic</span> <span class="n">requests</span></pre>
-  <p>Dependencias necesarias segun el proveedor IA que uses:</p>
   <ul>
-    <li><strong>Groq:</strong> Solo <code>openai</code> (usa API compatible)</li>
+    <li><strong>Groq / Ollama / OpenAI:</strong> <code>openai</code></li>
     <li><strong>Gemini:</strong> <code>requests</code></li>
-    <li><strong>Ollama:</strong> Solo <code>openai</code> (API compatible)</li>
-    <li><strong>OpenAI:</strong> <code>openai</code></li>
     <li><strong>Anthropic:</strong> <code>anthropic</code></li>
   </ul>
 </div>
@@ -263,7 +401,7 @@ eduSTrader - Local Free/
 <div class="step-box">
   <div class="step-num">Paso 3</div>
   <div class="step-title">Configurar API keys en config.json</div>
-  <p>Edita <code>gameplan_system/config.json</code> y coloca las API keys:</p>
+  <p>Edita <code>gameplan_system/config.json</code> y coloca las API keys y el enlace de YouTube:</p>
   <pre>{
   <span class="s">"ai"</span>: {
     <span class="s">"default_provider"</span>: <span class="s">"groq"</span>,
@@ -277,27 +415,22 @@ eduSTrader - Local Free/
         <span class="s">"base_url"</span>: <span class="s">"https://api.groq.com/openai/v1"</span>
       }
     }
+  },
+  <span class="s">"publishing"</span>: {
+    <span class="s">"auto_commit"</span>: <span class="k">true</span>,
+    <span class="s">"auto_push"</span>: <span class="k">true</span>,
+    <span class="s">"git_repo_path"</span>: <span class="s">"C:\\...\\GitHub\\edus-trader"</span>,
+    <span class="s">"youtube_url"</span>: <span class="s">"https://www.youtube.com/@EduSTrader"</span>
   }
 }</pre>
-  <p>Donde conseguir las keys:</p>
-  <ul>
-    <li><strong>Groq:</strong> <code>console.groq.com</code> &rarr; registrarse &rarr; API Keys &rarr; Crear key</li>
-    <li><strong>Gemini:</strong> <code>aistudio.google.com</code> &rarr; Get API key</li>
-  </ul>
 </div>
 
 <div class="step-box">
   <div class="step-num">Paso 4</div>
-  <div class="step-title">Configurar carpeta Post-Mercado en NT8</div>
-  <p>En NinjaTrader 8, asegurate de que las exportaciones CSV se guarden en:</p>
-  <pre><span class="s">C:\Users\eduar\OneDrive - Desarrollo Personal\Documents - Operativa Diaria\</span>
-<span class="s">EduSTrader - Local Free\Post-Mercado\{YYYYMMDD}\</span></pre>
-  <p>Los archivos esperados son:</p>
-  <ul>
-    <li><code>trades-NinjaTrader Grid *.csv</code> &mdash; Trades por trade</li>
-    <li><code>EduS_TradesContext*.csv</code> &mdash; Contexto de indicadores por entry</li>
-    <li><code>Orders-NinjaTrader Grid *.csv</code> &mdash; Ordenes (opcional)</li>
-  </ul>
+  <div class="step-title">Verificar V5_VolatilityConfig.csv</div>
+  <p>El archivo debe estar en:</p>
+  <pre><span class="s">EduSTrader - Local Free\V5_VolatilityConfig.csv</span></pre>
+  <p>El sistema lee automáticamente los campos <code>Market</code>, <code>ScenarioName</code>, <code>KeltWidth_Min</code>, <code>KeltWidth_Max</code>, <code>Atr_Min</code>, <code>Atr_Max</code>, <code>StopATRx</code>, <code>RR1</code> y <code>RR2</code>. Si el archivo no existe, el análisis de volatilidad se omite sin error.</p>
 </div>
 
 <div class="step-box">
@@ -305,47 +438,46 @@ eduSTrader - Local Free/
   <div class="step-title">Ejecutar por primera vez (modo manual)</div>
   <p>Para probar sin API key:</p>
   <pre><span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span></pre>
-  <p>Selecciona la opcion <strong>6) MANUAL</strong>. Esto genera el archivo <code>prompt_postmarket_data.txt</code>. Copia su contenido, pegalo en ChatGPT/Claude web, guarda la respuesta como JSON y luego:</p>
-  <pre><span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">manual</span><span class="o">-</span><span class="n">text</span> <span class="n">respuesta_postmarket</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">auto</span></pre>
+  <p>Selecciona la opción <strong>6) MANUAL</strong>. Esto genera <code>prompt_postmarket_data.txt</code>. Copia su contenido en ChatGPT/Claude web, guarda la respuesta como <code>respuesta_postmarket.json</code> y ejecuta:</p>
+  <pre><span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">manual-text</span> <span class="n">respuesta_postmarket</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">auto</span></pre>
 </div>
 
 <div class="section-divider"></div>
 
-<!-- ═══════════════════ CONFIGURACION ═══════════════════ -->
-<div class="section-label"><span class="num">4</span>Configuracion</div>
-<h2 id="configuracion">Archivo config.json en detalle</h2>
-<p class="sub">Todas las opciones se configuran desde <code>gameplan_system/config.json</code>. No es necesario editar el codigo Python.</p>
+<!-- ══════════════════════ CONFIGURACION ══════════════════════ -->
+<div id="configuracion" style="scroll-margin-top:52px"></div>
+<div class="section-label"><span class="num">5</span>Configuración</div>
+<h2>Archivo config.json en detalle</h2>
+<p class="sub">Todas las opciones se configuran desde <code>gameplan_system/config.json</code>. No es necesario editar el código Python.</p>
 
 <div class="card">
-  <div class="card-title">Campos de configuracion relevantes para Post-Market</div>
+  <div class="card-title">Campos de configuración relevantes para Post-Market</div>
   <table>
-    <thead>
-      <tr><th>Clave</th><th>Descripcion</th><th>Ejemplo</th></tr>
-    </thead>
+    <thead><tr><th>Clave</th><th>Descripción</th><th>Ejemplo</th></tr></thead>
     <tbody>
-      <tr><td><code>output_dir</code></td><td>Directorio donde se guarda el HTML (debe ser el repo)</td><td><code>C:\\...\\GitHub\\edus-trader</code></td></tr>
       <tr><td><code>ai.default_provider</code></td><td>Proveedor por defecto en modo <code>--auto</code></td><td><code>"groq"</code></td></tr>
-      <tr><td><code>ai.temperature</code></td><td>Creatividad del modelo (0.0 = deterministico)</td><td><code>0.7</code></td></tr>
-      <tr><td><code>ai.max_tokens</code></td><td>Maximo de tokens en la respuesta IA</td><td><code>8192</code></td></tr>
+      <tr><td><code>ai.temperature</code></td><td>Creatividad del modelo (0.0 = determinístico)</td><td><code>0.7</code></td></tr>
+      <tr><td><code>ai.max_tokens</code></td><td>Máximo de tokens en la respuesta IA</td><td><code>8192</code></td></tr>
       <tr><td><code>ai.providers.*.enabled</code></td><td>Habilita/deshabilita un proveedor</td><td><code>true</code> / <code>false</code></td></tr>
-      <tr><td><code>postmarket.path</code></td><td>Ruta base de Post-Mercado (opcional, por defecto es ../Post-Mercado)</td><td><code>".\\Post-Mercado"</code></td></tr>
+      <tr><td><code>postmarket.path</code></td><td>Ruta base de Post-Mercado</td><td><code>".\\Post-Mercado"</code></td></tr>
       <tr><td><code>postmarket.cuenta</code></td><td>Nombre de cuenta para mostrar en el HTML</td><td><code>"Sim101"</code></td></tr>
-      <tr><td><code>postmarket.tipo</code></td><td>Tipo de cuenta: SIM, FONDEO, REAL</td><td><code>"SIM"</code></td></tr>
-      <tr><td><code>publishing.auto_commit</code></td><td>Commitea automaticamente en git</td><td><code>true</code></td></tr>
+      <tr><td><code>publishing.auto_commit</code></td><td>Commitea automáticamente en git</td><td><code>true</code></td></tr>
       <tr><td><code>publishing.auto_push</code></td><td>Hace push a GitHub (dispara deploy Cloudflare)</td><td><code>true</code></td></tr>
       <tr><td><code>publishing.git_repo_path</code></td><td>Ruta al repositorio git local</td><td><code>"C:\\...\\GitHub\\edus-trader"</code></td></tr>
+      <tr><td><code>publishing.youtube_url</code></td><td><span class="new-badge">NUEVO</span> URL del canal YouTube para el botón del reporte</td><td><code>"https://www.youtube.com/@EduSTrader"</code></td></tr>
     </tbody>
   </table>
 </div>
 
 <div class="section-divider"></div>
 
-<!-- ═══════════════════ MODOS DE USO ═══════════════════ -->
-<div class="section-label"><span class="num">5</span>Modos de Uso</div>
-<h2 id="modos">Las diferentes formas de generar el Post-Market</h2>
-<p class="sub">Cada modo tiene su propio flujo. El sistema te pregunta al inicio cual usar.</p>
+<!-- ══════════════════════ MODOS DE USO ══════════════════════ -->
+<div id="modos" style="scroll-margin-top:52px"></div>
+<div class="section-label"><span class="num">6</span>Modos de Uso</div>
+<h2>Las diferentes formas de generar el Post-Market</h2>
+<p class="sub">Cada modo tiene su propio flujo. El sistema te pregunta al inicio cuál usar.</p>
 
-<h3>Menu Principal</h3>
+<h3>Menú Principal</h3>
 <p>Al ejecutar <code>python generar_postmarket.py</code> sin argumentos, aparece:</p>
 <pre>
 ============================================================
@@ -357,355 +489,214 @@ eduSTrader - Local Free/
   4) OpenAI (plan pago)              &mdash; gpt-4o
   5) Anthropic (plan pago)           &mdash; claude-sonnet-4
   6) MANUAL &mdash; genera prompt, pegas en web, cargas respuesta
-  7) Skip AI &mdash; solo datos, sin analisis
+  7) Skip AI &mdash; solo datos, sin análisis
 
   Selecciona (1-7):
 </pre>
 
-<h3 id="modo-diario">Analisis Diario (por defecto)</h3>
+<h3 id="modo-diario">Análisis Diario (por defecto)</h3>
 <div class="card card-green">
-  <div class="card-title">Uso tipico</div>
-  <p>Ejecutar al final de cada sesion de trading (lunes a viernes) para obtener el analisis completo del dia.</p>
+  <div class="card-title">Uso típico</div>
+  <p>Ejecutar al final de cada sesión de trading (lunes a viernes). Genera <code>respuesta_postmarket.json</code>.</p>
   <pre><span class="c"># Modo interactivo (elige proveedor)</span>
 <span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span>
 
-<span class="c"># Modo automatico (usa default_provider)</span>
+<span class="c"># Modo automático (usa default_provider)</span>
 <span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">auto</span>
 
-<span class="c"># Fecha especifica (para dias pasados)</span>
+<span class="c"># Fecha específica (para días pasados)</span>
 <span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">date</span> <span class="n">20260522</span> <span class="o">--</span><span class="n">auto</span></pre>
-</div>
-<div class="card">
-  <div class="card-title">Salida esperada</div>
-  <pre><span class="o">></span> <span class="n">Buscando archivos en Post-Mercado</span><span class="o">...</span>
-<span class="n">OK</span> <span class="n">Carpeta encontrada</span>
-<span class="n">OK</span> <span class="n">Trades: trades-NinjaTrader Grid 20260522.csv</span>
-<span class="n">OK</span> <span class="n">Contexto: EduS_TradesContext_20260522.csv</span>
-<span class="n">-</span> <span class="n">33 trades encontrados</span>
-<span class="n">-</span> <span class="n">PnL Total: +$4,950.00</span>
-<span class="o">></span> <span class="n">Llamando a GROQ</span><span class="o">...</span>
-<span class="n">OK</span> <span class="n">HTML generado: postmarket_22MAY2026.html</span>
-<span class="n">OK</span> <span class="n">Menus actualizados</span>
-<span class="n">OK</span> <span class="n">Homepage actualizada</span>
-<span class="n">OK</span> <span class="n">Publicado en GitHub</span></pre>
 </div>
 
 <h3 id="modo-semanal">Cierre Semanal</h3>
 <div class="card card-amber">
-  <div class="card-title">Para que sirve</div>
-  <p>Genera un resumen de toda la semana con comparativa dia a dia y conclusion semanal. Ideal para los viernes al cierre.</p>
+  <div class="card-title">Para qué sirve</div>
+  <p>Resumen de toda la semana con comparativa día a día, análisis de VIX semanal, patrones de señales y conclusión. Genera <code>respuesta_postmarket_semanal.json</code>. El prompt solicita secciones adicionales como <strong>analisis_semanal</strong>, mejor/peor día, tendencia VIX y patrón de señales semanal.</p>
   <pre><span class="c"># Cierre semanal (viernes de la semana actual)</span>
-<span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">cierre</span><span class="o">-</span><span class="n">semanal</span> <span class="o">--</span><span class="n">auto</span>
+<span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">cierre-semanal</span> <span class="o">--</span><span class="n">auto</span>
 
 <span class="c"># O usando el wrapper dedicado</span>
 <span class="n">python</span> <span class="n">generar_cierre_semanal</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">auto</span></pre>
   <p>El HTML generado se llama: <code>cierresemanal_22MAY2026.html</code></p>
-  <p>Incluye una seccion extra <strong>analisis_semanal</strong> con resumen, comparativa dia a dia y conclusion.</p>
 </div>
 
 <h3 id="modo-mensual">Cierre Mensual</h3>
 <div class="card card-amber">
-  <div class="card-title">Para que sirve</div>
-  <p>Genera un resumen del mes completo con estadisticas agregadas y conclusiones mensuales. Ideal el ultimo dia del mes.</p>
+  <div class="card-title">Para qué sirve</div>
+  <p>Resumen del mes completo con estadísticas agregadas, regímenes de volatilidad detectados, consistencia del sistema contra V5_VolatilityConfig y objetivos para el mes siguiente. Genera <code>respuesta_postmarket_mensual.json</code>.</p>
   <pre><span class="c"># Cierre mensual (mes actual)</span>
-<span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">cierre</span><span class="o">-</span><span class="n">mensual</span> <span class="o">--</span><span class="n">auto</span>
+<span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">cierre-mensual</span> <span class="o">--</span><span class="n">auto</span>
 
 <span class="c"># O usando el wrapper dedicado</span>
 <span class="n">python</span> <span class="n">generar_cierre_mensual</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">auto</span></pre>
   <p>El HTML generado se llama: <code>cierremensual_MAY2026.html</code></p>
-  <p>Incluye una seccion extra <strong>analisis_mensual</strong> con resumen, estadisticas y conclusiones.</p>
 </div>
 
 <h3 id="modo-manual">Modo Manual (Sin API key)</h3>
 <div class="card card-blue">
-  <div class="card-title">Como funciona</div>
-  <p>Ideal si no tienes API key o quieres usar ChatGPT/Claude desde el navegador web (versiones gratuitas).</p>
+  <div class="card-title">Cómo funciona</div>
+  <p>Ideal si no tienes API key o quieres usar ChatGPT/Claude desde el navegador web.</p>
   <ol>
-    <li>Ejecutas <code>python generar_postmarket.py</code> y eliges opcion 6</li>
-    <li>El sistema genera <code>prompt_postmarket_data.txt</code> con los datos de la sesion</li>
+    <li>Ejecutas <code>python generar_postmarket.py</code> y eliges opción 6</li>
+    <li>El sistema genera <code>prompt_postmarket_data.txt</code> con los datos de la sesión</li>
     <li>Abres el archivo, copias TODO su contenido</li>
-    <li>Lo pegas en ChatGPT, Claude o Gemini (web, version gratuita)</li>
-    <li>La IA te devuelve un JSON con el analisis completo</li>
-    <li>Copias esa respuesta y la guardas en un archivo (ej: <code>respuesta_postmarket.json</code>)</li>
+    <li>Lo pegas en ChatGPT, Claude o Gemini (web, versión gratuita)</li>
+    <li>La IA te devuelve un JSON con el análisis completo</li>
+    <li>Copias esa respuesta y la guardas como <strong>el archivo correcto según el tipo:</strong>
+      <div class="json-badges" style="margin-top:6px">
+        <span class="json-badge diario">Diario → respuesta_postmarket.json</span>
+        <span class="json-badge semanal">Semanal → respuesta_postmarket_semanal.json</span>
+        <span class="json-badge mensual">Mensual → respuesta_postmarket_mensual.json</span>
+      </div>
+    </li>
     <li>Ejecutas: <code>python generar_postmarket.py --manual-text respuesta_postmarket.json --auto</code></li>
     <li>El sistema genera el HTML y lo publica</li>
   </ol>
 </div>
 <div class="card">
-  <div class="card-title">Ejemplo completo</div>
-  <pre><span class="c"># Terminal 1: Generar el prompt</span>
+  <div class="card-title">Ejemplo completo — modo diario manual</div>
+  <pre><span class="c"># 1. Generar el prompt</span>
 <span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span>
-<span class="c">> Elegir opcion 6</span>
-<span class="c">> Se genera prompt_postmarket_data.txt</span>
+<span class="c">  → Elegir opción 6 → se genera prompt_postmarket_data.txt</span>
 
-<span class="c"># Abrir prompt_postmarket_data.txt, copiar, pegar en chat.openai.com</span>
+<span class="c"># 2. Pegar en ChatGPT/Claude y guardar respuesta</span>
+<span class="c">  → Guardar como: respuesta_postmarket.json</span>
 
-<span class="c"># Guardar respuesta como respuesta_postmarket.json</span>
+<span class="c"># 3. Cargar respuesta y completar</span>
+<span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">manual-text</span> <span class="n">respuesta_postmarket</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">auto</span>
 
-<span class="c"># Terminal 2: Cargar respuesta y completar</span>
-<span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">manual</span><span class="o">-</span><span class="n">text</span> <span class="n">respuesta_postmarket</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">auto</span>
+<span class="c"># Para fecha específica:</span>
+<span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">date</span> <span class="n">20260522</span> <span class="o">--</span><span class="n">manual-text</span> <span class="n">respuesta_postmarket</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">auto</span>
 
-<span class="c"># Con fecha especifica:</span>
-<span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">date</span> <span class="n">20260522</span> <span class="o">--</span><span class="n">manual</span><span class="o">-</span><span class="n">text</span> <span class="n">respuesta_postmarket</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">auto</span></pre>
+<span class="c"># Para cierre semanal manual:</span>
+<span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">cierre-semanal</span> <span class="o">--</span><span class="n">manual-text</span> <span class="n">respuesta_postmarket_semanal</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">auto</span></pre>
 </div>
 
 <h3 id="modo-skip">Skip AI (Solo datos)</h3>
 <div class="card card-amber">
-  <div class="card-title">Para que sirve</div>
+  <div class="card-title">Para qué sirve</div>
   <ul>
     <li>Verificar que los CSVs se leen correctamente</li>
-    <li>Probar el template HTML sin llamar a la IA</li>
-    <li>Generar un HTML rapido con solo las tablas de datos</li>
-    <li>Depurar problemas de parseo de CSVs</li>
+    <li>Probar el nuevo template HTML sin llamar a la IA</li>
+    <li>Generar un HTML rápido con solo tablas y gráficas</li>
+    <li>Depurar problemas de parseo</li>
   </ul>
-  <pre><span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">skip</span><span class="o">-</span><span class="n">ai</span>
-<span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">date</span> <span class="n">20260522</span> <span class="o">--</span><span class="n">skip</span><span class="o">-</span><span class="n">ai</span></pre>
+  <pre><span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">skip-ai</span>
+<span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">date</span> <span class="n">20260522</span> <span class="o">--</span><span class="n">skip-ai</span></pre>
 </div>
 
 <div class="section-divider"></div>
 
-<!-- ═══════════════════ FLUJO COMPLETO ═══════════════════ -->
-<div class="section-label"><span class="num">6</span>Flujo Completo</div>
-<h2 id="flujo-completo">Ejecucion paso a paso (con Groq)</h2>
-<p class="sub">Este es el flujo completo desde que abres PowerShell hasta que el Post-Market esta publicado en la web.</p>
+<!-- ══════════════════════ FLUJO COMPLETO ══════════════════════ -->
+<div id="flujo-completo" style="scroll-margin-top:52px"></div>
+<div class="section-label"><span class="num">7</span>Flujo Completo</div>
+<h2>Ejecución paso a paso (con Groq)</h2>
+<p class="sub">Desde PowerShell hasta el Post-Market publicado en la web.</p>
 
-<div class="step-box" style="border-left-color:var(--green)">
+<div class="step-box" style="border-left-color:var(--bull)">
   <div class="step-num">Paso 1</div>
   <div class="step-title">Abrir PowerShell y navegar al directorio</div>
   <pre><span class="n">cd</span> <span class="s">"C:\Users\eduar\OneDrive - Desarrollo Personal\Documents - Operativa Diaria\EduSTrader - Local Free\gameplan_system"</span></pre>
 </div>
 
-<div class="step-box" style="border-left-color:var(--green)">
+<div class="step-box" style="border-left-color:var(--bull)">
   <div class="step-num">Paso 2</div>
   <div class="step-title">Ejecutar el generador</div>
-  <pre><span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span></pre>
-  <p>O si prefieres modo automatico (sin preguntas):</p>
   <pre><span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">auto</span></pre>
 </div>
 
-<div class="step-box" style="border-left-color:var(--green)">
+<div class="step-box" style="border-left-color:var(--bull)">
   <div class="step-num">Paso 3</div>
-  <div class="step-title">El sistema busca los CSVs del dia</div>
-  <p>Busca automaticamente en la carpeta <code>Post-Mercado/{YYYYMMDD}/</code>. Si la carpeta no existe (dia no operado o festivo), genera un informe vacio.</p>
+  <div class="step-title">El sistema busca los CSVs y carga V5_VolatilityConfig</div>
   <pre><span class="o">></span> <span class="n">Buscando archivos en Post-Mercado</span><span class="o">...</span>
 <span class="n">OK</span> <span class="n">Carpeta encontrada</span>
 <span class="n">OK</span> <span class="n">Trades: trades-NinjaTrader Grid 20260522.csv</span>
-<span class="n">-</span> <span class="n">33 trades encontrados</span>
-<span class="n">-</span> <span class="n">PnL Total: +$4,950.00</span></pre>
+<span class="n">-</span>  <span class="n">33 trades encontrados</span>
+<span class="n">-</span>  <span class="n">PnL Total: +$4,950.00</span>
+<span class="n">OK</span> <span class="n">V5_VolatilityConfig cargado: 5 escenarios para MES, 5 para NQ</span></pre>
 </div>
 
-<div class="step-box" style="border-left-color:var(--green)">
+<div class="step-box" style="border-left-color:var(--bull)">
   <div class="step-num">Paso 4</div>
-  <div class="step-title">Se genera el prompt compacto</div>
-  <p>El prompt incluye en formato CSV compacto (ahorrando ~90% de tokens respecto a JSON):</p>
+  <div class="step-title">Se construye el prompt especializado (diario)</div>
+  <p>El prompt incluye en formato compacto:</p>
   <ul>
-    <li>Resumen de la sesion (total trades, wins, losses, PnL, WR)</li>
-    <li>Todos los trades en formato linea: <code>#|Inst|Dir|Entry|Exit|Px|Qty|PnL|Estrategia</code></li>
-    <li>Contexto de indicadores de las primeras entradas</li>
-    <li>Game plan del dia (auto-cargado desde <code>gameplan_system/Gameplan json/gameplan_{fecha}.json</code>)</li>
+    <li>Resumen de la sesión (total trades, wins, losses, PnL, WR)</li>
+    <li>Trades con zona de señal: <code>#|Inst|Dir|Entry|Exit|Px|Qty|PnL|<strong>Zona</strong>|Estrategia</code></li>
+    <li>Contexto de indicadores (VWAP, SMA20/80, Keltner, ATR, POC)</li>
+    <li>Validación V5_VolatilityConfig (escenario activo, stop mínimo, RR objetivo)</li>
+    <li>Game plan del día (auto-cargado)</li>
+    <li>Instrucciones para diagnosticar motivo de cada stop</li>
   </ul>
 </div>
 
-<div class="step-box" style="border-left-color:var(--green)">
+<div class="step-box" style="border-left-color:var(--bull)">
   <div class="step-num">Paso 5</div>
-  <div class="step-title">La IA genera el analisis</div>
-  <p>El prompt se envia al proveedor seleccionado. La IA devuelve un JSON estructurado con:</p>
+  <div class="step-title">La IA genera el análisis estructurado</div>
+  <p>La IA devuelve un JSON con:</p>
   <ul>
-    <li><strong>resumen_ejecutivo:</strong> Texto de 2-3 lineas describiendo la sesion</li>
-    <li><strong>analisis_volatilidad:</strong> VIX, Keltner, ATR y si las definiciones fueron correctas</li>
-    <li><strong>analisis_premercado:</strong> Si se cumplio el game plan del dia</li>
-    <li><strong>analisis_trades:</strong> Evaluacion individual de CADA trade contra reglas HUD V5</li>
-    <li><strong>analisis_stops:</strong> Patrones y recomendaciones sobre stops</li>
-    <li><strong>matriz_dofa:</strong> Fortalezas, debilidades, oportunidades, amenazas</li>
-    <li><strong>recomendaciones:</strong> Acciones concretas para mejorar</li>
-    <li><strong>bugs_incidencias:</strong> Problemas tecnicos detectados</li>
+    <li><code>resumen_ejecutivo</code> — 2-3 líneas sobre el rendimiento</li>
+    <li><code>analisis_volatilidad</code> — VIX, Keltner, ATR, Profit Factor, escenario V5 activo</li>
+    <li><code>analisis_premercado</code> — cumplimiento del game plan</li>
+    <li><code>analisis_trades</code> — evaluación individual con zona, señales activas y motivo del stop</li>
+    <li><code>analisis_senales_vs_trades</code> — señales ignoradas, trades fuera de señal, patrón de decisión</li>
+    <li><code>analisis_stops</code> — patrones y recomendaciones con motivo principal de cada stop</li>
+    <li><code>matriz_dofa</code> — Fortalezas, Debilidades, Oportunidades, Amenazas</li>
+    <li><code>recomendaciones</code> — Reglas 🔴 críticas / 🟡 calidad / 🟢 mejoras</li>
+    <li><code>bugs_incidencias</code> — problemas técnicos detectados</li>
   </ul>
 </div>
 
-<div class="step-box" style="border-left-color:var(--green)">
+<div class="step-box" style="border-left-color:var(--bull)">
   <div class="step-num">Paso 6</div>
-  <div class="step-title">Se genera el HTML</div>
-  <p>El template se rellena con todos los datos del analisis, las tablas de trades, contexto de indicadores, y secciones de volatilidad, gameplan, stops, DOFA y recomendaciones.</p>
-  <pre><span class="o">></span> <span class="n">Generando HTML</span><span class="o">...</span>
-<span class="n">OK</span> <span class="n">HTML generado: postmarket_22MAY2026.html</span> <span class="o">(</span><span class="n">39,013</span> <span class="n">bytes</span><span class="o">)</span></pre>
+  <div class="step-title">Se genera el HTML con el nuevo template v2</div>
+  <pre><span class="o">></span> <span class="n">Generando HTML Post-Market</span><span class="o">...</span>
+<span class="n">OK</span> <span class="n">HTML generado: postmarket_22MAY2026.html</span> <span class="o">(</span><span class="n">52,130 bytes</span><span class="o">)</span></pre>
 </div>
 
-<div class="step-box" style="border-left-color:var(--green)">
-  <div class="step-num">Paso 7</div>
-  <div class="step-title">Se actualiza la pagina de inicio</div>
-  <p>Se inserta una tarjeta resumen en la seccion "Ultimos registros de sesion" de la homepage, con el PnL, win rate, cantidad de trades y enlace al analisis completo.</p>
-  <pre><span class="n">OK</span> <span class="n">Homepage actualizada</span></pre>
-</div>
-
-<div class="step-box" style="border-left-color:var(--green)">
-  <div class="step-num">Paso 8</div>
-  <div class="step-title">Se actualiza el menu lateral</div>
-  <p>Se agrega la entrada al sidebar de la zona de miembros, tanto en el formato JS (members/index.html) como en el clasico (members/portal/index.html), en la seccion "Analisis de Operativa" bajo el mes correspondiente.</p>
-  <pre><span class="n">OK</span> <span class="n">Menu actualizado: members\index.html</span>
-<span class="n">OK</span> <span class="n">Menu actualizado: members\portal\index.html</span></pre>
-</div>
-
-<div class="step-box" style="border-left-color:var(--green)">
-  <div class="step-num">Paso 9</div>
-  <div class="step-title">Se publica en la web</div>
-  <pre><span class="n">OK</span> <span class="n">git add OK</span>
+<div class="step-box" style="border-left-color:var(--bull)">
+  <div class="step-num">Paso 7 → 9</div>
+  <div class="step-title">Actualización y publicación</div>
+  <pre><span class="n">OK</span> <span class="n">Homepage actualizada</span>
+<span class="n">OK</span> <span class="n">Menu actualizado: members\index.html</span>
+<span class="n">OK</span> <span class="n">git add OK</span>
 <span class="n">OK</span> <span class="n">git commit OK</span>
 <span class="n">OK</span> <span class="n">git push OK</span>
 <span class="n">OK</span> <span class="n">Publicado: postmarket_22MAY2026.html</span></pre>
-  <p>El archivo se commitea y pushea al repositorio de GitHub. Cloudflare Pages detecta el cambio y despliega automaticamente (tarda ~30 segundos).</p>
-</div>
-
-<div class="step-box" style="border-left-color:var(--green)">
-  <div class="step-num">Paso 10</div>
-  <div class="step-title">Verificar en la web</div>
-  <p>Abre en tu navegador:</p>
-  <pre><span class="n">https:</span><span class="o">//</span><span class="n">edustrader</span><span class="o">.</span><span class="n">pages</span><span class="o">.</span><span class="n">dev</span><span class="o">/</span><span class="n">postmarket_22MAY2026</span><span class="o">.</span><span class="n">html</span></pre>
-  <p>O desde la zona de miembros en <code>members/portal/index.html</code>, en la seccion "Analisis de Operativa".</p>
+  <p>Cloudflare Pages detecta el cambio y despliega automáticamente (~30 segundos).</p>
 </div>
 
 <div class="section-divider"></div>
 
-<!-- ═══════════════════ RESULTADOS ═══════════════════ -->
-<div class="section-label"><span class="num">7</span>Resultados</div>
-<h2 id="resultados">Que contiene el HTML generado</h2>
-<p class="sub">El Post-Market generado incluye analisis completo de la sesion. Esto es lo que debe contener cada seccion.</p>
-
-<h3>Header</h3>
-<div class="card card-teal">
-  <p>Logo "EduS Trader", fecha completa (ej: "Sabado 23 de Mayo 2026"), tipo de analisis (Post-Market / Cierre Semanal / Cierre Mensual), y el PnL total de la sesion con codigo de color (verde = positivo, rojo = negativo).</p>
-</div>
-
-<h3>RESUMEN</h3>
-<div class="card card-teal">
-  <p>Grid de 8 tarjetas con metricas clave:</p>
-  <ul>
-    <li>Total Trades, Wins, Losses</li>
-    <li>Win Rate (%)</li>
-    <li>Total PnL ($)</li>
-    <li>Avg Trade ($)</li>
-    <li>Mayor Win ($) y Mayor Loss ($)</li>
-    <li>Todo codificado por color (verde/rojo)</li>
-  </ul>
-</div>
-
-<h3>ESTRATEGIAS</h3>
-<div class="card card-teal">
-  <p>Tabla desglosada por cada estrategia utilizada (HUD_Manual, HUD_Scalper, etc.) mostrando trades totales, wins, losses, flats, win rate y PnL. Ordenado por PnL descendente.</p>
-</div>
-
-<h3>CONTEXTO</h3>
-<div class="card card-teal">
-  <p>Tablas de indicadores por cada entry de trade, mostrando:</p>
-  <ul>
-    <li>Direccion (Long/Short con iconos de color)</li>
-    <li>VWAP direction (UP/DOWN) y precio</li>
-    <li>Pendientes SMA20 y SMA80</li>
-    <li>LinReg89</li>
-    <li>Distancia a SMA20 y SMA80</li>
-    <li>Keltner Width y ATR</li>
-    <li>Window POC</li>
-  </ul>
-</div>
-
-<h3>VOLATILIDAD</h3>
-<div class="card card-teal">
-  <ul>
-    <li><strong>VIX Observado:</strong> Valor y contexto del VIX en la sesion</li>
-    <li><strong>Definiciones Correctas:</strong> Si las definiciones de volatilidad del pre-market fueron adecuadas</li>
-    <li><strong>Relacion VIX/Keltner/ATR:</strong> Analisis de la volatilidad observada</li>
-    <li><strong>Nota de Volatilidad:</strong> Detalle adicional sobre el comportamiento de la volatilidad</li>
-  </ul>
-</div>
-
-<h3>GAMEPLAN</h3>
-<div class="card card-teal">
-  <ul>
-    <li><strong>Cumplimiento:</strong> SI / NO / PARCIAL (con codigo de color)</li>
-    <li><strong>Desviaciones:</strong> Lista de puntos donde la operativa se desvio del plan</li>
-    <li><strong>Aciertos:</strong> Puntos donde se siguio el plan correctamente</li>
-    <li><strong>Lecciones:</strong> Aprendizajes para proximos game plans</li>
-  </ul>
-</div>
-
-<h3>STOPS</h3>
-<div class="card card-teal">
-  <ul>
-    <li><strong>Detalle por stop:</strong> Trade numero, instrumento, perdida, distancia en puntos, distancia/ATR, tipo de stop (tight-stop, adecuado, etc.), analisis y recomendacion</li>
-    <li><strong>Tabla resumen:</strong> Total stops, total perdido, stops adecuados, stops ajustados</li>
-    <li><strong>Patron general:</strong> Patron identificado en los stops de la sesion</li>
-    <li><strong>Recomendacion general:</strong> Acciones para mejorar la gestion de stops</li>
-  </ul>
-</div>
-
-<h3>DOFA</h3>
-<div class="card card-teal">
-  <p>Matriz 2x2 con:</p>
-  <ul>
-    <li><strong>Fortalezas (F):</strong> Aspectos positivos de la sesion</li>
-    <li><strong>Debilidades (D):</strong> Aspectos a mejorar</li>
-    <li><strong>Oportunidades (O):</strong> Areas de oportunidad detectadas</li>
-    <li><strong>Amenazas (A):</strong> Riesgos identificados para sesiones futuras</li>
-  </ul>
-</div>
-
-<h3>RECOMENDACIONES</h3>
-<div class="card card-teal">
-  <p>Lista de recomendaciones especificas con titulo y puntos de accion. Tambien incluye:</p>
-  <ul>
-    <li><strong>Bugs e Incidencias:</strong> Problemas tecnicos detectados con severidad (ALTA/MEDIA/BAJA) y solucion propuesta</li>
-  </ul>
-</div>
-
-<h3>ANALISIS IA</h3>
-<div class="card card-teal">
-  <ul>
-    <li><strong>Resumen Ejecutivo:</strong> Texto generado por la IA describiendo el rendimiento general</li>
-    <li><strong>Nota Final:</strong> Resumen y cierre del analisis post-market</li>
-    <li><strong>Para cierre semanal:</strong> Seccion extra con resumen semanal, comparativa dia a dia y conclusion</li>
-    <li><strong>Para cierre mensual:</strong> Seccion extra con resumen mensual, estadisticas agregadas y conclusiones</li>
-  </ul>
-</div>
-
-<h3>TABLA COMPLETA DE TRADES</h3>
-<div class="card card-teal">
-  <p>Tabla con todos los trades de la sesion incluyendo: numero, estrategia, instrumento, direccion, entry/exit time, entry/exit price, cantidad, PnL (codificado por color), entry name y exit name. Con paginacion incorporada (10 trades por pagina) para sesiones con muchos trades.</p>
-</div>
-
-<div class="section-divider"></div>
-
-<!-- ═══════════════════ REFERENCIA DE COMANDOS ═══════════════════ -->
+<!-- ══════════════════════ COMANDOS ══════════════════════ -->
+<div id="comandos" style="scroll-margin-top:52px"></div>
 <div class="section-label"><span class="num">8</span>Referencia de Comandos</div>
-<h2 id="comandos">Todas las variantes de ejecucion</h2>
-<p class="sub">Cada comando se ejecuta desde <code>gameplan_system/</code> en PowerShell. Los parametros se pueden combinar libremente.</p>
+<h2>Todas las variantes de ejecución</h2>
+<p class="sub">Cada comando se ejecuta desde <code>gameplan_system/</code> en PowerShell. Los parámetros se pueden combinar libremente.</p>
 
-<h3>Modos de analisis</h3>
+<h3>Modos de análisis</h3>
 <div class="card card-blue">
-  <div class="card-title">Comandos basicos</div>
+  <div class="card-title">Comandos básicos</div>
   <table>
-    <thead>
-      <tr><th>Comando</th><th>Que hace</th></tr>
-    </thead>
+    <thead><tr><th>Comando</th><th>Qué hace</th><th>JSON generado</th></tr></thead>
     <tbody>
-      <tr><td><code>python generar_postmarket.py</code></td><td>Analisis diario, modo interactivo (elige proveedor 1-7)</td></tr>
-      <tr><td><code>python generar_postmarket.py --auto</code></td><td>Analisis diario, modo automatico (usa default_provider del config)</td></tr>
-      <tr><td><code>python generar_postmarket.py --cierre-semanal</code></td><td>Cierre semanal interactivo (elige proveedor)</td></tr>
-      <tr><td><code>python generar_postmarket.py --cierre-semanal --auto</code></td><td>Cierre semanal automatico</td></tr>
-      <tr><td><code>python generar_postmarket.py --cierre-mensual</code></td><td>Cierre mensual interactivo</td></tr>
-      <tr><td><code>python generar_postmarket.py --cierre-mensual --auto</code></td><td>Cierre mensual automatico</td></tr>
+      <tr><td><code>python generar_postmarket.py</code></td><td>Análisis diario, modo interactivo</td><td><code>respuesta_postmarket.json</code></td></tr>
+      <tr><td><code>python generar_postmarket.py --auto</code></td><td>Análisis diario, modo automático</td><td><code>respuesta_postmarket.json</code></td></tr>
+      <tr><td><code>python generar_postmarket.py --cierre-semanal --auto</code></td><td>Cierre semanal automático</td><td><code>respuesta_postmarket_semanal.json</code></td></tr>
+      <tr><td><code>python generar_postmarket.py --cierre-mensual --auto</code></td><td>Cierre mensual automático</td><td><code>respuesta_postmarket_mensual.json</code></td></tr>
+      <tr><td><code>python generar_postmarket.py --skip-ai</code></td><td>Solo datos, sin IA (ideal para probar template)</td><td>—</td></tr>
     </tbody>
   </table>
 </div>
 
-<h3>Seleccion de fecha</h3>
+<h3>Selección de fecha</h3>
 <div class="card card-blue">
-  <div class="card-title">Por defecto usa la fecha de hoy. Con --date usas una fecha especifica.</div>
+  <div class="card-title">Por defecto usa la fecha de hoy. Con --date usas una fecha específica.</div>
   <table>
-    <thead>
-      <tr><th>Comando</th><th>Que hace</th></tr>
-    </thead>
+    <thead><tr><th>Comando</th><th>Qué hace</th></tr></thead>
     <tbody>
-      <tr><td><code>python generar_postmarket.py --date 20260522</code></td><td>Analisis diario del 22 de Mayo 2026</td></tr>
-      <tr><td><code>python generar_postmarket.py --date 20260522 --auto</code></td><td>Analisis diario automatico del 22 May</td></tr>
+      <tr><td><code>python generar_postmarket.py --date 20260522</code></td><td>Análisis diario del 22 de Mayo 2026</td></tr>
+      <tr><td><code>python generar_postmarket.py --date 20260522 --auto</code></td><td>Análisis diario automático del 22 May</td></tr>
       <tr><td><code>python generar_postmarket.py --date 20260522 --skip-ai</code></td><td>Solo datos del 22 May, sin IA</td></tr>
       <tr><td><code>python generar_postmarket.py --cierre-semanal --date 20260522</code></td><td>Cierre semanal de la semana del 22 May</td></tr>
       <tr><td><code>python generar_postmarket.py --cierre-mensual --date 20260501</code></td><td>Cierre mensual de Mayo 2026</td></tr>
@@ -715,183 +706,71 @@ eduSTrader - Local Free/
 
 <h3>Modo Manual (sin API key)</h3>
 <div class="card card-blue">
-  <div class="card-title">Ideal cuando quieres usar ChatGPT/Claude web gratis.</div>
+  <div class="card-title">El nombre del archivo JSON varía según el tipo de reporte</div>
   <table>
-    <thead>
-      <tr><th>Comando</th><th>Que hace</th></tr>
-    </thead>
+    <thead><tr><th>Tipo</th><th>Comando</th></tr></thead>
     <tbody>
-      <tr><td><code>python generar_postmarket.py</code> → opcion 6</td><td>Genera prompt_postmarket_data.txt, sales a pegar en la IA</td></tr>
-      <tr><td><code>python generar_postmarket.py --manual-text respuesta.json --auto</code></td><td>Carga respuesta.json y genera HTML + publica</td></tr>
-      <tr><td><code>python generar_postmarket.py --date 20260522 --manual-text respuesta.json --auto</code></td><td>Lo mismo pero para fecha especifica</td></tr>
-      <tr><td><code>python generar_postmarket.py --cierre-semanal --manual-text respuesta.json --auto</code></td><td>Cierre semanal con respuesta manual</td></tr>
-      <tr><td><code>python generar_postmarket.py --cierre-mensual --manual-text respuesta.json --auto</code></td><td>Cierre mensual con respuesta manual</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<h3>Proveedor especifico en modo --auto</h3>
-<div class="card card-blue">
-  <div class="card-title">Si quieres forzar un proveedor sin menu interactivo, cambia <code>ai.default_provider</code> en config.json.</div>
-  <table>
-    <thead>
-      <tr><th>Valor en config.json</th><th>Proveedor</th></tr>
-    </thead>
-    <tbody>
-      <tr><td><code>"default_provider": "groq"</code></td><td>Groq (llama-3.3-70b-versatile)</td></tr>
-      <tr><td><code>"default_provider": "gemini"</code></td><td>Google Gemini (gemini-2.0-flash)</td></tr>
-      <tr><td><code>"default_provider": "ollama"</code></td><td>Ollama local (qwen2.5-coder:7b)</td></tr>
-      <tr><td><code>"default_provider": "openai"</code></td><td>OpenAI (gpt-4o)</td></tr>
-      <tr><td><code>"default_provider": "anthropic"</code></td><td>Anthropic (claude-sonnet-4)</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<h3>Wrappers y accesos directos</h3>
-<div class="card card-blue">
-  <div class="card-title">atajos para ejecucion rapida</div>
-  <table>
-    <thead>
-      <tr><th>Comando</th><th>Que hace</th></tr>
-    </thead>
-    <tbody>
-      <tr><td><code>python generar_cierre_semanal.py</code></td><td>Wrapper para cierre semanal interactivo</td></tr>
-      <tr><td><code>python generar_cierre_semanal.py --auto</code></td><td>Wrapper para cierre semanal automatico</td></tr>
-      <tr><td><code>python generar_cierre_mensual.py</code></td><td>Wrapper para cierre mensual interactivo</td></tr>
-      <tr><td><code>python generar_cierre_mensual.py --auto</code></td><td>Wrapper para cierre mensual automatico</td></tr>
-      <tr><td><code>INICIAR_POSTMARKET.bat</code></td><td>Doble click: modo interactivo</td></tr>
-      <tr><td><code>INICIAR_POSTMARKET_AUTO.bat</code></td><td>Doble click: modo automatico</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<h3>Combinaciones utiles</h3>
-<div class="card card-green">
-  <div class="card-title">Casos de uso reales</div>
-  <table>
-    <thead>
-      <tr><th>Escenario</th><th>Comando</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>Fin de sesion, publicar rapido</td><td><code>python generar_postmarket.py --auto</code></td></tr>
-      <tr><td>Viernes, cierre semanal automatico</td><td><code>python generar_postmarket.py --cierre-semanal --auto</code></td></tr>
-      <tr><td>Ultimo dia del mes, cierre mensual</td><td><code>python generar_postmarket.py --cierre-mensual --auto</code></td></tr>
-      <tr><td>Analizar dia pasado sin IA</td><td><code>python generar_postmarket.py --date 20260520 --skip-ai</code></td></tr>
-      <tr><td>Cargar analisis de ChatGPT</td><td><code>python generar_postmarket.py --date 20260522 --manual-text respuesta.json --auto</code></td></tr>
-      <tr><td>Probar sin publicar</td><td><code>python generar_postmarket.py --skip-ai</code> (y responde "n" a publicar)</td></tr>
-      <tr><td>Recuperar cierre semanal atrasado</td><td><code>python generar_postmarket.py --cierre-semanal --date 20260522 --auto</code></td></tr>
+      <tr><td><span class="tag tag-green">DIARIO</span></td><td><code>python generar_postmarket.py --manual-text respuesta_postmarket.json --auto</code></td></tr>
+      <tr><td><span class="tag tag-amber">SEMANAL</span></td><td><code>python generar_postmarket.py --cierre-semanal --manual-text respuesta_postmarket_semanal.json --auto</code></td></tr>
+      <tr><td><span class="tag tag-blue">MENSUAL</span></td><td><code>python generar_postmarket.py --cierre-mensual --manual-text respuesta_postmarket_mensual.json --auto</code></td></tr>
     </tbody>
   </table>
 </div>
 
 <div class="section-divider"></div>
 
-<!-- ═══════════════════ TROUBLESHOOTING ═══════════════════ -->
-<div class="section-label"><span class="num">9</span>Troubleshooting</div>
-<h2 id="troubleshooting">Solucion de problemas comunes</h2>
-<p class="sub">Problemas frecuentes y como resolverlos.</p>
+<!-- ══════════════════════ TROUBLESHOOTING ══════════════════════ -->
+<div id="troubleshooting" style="scroll-margin-top:52px"></div>
+<div class="section-label"><span class="num">9</span>Solución de Problemas</div>
+<h2>Problemas frecuentes y soluciones</h2>
 
 <div class="card card-red">
-  <div class="card-title">Error: No se encuentra la carpeta Post-Mercado/{fecha}</div>
-  <pre>Carpeta no encontrada: Post-Mercado/20260523</pre>
-  <p><strong>Solucion:</strong> La carpeta se genera al exportar CSVs desde NinjaTrader 8. Asegurate de que:</p>
-  <ul>
-    <li>Exportaste los trades desde NT8 despues de la sesion</li>
-    <li>La carpeta de destino es <code>Post-Mercado/{YYYYMMDD}/</code></li>
-    <li>El formato de fecha coincide (YYYYMMDD, ej: 20260522)</li>
-  </ul>
-  <p>Si el dia no se opero (festivo, fin de semana), puedes usar <code>--skip-ai</code> para generar un informe vacio.</p>
+  <div class="card-title">❌ Error: No se encuentra V5_VolatilityConfig.csv</div>
+  <p>El sistema buscará el archivo en <code>EduSTrader - Local Free\V5_VolatilityConfig.csv</code>. Si no lo encuentra, mostrará un aviso pero continuará sin la sección de validación de volatilidad. Asegúrate de que el archivo está en la raíz de la carpeta del sistema.</p>
 </div>
 
 <div class="card card-red">
-  <div class="card-title">Error: API key no configurada</div>
-  <pre>ERROR: API key para groq no configurada.</pre>
-  <p><strong>Solucion:</strong> Abre <code>config.json</code> y verifica que la clave <code>api_key</code> tenga el valor correcto. O configura la variable de entorno correspondiente (<code>GROQ_API_KEY</code>, <code>GEMINI_API_KEY</code>, etc.).</p>
+  <div class="card-title">❌ El JSON de respuesta IA no se parsea</div>
+  <p>La respuesta cruda se guarda en <code>ai_raw_response_postmarket.txt</code>. Ábrelo para verificar si la IA devolvió texto adicional antes o después del JSON. Asegúrate de que la IA no agrega bloques <code>```json</code>. El sistema intenta limpiarlos automáticamente pero puede fallar en casos extremos.</p>
 </div>
 
 <div class="card card-red">
-  <div class="card-title">Error: El prompt excede el limite de tokens de Groq</div>
-  <pre>Error code: 429 - Request too large</pre>
-  <p><strong>Solucion:</strong> Groq tiene un limite de 12,000 TPM (tokens por minuto). Si tu prompt es muy grande (muchos trades), intenta:</p>
-  <ul>
-    <li>Usar Gemini (limite mas generoso)</li>
-    <li>Usar modo Manual (opcion 6) con ChatGPT o Claude web</li>
-    <li>Reducir la cantidad de trades en el CSV (exportar solo los relevantes)</li>
-  </ul>
+  <div class="card-title">❌ Las gráficas Chart.js no aparecen</div>
+  <p>El template carga Chart.js desde <code>cdnjs.cloudflare.com</code>. Si abres el HTML sin conexión a internet, las gráficas no cargarán. Para verlas offline, descarga Chart.js y ajusta la URL en <code>template_postmarket.html</code>.</p>
 </div>
 
 <div class="card card-amber">
-  <div class="card-title">La IA no genera todos los campos esperados</div>
-  <p><strong>Solucion:</strong> Prueba con otro proveedor. Groq (Llama 3.3 70B) y Gemini suelen dar los mejores resultados. Si el analisis viene incompleto, prueba el modo Manual (opcion 6) con ChatGPT o Claude web que suelen seguir mejor las instrucciones.</p>
+  <div class="card-title">⚠️ El logo no aparece en el header</div>
+  <p>El template busca <code>/assets/logo.png</code> relativo a la raíz del servidor web. Funciona correctamente en <code>edustrader.pages.dev</code>. Para pruebas locales, abre el HTML desde un servidor local (<code>python -m http.server</code>) o coloca el logo en la misma carpeta que el HTML.</p>
 </div>
 
 <div class="card card-amber">
-  <div class="card-title">El JSON de respuesta de IA no se parsea correctamente</div>
-  <pre>Error parseando JSON de IA</pre>
-  <p><strong>Solucion:</strong> El sistema guarda la respuesta cruda en <code>ai_raw_response_postmarket.txt</code>. Abre ese archivo para ver que respondio la IA exactamente. Si la respuesta tiene texto adicional fuera del JSON, corrige el prompt o prueba con otro proveedor. Si usas modo Manual, asegurate de que la respuesta sea UNICAMENTE JSON (sin bloques ``` ni markdown).</p>
+  <div class="card-title">⚠️ La sección DOFA aparece vacía</div>
+  <p>La IA debe devolver el campo <code>matriz_dofa</code> con los cuatro arrays: <code>fortalezas</code>, <code>debilidades</code>, <code>oportunidades</code> y <code>amenazas</code>. Si alguno está vacío, la tarjeta correspondiente mostrará "Sin elementos". Los tres prompts (diario/semanal/mensual) incluyen la DOFA como campo obligatorio.</p>
 </div>
 
 <div class="card card-amber">
-  <div class="card-title">Ollama no responde</div>
-  <pre>Error: Cannot connect to host localhost:11434</pre>
-  <p><strong>Solucion:</strong> Asegurate de que Ollama esta instalado y corriendo. Abre PowerShell y ejecuta <code>ollama list</code>. Si no aparece, inicia Ollama desde el menu de inicio. Luego <code>ollama pull qwen2.5-coder:7b</code> si no lo has descargado.</p>
-</div>
-
-<div class="card card-amber">
-  <div class="card-title">Git push falla</div>
-  <pre>Error en git push</pre>
-  <p><strong>Solucion:</strong> Asegurate de que el repositorio tiene un remote configurado. Ejecuta <code>git remote -v</code> dentro del repo. Si no hay remote, agrega: <code>git remote add origin &lt;url&gt;</code>. Verifica tambien que las credenciales de GitHub esten configuradas. En algunos casos, el token de acceso personal puede haber expirado.</p>
-</div>
-
-<div class="card card-amber">
-  <div class="card-title">El HTML se genera pero no se ve en la web</div>
-  <p><strong>Solucion:</strong> Cloudflare Pages tarda ~30 segundos en desplegar despues del push. Espera un minuto y refresca. Verifica que el archivo existe en el repositorio de GitHub (<code>edus-trader/postmarket_{fecha}.html</code>). Si el archivo esta pero no carga, probablemente Cloudflare esta re-desplegando.</p>
+  <div class="card-title">⚠️ La validación de V5_VolatilityConfig no muestra escenario</div>
+  <p>El sistema busca el símbolo del instrumento (ej: <code>MES</code>, <code>NQ</code>) en la columna <code>Market</code> del CSV. Asegúrate de que los nombres de instrumento en NinjaTrader coinciden con los definidos en el CSV. El separador del CSV debe ser punto y coma (<code>;</code>).</p>
 </div>
 
 <div class="card card-green">
-  <div class="card-title">Pro tip: atajo de doble click</div>
-  <p>Usa el archivo <code>INICIAR_POSTMARKET_AUTO.bat</code> para ejecutar todo automaticamente sin abrir PowerShell:</p>
-  <ol>
-    <li>Navega a <code>eduSTrader - Local Free/gameplan_system/</code></li>
-    <li>Haz doble click en <code>INICIAR_POSTMARKET_AUTO.bat</code></li>
-    <li>El sistema busca los CSVs, llama a la IA (proveedor por defecto), genera el HTML y publica</li>
-  </ol>
-  <p>Para ejecucion completamente desatendida (programable con Windows Task Scheduler):</p>
-  <pre><span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">auto</span></pre>
+  <div class="card-title">✅ Para verificar que todo funciona correctamente</div>
+  <pre><span class="c"># 1. Verificar sintaxis del script</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s">"import ast; ast.parse(open('generar_postmarket.py', encoding='utf-8').read()); print('OK')"</span>
+
+<span class="c"># 2. Generar HTML de prueba sin IA</span>
+<span class="n">python</span> <span class="n">generar_postmarket</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">skip-ai</span>
+
+<span class="c"># 3. Verificar que se lee el V5_VolatilityConfig</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s">"import sys; sys.path.insert(0,'.'); exec(open('generar_postmarket.py').read().split('def load_config')[0]); print(load_volatility_config())"</span></pre>
 </div>
 
-<div class="card card-purple">
-  <div class="card-title">Resumen de comandos utiles</div>
-  <table>
-    <thead>
-      <tr><th>Comando</th><th>Que hace</th></tr>
-    </thead>
-    <tbody>
-      <tr><td><code>python generar_postmarket.py</code></td><td>Modo interactivo (elige proveedor)</td></tr>
-      <tr><td><code>python generar_postmarket.py --auto</code></td><td>Modo automatico con proveedor por defecto</td></tr>
-      <tr><td><code>python generar_postmarket.py --date 20260522</code></td><td>Analisis de una fecha especifica</td></tr>
-      <tr><td><code>python generar_postmarket.py --skip-ai</code></td><td>Solo datos, sin llamar a la IA</td></tr>
-      <tr><td><code>python generar_postmarket.py --manual-text resp.json --auto</code></td><td>Cargar analisis pre-escrito</td></tr>
-      <tr><td><code>python generar_postmarket.py --cierre-semanal --auto</code></td><td>Cierre semanal (viernes)</td></tr>
-      <tr><td><code>python generar_postmarket.py --cierre-mensual --auto</code></td><td>Cierre mensual</td></tr>
-      <tr><td><code>python generar_cierre_semanal.py --auto</code></td><td>Wrapper para cierre semanal</td></tr>
-      <tr><td><code>python generar_cierre_mensual.py --auto</code></td><td>Wrapper para cierre mensual</td></tr>
-      <tr><td><code>INICIAR_POSTMARKET_AUTO.bat</code></td><td>Doble click para ejecucion automatica</td></tr>
-    </tbody>
-  </table>
-</div>
+</div><!-- /page -->
 
-<div style="height:40px"></div>
-
-<div class="card card-purple" style="text-align:center">
-  <p style="font-size:14px;color:var(--text)">
-    <strong>EduS Trader</strong> &mdash; Sistema Automatizado de Post-Market v1.0<br>
-    Documentacion generada el 23 de Mayo 2026<br>
-    <span style="font-size:12px;color:var(--text3)">Para dudas o mejoras, contacta al desarrollador.</span>
-  </p>
-</div>
-
-</div>
+<footer>
+  <strong>EduS Trader</strong> &middot; Sistema Post-Market Automatizado v2.0 &middot; HUD V5 + V5_VolatilityConfig &middot; Junio 2026
+</footer>
 
 </body>
 </html>
