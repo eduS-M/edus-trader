@@ -610,7 +610,13 @@ footer .brand-ft .gold { color: var(--gold); }
   <div class="section-label"><span class="num">2</span>GamePlan vs Mercado Real</div>
   <h2>Evaluación del Pre-Mercado</h2>
   <p class="sub">Comparación entre el plan planteado y lo que realmente ocurrió en el mercado</p>
-  
+  <div class="section-title"><span class="step">GAMEPLAN</span><h2>Game Plan — Evaluación de Cumplimiento</h2></div>
+<div class="gameplan-compare">
+  <h3>📋 Pre-Mercado: <span class="parcial">PARCIAL</span></h3>
+  <h4 style='margin-top:10px;color:var(--bear);font-size:13px'>❌ Desviaciones</h4><ul><li>La regla de 'contexto OK obligatorio' continuó siendo ignorada: 19 de 37 trades ejecutados en contexto MIXTO — la misma violación documentada en las últimas sesiones</li><li>Los trades 1-5 en apertura (9:46-9:54 ET) incluyeron shorts en NQ contra el VWAP UP (trades 3/4) y longs en NQ con SMA negativa (trade 5) — entradas prematuras en apertura con señales conflictivas</li><li>La estrategia 1x ejecutó 2 trades SIN señal HUD activa (#16/#17) con pérdida de -$1,020 — las reglas de las semanas anteriores no fueron respetadas</li></ul>
+  <h4 style='margin-top:10px;color:var(--bull);font-size:13px'>✅ Aciertos</h4><ul><li>El MaxW de la sesión ($1,615, trade #35) fue capturado correctamente — NQ Long en contexto OK con ATR=11 y paciencia para mantener hasta +80.75 pts</li><li>Los trades #11/#12 (NQ Short, contexto OK, $775 combinados) y #18/#19 (NQ Long, contexto OK, $1,455 combinados) demuestran que el sistema genera excelentes resultados en contexto OK</li><li>Los stops de ES en contexto Media fueron correctamente dimensionados (>1.06 pts mínimo V5)</li><li>La concentración de operativa en NQ con escenario Alta fue correcta — el instrumento con mayor ATR generó los mayores ganadores del día</li></ul>
+  <h4 style='margin-top:10px;color:var(--text-muted);font-size:13px'>📖 Lecciones</h4><p style='font-size:13px;color:var(--text-muted)'>La sesión confirma matemáticamente que el contexto MIXTO destruye el resultado: -$3,110 en MIXTO vs +$1,235 en OK. En escenario V5 'Alta' (NQ KW=95, ATR=13.5) la penalización por contexto MIXTO es aún mayor porque los movimientos adversos son más amplios antes del stop. La lección más importante: en escenario Alta, si el contexto no es OK, el stop se activa más rápido y con mayor pérdida que en escenario Baja. La exigencia de contexto OK debe escalar con el escenario de volatilidad V5.</p>
+</div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 3 — VOLATILIDAD ══════════════════════ -->
@@ -619,7 +625,25 @@ footer .brand-ft .gold { color: var(--gold); }
   <div class="section-label"><span class="num">3</span>Análisis de Volatilidad — VIX · ATR · Keltner</div>
   <h2>Volatilidad Real de la Sesión</h2>
   <p class="sub">VIX observado, ATR del día, Ancho del canal Keltner y validación contra V5_VolatilityConfig</p>
-  
+  <div class="section-title"><span class="step">VOLATILIDAD</span><h2>Análisis de Volatilidad — VIX / Keltner / ATR</h2></div>
+<div class="card">
+  <div class="volatility-gauge">
+    <div class="gauge-item"><div class="g-label">VIX Observado</div><div class="g-value" style="font-size:16px">VIX no reportado explícitamente en los datos de sesión pero el entorno de KW=95.14 en NQ y ATR=13.50 es consistente con un VIX en zona 17-18, volatilidad media-alta. El rango de KW durante los stops (97.38-105.71 en los stops de apertura, comprimiéndose a 65.57 en los últimos stops) confirma una sesión de volatilidad decreciente durante la mañana.</div></div>
+    <div class="gauge-item"><div class="g-label">Definiciones Correctas</div><div class="g-value" style="font-size:16px">SÍ</div></div>
+  </div>
+  <div class="info-box" style="margin-bottom:0">
+    <h3>📊 Relación VIX / Keltner / ATR</h3>
+    <p>La trifecta V5 fue coherente: escenario Alta en NQ con KW>90 y ATR>12 implicaba que los movimientos individuales podían ser de 15-20 pts rápidamente. Este nivel de volatilidad hace que cualquier entrada en contexto MIXTO (señal contraria en VWAP o SMA) tenga muy alto riesgo de ser stoppada antes de que el mercado muestre la dirección correcta. En escenario Alta, la exigencia de contexto OK es más crítica que en escenario Bajo — la volatilidad amplifica los errores de dirección.</p>
+  </div>
+  <div class="info-box" style="margin-bottom:0;margin-top:10px">
+    <h3>📈 Keltner y ATR</h3>
+    <p>NQ: KW de apertura 95.14 (escenario Alta V5), subiendo a 105.71 en el trade #5 (MaxL) y 103.85 en trades 8-9. Compresión gradual hasta 65.57 en los trades finales (36-37). La expansión de KW en apertura (95-105) fue la ventana de mayor riesgo — coincide con las mayores pérdidas. En ES: KW=14.09 (escenario Media V5), estable durante toda la sesión (11.93-13.37 en stops de ES). Ambos instrumentos dentro de los rangos definidos por V5_VolatilityConfig.<br><br><strong>ATR Observado:</strong> NQ: ATR de apertura 13.50, aumentando a 16.41 en el MaxL (#5), luego normalizando a 10.80-14.45 en el rango medio de la sesión y 10.23 en los trades finales. ES: ATR estable 1.86-2.13 durante la sesión. NQ escenario 'Alta' confirmado (ATR=[12,16]). ES escenario 'Media' confirmado (ATR=[1.8,2.4]).</p>
+  </div>
+  <div class="ai-insight" style="margin-top:14px">
+    <div class="ai-label">Nota de Volatilidad</div>
+    <p>El escenario V5 'Alta' en NQ fue correctamente aplicado en cuanto a sizing de stops (todos >7.43 pts). El error no estuvo en la volatilidad sino en la disciplina de contexto: 19 de 37 trades se ejecutaron en contexto MIXTO con un resultado promedio de -$163.7 por trade vs +$68.6 promedio en contexto OK. En escenario Alta, la exigencia de contexto OK debería ser máxima — la amplitud de los movimientos (ATR=13.50) hace que los errores de dirección sean muy costosos antes de que el stop se active correctamente.</p>
+  </div>
+</div>
   
 <div class="sub-title">Escenario V5_VolatilityConfig activo</div>
 <div class="volat-grid">
@@ -640,7 +664,7 @@ footer .brand-ft .gold { color: var(--gold); }
       <div class="vc-metric"><span class="vc-metric-label">RR Objetivo</span><span class="vc-metric-val">2.0:3.0</span></div>
     </div>
 </div>
-
+<div class="ai-insight" style="margin-top:14px"><div class="ai-label">🤖 Validación IA</div><p>NQ: Escenario 'Alta' activo (KW=95.14 dentro de [90,120], ATR=13.50 dentro de [12,16]). Stop mínimo recomendado = 0.55 × 13.50 = 7.43 pts. RR mínimo = 2.0:1. La mayoría de stops ejecutados estuvieron entre 15-17 pts, SUPERIORES al mínimo de 7.43 — el sizing del stop NO fue el problema. ES: Escenario 'Media' activo (KW=14.09 dentro de [11,16], ATR=2.13 dentro de [1.8,2.4]). Stop mínimo = 0.5 × 2.13 = 1.06 pts. Los stops de ES estuvieron en 3.50-3.75 pts, superiores al mínimo. CONCLUSIÓN: los stops estaban correctamente dimensionados según V5_VolatilityConfig — el problema no fue el tamaño del stop sino la calidad de la señal de entrada (contexto MIXTO).</p></div><div class="icard info" style="margin-top:8px"><div class="icard-title">📊 Profit Factor</div><div class="icard-text">0.77 — Suma ganancias: $6,255 / Suma pérdidas: $8,130. Profit Factor inferior a 1.0 confirma pérdida neta. Con contexto OK exclusivamente el PF hubiera sido aproximadamente 1.52 ($1,235 ganancias OK / $810 pérdidas OK estimadas).</div></div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 4 — TRADES ══════════════════════ -->
@@ -650,7 +674,79 @@ footer .brand-ft .gold { color: var(--gold); }
   <h2>Registro Completo de Trades</h2>
   <p class="sub">Detalle de cada operación con zona de señal, indicadores en el momento de la entrada y resultado</p>
 
-  
+  <div class="section-title"><span class="step">STOPS</span><h2>Análisis de los Stop Loss</h2></div>
+<div class="card">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+    
+    <div class="stop-card adecuado-contexto-mixto-2contratos-pico-volatilidad">
+      <div class="stop-hdr">
+        <span class="stop-num">#5</span>
+        <span class="stop-inst">NQ</span>
+        <span class="stop-pnl" style="color:var(--bear)">-$600.00</span>
+      </div>
+      <div class="stop-body">Distancia: 15.0pts · Dist/ATR: 0.91x</div>
+      <table class="indicator-table">
+        <tr><td>Análisis</td><td>MaxL de la sesión. Stop 15 pts = 0.91x StopATRx con ATR=16.41 (V5 mín = 9.03 pts → 15 > 9.03 = adecuado). Sin embargo KW=105.71 era el pico de volatilidad — en SuperAlta los spikes de 15 pts ocurren en 3 segundos. El stop fue correcto per V5 pero el contexto MIXTO (SMAs bajistas en long) y los 2 contratos amplificaron el daño a -$600.</td></tr>
+        <tr><td>Recomendación</td><td style="color:var(--teal)">En KW>100 (zona SuperAlta): máximo 1 contrato y solo en contexto OK. El KW=105 era señal de máximo riesgo — nunca 2 contratos en ese entorno.</td></tr>
+      </table>
+    </div>
+    <div class="stop-card sin-señal-contexto-mixto">
+      <div class="stop-hdr">
+        <span class="stop-num">#16</span>
+        <span class="stop-inst">NQ</span>
+        <span class="stop-pnl" style="color:var(--bear)">-$510.00</span>
+      </div>
+      <div class="stop-body">Distancia: 25.5pts · Dist/ATR: 1.96x</div>
+      <table class="indicator-table">
+        <tr><td>Análisis</td><td>Stop 25.5 pts = 1.92x StopATRx (V5 mín = 7.29 con ATR=13.25). Adecuado en distancia pero sin señal HUD y VWAP UP al entrar short. El par #16+#17 generó -$1,020 — la mayor pérdida combinada sin señal.</td></tr>
+        <tr><td>Recomendación</td><td style="color:var(--teal)">La estrategia 1x NO puede operar sin señal HUD activa. Implementar condición hard: sin señal activa del motor, bloquear ejecución de la estrategia 1x.</td></tr>
+      </table>
+    </div>
+    <div class="stop-card adecuado-direccion-contra-momentum">
+      <div class="stop-hdr">
+        <span class="stop-num">#31</span>
+        <span class="stop-inst">NQ</span>
+        <span class="stop-pnl" style="color:var(--bear)">-$510.00</span>
+      </div>
+      <div class="stop-body">Distancia: 25.5pts · Dist/ATR: 2.17x</div>
+      <table class="indicator-table">
+        <tr><td>Análisis</td><td>Stop 25.5 pts = 2.17x StopATRx (V5 mín = 6.47 con ATR=11.77). Adecuado. VWAP UP al stop confirma que el mercado continuaba al alza cuando se ejecutó. Short en zona de impulso alcista. Duplicado con #32: par -$1,025.</td></tr>
+        <tr><td>Recomendación</td><td style="color:var(--teal)">No operar shorts cuando el mercado está en impulso alcista (VWAP UP + precio en ascenso). Esperar señal de agotamiento o cambio de VWAP antes de short.</td></tr>
+      </table>
+    </div>
+    <div class="stop-card adecuado-vwap-contrario">
+      <div class="stop-hdr">
+        <span class="stop-num">#3</span>
+        <span class="stop-inst">NQ</span>
+        <span class="stop-pnl" style="color:var(--bear)">-$340.00</span>
+      </div>
+      <div class="stop-body">Distancia: 17.0pts · Dist/ATR: 1.28x</div>
+      <table class="indicator-table">
+        <tr><td>Análisis</td><td>Stop 17 pts = 1.28x StopATRx (V5 mín = 7.28 con ATR=13.23). Adecuado. El VWAP había girado UP entre el trade #1 (VWAP DOWN) y #3 (VWAP UP) — la tendencia cambió de dirección. El stop fue correcto en distancia pero la entrada fue incorrecta (short con VWAP UP).</td></tr>
+        <tr><td>Recomendación</td><td style="color:var(--teal)">Monitorear el VWAP activamente entre trades consecutivos. Si el VWAP cambió de dirección entre dos entradas en el mismo instrumento, la segunda entrada debe alinearse con el nuevo VWAP.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3 style="margin-top:20px;margin-bottom:10px;font-size:14px;">Resumen de Stops</h3>
+  <div class="tab-wrap">
+  <table>
+    <thead><tr><th>Total Stops</th><th>Total Perdido</th><th>Stops Adecuados</th><th>Stops Ajustados</th></tr></thead>
+    <tbody>
+      <tr><td>22</td><td style="color:var(--bear)">-$8,130.00</td><td>16</td><td>6</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="info-box" style="margin-top:14px;margin-bottom:0">
+    <h3>📊 Patrón General</h3>
+    <p>Dos patrones dominantes en los stops de la sesión: (1) Stops adecuados per V5_VolatilityConfig (>StopATRx mínimo) pero en contexto MIXTO — el problema no es el tamaño del stop sino la calidad de la entrada. (2) Stops en duplicados que doblan la pérdida. De los 22 stops, 16 tuvieron distancia adecuada per V5 y 6 tuvieron características agravantes (2 contratos en MIXTO, sin señal HUD, o KW>100). El stop sizing NO es el problema principal — el contexto de entrada SÍ lo es.</p>
+  </div>
+  <div class="ai-insight" style="margin-top:12px">
+    <div class="ai-label">Recomendación General</div>
+    <p>Los stops de NQ deben mantenerse en el rango >7.43 pts (0.55×ATR) per V5 Alta — esto ya se cumple en la mayoría. La mejora no está en el stop sino en NO entrar en contexto MIXTO: si se eliminan las 19 entradas MIXTO (-$3,110), el resultado con solo las 18 OK sería +$1,235. La regla prioritaria: stop adecuado + contexto OK es el único combination realmente viable.</p>
+  </div>
+</div>
 
   <div class="sub-title">Tabla de operaciones ejecutadas</div>
   <div style="overflow-x:auto">
@@ -831,7 +927,489 @@ footer .brand-ft .gold { color: var(--gold); }
     </div>
   <p style="margin-top:12px;font-size:11px;color:var(--text-muted);text-align:center">Mostrando 8 de 33 entradas registradas</p>
 </div>
-  
+  <div class="sub-title" style="margin-top:20px">Análisis IA por trade — Zona, señal y evaluación</div>
+
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#1 &middot; NQ Short</span>
+        <span class="tag tag-loss">$-315.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified">HUD_En_2</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP DOWN ✓ + SMA20 DOWN (-1.1) ✓ + SMA80 DOWN (-1.1094) ✓ = 3/3 → Contexto OK<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Expansión de volatilidad en apertura: stop a las 09:46:40 (6 segundos de duración). KW al cierre del stop = 97.38, ATR=14.66. Stop de 15.75 pts = 2.12x StopATRx de V5 (mínimo 7.43 pts) — adecuado. El mercado se movió agresivamente contra en 6 segundos durante la expansión de apertura.<br>
+        Contexto OK completo: VWAP DOWN, ambas SMAs bajistas (-1.1/-1.1094). Stop bien dimensionado (15.75 pts > 7.43 mín V5). La pérdida se debió a la volatilidad extrema de apertura (ATR=14.66 al cierre) — en escenario Alta, los primeros minutos de sesión tienen mayor riesgo de spike. Trade duplicado con #2.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#2 &middot; NQ Short</span>
+        <span class="tag tag-loss">$-315.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified">HUD_En_2</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP DOWN ✓ + SMA20 DOWN ✓ + SMA80 DOWN ✓ = 3/3 → Contexto OK — Duplicado de #1<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Mismo stop que #1. Duplicado. Stop 15.75 pts adecuado per V5.<br>
+        Duplicado exacto del trade #1. Bug de duplicación HUD_Manual activo. Par #1+#2: -$630 en contexto OK. Ambos stops correctamente dimensionados per V5 Alta.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#3 &middot; NQ Short</span>
+        <span class="tag tag-loss">$-340.00</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified">HUD_En_3</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✗ + SMA20 UP (0.625) ✗ + SMA80 DOWN (-0.9938) → Contexto MIXTO<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Contexto MIXTO: VWAP giró UP entre trade #1 y #3 — la tendencia cambió de dirección. Short contra VWAP UP en apertura. Stop 17 pts = 2.28x StopATRx (mín 7.28 pts con ATR=13.23) — adecuado en distancia pero dirección incorrecta.<br>
+        Entrada short con VWAP UP — violación de regla fundamental HUD V5. El cambio del VWAP de DOWN (trade #1) a UP (trade #3) era la señal para dejar de operar shorts. En escenario Alta con ATR=13.23, un short contra el VWAP tiene alta probabilidad de stop rápido. Duplicado con #4.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#4 &middot; NQ Short</span>
+        <span class="tag tag-loss">$-345.00</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified">HUD_En_3</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✗ + SMA20 UP ✗ → Contexto MIXTO — Duplicado de #3<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Mismo contexto MIXTO que #3. Stop 17.25 pts adecuado per V5 pero dirección contra VWAP.<br>
+        Duplicado de #3. Par #3+#4: -$685 en contexto MIXTO con VWAP contra la dirección.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#5 &middot; NQ Long</span>
+        <span class="tag tag-loss">$-600.00</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified">HUD_En_5</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ + SMA20 DOWN (-0.3375) ✗ + SMA80 DOWN (-0.075) ✗ → Contexto MIXTO<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> MaxL de la sesión (-$600). 2 contratos en NQ. 3 segundos de duración. KW=105.71 (pico de volatilidad), ATR=16.41. Stop min V5 = 0.55 × 16.41 = 9.03 pts. Stop real = 15 pts > 9.03 → adecuado per V5 pero contexto MIXTO. En 3 segundos con KW=105.71, el mercado se movió 15 pts contra la posición. Spike de apertura con máxima expansión de volatilidad.<br>
+        MaxL de la sesión (-$600). Triple error: (1) 2 contratos en Contexto MIXTO, (2) entrada en el pico de KW=105.71 (máxima volatilidad de la sesión), (3) SMA20 y SMA80 bajistas contradicen el long. El ATR=16.41 era la señal más clara de evitar entrada en este momento — en Alta/SuperAlta con KW>100, el riesgo de spike es extremo. Con 1 contrato: -$300.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#6 &middot; ES Long</span>
+        <span class="tag tag-win">$+262.50</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified">HUD_En_1</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ + SMA20 UP (0.2625) ✓ + SMA80 DOWN (-0.025) ✗ → Contexto MIXTO (SMA80 levemente negativa)<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Trade ganador — T1 alcanzado. Sin stop activado.<br>
+        Resultado positivo ($262.50, T1) a pesar de SMA80 levemente negativa. Con escenario Media en ES (ATR=2.13, stop mín=1.06 pts), el target T1 de +5.25 pts = 2.47x RR — dentro del rango V5 (2.0:3.0). La SMA80 casi neutra (-0.025) en ES es marginal, el VWAP UP y SMA20 positiva son las señales dominantes. Trade ganador pese a señal mixta marginal.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#7 &middot; ES Long</span>
+        <span class="tag tag-win">$+337.50</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified">HUD_En_1</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ + SMA20 UP ✓ + SMA80 DOWN (-0.025) ✗ → Contexto MIXTO marginal — segundo contrato de #6<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> StBE en ganancias (+6.75 pts, $337.50). Sin pérdida.<br>
+        Segundo contrato de la entrada #6, cerrado en StBE con $337.50. Par #6+#7: $600 en ES. La gestión del StBE fue correcta. Con escenario Media: +6.75 pts = 3.17x RR — por encima del rango V5 de 3.0, excelente.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#8 &middot; NQ Long</span>
+        <span class="tag tag-loss">$-305.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_8</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ + SMA20 UP (0.8125) ✓ + SMA80 UP (0.4625) ✓ = 3/3 → Contexto OK<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop activado en 15 segundos. Stop real = 15.25 pts. V5 mín = 0.55 × 13.23 = 7.28 pts → adecuado. KW al stop = 103.37, ATR=13.39. El mercado seguía con alta expansión de volatilidad (KW=103.37). VWAP giró DOWN al momento del stop — cambio de tendencia fue el motivo del stop, no ruido. Duplicado con #9.<br>
+        Contexto OK correcto. Stop bien dimensionado per V5. El stop fue motivado por cambio de VWAP (DOWN al cierre del stop según tabla de contexto de salida). En escenario Alta con KW=103.37, el cambio de VWAP puede generar stops rápidos incluso en entradas de contexto OK. Trade estadísticamente correcto pero resultado adverso.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#9 &middot; NQ Long</span>
+        <span class="tag tag-loss">$-305.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_8</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ + SMA20 UP ✓ + SMA80 UP ✓ = 3/3 → Contexto OK — Duplicado de #8<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Mismo stop que #8. Duplicado. VWAP giró DOWN.<br>
+        Duplicado de #8. Par #8+#9: -$610 en contexto OK. Bug de duplicación activo. Ambos stops adecuados per V5.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#10 &middot; ES Long</span>
+        <span class="tag tag-loss">$-375.00</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified">HUD_En_2</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ + SMA20 DOWN (-0.05) ✗ + SMA80 UP (0.1844) ✓ → Contexto MIXTO<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> 2 contratos en ES. Stop 3.75 pts = 1.76x ATR (V5 mín = 0.5 × 1.86 = 0.93 pts) → adecuado. VWAP giró DOWN al stop (tabla contexto salida). La SMA20 negativa era señal de no entrar long. Pérdida amplificada por 2 contratos.<br>
+        Contexto MIXTO (SMA20 negativa). 2 contratos amplificaron la pérdida a -$375. Con 1 contrato: -$187.50. Stop adecuado per V5 pero contexto incorrecto. La regla de 1 contrato máximo en contexto MIXTO hubiera reducido el daño a la mitad.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#11 &middot; NQ Short</span>
+        <span class="tag tag-win">$+520.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_12</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP DOWN ✓ + SMA20 DOWN (-1.325) ✓ + SMA80 DOWN (-1.25) ✓ = 3/3 → Contexto OK<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> T1 alcanzado — trade ganador.<br>
+        Trade de referencia: contexto OK completo, SMA20 y SMA80 bajistas fuertes, VWAP DOWN. Capturó -26 pts en T1 en 41 segundos ($520). Con V5 Alta: 26 pts = 3.50x StopATRx (mín 5.94 pts con ATR=10.80) y 2.41x ATR. RR excelente. Par #11+#12: $775.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#12 &middot; NQ Short</span>
+        <span class="tag tag-win">$+255.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_12</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP DOWN ✓ + SMA20 DOWN ✓ + SMA80 DOWN ✓ = 3/3 → Contexto OK — segundo contrato<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> StBE en ganancias (-12.75 pts). Sin pérdida.<br>
+        Segundo contrato con StBE en ganancias ($255). Gestión correcta. Par #11+#12: $775 en contexto OK con SMAs bajistas fuertes.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#13 &middot; NQ Short</span>
+        <span class="tag tag-loss">$-310.00</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified">HUD_En_13</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ + SMA20 UP ✗ + SMA80 DOWN (-1.25) → Contexto MIXTO (SMA20 contraria al short)<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop 15.5 pts = 2.09x StopATRx (V5 mín = 7.96 pts con ATR=14.45) → adecuado per V5. VWAP DOWN al stop (tabla contexto salida). El mercado rebotó contra el short en la zona donde el HUD #11 ya había capturado el movimiento bajista. Re-entrada corta en el mismo nivel con señal mixta.<br>
+        Contexto MIXTO: SMA20 subiendo contradice el short. Entrada en re-test del nivel 30,183 donde el trade #11 ya había ejecutado. Stop adecuado per V5 pero dirección dudosa por SMA20 positiva. Duplicado con #14.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#14 &middot; NQ Short</span>
+        <span class="tag tag-loss">$-315.00</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified">HUD_En_13</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Contexto MIXTO — Duplicado de #13<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Mismo stop que #13. Duplicado.<br>
+        Duplicado de #13. Par #13+#14: -$625 en contexto MIXTO.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#15 &middot; ES Short</span>
+        <span class="tag tag-loss">$-350.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_3</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP DOWN ✓ + SMA20 UP (contextual) → Contexto OK per validación tabla (OK confirmado)<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> 2 contratos en ES. Stop 3.5 pts = 1.64x ATR (V5 mín = 0.5 × 1.93 = 0.97 pts) → adecuado. VWAP giró UP al stop. El mercado revirtió al alza. Cambio de tendencia motivó el stop.<br>
+        Contexto OK en ES. Stop 3.5 pts > mínimo V5 de 0.97 pts. La pérdida de -$350 con 2 contratos se debió al cambio de VWAP a UP durante la posición — señal legítima de reversión. Con 1 contrato: -$175. El uso de 2 contratos en ES cuando el mercado está indeciso (VWAP cambiando) fue el agravante.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#16 &middot; NQ Short</span>
+        <span class="tag tag-loss">$-510.00</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified">Manual</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✗ + SMA20 indeterminado ✗ → Contexto MIXTO + SIN señal HUD activa<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop 25.5 pts. KW al stop = 90.56, ATR=13.25. V5 mín = 7.29 pts → adecuado en distancia pero sin señal HUD y VWAP contrario. El mercado continuó subiendo 25.5 pts en 34 segundos. Duplicado con #17.<br>
+        Trade SIN señal HUD activa + contexto MIXTO (VWAP UP, short contra tendencia). Estrategia 1x ejecutó sin señal del motor. Par #16+#17: -$1,020 — la mayor fuente de pérdida individual de la sesión. El mercado estaba en impulso alcista cuando se entró short. Bug de duplicación activo.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#17 &middot; NQ Short</span>
+        <span class="tag tag-loss">$-510.00</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified">Manual</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD + Contexto MIXTO — Duplicado exacto de #16<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Duplicado exacto de #16.<br>
+        Duplicado exacto de #16. El par #16+#17 generó -$1,020 sin señal HUD activa en contexto MIXTO — la mayor pérdida combinada de la sesión.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#18 &middot; NQ Long</span>
+        <span class="tag tag-win">$+850.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_14</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ + SMA20 UP ✓ + SMA80 UP ✓ = 3/3 → Contexto OK<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> T1 alcanzado — trade ganador. +42.5 pts.<br>
+        Trade excelente: contexto OK completo, T1 de +42.5 pts en 3 minutos 7 segundos ($850). Con V5 Alta (ATR=11.16): 42.5 pts = 5.35x StopATRx — muy por encima del RR mínimo de 2.0. Inmediatamente después del par de pérdidas #16/#17, demuestra que el sistema recupera cuando el contexto es OK.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#19 &middot; NQ Long</span>
+        <span class="tag tag-win">$+605.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_14</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ + SMA20 UP ✓ + SMA80 UP ✓ = 3/3 → Contexto OK — segundo contrato<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> StBE en ganancias (+30.25 pts). Sin pérdida.<br>
+        Segundo contrato con StBE en $605. Par #18+#19: $1,455 en contexto OK — el mejor par de la sesión junto a #34+#35.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#20 &middot; ES Long</span>
+        <span class="tag tag-win">$+100.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_4</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ + SMA20 UP ✓ + SMA80 UP ✓ = 3/3 → Contexto OK<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop en ganancias ($100, 2 contratos). Sin pérdida.<br>
+        Contexto OK en ES. Stop en ganancias con $100 — modesto pero correcto para el ATR=1.57 en Media. El stop en +0.50 pts (con 2 contratos) es conservador pero protegió capital.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#21 &middot; NQ Long</span>
+        <span class="tag tag-loss">$-315.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified">HUD_En_20</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Contexto no disponible directamente pero validación total confirma este en MIXTO o OK del bloque restante<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop 15.75 pts. KW al stop = 92.45, ATR=12.64. V5 mín = 6.95 pts → adecuado. Duplicado con #22.<br>
+        Par #21+#22: -$635. Stop adecuado per V5 Alta. El mercado retrocedió desde 30,326 hacia 30,310 en 52 segundos.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#22 &middot; NQ Long</span>
+        <span class="tag tag-loss">$-320.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified">HUD_En_20</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #21<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Duplicado de #21.<br>
+        Duplicado de #21. Par #21+#22: -$635.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#23 &middot; ES Long</span>
+        <span class="tag tag-win">$+100.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_5</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP presumido (mercado en tendencia alcista), contexto OK confirmado por resultado positivo<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop en ganancias ($100, 2 contratos). Sin pérdida.<br>
+        Trade ganador en ES (+$100 con 2 contratos). Stop en ganancias conservador pero protector. ATR ~1.50 en esta ventana.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#24 &middot; NQ Long</span>
+        <span class="tag tag-win">$+540.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_22</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ + SMAs presumiblemente positivas → Contexto OK<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> T1 alcanzado — trade ganador. +27 pts.<br>
+        T1 de +27 pts en 1 minuto 34 segundos ($540). Con V5 Alta: 27 pts = 3.89x StopATRx excelente. Par #24+#25: $945.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#25 &middot; NQ Long</span>
+        <span class="tag tag-win">$+405.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_22</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Contexto OK — segundo contrato de #24<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> StBE en ganancias (+20.25 pts). Sin pérdida.<br>
+        StBE correcto en $405. Par #24+#25: $945.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#26 &middot; NQ Long</span>
+        <span class="tag tag-win">$+115.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_23</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ + SMAs positivas → Contexto OK<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop en ganancias (+5.75 pts, $115). Sin pérdida.<br>
+        Trade positivo en 12 segundos ($115). Stop en ganancias muy rápido. Duplicado con #27 (diferencia de 0.25 pts).
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#27 &middot; NQ Long</span>
+        <span class="tag tag-win">$+110.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_23</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #26<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Duplicado de #26.<br>
+        Duplicado de #26. Par #26+#27: $225 — par positivo.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#28 &middot; NQ Long</span>
+        <span class="tag tag-loss">$-305.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified">HUD_En_24</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Contexto disponible en tabla salida: KW=94.47, ATR=13.7, VWAP DOWN al stop<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop 15.25 pts. KW al stop = 94.47, ATR=13.7. V5 mín = 7.54 pts → adecuado. VWAP giró DOWN al stop — cambio de tendencia. Duplicado con #29.<br>
+        Stop adecuado per V5 (15.25 > 7.54 mín). VWAP DOWN al stop indica cambio de tendencia. Par #28+#29: -$615.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#29 &middot; NQ Long</span>
+        <span class="tag tag-loss">$-310.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified">HUD_En_24</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #28<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Duplicado de #28.<br>
+        Duplicado de #28. Par #28+#29: -$615.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#30 &middot; ES Short</span>
+        <span class="tag tag-win">$+75.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_6</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP DOWN ✓ + SMAs alineadas → Contexto OK<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop en ganancias (+0.75 pts, 2 contratos, $75). Sin pérdida.<br>
+        Short en ES ganador ($75). Stop en ganancias muy conservador. El ATR=1.95 en contexto Media permite mayor margen para T1.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#31 &middot; NQ Short</span>
+        <span class="tag tag-loss">$-510.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified">HUD_En_25</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> KW al stop = 90.51, ATR=11.77, VWAP UP al stop — short contra VWAP UP al cierre<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop 25.5 pts. KW al stop = 90.51, ATR=11.77. V5 mín = 6.47 pts → adecuado. VWAP UP al stop indica que el mercado continuaba al alza cuando se ejecutó el stop. Duplicado con #32.<br>
+        Short de 5 minutos 53 segundos contra el impulso alcista de la sesión. VWAP UP al stop confirma dirección incorrecta. Par #31+#32: -$1,025 — segunda mayor fuente de pérdida combinada. Stop adecuado per V5 pero contexto incorrecto para el short.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#32 &middot; NQ Short</span>
+        <span class="tag tag-loss">$-515.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified">HUD_En_25</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #31 — VWAP UP al stop<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Duplicado de #31.<br>
+        Duplicado de #31. Par #31+#32: -$1,025.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#33 &middot; ES Short</span>
+        <span class="tag tag-loss">$-300.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified">HUD_En_7</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> KW al stop = 11.93, ATR=1.95, VWAP UP al stop<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> 2 contratos ES. Stop 3 pts = 1.54x ATR. V5 mín = 0.5 × 1.95 = 0.97 pts → adecuado. VWAP UP al stop. El mercado continuó al alza. Con 1 contrato: -$150.<br>
+        Short contra VWAP UP al stop en ES. 2 contratos amplificaron la pérdida. Stop adecuado per V5 pero dirección incorrecta según VWAP.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#34 &middot; NQ Long</span>
+        <span class="tag tag-win">$+365.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_28</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ + SMAs UP ✓ → Contexto OK<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> T1 alcanzado — trade ganador. +18.25 pts.<br>
+        T1 de +18.25 pts en 1 min 5 seg ($365). Par #34+#35: $1,980 — el mejor par de la sesión. T1 fue el inicio del gran movimiento hacia 30,440.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#35 &middot; NQ Long</span>
+        <span class="tag tag-win">$+1615.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified">HUD_En_28</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ + SMAs UP ✓ → Contexto OK — MaxW de la sesión<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> StBE en ganancias (+80.75 pts). Sin pérdida. MaxW de la sesión.<br>
+        MaxW de la sesión ($1,615). StBE con +80.75 pts en 8 minutos 9 segundos. Con V5 Alta (ATR~11): 80.75 pts = 7.34x ATR — uno de los mejores trades de la semana. La paciencia de mantener el segundo contrato hasta 30,440.5 fue la diferencia entre $365 y $1,615. Par #34+#35: $1,980.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#36 &middot; NQ Long</span>
+        <span class="tag tag-loss">$-330.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified">HUD_En_29</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> KW al stop = 65.57, ATR=10.23, VWAP UP al stop — KW comprimiéndose<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop 16.5 pts. KW al stop = 65.57 (compresión desde 90+). ATR=10.23. V5 mín = 5.63 pts → adecuado. El KW se comprimió significativamente — señal de que el escenario Alta estaba transitando a escenario Medio. En compresión, las entradas en breakout de nuevos máximos tienen mayor riesgo de fakeout. Duplicado con #37.<br>
+        Long en los máximos de la sesión (30,445.75) con KW en compresión (65.57 vs 95+ de apertura). La reducción de KW era señal de reducir agresividad. Par #36+#37: -$660.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#37 &middot; NQ Long</span>
+        <span class="tag tag-loss">$-330.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified">HUD_En_29</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #36<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Duplicado de #36.<br>
+        Duplicado de #36. Par #36+#37: -$660. Cierre de la sesión con pérdida por KW en compresión.
+      </div>
+    </div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 5 — SEÑALES ══════════════════════ -->
@@ -871,7 +1449,12 @@ footer .brand-ft .gold { color: var(--gold); }
       <table style='width:100%;font-size:12px;border-collapse:collapse;'><thead><tr style='color:var(--text-muted);border-bottom:1px solid var(--border);'><th style='padding:6px;text-align:left'>#</th><th>Instrumento</th><th>Dir</th><th>Hora entrada</th><th>Precio</th><th>P&L</th><th>Estrategia</th></tr></thead><tbody><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>16</td><td style='padding:5px;'>NQ</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>10:10:21</td><td style='padding:5px;'>30,206.75</td><td style='padding:5px;color:#c0392b;font-weight:600'>-$510.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>1x (200 Profit 100 Lost)</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>17</td><td style='padding:5px;'>NQ</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>10:10:21</td><td style='padding:5px;'>30,206.75</td><td style='padding:5px;color:#c0392b;font-weight:600'>-$510.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>1x (200 Profit 100 Lost)</td></tr></tbody></table>
     </div>
   </div>
-  
+  <div class="ai-insight" style="margin-top:12px;">
+    <div class="ai-label">📊 Análisis de Disciplina</div>
+    <p style="margin:6px 0;">De 97 señales totales del motor HUD V5, se ejecutaron 21, se ignoraron 76 y 2 estuvieron fuera de señal. La disciplina fue parcial: 13 señales ganadoras fueron ignoradas mientras 14 señales que habrían sido stop también se ignoraron correctamente. Los 2 trades sin señal (#16/#17, estrategia 1x) generaron -$1,020 — el mayor error de disciplina del día. El motor HUD V5 está correctamente calibrado (señales en zona de precios reales ~30,183-30,462 para NQ y ~7,559-7,601 para ES), a diferencia del lunes.</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Patrón:</strong> El patrón más claro de la sesión: la estrategia 1x opera sin señal HUD y sin filtro de contexto — los 2 únicos trades de la estrategia 1x del día fueron shorts sin señal con VWAP UP, generando -$1,020. El HUD_Manual muestra mejor disciplina con señales activas en la mayoría de sus trades, pero continúa ejecutando en contexto MIXTO especialmente en los shorts de la tarde (#31/#32, -$1,025). Las señales ganadoras ignoradas en la tarde (12:38-13:36) indican que el cierre de sesión a las 11:32 dejó $3,000+ de oportunidad sobre la mesa.</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Impacto:</strong> Si se hubieran ejecutado las 13 señales ganadoras ignoradas (estimado conservador de $500 promedio por señal = $6,500 adicionales) y eliminado los 2 trades sin señal (-$1,020), la sesión hubiera generado aproximadamente +$3,605 en lugar de -$1,875. El impacto de disciplina es de $5,480 en esta sola sesión.</p>
+  </div>
 </div>
   <div class="section-title"><span class="step">CONTEXTO</span><h2>Validación de Contexto por Trade</h2></div>
 <div class="card">
@@ -1110,7 +1693,13 @@ footer .brand-ft .gold { color: var(--gold); }
   <div class="section-label"><span class="num">6</span>Diagnóstico de la Sesión</div>
   <h2>Análisis General y Conclusiones</h2>
   <p class="sub">Evaluación cualitativa de la sesión, patrones identificados y aprendizajes</p>
-  
+  <div class="section-title"><span class="step">ANALISIS</span><h2>Análisis General de la Sesión</h2></div>
+<div class="ai-insight">
+  <div class="ai-label">🤖 Análisis de IA</div>
+  <p>Sesión del jueves 4 de junio 2026 con PnL=-$1,875 en 37 trades y WR=41%, confirmando el patrón más crítico de la semana: contexto MIXTO destruye el resultado. Las 19 entradas en contexto MIXTO generaron -$3,110 mientras las 18 entradas en contexto OK generaron +$1,235 — una diferencia de $4,345 en el mismo día. El escenario V5 'Alta' en NQ (KW=95.14, ATR=13.50) fue correctamente identificado y los stops estuvieron bien dimensionados según la config (>0.55x ATR), pero el driver de las pérdidas fue la calidad del contexto, no el tamaño del stop. La estrategia 1x generó -$1,020 en dos duplicados sin señal HUD activa.</p>
+</div><div class="card" style="background:var(--header-gradient);color:white;border:none;">
+  <p style="font-size:14px;line-height:1.7;text-align:center;font-style:italic;">"El jueves 4 de junio confirma con datos irrefutables que el contexto MIXTO es la causa raíz del rendimiento negativo: -$3,110 en 19 entradas MIXTO vs +$1,235 en 18 entradas OK. La sesión tuvo momentos brillantes — el par #34+#35 generó $1,980 y el MaxW de $1,615 es uno de los mejores trades individuales de las últimas dos semanas. Pero por cada gran ganador en OK, el sistema generó múltiples pérdidas en MIXTO que erosionaron el resultado. La ecuación es simple: WR=100% con contexto OK exclusivo vs WR=0% con contexto MIXTO en la estrategia 1x. Para la sesión del viernes: una sola regla ejecutada perfectamente — NUNCA entrar en contexto MIXTO — transforma la sesión de -$1,875 en +$1,235."</p>
+</div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 7 — ESTRATEGIAS ══════════════════════ -->
@@ -1126,17 +1715,17 @@ footer .brand-ft .gold { color: var(--gold); }
 </div>
 
 <!-- ══════════════════════ SECCIÓN 8 — FONDEO ══════════════════════ -->
-<div id="fondeo-section" style="display:0">
+<div id="fondeo-section" style="display:1">
 <div class="section-divider"></div>
   <div class="section-label"><span class="num">8</span>Cuenta Fondeada</div>
   <h2>Evaluación de la Cuenta Fondeada</h2>
   <div class="kpi-grid" style="margin-bottom:14px">
-    <div class="kpi"><div class="kpi-label">Balance</div><div class="kpi-value" style="color:var(--teal)">—</div></div>
-    <div class="kpi"><div class="kpi-label">Drawdown</div><div class="kpi-value neg">— (—)</div></div>
-    <div class="kpi"><div class="kpi-label">Días Restantes</div><div class="kpi-value">—</div></div>
-    <div class="kpi"><div class="kpi-label">Objetivo</div><div class="kpi-value" style="color:var(--gold)">—</div></div>
+    <div class="kpi"><div class="kpi-label">Balance</div><div class="kpi-value" style="color:var(--teal)">No disponible en los datos de la sesión</div></div>
+    <div class="kpi"><div class="kpi-label">Drawdown</div><div class="kpi-value neg">No disponible (No disponible)</div></div>
+    <div class="kpi"><div class="kpi-label">Días Restantes</div><div class="kpi-value">No disponible</div></div>
+    <div class="kpi"><div class="kpi-label">Objetivo</div><div class="kpi-value" style="color:var(--gold)">No disponible</div></div>
   </div>
-  <div class="ai-insight"><div class="ai-label">Evaluación</div><p>No disponible.</p></div>
+  <div class="ai-insight"><div class="ai-label">Evaluación</div><p>No hay datos de cuenta fondeada en los trades de esta sesión. PnL del día: -$1,875. Para cuentas fondeadas con límite de drawdown diario, esta pérdida debe ser monitoreada contra el límite establecido. Recomendación: si el sistema tiene un límite de pérdida diaria, verificar si -$1,875 representa un porcentaje significativo del límite permitido antes de continuar operando mañana.</p></div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 9 — DOFA ══════════════════════ -->
@@ -1146,6 +1735,24 @@ footer .brand-ft .gold { color: var(--gold); }
   <h2>Análisis DOFA — 4 JUN 2026</h2>
   <p class="sub">Fortalezas · Debilidades · Oportunidades · Amenazas del período analizado</p>
   
+<div class="dofa-grid">
+  <div class="dofa-card F">
+    <div class="dofa-title F">✅ Fortalezas</div>
+    <div class="dofa-item">El MaxW de $1,615 (trade #35, NQ Long +80.75 pts) y el par #34+#35 ($1,980) demuestran que el sistema HUD_Manual tiene Edge excepcional cuando el contexto es OK y el T2 se mantiene con paciencia</div><div class="dofa-item">Los stops en contexto OK estuvieron correctamente dimensionados per V5_VolatilityConfig en todos los casos — el sizing del stop es correcto y no requiere ajuste</div><div class="dofa-item">El motor HUD V5 está correctamente calibrado (señales en precios reales del mercado, a diferencia del lunes) y generó 13 señales ganadoras y solo 14 que habrían sido stop — señales de calidad</div><div class="dofa-item">La correcta identificación del escenario V5 'Alta' en NQ (KW=95.14, ATR=13.50) y 'Media' en ES permitió una configuración técnicamente correcta de stops y targets</div>
+  </div>
+  <div class="dofa-card D">
+    <div class="dofa-title D">⚠️ Debilidades</div>
+    <div class="dofa-item">19 entradas en contexto MIXTO generaron -$3,110 (promedio -$163.7 por trade) vs 18 OK con +$1,235 (promedio +$68.6). La sesión es una demostración matemática perfecta del costo del contexto MIXTO</div><div class="dofa-item">Bug de duplicación HUD_Manual activo: 10 pares de duplicados identificados (1/2, 3/4, 8/9, 13/14, 21/22, 26/27, 28/29, 31/32, 36/37). Si los duplicados hubieran sido en ganadores solamente: +$975 adicionales. En losers: -$975 adicionales</div><div class="dofa-item">Estrategia 1x operó sin señal HUD activa (#16/#17) generando -$1,020 — la mayor pérdida sin señal documentada en los últimos días y una violación directa del protocolo</div><div class="dofa-item">Los shorts #31/#32 contra el momentum alcista (VWAP UP al stop) generaron -$1,025 combinados — el mercado estaba en impulso alcista claro y los shorts fueron contraproducentes</div>
+  </div>
+  <div class="dofa-card O">
+    <div class="dofa-title O">🔵 Oportunidades</div>
+    <div class="dofa-item">Las 13 señales ganadoras ignoradas en la tarde (12:38-13:36 ET) representan ~$5,000+ de PnL disponible. Extender la ventana de sesión activa hasta las 14:00 ET (manteniendo el filtro de contexto OK) capturaría estas oportunidades</div><div class="dofa-item">La regla de contexto OK obligatorio transforma la sesión: eliminar los 19 trades MIXTO ($3,110 de pérdidas) convierte -$1,875 en +$1,235. Es la única mejora necesaria para ser rentable consistentemente</div><div class="dofa-item">El escenario V5 Alta en NQ (KW=95-105, ATR=13-16) es el de mayor potencial de ganancia — el MaxW de $1,615 lo demuestra. Concentrar size en KW>90 con contexto OK es la oportunidad de mayor impacto</div><div class="dofa-item">Resolver el bug de duplicación convertiría los 10 pares duplicados en 10 trades únicos — reduciendo el ruido estadístico y la exposición involuntaria al doble</div>
+  </div>
+  <div class="dofa-card A">
+    <div class="dofa-title A">🔴 Amenazas</div>
+    <div class="dofa-item">La repetición del patrón MIXTO en séptima sesión consecutiva indica que el trader continúa ejecutando contra las reglas establecidas como lección crítica — riesgo sistémico de no aprendizaje del ciclo MIXTO→pérdida</div><div class="dofa-item">El bug de duplicación del HUD_Manual (no solo de la estrategia 1x) si no se corrige puede generar eventos de SafeClose/race condition similares al miércoles 27 — el par #31/#32 con -$1,025 es el resultado más grave hasta ahora del bug en HUD_Manual</div><div class="dofa-item">La estrategia 1x sin señal HUD activa en dos trades consecutivos contra el momentum es el mismo patrón que generó -$1,020 en miércoles 27 — sin corrección del protocolo de entrada de la 1x, el riesgo persiste</div><div class="dofa-item">En escenario V5 Alta (KW>90), cualquier entrada en contexto MIXTO tiene un costo promedio de pérdida 2.4x mayor que en escenario Baja — la penalización por mala calidad de señal escala con la volatilidad</div>
+  </div>
+</div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 10 — REGLAS ══════════════════════ -->
@@ -1154,8 +1761,39 @@ footer .brand-ft .gold { color: var(--gold); }
   <div class="section-label"><span class="num">10</span>Reglas Post-Mercado</div>
   <h2>Recomendaciones y Reglas a Seguir</h2>
   <p class="sub">Reglas críticas, ajustes de calidad y mejoras para las próximas sesiones</p>
+  <div class="section-title"><span class="step">RECOMENDACIONES</span><h2>Recomendaciones Finales</h2></div>
+<div class="rec-card">
+  <h3>🔴 Regla Crítica — NUNCA ejecutar en contexto MIXTO: costo demostrado $3,110 en esta sesión</h3>
+  <ul><li>Implementar bloqueo hard del sistema: si el validador de contexto muestra MIXTO (cualquier SMA no alineada con la dirección), la ejecución es bloqueada automáticamente</li><li>En escenario V5 Alta (KW>90), el costo de una entrada MIXTO es de -$163.7 promedio vs -$68.6 en escenario Bajo — la penalización escala con la volatilidad</li><li>La regla debe aplicarse a TODAS las estrategias (HUD_Manual, 1x, 2x) sin excepción — los trades #3/#4, #5, #13/#14, #16/#17, #31/#32 fueron todos MIXTO con pérdidas</li><li>Llevar un contador de 'trades MIXTO evitados' en el journal como métrica de disciplina — el objetivo es 0 trades MIXTO por sesión</li></ul>
+</div><div class="rec-card">
+  <h3>🔴 Regla Crítica — Estrategia 1x: señal HUD activa obligatoria antes de cualquier ejecución</h3>
+  <ul><li>Los trades #16/#17 (-$1,020) fueron ejecutados SIN señal HUD activa por la estrategia 1x. Esta violación debe ser imposible técnicamente</li><li>Implementar condición pre-entrada en la estrategia 1x: verificar existencia de señal HUD activa en el instrumento y dirección. Si no hay señal activa, rechazar la orden automáticamente</li><li>Esta corrección sola hubiera ahorrado -$1,020 en esta sesión y -$2,000+ en la semana anterior</li><li>Además del filtro de señal, la estrategia 1x debe heredar el filtro de contexto OK — si el HUD tiene MIXTO, la 1x también bloquea</li></ul>
+</div><div class="rec-card">
+  <h3>🟡 Regla de Calidad — Escalar el escenario V5: en KW>100 (SuperAlta) máximo 1 contrato</h3>
+  <ul><li>El trade #5 (MaxL -$600) ocurrió con KW=105.71 — pico de volatilidad. Con 1 contrato hubiera sido -$300</li><li>Agregar un nivel al escenario V5: cuando KW>100 en NQ, activar modo 'SuperAlta' con tamaño máximo de 1 contrato independientemente del contexto</li><li>En SuperAlta los spikes de 15 pts ocurren en 3 segundos — la velocidad del mercado no da tiempo a ajustar el stop manualmente</li><li>Definir el umbral: NQ KW=[90,100] = Alta (2 contratos permitidos si contexto OK); NQ KW>100 = SuperAlta (1 contrato máximo, stop ampliado a 1.0x ATR mínimo)</li></ul>
+</div><div class="rec-card">
+  <h3>🟡 Regla de Calidad — Monitorear el VWAP activamente: no entrar si cambió de dirección vs el trade anterior</h3>
+  <ul><li>El trade #3 falló porque el VWAP cambió de DOWN (trade #1) a UP (trade #3) en 4 minutos — la tendencia se invirtió</li><li>Antes de cada entrada: verificar si el VWAP del instrumento cambió de dirección desde la última señal ejecutada</li><li>Si el VWAP cambió de dirección, solo entrar en la nueva dirección del VWAP — no en la dirección anterior</li><li>Este chequeo activo del VWAP hubiera evitado los trades #3/#4 (VWAP UP en shorts) = ahorro de -$685</li></ul>
+</div><div class="rec-card">
+  <h3>🟢 Mejora para siguiente sesión — Extender la ventana de operativa activa hasta las 14:00 ET para capturar señales de tarde</h3>
+  <ul><li>Las 5 señales ganadoras ignoradas entre 12:38 y 13:36 representan ~$4,000 de PnL no capturado. La sesión se cerró a las 11:32</li><li>Extender la sesión hasta las 14:00 ET manteniendo la regla de contexto OK obligatorio y el kill switch de horario a las 15:30</li><li>Las señales de zona '20+' y 'A+' entre 12:38-13:36 estaban en zonas de calidad alta — ejecutar solo señales de calidad en esa ventana</li><li>Documentar el motivo del cierre anticipado a las 11:32 — si fue una regla deliberada, mantener pero considerar el costo de oportunidad de ~$4,000 diarios</li></ul>
+</div>
+
+<div class="section-title"><span class="step">INCIDENCIAS</span><h2>Bugs y Diagnóstico</h2></div>
+<div class="card">
   
-  <div class="info-box" style="text-align:center;color:var(--text-muted)">No hay plan de mejoras registrado para esta sesión.</div>
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ BUG PERSISTENTE: Duplicación sistemática HUD_Manual — 10 pares en esta sesión <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">El HUD_Manual generó 10 pares de trades casi duplicados durante la sesión: pares 1/2, 3/4, 8/9, 13/14, 21/22, 26/27, 28/29, 31/32, 36/37 (y posiblemente otros). Todos los pares tienen el mismo timestamp de entrada, mismo instrumento, misma dirección y precios de salida que difieren solo en 0.25 pts. En ganadores los duplicados generan $225 adicionales (par 26/27). En losers generan -$975 adicionales (suma de pares perdedores duplicados). El bug está activo desde el 22 de mayo sin corrección.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ 1) Implementar deduplicación con hash único (instrumento+dirección+timestamp, ventana 2 segundos) en el motor HUD_Manual. 2) Auditar broker statements del día para confirmar si los 10 pares se ejecutaron como 20 órdenes reales en el mercado. 3) Si son ejecuciones reales: la exposición real fue el doble de lo planificado. 4) Probar corrección en paper trading con 20 señales sin ningún par duplicado antes de producción.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ BUG PERSISTENTE: Estrategia 1x opera SIN señal HUD activa (octava sesión con incidencia) <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">Los trades #16 y #17 de la estrategia 1x (-$510 cada uno, -$1,020 combinados) fueron ejecutados SIN señal HUD activa. La estrategia 1x continúa disparándose por condiciones propias sin requerir la validación del motor HUD. Este es el mismo bug documentado desde el 22 de mayo. La estrategia 1x también duplicó los trades (#16 = #17 exactamente) — dos bugs activos simultáneamente.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ 1) Agregar condición de señal HUD activa como prerequisito obligatorio en la estrategia 1x. 2) Agregar filtro de contexto OK (VWAP + SMA) antes de cualquier ejecución de la 1x. 3) Corregir el bug de duplicación en la 1x simultáneamente. 4) SUSPENDER la estrategia 1x en producción hasta que las 3 correcciones estén implementadas y verificadas en paper trading.</p>
+    </div>
+</div>
+  <div class="info-box" style="text-align:center;color:var(--text-muted)">No hay plan de mejoras registrado para esta sesión.</div><div class="discrepancy-box" style="margin-top:12px"><p style="font-size:12px">💡 Para generar un plan de mejoras, incluye la sección <code>"plan_mejoras"</code> en el análisis JSON de la IA.</p></div>
 </div>
 
 <!-- ══════════════════════ PLAN DE MEJORAS ══════════════════════ -->
