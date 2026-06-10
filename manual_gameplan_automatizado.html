@@ -94,7 +94,7 @@ tr:hover td{background:rgba(0,0,0,0.02)}
     <div class="header-text">
       <div class="brand">EduS Trader</div>
       <h1>Sistema Automatizado de Game Plan</h1>
-      <span class="version">v1.0 &middot; Mayo 2026</span>
+      <span class="version">v1.5 &middot; Junio 2026</span>
     </div>
   </div>
   <nav>
@@ -118,7 +118,7 @@ tr:hover td{background:rgba(0,0,0,0.02)}
 
 <div class="card card-teal">
   <div class="card-title">Que hace?</div>
-  <p>El sistema obtiene datos actualizados de ES (S&amp;P 500 E-mini), NQ (Nasdaq 100 E-mini), CL (Crude Oil WTI) y GC (Gold) via Yahoo Finance, construye un prompt estructurado con esos datos, lo envia a un modelo de IA (Groq, Gemini, Ollama, etc.), recibe el analisis en formato JSON, genera un HTML profesional con el estilo de EduS Trader, y lo publica automaticamente en <strong>edustrader.pages.dev</strong> via git push.</p>
+  <p>El sistema obtiene datos actualizados de ES, NQ, CL y GC via Yahoo Finance y lee tu <strong>Backtesting de Señales HUD V5</strong>. Construye un prompt estructurado con estos datos y el estado horario del mercado (Pre-Market, Abierto, etc.), lo envia a un modelo de IA (Groq, Gemini, Ollama, etc.), recibe el analisis en formato JSON, genera un HTML profesional con el Recomendador Cuantitativo incorporado, y lo publica automaticamente en <strong>edustrader.pages.dev</strong> via git push.</p>
 </div>
 
 <div class="card card-green">
@@ -182,9 +182,11 @@ tr:hover td{background:rgba(0,0,0,0.02)}
 <pre>
 eduSTrader - Local Free/
   gameplan_system/
-    config.json                Configuracion (API keys, rutas, contratos)
-    template.html              Template HTML estandar (EduS Brand)
-    generar_gameplan.py        Script principal (>1100 lineas)
+    config.json                Configuracion (API keys, parametros HUD, etc)
+    template.html              Template HTML estandar (EduS Brand + Paso 06)
+    generar_gameplan.py        Script principal (>1200 lineas)
+    preprocess_backtesting.py  Motor de backtesting y Monte Carlo
+    backtesting_summary.json   (generado) Metricas de backtesting para IA
     requirements.txt           Dependencias Python
     INICIAR_GAMEPLAN.bat       Acceso directo modo interactivo
     INICIAR_GAMEPLAN_AUTO.bat  Acceso directo modo automatico
@@ -193,13 +195,14 @@ eduSTrader - Local Free/
 </pre>
 
 <h3>Template HTML - Secciones</h3>
-<p>El HTML generado contiene 5 secciones principales, siguiendo el formato estandar de EduS Trader:</p>
+<p>El HTML generado contiene 6 secciones principales, incluyendo la integracion con el HUD V5:</p>
 <ol>
   <li><strong>PASO 01 &mdash; Sentimiento Global &amp; Fundamentales:</strong> Barra de sentimiento, alertas principales, tabla de eventos economicos del dia.</li>
   <li><strong>PASO 02 &mdash; Analisis Estructural:</strong> 4 tarjetas de zonas (ES, NQ, CL, GC) en grid 2x2 con resistencias, soportes y analisis Wyckoff.</li>
   <li><strong>PASO 03 &mdash; Matriz de Escenarios:</strong> Barra de probabilidades y 3 escenarios (Alcista, Bajista, Lateral) con triggers, estrategia, targets para los 4 instrumentos e invalidacion.</li>
   <li><strong>PASO 04 &mdash; Market Breadth:</strong> Grid de las 7 Magnificas (AAPL, MSFT, GOOGL, AMZN, NVDA, META, TSLA) y tabla de Top Movers del dia.</li>
   <li><strong>PASO 05 &mdash; Estrategia Operativa:</strong> Setups (primario y secundario), horarios criticos y reglas de la mesa.</li>
+  <li><strong>PASO 06 &mdash; Recomendador de Señales HUD V5:</strong> Panel cuantitativo con WinRate/MonteCarlo según el horario y régimen VIX, más una narrativa sugerida por la IA.</li>
 </ol>
 
 <div class="section-divider"></div>
@@ -297,8 +300,8 @@ eduSTrader - Local Free/
       <tr><td><code>ai.providers.groq.api_key</code></td><td>API key de Groq</td><td><code>"gsk_..."</code></td></tr>
       <tr><td><code>ai.providers.gemini.api_key</code></td><td>API key de Google Gemini</td><td><code>"AIzaSy..."</code></td></tr>
       <tr><td><code>ai.providers.ollama.model</code></td><td>Modelo local de Ollama</td><td><code>"llama3.1"</code></td></tr>
-      <tr><td><code>session.tipo</code></td><td>Tipo de sesion: PRE-MARKET o POST-MARKET</td><td><code>"PRE-MARKET"</code></td></tr>
-      <tr><td><code>session.hora</code></td><td>Hora que aparece en el header del HTML</td><td><code>"09:20 AM ET"</code></td></tr>
+      <tr><td><code>senales_recomendacion.*</code></td><td>Filtros para el HUD (capital, riesgo ruina, winrate min)</td><td><code>25000</code></td></tr>
+      <tr><td>(Automático)</td><td>La hora ET y el estado del mercado se calculan en tiempo real</td><td><code>"10:45 AM ET"</code></td></tr>
       <tr><td><code>contract_months.*</code></td><td>Meses de contrato para cada futuro</td><td><code>"JUN26"</code></td></tr>
       <tr><td><code>publishing.auto_commit</code></td><td>Commitea automaticamente en git</td><td><code>true</code></td></tr>
       <tr><td><code>publishing.auto_push</code></td><td>Hace push a GitHub (dispara deploy Cloudflare)</td><td><code>true</code></td></tr>
@@ -547,7 +550,7 @@ eduSTrader - Local Free/
 
 <h3>Header</h3>
 <div class="card card-teal">
-  <p>Logo "EduS Trader", fecha completa (ej: "DOMINGO 17 DE MAYO 2026"), hora (ej: "09:20 AM ET"), y los precios de los 5 instrumentos (ES, NQ, CL, GC, VIX) con sus cambios porcentuales codificados por color (verde = positivo, rojo = negativo).</p>
+  <p>Logo "EduS Trader", fecha completa (ej: "MIÉRCOLES 10 DE JUNIO 2026"), la hora de generación dinámica (ej: "11:59 AM ET") acompañada del Badge de Estado de Mercado (<strong>PRE-MARKET</strong>, <strong>MERCADO ABIERTO</strong>, <strong>POST-MARKET</strong>, <strong>OVERNIGHT</strong>), y los precios de los instrumentos.</p>
 </div>
 
 <h3>PASO 01 &mdash; Sentimiento Global</h3>
@@ -603,6 +606,14 @@ eduSTrader - Local Free/
     <li><strong>Setup Secundario:</strong> Alternativa con menor probabilidad</li>
     <li><strong>Horarios Criticos:</strong> Tabla con zonas de alta volatilidad y accion recomendada (ej: "08:25-08:40 EVITAR")</li>
     <li><strong>Reglas de la Mesa:</strong> Lista de reglas para la sesion del dia</li>
+  </ul>
+</div>
+
+<h3>PASO 06 &mdash; Recomendador HUD V5</h3>
+<div class="card card-teal">
+  <ul>
+    <li><strong>Panel A (Cuantitativo):</strong> Tabla generada a partir de tu archivo <code>BT-senales-v5.csv</code> cruzado con el régimen VIX actual. Te muestra los top setups rankeados por WinRate y riesgo de ruina para USA AM, Almuerzo y USA PM.</li>
+    <li><strong>Panel B (IA):</strong> Resumen narrativo donde la IA sugiere qué señales activar/apagar en el panel HUD basándose en la data dura y el momento del mercado.</li>
   </ul>
 </div>
 
@@ -670,8 +681,8 @@ eduSTrader - Local Free/
 
 <div class="card card-purple" style="text-align:center">
   <p style="font-size:14px;color:var(--text)">
-    <strong>EduS Trader</strong> &mdash; Sistema Automatizado de Game Plan v1.0<br>
-    Documentacion generada el 17 de Mayo 2026<br>
+    <strong>EduS Trader</strong> &mdash; Sistema Automatizado de Game Plan v1.5<br>
+    Documentacion actualizada en Junio 2026<br>
     <span style="font-size:12px;color:var(--text3)">Para dudas o mejoras, contacta al desarrollador.</span>
   </p>
 </div>
