@@ -610,7 +610,13 @@ footer .brand-ft .gold { color: var(--gold); }
   <div class="section-label"><span class="num">2</span>GamePlan vs Mercado Real</div>
   <h2>Evaluación del Pre-Mercado</h2>
   <p class="sub">Comparación entre el plan planteado y lo que realmente ocurrió en el mercado</p>
-  
+  <div class="section-title"><span class="step">GAMEPLAN</span><h2>Game Plan — Evaluación de Cumplimiento</h2></div>
+<div class="gameplan-compare">
+  <h3>📋 Pre-Mercado: <span class="parcial">PARCIAL</span></h3>
+  <h4 style='margin-top:10px;color:var(--bear);font-size:13px'>❌ Desviaciones</h4><ul><li>El game plan identificó NQ como instrumento primario con sesgo long, pero se ejecutaron trades short en NQ (trade 23: Short NQ -$1,010) en contradicción directa con el análisis pre-market que advertía 'Opera con sesgo long exclusivamente en NQ durante USA AM'.</li><li>El game plan alertó sobre 'gaps y volatilidad elevada en apertura' por el colapso de CL, pero los primeros trades manuales (15-18) se ejecutaron a los 57 segundos de apertura (9:57 AM) sin esperar definición de ORB ni Value Area.</li><li>El escenario bull requería NQ sosteniendo 29,490 post-apertura. Los trades manuales se ejecutaron con niveles de ES en 7,325 (muy por debajo del VAH en 7,435 mencionado en el game plan), operando fuera del escenario definido.</li><li>El game plan indicaba 'esperar definición de ORB y Value Area antes de tomar sesgo direccional en ES'. Los trades 15-16 en ES se ejecutaron a los 7 segundos de apertura, sin ninguna definición de rango.</li></ul>
+  <h4 style='margin-top:10px;color:var(--bull);font-size:13px'>✅ Aciertos</h4><ul><li>El AutoTrader V1 respetó las zonas HUD designadas (HUD_En_1 a HUD_En_7) sin desviarse, ejecutando exactamente en las señales del sistema.</li><li>La identificación de la divergencia NQ/ES fue correcta y el sistema automatizado capturó el liderazgo de NQ con los trades 7-14 y 44-47.</li><li>El game plan anticipó correctamente el efecto del colapso de CL en la apertura y la rotación hacia tech/NQ, que se materializó exactamente como se describió.</li><li>Los targets duales (T1 + StBE) del AutoTrader funcionaron como se diseñaron, capturando profit parcial y asegurando breakeven en la segunda posición.</li></ul>
+  <h4 style='margin-top:10px;color:var(--text-muted);font-size:13px'>📖 Lecciones</h4><p style='font-size:13px;color:var(--text-muted)'>El game plan es de alta calidad analítica pero el trader manual no lo respeta en los momentos de mayor estrés (apertura volátil). Para las próximas semanas: (1) Establecer regla de no-trade-manual en los primeros 15 minutos de sesión. (2) Si el game plan define instrumento primario y sesgo, cualquier trade en dirección opuesta requiere justificación explícita en bitácora. (3) El análisis pre-market debe incluir niveles de invalidación con stops de sesión definidos antes de abrir cualquier posición manual.</p>
+</div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 3 — VOLATILIDAD ══════════════════════ -->
@@ -619,7 +625,25 @@ footer .brand-ft .gold { color: var(--gold); }
   <div class="section-label"><span class="num">3</span>Análisis de Volatilidad — VIX · ATR · Keltner</div>
   <h2>Volatilidad Real de la Sesión</h2>
   <p class="sub">VIX observado, ATR del día, Ancho del canal Keltner y validación contra V5_VolatilityConfig</p>
-  
+  <div class="section-title"><span class="step">VOLATILIDAD</span><h2>Análisis de Volatilidad — VIX / Keltner / ATR</h2></div>
+<div class="card">
+  <div class="volatility-gauge">
+    <div class="gauge-item"><div class="g-label">VIX Observado</div><div class="g-value" style="font-size:16px">VIX semana: mínimo inferido ~18.5 → máximo ~20.8 (régimen Moderado-Alto consistente). Punto de referencia pre-market confirmado: 19.41.</div></div>
+    <div class="gauge-item"><div class="g-label">Definiciones Correctas</div><div class="g-value" style="font-size:16px">PARCIAL</div></div>
+  </div>
+  <div class="info-box" style="margin-bottom:0">
+    <h3>📊 Relación VIX / Keltner / ATR</h3>
+    <p>El régimen de Alta Volatilidad con VIX ~19.4 y ATR NQ de 15-16 creó un entorno donde los movimientos de 25-28 puntos en NQ son completamente normales dentro del ATR diario. Las pérdidas manuales en NQ (trades 17, 18, 23, 26, 27, 30, 31) ocurrieron precisamente porque los stops no respetaron el multiplicador ATR recomendado de 0.55x. Un stop correcto en NQ alta volatilidad debería haber sido de mínimo 8.56 puntos según config, pero varios trades mostraron stops efectivos de solo 25 puntos en un instrumento con ATR de 155+ puntos diarios.</p>
+  </div>
+  <div class="info-box" style="margin-bottom:0;margin-top:10px">
+    <h3>📈 Keltner y ATR</h3>
+    <p>ES KeltnerWidth=18.61 dentro del rango de Alta Volatilidad [16.0-23.0]. NQ KeltnerWidth=107.97 dentro del rango de Alta Volatilidad [90.0-120.0]. Ambos instrumentos operaron en escenario Alto durante toda la semana observable, lo que implica expansión de canales y mayor ruido en movimientos intradía. Las lecturas de KW en NQ variaron entre 90.71 (contexto 10) y 109.85 (contexto 5-6), indicando volatilidad sostenida sin picos extremos.<br><br><strong>ATR Observado:</strong> ES ATR promedio semanal: 2.73 puntos (rango observado 2.71-2.73, muy estable). NQ ATR promedio semanal: 14.83 puntos (rango observado 11.34-16.79, mayor variabilidad). En NQ se observó un ATR de 16.79 en el bloque de apertura temprana, coincidiendo con el período de mayor volatilidad y mayores pérdidas manuales.</p>
+  </div>
+  <div class="ai-insight" style="margin-top:14px">
+    <div class="ai-label">Nota de Volatilidad</div>
+    <p>El escenario de Alta Volatilidad fue correctamente identificado en el game plan pre-market. Sin embargo, esta identificación no se tradujo en ajuste de tamaños de posición ni en stops adecuados para el manual trading. El colapso de CL -9.41% añadió volatilidad macroeconómica que el game plan anticipó correctamente pero que el trader ignoró en la ejecución manual. Para la próxima semana en régimen Alto: NQ stops mínimos de 10 puntos, máximo 2 intentos manuales por sesión antes de activar circuit breaker.</p>
+  </div>
+</div>
   
 <div class="sub-title">Escenario V5_VolatilityConfig activo</div>
 <div class="volat-grid">
@@ -640,7 +664,7 @@ footer .brand-ft .gold { color: var(--gold); }
       <div class="vc-metric"><span class="vc-metric-label">RR Objetivo</span><span class="vc-metric-val">2.0:3.0</span></div>
     </div>
 </div>
-
+<div class="ai-insight" style="margin-top:14px"><div class="ai-label">🤖 Validación IA</div><p>Escenario V5: ALTA VOLATILIDAD activo en ambos instrumentos durante toda la semana. Consistencia con operativa: PARCIAL. AutoTrader respetó las configuraciones de stop por ATR implícitamente (stops en HUD_St_X ejecutados dentro de rangos razonables). Trading manual violó repetidamente el stop mínimo recomendado al colocarse con stops efectivos de 3.25-7.5 puntos en ES (vs mínimo 1.36 recomendado — paradójicamente algunos fueron demasiado ajustados en relación al movimiento) y stops de 25-28 puntos en NQ (vs mínimo de 8.56 recomendado por config pero insuficientes dado el ATR real de 15-16).</p></div><div class="icard info" style="margin-top:8px"><div class="icard-title">📊 Profit Factor</div><div class="icard-text">Profit Factor semanal global: ganadores totales estimados ~$8,892 / perdedores totales estimados ~$9,990 = PF=0.89 (por debajo de 1.0, semana destructiva neta). AutoTrader aislado: PF estimado >3.0. Manual consolidado: PF estimado ~0.35.</div></div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 4 — TRADES ══════════════════════ -->
@@ -650,7 +674,493 @@ footer .brand-ft .gold { color: var(--gold); }
   <h2>Registro Completo de Trades</h2>
   <p class="sub">Detalle de cada operación con zona de señal, indicadores en el momento de la entrada y resultado</p>
 
-  
+  <div class="section-title"><span class="step">STOPS</span><h2>Análisis de los Stop Loss</h2></div>
+<div class="card">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+    
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">ES</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">ES</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">ES</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">ES</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">ES</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">ES</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">ES</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">ES</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">ES</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">ES</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #?</span>
+        <span style="font-size:13px;font-weight:600;">ES</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;"></div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:20px;margin-bottom:10px;font-size:14px;">Resumen de Stops</h3>
+  <div class="tab-wrap">
+  <table>
+    <thead><tr><th>Total Stops</th><th>Total Perdido</th><th>Stops Adecuados</th><th>Stops Ajustados</th></tr></thead>
+    <tbody>
+      <tr><td>22</td><td style="color:var(--bear)">-$9,318.50</td><td>6</td><td>16</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="info-box" style="margin-top:14px;margin-bottom:0">
+    <h3>📊 Patrón General</h3>
+    <p>El patrón dominante de stops de la semana es el REVENGE TRADING en cadena: tras una pérdida inicial, se retoma la operativa inmediatamente (en segundos) con la misma dirección o la opuesta, sin pausa de evaluación, acumulando 4-6 stops consecutivos en períodos de 3-7 minutos. Este patrón se repite en al menos dos bloques identificables (trades 17-18 en apertura, y trades 23-31 en el bloque de mayor drawdown). La estrategia 2x opera con pares de posiciones (dos lotes) que duplican el impacto de cada stop sin mejorar la probabilidad de éxito.</p>
+  </div>
+  <div class="ai-insight" style="margin-top:12px">
+    <div class="ai-label">Recomendación General</div>
+    <p>Implementar CIRCUIT BREAKER obligatorio: tras 2 stops consecutivos en trading manual, pausa mínima de 30 minutos sin operar. Tras pérdida de $500 en manual en cualquier período de 15 minutos, cierre de la sesión manual y activación exclusiva del AutoTrader. Revisar el esquema de posiciones twins en estrategia 2x — si ambas posiciones tienen el mismo stop, el resultado siempre será 2x la pérdida individual, anulando la lógica de la estrategia.</p>
+  </div>
+</div>
 
   <div class="sub-title">Tabla de operaciones ejecutadas</div>
   <div style="overflow-x:auto">
@@ -1058,7 +1568,44 @@ footer .brand-ft .gold { color: var(--gold); }
   <div class="section-label"><span class="num">5</span>Señales del Indicador vs Ejecución</div>
   <h2>Análisis Comparativo — Señales HUD vs Trades</h2>
   <p class="sub">Verificación de zonas (A, M1, etc.), señales ejecutadas, ignoradas y trades fuera de señal</p>
+  <div class="section-title"><span class="step">SEÑALES</span><h2>Señales HUD V5 — Correlación con Ejecuciones</h2></div>
+<div class="card">
   
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #279995;">
+        <div style="font-size:24px;font-weight:700;color:#279995;">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Señales emitidas</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #27ae60;">
+        <div style="font-size:24px;font-weight:700;color:#27ae60;">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ejecutadas <span style="color:#27ae60;font-weight:600;">(0%)</span></div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #e67e22;">
+        <div style="font-size:24px;font-weight:700;color:#e67e22;">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ignoradas</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #c0392b;">
+        <div style="font-size:24px;font-weight:700;color:#c0392b;">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Fuera de señal</div>
+      </div>
+    </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+    <div>
+      <h3 style="font-size:13px;color:var(--text-muted);margin:0 0 10px">⚠️ Señales ignoradas que ganaron</h3>
+      <p style='color:var(--text-muted);font-size:12px;margin:0'>No hubo señales ganadoras ignoradas — buena ejecución.</p>
+    </div>
+    <div>
+      <h3 style="font-size:13px;color:var(--text-muted);margin:0 0 10px">🚫 Trades ejecutados sin señal activa</h3>
+      <p style='color:var(--text-muted);font-size:12px;margin:0'>Todos los trades ejecutados correspondían a señales activas.</p>
+    </div>
+  </div>
+  <div class="ai-insight" style="margin-top:12px;">
+    <div class="ai-label">📊 Análisis de Disciplina</div>
+    <p style="margin:6px 0;">La disciplina de señales presenta una bifurcación absoluta entre el componente automatizado y el manual. El AutoTrader V1 ejecutó el 100% de sus señales dentro de zonas HUD designadas con correcta nomenclatura (HUD_En_X, HUD_T1_X, HUD_StBE_X, HUD_St_X), sin desviaciones. El componente manual operó el 87% de sus trades en zona 'Manual' sin alineación con el sistema HUD, y en múltiples casos en dirección opuesta al bias del game plan.</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Patrón:</strong> El patrón semanal muestra una tendencia clara: el trader manual interviene principalmente en dos contextos problemáticos: (1) apertura de mercado (primeros 15 minutos) antes de que el AutoTrader tenga señales HUD disponibles, y (2) períodos de drawdown activo como respuesta emocional. En contraste, los trades manuales exitosos (trades 32-33, 40-43) ocurrieron en condiciones de mercado más definidas con momentum claro visible.</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Impacto:</strong> El impacto estimado de la falta de disciplina en el P&L semanal es de aproximadamente -$4,196 atribuible directamente a trades fuera de señal o en contra del game plan (principalmente el bloque 23-31 con -$3,660 y los trades de apertura 15-18 con -$1,337.5, parcialmente compensados por algunos manuales exitosos). Sin estos trades indisciplinados, el P&L semanal estaría en terreno positivo cercano a +$3,098 del AutoTrader.</p>
+  </div>
+</div>
   
 </div>
 
@@ -1068,7 +1615,21 @@ footer .brand-ft .gold { color: var(--gold); }
   <div class="section-label"><span class="num">6</span>Diagnóstico de la Sesión</div>
   <h2>Análisis General y Conclusiones</h2>
   <p class="sub">Evaluación cualitativa de la sesión, patrones identificados y aprendizajes</p>
-  
+  <div class="section-title"><span class="step">ANALISIS</span><h2>Análisis General de la Sesión</h2></div>
+<div class="ai-insight">
+  <div class="ai-label">🤖 Análisis de IA</div>
+  <p>Semana del 8 al 12 de Junio 2026 — Resultado global NEGATIVO con PnL neto de -$1,098 sobre 47 operaciones (WR=53%). El sistema automatizado EduS_AutoTrader_V1 fue el único componente rentable de la semana con +$3,098 y WR del 75%, mientras que ambas estrategias manuales destruyeron valor: 2x (-$1,875, WR=38%) y 1x (-$2,320, WR=36%). El mercado operó bajo régimen de Alta Volatilidad en ambos instrumentos (ES KeltW=18.61, NQ KeltW=107.97), con contexto macro dominado por el colapso de CL -9.41% y divergencia notable NQ +1.17% vs ES +0.11% en apertura. La semana evidencia una brecha estructural crítica: la automatización funciona; el trading manual destruye el capital generado por el sistema.</p>
+</div><div class="card" style="background:var(--header-gradient);color:white;border:none;">
+  <p style="font-size:14px;line-height:1.7;text-align:center;font-style:italic;">"Semana con una lección estructural clara: el sistema funciona, el operador manual no. El AutoTrader V1 generó $3,098 con disciplina y consistencia. La semana terminó en rojo solo porque el componente manual destruyó $4,196 más de lo que ganó. Esto no es un problema de análisis ni de metodología — es un problema de gestión emocional y ausencia de reglas de protección automáticas. Para la semana del 15-19 de Junio: implementar el circuit breaker antes de operar el primer día. Si el AutoTrader termina la semana positivo y el manual no entra en pérdida neta, habremos ganado la semana más importante del año — no en P&L, sino en disciplina operativa. El sistema está listo. Ahora toca que el operador esté a la altura del sistema."</p>
+</div><div class="section-title"><span class="step">SEMANAL</span><h2>Análisis Semanal</h2></div>
+<div class="card">
+  <div class="ai-insight">
+    <div class="ai-label">Resumen Semanal</div>
+    <p>La semana presentó al menos tres sesiones identificables con características distintas. Las sesiones con presencia del EduS_AutoTrader_V1 generaron resultados consistentes y positivos (trades 1-14, 36-39, 44-47), ejecutando con disciplina en zonas HUD designadas y capturando movimientos de 50 a 765 USD por operación. En contraste, los bloques de trading manual —particularmente visibles en los trades 15-35— muestran un patrón de pérdidas encadenadas con stops alcanzados en secuencia rápida (trades 17-31 en NQ muestran 8 stops consecutivos en menos de 6 minutos), lo que sugiere operativa en condiciones adversas sin gestión de drawdown activa. La sesión con el peor bloque manual (trades 23-31) generó pérdidas de más de $4,000 en aproximadamente 6 minutos.</p>
+  </div>
+  <div class="info-box"><h3>📊 Comparativa Diaria</h3><p>Sin datos de P&L por día discriminados, se puede inferir por bloques horarios: Bloque AM temprano (trades 1-14, zona 10:08-10:55): +$1,832 dominado por AutoTrader. Bloque apertura manual (trades 15-35, zona 9:57-11:08): aproximadamente -$5,100 en pérdidas manuales. Bloque PM tarde sesión 1 (trades 36-39, zona 12:41-13:20): +$1,000 AutoTrader. Bloque cierre sesión 2 (trades 40-43, zona 10:23-10:51): +$962 manual positivo. Bloque cierre tardío (trades 44-47, zona 14:15-16:34): +$1,850 AutoTrader. El VIX en 19.41 al inicio de semana marcó régimen Moderado-Alto que se mantuvo consistente con los KeltnerWidth observados.</p></div>
+  <div class="info-box" style="margin-top:10px"><h3>🎯 Conclusión Semanal</h3><p>La semana confirma que la infraestructura automatizada HUD V5 + AutoTrader funciona con eficiencia real (WR 75%, $3,098). El problema estructural es el trading manual discrecional que opera sin disciplina de stops, sin respeto a daily loss limits y sin alineación con el bias de mercado del game plan. La acción correctiva prioritaria no es técnica sino conductual: eliminar o limitar severamente el trading manual hasta establecer reglas no negociables de máximo drawdown diario.</p></div>
+</div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 7 — ESTRATEGIAS ══════════════════════ -->
@@ -1105,6 +1666,24 @@ footer .brand-ft .gold { color: var(--gold); }
   <h2>Análisis DOFA — 8-12 JUN 2026</h2>
   <p class="sub">Fortalezas · Debilidades · Oportunidades · Amenazas del período analizado</p>
   
+<div class="dofa-grid">
+  <div class="dofa-card F">
+    <div class="dofa-title F">✅ Fortalezas</div>
+    <div class="dofa-item">EduS_AutoTrader_V1 demostró consistencia real con WR del 75% y $3,098 de ganancia neta, ejecutando 20 trades en zonas HUD designadas sin desviaciones — el sistema funciona como fue diseñado.</div><div class="dofa-item">La calidad analítica del game plan pre-market fue alta: identificó correctamente la divergencia NQ/ES, el efecto del colapso de CL, el régimen de volatilidad Alta y los niveles clave. El análisis como herramienta es sólido.</div><div class="dofa-item">El sistema de salidas duales (T1 + StBE) del AutoTrader capturó profit en T1 y aseguró capital en el segundo contrato consistentemente, reflejando una gestión de posición bien diseñada.</div><div class="dofa-item">Capacidad de recuperación demostrada en la sesión: después del bloque de pérdidas AM, el trader/sistema logró trades positivos en PM (trades 36-47), lo que muestra resiliencia operativa cuando se vuelve al sistema.</div>
+  </div>
+  <div class="dofa-card D">
+    <div class="dofa-title D">⚠️ Debilidades</div>
+    <div class="dofa-item">Ausencia total de circuit breaker o daily loss limit en trading manual: el bloque de trades 23-31 acumuló -$4,095 en 7 minutos sin ningún mecanismo de freno, representando el fallo de gestión de riesgo más crítico de la semana.</div><div class="dofa-item">Revenge trading sistémico documentado: tras el trade 23 (MaxL -$1,010), se ejecutaron 6 trades adicionales en los siguientes 6 minutos (26-31), todos perdedores, con tiempo de recuperación de segundos entre cada uno. Este es un patrón conductual recurrente que requiere intervención estructural.</div><div class="dofa-item">Las estrategias manuales 2x y 1x operan con posiciones twins (dos contratos simultáneos) que duplican automáticamente el impacto de cada pérdida sin diversificar el riesgo — son trades idénticos disfrazados de diversificación.</div><div class="dofa-item">Inconsistencia entre análisis pre-market y ejecución manual: el game plan identificó NQ como instrumento primario con sesgo long, pero el trade 23 fue un Short NQ de 2 contratos, la operación más costosa de la semana.</div>
+  </div>
+  <div class="dofa-card O">
+    <div class="dofa-title O">🔵 Oportunidades</div>
+    <div class="dofa-item">El AutoTrader V1 tiene capacidad de escalabilidad probada: si se limita el trading manual a zero o condiciones muy específicas, el P&L semanal se aproximaría al resultado del AutoTrader solo ($3,098), cambiando radicalmente el resultado neto.</div><div class="dofa-item">Los trades manuales exitosos (32-33 con +$687.5, 40-43 con +$962.5, 11-12 con +$715) demuestran que el trader tiene capacidad de leer el mercado correctamente cuando opera sin estrés — formalizar las condiciones de esos trades como reglas explícitas.</div><div class="dofa-item">La calidad del game plan puede ser convertida en checklist de filtros pre-trade que evite automáticamente trades en contra del bias, reduciendo errores de ejecución sin requerir cambio de metodología.</div>
+  </div>
+  <div class="dofa-card A">
+    <div class="dofa-title A">🔴 Amenazas</div>
+    <div class="dofa-item">El patrón de revenge trading es la amenaza existencial más seria para la cuenta: dos episodios similares en una semana sugieren que este comportamiento es estructural, no esporádico. Sin circuit breaker hard-coded, un día de drawdown severo puede borrar semanas de ganancias del AutoTrader.</div><div class="dofa-item">La estrategia de twins (2 posiciones simultáneas idénticas) en manual trading crea una exposición efectiva de 2x sin beneficio de diversificación — en escenarios de drawdown amplifica las pérdidas en exactamente 2x, como se observó en todos los bloques negativos de la semana.</div><div class="dofa-item">La apertura de mercado (9:45-10:15) concentra el mayor riesgo de trading emocional: la volatilidad es máxima, el ORB no está definido y las señales HUD aún no están activas, creando un vacío temporal que el trader manual llena con operativa de alto riesgo.</div>
+  </div>
+</div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 10 — REGLAS ══════════════════════ -->
@@ -1113,8 +1692,44 @@ footer .brand-ft .gold { color: var(--gold); }
   <div class="section-label"><span class="num">10</span>Reglas Post-Mercado</div>
   <h2>Recomendaciones y Reglas a Seguir</h2>
   <p class="sub">Reglas críticas, ajustes de calidad y mejoras para las próximas sesiones</p>
+  <div class="section-title"><span class="step">RECOMENDACIONES</span><h2>Recomendaciones Finales</h2></div>
+<div class="rec-card">
+  <h3>Regla Crítica (🔴) — Circuit Breaker de Session Manual Obligatorio</h3>
+  <ul><li>Implementar regla hard: tras 2 stops consecutivos en trading manual O pérdida acumulada manual > $500 en cualquier período de 15 minutos, CERO trades manuales por el resto de la sesión. Solo AutoTrader activo.</li><li>El bloque de pérdidas 23-31 (-$4,095 en 7 minutos) es evidencia directa de la ausencia de este mecanismo. Con un circuit breaker activado en el trade 24, el daño hubiera sido -$1,385 en lugar de -$4,095.</li><li>Codificar el circuit breaker como alerta en NinjaTrader o como nota visible en el HUD: 'MANUAL BLOQUEADO — Daily Loss Limit Alcanzado'. La regla debe ser automática, no discrecional.</li></ul>
+</div><div class="rec-card">
+  <h3>Regla Crítica (🔴) — No Operar Manual en Primeros 15 Minutos de Sesión</h3>
+  <ul><li>Los trades 15-18 (9:57-9:57 AM) demuestran que la apertura con alta volatilidad y sin ORB definido es el entorno más hostil para el trading manual. El game plan lo advirtió explícitamente: 'esperar definición de ORB y Value Area'.</li><li>Regla: cero trades manuales antes de las 10:15 AM ET. Si hay señales HUD disponibles, el AutoTrader las ejecuta. Si no hay señales, no se opera.</li><li>Excepción única: el game plan identifica un setup A+ con confluencia de VWAP + POC + señal HUD. Incluso en ese caso, máximo 1 contrato.</li></ul>
+</div><div class="rec-card">
+  <h3>Regla de Calidad (🟡) — Alineación Obligatoria con Bias del Game Plan</h3>
+  <ul><li>Antes de ejecutar cualquier trade manual, verificar: ¿está esta dirección alineada con el bias del game plan? El trade 23 (Short NQ cuando el game plan decía 'sesgo long exclusivo en NQ AM') viola esta regla de manera flagrante.</li><li>Implementar checklist físico de 3 preguntas pre-trade: (1) ¿Está alineado con el bias del game plan? (2) ¿Hay señal HUD o confluencia de indicadores? (3) ¿El P&L manual del día permite este trade según el circuit breaker?</li><li>Si la respuesta a cualquiera de las 3 es NO, el trade no se ejecuta.</li></ul>
+</div><div class="rec-card">
+  <h3>Regla de Calidad (🟡) — Eliminar Posiciones Twins en Manual Trading</h3>
+  <ul><li>Las estrategias 2x y 1x no deben ejecutarse como dos posiciones simultáneas idénticas. Si el análisis justifica un trade, se ejecuta con 1 contrato. La segunda posición twin no añade valor analítico — solo duplica el riesgo.</li><li>Redefinir 2x y 1x como referencias de profit/loss targets en USD, no como cantidad de contratos. 2x = buscar $120 profit con $60 de riesgo. 1x = buscar $200 profit con $100 de riesgo. Siempre 1 contrato.</li><li>Con esta regla, la pérdida del trade 23 hubiera sido -$505 en lugar de -$1,010.</li></ul>
+</div><div class="rec-card">
+  <h3>Mejora para siguiente semana (🟢) — Maximizar Uso de AutoTrader en Sesiones Completas</h3>
+  <ul><li>El AutoTrader V1 demostró ser el único generador de valor consistente de la semana. Para la próxima semana, establecer como objetivo que el AutoTrader ejecute al menos el 80% de los trades totales de la sesión.</li><li>Si el AutoTrader genera señales durante el bloque de pérdidas manuales (como probablemente hubiera hecho en el período 10:22-10:28), dejar que las ejecute sin interferencia manual.</li><li>Documentar cada sesión con separación explícita de P&L: AutoTrader vs Manual. El objetivo de la próxima semana es que el manual no sea negativo neto — si no puede ganar, que al menos no destruya lo que gana el sistema.</li></ul>
+</div>
+
+<div class="section-title"><span class="step">INCIDENCIAS</span><h2>Bugs y Diagnóstico</h2></div>
+<div class="card">
   
-  <div class="info-box" style="text-align:center;color:var(--text-muted)">No hay plan de mejoras registrado para esta sesión.</div>
+    <div class="discrepancy-box" style="border-left-color:#f39c12;background:#fef3e2">
+      <h4 style="color:#f39c12;font-size:13px;margin-bottom:6px;">⚠️ Incidencia <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[MEDIA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">Trade 4 (ES Short HUD_En_3): entrada en dirección Short cuando el contexto de indicadores muestra VWAP_DIR=DOWN con precio en 7436.25 por debajo de VWAP 7440.2 — esto es consistente. Sin embargo, el stop se ejecutó en +5 puntos adversos ($500 pérdida en 47 segundos), sugiriendo que la señal HUD_En_3 Short fue tomada en un rebote que continuó al alza brevemente. Revisar si la lógica de HUD_En_3 tiene filtro de fuerza de tendencia antes de la señal Short.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ </p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#f39c12;background:#fef3e2">
+      <h4 style="color:#f39c12;font-size:13px;margin-bottom:6px;">⚠️ Incidencia <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[MEDIA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">Trades 7-10 (NQ Long, 4 posiciones en 97 segundos): el AutoTrader ejecutó 4 entradas Long en NQ con VWAP_DIR=DOWN en los trades 7-8 (HUD_En_5) y VWAP_DIR=UP en los trades 9-10 (HUD_En_6). Los trades 7-8 resultaron en stops inmediatos (-$595 combinado). Verificar si HUD_En_5 tiene filtro de VWAP_DIR como condición de entrada — si el VWAP está DOWN, las entradas Long en HUD_En_5 deberían ser filtradas o reducir el tamaño.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ </p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#f39c12;background:#fef3e2">
+      <h4 style="color:#f39c12;font-size:13px;margin-bottom:6px;">⚠️ Incidencia <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[MEDIA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">El trade 23 (NQ Short 2 contratos, estrategia 1x) muestra Qty=2 cuando la estrategia 1x está definida como 1 contrato (200 Profit 100 Lost). Posible error de ejecución — el trader ingresó manualmente 2 contratos en lugar de 1, duplicando el MaxL de la semana de -$505 a -$1,010.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ </p>
+    </div>
+</div>
+  <div class="info-box" style="text-align:center;color:var(--text-muted)">No hay plan de mejoras registrado para esta sesión.</div><div class="discrepancy-box" style="margin-top:12px"><p style="font-size:12px">💡 Para generar un plan de mejoras, incluye la sección <code>"plan_mejoras"</code> en el análisis JSON de la IA.</p></div>
 </div>
 
 <!-- ══════════════════════ PLAN DE MEJORAS ══════════════════════ -->
