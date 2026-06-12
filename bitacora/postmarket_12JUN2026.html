@@ -610,7 +610,13 @@ footer .brand-ft .gold { color: var(--gold); }
   <div class="section-label"><span class="num">2</span>GamePlan vs Mercado Real</div>
   <h2>Evaluación del Pre-Mercado</h2>
   <p class="sub">Comparación entre el plan planteado y lo que realmente ocurrió en el mercado</p>
-  
+  <div class="section-title"><span class="step">GAMEPLAN</span><h2>Game Plan — Evaluación de Cumplimiento</h2></div>
+<div class="gameplan-compare">
+  <h3>📋 Pre-Mercado: <span class="parcial">PARCIAL</span></h3>
+  <h4 style='margin-top:10px;color:var(--bear);font-size:13px'>❌ Desviaciones</h4><ul><li>Trades 7 y 8 (NQ AutoTrader) cerraron a las 16:34 ET — el GamePlan establecia cierre TOTAL antes de 16:00 ET por pin risk de opciones semanales (Regla #9). Violacion de 34 minutos sobre una regla critica.</li><li>Los 8 trades fueron ejecutados SIN señal HUD V5 activa. El GamePlan definia A+ y LR+ como señales activas obligatorias, pero el sistema reporta 0 ejecuciones de señal. La configuracion HUD recomendada (SoloPlus, SoloLong, señales A y LR activas) no produjo ejecuciones.</li><li>Las entradas manuales en ES (10:23 y 10:46) se realizaron con contexto MIXTO (1/3) y 0/3 respectivamente, en contradiccion con la recomendacion del GamePlan de esperar alineacion de indicadores antes de operar ES.</li><li>El AutoTrader_V1 opero sobre zonas HUD (HUD_En_3, HUD_En_4) sin señal HUD activa confirmada — genera una discrepancia entre la operativa real del sistema y el marco de señales del HUD V5.</li></ul>
+  <h4 style='margin-top:10px;color:var(--bull);font-size:13px'>✅ Aciertos</h4><ul><li>No se operaron los primeros 5 minutos del cash open — regla de esperar ORB correctamente cumplida.</li><li>No habia posiciones abiertas durante la ventana critica UMich 09:55-10:05 ET — primera entrada fue a las 10:23.</li><li>La unica señal HUD V5 disponible (ES SHORT M1+ 15:36:54) fue correctamente ignorada — habria resultado en una perdida.</li><li>Sesgo LONG exclusivo mantenido durante toda la sesion, 100% coherente con el escenario BULL materializado y con la recomendacion de SoloLong del GamePlan.</li><li>NQ fue el instrumento principal tal como recomendaba el GamePlan — 4 de 8 trades en NQ, generando $1,850 (65.8% del PnL total).</li><li>Tamaño de 1 contrato por operacion mantenido en toda la sesion — consistente con las reglas de sizing del GamePlan.</li></ul>
+  <h4 style='margin-top:10px;color:var(--text-muted);font-size:13px'>📖 Lecciones</h4><p style='font-size:13px;color:var(--text-muted)'>El GamePlan fue preciso al identificar NQ como instrumento primario, el sesgo BULL y la importancia de la ventana UMich — la lectura macro fue correcta. El gap mas importante es la desconexion entre el analisis pre-mercado (que define configuracion HUD y señales activas) y la operativa real (que ignoro completamente las señales). Para futuros game plans: añadir una seccion especifica de 'condicion de entrada minima' que el AutoTrader y el trader manual deben cumplir en coherencia con el HUD configurado — actualmente el GamePlan puede decir 'usar A+ y LR+' pero si el sistema no genera esas señales durante los horarios operados, no hay mecanismo de fallback definido.</p>
+</div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 3 — VOLATILIDAD ══════════════════════ -->
@@ -619,7 +625,25 @@ footer .brand-ft .gold { color: var(--gold); }
   <div class="section-label"><span class="num">3</span>Análisis de Volatilidad — VIX · ATR · Keltner</div>
   <h2>Volatilidad Real de la Sesión</h2>
   <p class="sub">VIX observado, ATR del día, Ancho del canal Keltner y validación contra V5_VolatilityConfig</p>
-  
+  <div class="section-title"><span class="step">VOLATILIDAD</span><h2>Análisis de Volatilidad — VIX / Keltner / ATR</h2></div>
+<div class="card">
+  <div class="volatility-gauge">
+    <div class="gauge-item"><div class="g-label">VIX Observado</div><div class="g-value" style="font-size:16px">VIX 19.41 al inicio de sesion (pre-market) — Regimen de Volatilidad MODERADO. No se dispone de VIX de cierre en los datos post-mercado. Condicion adecuada para operar con stops ajustados al escenario SuperExtrema, no extremo de panico.</div></div>
+    <div class="gauge-item"><div class="g-label">Definiciones Correctas</div><div class="g-value" style="font-size:16px">PARCIAL</div></div>
+  </div>
+  <div class="info-box" style="margin-bottom:0">
+    <h3>📊 Relación VIX / Keltner / ATR</h3>
+    <p>La triada VIX (19.41) + KeltnerWidth expandido (39.72 ES / 395.12 NQ) + ATR elevado (5.84-6.41 ES / 45.25-54.32 NQ) es coherente: el VIX moderado-alto impulsado por el colapso de CL -9.41% se traduce directamente en expansion de Keltner y ATR elevado. Esta configuracion es la definicion operativa del escenario SuperExtrema en V5 — exige stops mas amplios de lo habitual y targets con RR minimo 2.0 para que la esperanza matematica sea positiva.</p>
+  </div>
+  <div class="info-box" style="margin-bottom:0;margin-top:10px">
+    <h3>📈 Keltner y ATR</h3>
+    <p>ES: KeltnerWidth=39.72 — supera el umbral SuperExtrema de 33.0, canal ampliamente expandido. NQ primera entrada: KeltnerWidth=395.12 — supera el umbral SuperExtrema de 160.0. NQ segunda entrada: KeltnerWidth=367.42 — igualmente SuperExtrema. Ambos instrumentos en zona de alta expansion de volatilidad durante toda la sesion operada. Implicacion directa: el sistema V5 activa restricciones de stop minimo y RR minimo.<br><br><strong>ATR Observado:</strong> ES Trade 1-2: ATR=5.84 pts. ES Trade 3-4: ATR=6.41 pts — leve expansion durante USA AM. NQ Trade 5-6: ATR=54.32 pts. NQ Trade 7-8: ATR=45.25 pts — leve contraccion en segunda entrada PM. Todos los valores confirman escenario SuperExtrema para ambos instrumentos.</p>
+  </div>
+  <div class="ai-insight" style="margin-top:14px">
+    <div class="ai-label">Nota de Volatilidad</div>
+    <p>El escenario SuperExtrema fue correctamente detectado por el sistema V5 y los parametros estaban definidos. Sin embargo, su aplicacion en los trades fue inconsistente. Los casos criticos: Trade 4 (Stop1 exit a +2.75 pts con minimo V5 de 4.49 pts — 0.43x ATR vs el 0.7x requerido) es el incumplimiento mas claro. En NQ, los Trades 7-8 tuvieron exits a +16.5 y +18.0 pts con un stop minimo de 31.68 pts — los targets alcanzados equivalen a apenas 0.52x el stop minimo prescrito por V5 para ese ATR. Hoy el mercado fue cooperativo y estos niveles resultaron en ganancia, pero la logica V5 establece esos umbrales precisamente para que la operativa sea robusta en condiciones adversas. Un dia con la misma volatilidad pero direccion opuesta habria barrido los stops antes de los exits observados.</p>
+  </div>
+</div>
   
 <div class="sub-title">Escenario V5_VolatilityConfig activo</div>
 <div class="volat-grid">
@@ -640,7 +664,7 @@ footer .brand-ft .gold { color: var(--gold); }
       <div class="vc-metric"><span class="vc-metric-label">RR Objetivo</span><span class="vc-metric-val">2.0:3.0</span></div>
     </div>
 </div>
-
+<div class="ai-insight" style="margin-top:14px"><div class="ai-label">🤖 Validación IA</div><p>SuperExtrema activo en ambos instrumentos durante toda la sesion operada. ES: StopATRx=0.7 → stop minimo session AM = 0.7 × 5.84 = 4.09 pts (Trade 1-2) y 0.7 × 6.41 = 4.49 pts (Trade 3-4). NQ: StopATRx=0.7 → stop minimo primera entrada = 0.7 × 54.32 = 38.02 pts. NQ segunda entrada: 0.7 × 45.25 = 31.68 pts. RR minimo recomendado por V5: 2.0 a 3.0. RESULTADO: cumplimiento PARCIAL — Trade 4 (Stop1 a +2.75 pts) no cumple el stop minimo de 4.49 pts. Trade 6 (StBE a +19.75 pts) y Trades 7-8 (T1/T2 a +16.5 y +18.0 pts) no cumplen el stop minimo de 31.68-38.02 pts para NQ. Los exits resultaron en ganancia pero con distancias por debajo de lo prescrito por V5.</p></div><div class="icard info" style="margin-top:8px"><div class="icard-title">📊 Profit Factor</div><div class="icard-text">Infinito (division por cero — sin perdidas). Total ganancias: $2,812.50. Total perdidas: $0.00. Profit factor convencional no calculable. Nota: MaxL=$137.50 reportado corresponde al menor ganador (Trade 4), no a una perdida real.</div></div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 4 — TRADES ══════════════════════ -->
@@ -650,7 +674,73 @@ footer .brand-ft .gold { color: var(--gold); }
   <h2>Registro Completo de Trades</h2>
   <p class="sub">Detalle de cada operación con zona de señal, indicadores en el momento de la entrada y resultado</p>
 
-  
+  <div class="section-title"><span class="step">STOPS</span><h2>Análisis de los Stop Loss</h2></div>
+<div class="card">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+    
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #2</span>
+        <span style="font-size:13px;font-weight:600;">ES</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">trailing-stop — Stop2 del par 2x, exit con ganancia</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>stop de proteccion activado antes del segundo target en contexto favorable</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">4.5 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.77x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">Exit a +4.5 pts (7476.5 vs entrada 7472.0) en escenario SuperExtrema con ATR=5.84. La distancia 4.5 pts = 0.77× ATR — supera el StopATRx minimo de 0.7 (4.09 pts) pero con margen de solo 0.41 pts. El stop fue minimamente adecuado segun V5_VolatilityConfig. El resultado es positivo y el stop respeta el parametro V5 por un margen estrecho. El ruido normal del mercado en escenario SuperExtrema puede facilmente cubrir 4-5 pts, lo que significa que este stop habria estado en riesgo de activacion prematura.</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 Configurar Stop2 en la estrategia 2x a minimo 1.0× ATR (5.84 pts para esta sesion) en escenario SuperExtrema, para dar margen al ruido del mercado y reducir la probabilidad de exit prematuro en el segundo contrato.</div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #4</span>
+        <span style="font-size:13px;font-weight:600;">ES</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">trailing-stop — Stop1 del par 2x, exit con ganancia minima</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>stop activado antes del primer target, con distancia insuficiente para el escenario SuperExtrema</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">+$0.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">2.75 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.43x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">Exit a +2.75 pts (7459.75 vs entrada 7457.0) en escenario SuperExtrema con ATR=6.41. La distancia 2.75 pts = 0.43× ATR — INFERIOR al StopATRx minimo de 0.7 (4.49 pts). INCUMPLIMIENTO V5: el stop de este contrato fue 1.74 pts menor de lo que V5_VolatilityConfig prescribe. En un dia adverso con igual ATR (6.41 pts), una fluctuacion de 2.75 pts es perfectamente normal dentro del ruido intraday — el stop habria sido barrido antes de tomar el trade en la direccion correcta. El hecho de que sea ganador no valida el dimensionamiento del stop; fue resultado de que el mercado se movio inmediatamente en la direccion favorable desde la entrada.</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 ACCION CRITICA: Ajustar Stop1 en la estrategia 2x para que nunca sea inferior a StopATRx × ATR segun el escenario V5 activo. Para escenario SuperExtrema en ES: Stop1 minimo = 4.5 pts como referencia con ATR promedio de 6 pts. Implementar esta validacion como condicion pre-entrada en la logica de la estrategia.</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:20px;margin-bottom:10px;font-size:14px;">Resumen de Stops</h3>
+  <div class="tab-wrap">
+  <table>
+    <thead><tr><th>Total Stops</th><th>Total Perdido</th><th>Stops Adecuados</th><th>Stops Ajustados</th></tr></thead>
+    <tbody>
+      <tr><td>2</td><td style="color:var(--bear)">+$0.00</td><td>1</td><td>1</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="info-box" style="margin-top:14px;margin-bottom:0">
+    <h3>📊 Patrón General</h3>
+    <p>Los dos exits via stop fueron ambos positivos (ningun stop en perdida). Sin embargo, un stop (Trade 4) no cumplio el parametro StopATRx minimo de V5_VolatilityConfig para el escenario SuperExtrema activo. El StBE en Trade 6 (NQ) tambien fue prematuro para el ATR observado. El patron general: la estrategia 2x y el AutoTrader tienen stops que no estan dinamicamente ajustados al escenario V5 activo — usan valores estaticos o parametros fijos que pueden quedar cortos en sesiones de alta volatilidad como la de hoy.</p>
+  </div>
+  <div class="ai-insight" style="margin-top:12px">
+    <div class="ai-label">Recomendación General</div>
+    <p>Implementar validacion dinamica del StopATRx minimo en ambas estrategias (2x y AutoTrader_V1): antes de cada entrada, leer el escenario V5 activo (SuperExtrema, Extrema, Alta, Media, Baja), calcular StopATRx × ATR en tiempo real y ajustar los niveles de stop automaticamente. Si los parametros de la estrategia no permiten el stop minimo con el RR objetivo, la entrada debe cancelarse. Esta es la correccion de mayor impacto en consistencia a largo plazo.</p>
+  </div>
+</div>
 
   <div class="sub-title">Tabla de operaciones ejecutadas</div>
   <div style="overflow-x:auto">
@@ -926,7 +1016,112 @@ footer .brand-ft .gold { color: var(--gold); }
     </div>
   <p style="margin-top:12px;font-size:11px;color:var(--text-muted);text-align:center">Mostrando 6 de 6 entradas registradas</p>
 </div>
-  
+  <div class="sub-title" style="margin-top:20px">Análisis IA por trade — Zona, señal y evaluación</div>
+
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#1 &middot; ES Long</span>
+        <span class="tag tag-win">$+362.50</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Entry — Manual (sin señal HUD activa)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ (precio 7472 > VWAP 7466.83, +5.17 pts) | SMA20 DOWN ✗ (-0.35) | SMA80 PLANA ✗ (+0.0375) = 1/3 indicadores alineados — Contexto MIXTO<br>
+        
+        Trade ganador del primer par en ES. Contexto MIXTO (1/3): solo VWAP alineado, SMAs sin confirmar direccion alcista. Duracion de 2 min 15 seg — trade de muy alta precision. Escenario V5 SuperExtrema activo: stop minimo = 4.09 pts (0.7 × ATR 5.84). El T1 a +7.25 pts implica un RR de 1.77 si el stop original era el minimo V5 — levemente inferior al RR minimo de 2.0 del escenario. Trade sin señal HUD activa en contexto de indicadores parcialmente alineados: resultado positivo pero calidad de setup clasificada como MEDIA-BAJA segun los criterios del sistema.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#2 &middot; ES Long</span>
+        <span class="tag tag-win">$+225.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Entry — Manual (sin señal HUD activa)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ | SMA20 DOWN ✗ | SMA80 PLANA ✗ = 1/3 indicadores alineados — Contexto MIXTO<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Exit via Stop2 — segundo contrato del par 2x salio en stop de proteccion a +4.5 pts sobre entrada. Ganancia positiva. Distancia de salida: 4.5 pts = 0.77× ATR, apenas supera el StopATRx minimo V5 de 0.7 (4.09 pts). El stop fue minimamente adecuado segun configuracion V5.<br>
+        Segundo contrato del par de Trade 1. El exit via Stop2 a +4.5 pts indica que el trailing stop o stop de proteccion se activo antes de alcanzar el segundo target. Cumplimiento V5: 4.5 pts > minimo de 4.09 pts — OK pero sin margen. El RR combinado del par (Trade 1 + Trade 2 = $587.50 total con riesgo de 4.09 pts por contrato) es aceptable. Recomendacion: en escenario SuperExtrema, el Stop2 deberia configurarse a minimo 1.0× ATR (5.84 pts) para dar margen al ruido del mercado y no salir prematuramente.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#3 &middot; ES Long</span>
+        <span class="tag tag-win">$+237.50</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Entry — Manual (sin señal HUD activa)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP DOWN ✗ (precio 7457.0 esta 19.55 pts BAJO VWAP 7476.55) | SMA20 DOWN ✗ (-1.325) | SMA80 DOWN ✗ (+0.3 pero en caida) = 0/3 indicadores alineados para Long — Contexto ADVERSO<br>
+        
+        TRADE DE MENOR CALIDAD ABSOLUTA DE LA SESION en terminos de disciplina. El precio de entrada (7457.0) estaba 19.55 pts POR DEBAJO del VWAP (7476.55) — señal bajista significativa para un Long. SMA20 y SMA80 ambas en direccion adversa. Contexto 0/3 — ninguna condicion tecnica alineada. El target alcanzado fue +4.75 pts vs stop minimo V5 de 4.49 pts (0.7 × ATR 6.41) — margen de apenas 0.26 pts. Si el mercado hubiese continuado bajando 5 pts desde la entrada (perfectamente posible con precio 19 pts bajo VWAP), el trade habria sido un stop. Ganador por condicion favorable de mercado, no por calidad de setup. Este trade junto con el Trade 4 son los casos de estudio criticos de la sesion para ajuste de disciplina futura.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#4 &middot; ES Long</span>
+        <span class="tag tag-win">$+137.50</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Entry — Manual (sin señal HUD activa)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP DOWN ✗ | SMA20 DOWN ✗ | SMA80 DOWN ✗ = 0/3 indicadores alineados — Contexto ADVERSO<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Exit via Stop1 — primer contrato salio en stop de proteccion a +2.75 pts. Ganancia minima positiva. ALERTA CRITICA: distancia de salida 2.75 pts = 0.43× ATR — INFERIOR al StopATRx minimo V5 de 0.7 (4.49 pts para ATR=6.41). El stop de este contrato fue insuficientemente amplio para el escenario SuperExtrema activo.<br>
+        Segundo contrato del par Trade 3. El menor PnL de la sesion ($137.50) y el incumplimiento mas claro del parametro StopATRx de V5_VolatilityConfig. Con ATR=6.41 y escenario SuperExtrema, el stop minimo prescrito es 4.49 pts. El exit a +2.75 pts (0.43× ATR) es 1.74 pts menor de lo que V5 requiere — en un dia adverso con igual volatilidad, este nivel habria sido alcanzado y superado dentro del ruido normal del ATR, convirtiendo la ganancia de $137.50 en una perdida. El contexto 0/3 y la ausencia de señal HUD hacen de este el trade de mayor riesgo silencioso de la sesion. Fue ganador exclusivamente por la condicion alcista del mercado en ese momento, no por calidad de setup ni por dimensionamiento correcto del stop.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#5 &middot; NQ Long</span>
+        <span class="tag tag-win">$+765.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_3 (zona de entrada AutoTrader — sin señal HUD activa confirmada en pipeline)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP DOWN ✗ (precio 29937.25 bajo VWAP 29947.67, diferencia -10.42 pts) | SMA20 UP ✓ (+3.1125) | SMA80 UP ✓ (+1.1313) = 2/3 indicadores alineados — Contexto MIXTO<br>
+        
+        Mejor trade de la sesion en PnL absoluto ($765). La entrada en zona HUD_En_3 con el AutoTrader_V1 fue precisa. El T1 a +38.25 pts barely cumple el stop minimo V5 (38.02 pts para ATR=54.32) con un margen de apenas 0.23 pts — tecnicamente cumple pero sin margen. El RR si el stop original fue el minimo V5 (38.02 pts) resulta exactamente 1.0 — inferior al RR minimo de 2.0 del escenario SuperExtrema. POC en 29951.25 estaba 14 pts sobre la entrada — el AutoTrader entro en zona de demanda bajo el POC, lo que es coherente con la logica de Value Area. Contexto MIXTO (2/3): SMAs alcistas pero VWAP bajista. Punto critico de sistema: el pipeline clasifica este trade como 'fuera de señal' a pesar de usar HUD_En_3 — hay una inconsistencia entre logica de zonas y logica de señal que requiere resolucion.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#6 &middot; NQ Long</span>
+        <span class="tag tag-win">$+395.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_3 (zona de entrada AutoTrader — sin señal HUD activa confirmada en pipeline)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP DOWN ✗ | SMA20 UP ✓ | SMA80 UP ✓ = 2/3 indicadores alineados — Contexto MIXTO<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Exit via HUD_StBE_3 — stop movido a BreakEven, exit con ganancia de +19.75 pts. El precio retrocedio hasta el nivel de BE despues de avanzar. Ganancia positiva pero inferior al T1 (+38.25 pts) del primer contrato. Con ATR=54.32, el nivel de BE fue alcanzado dentro del ruido normal del mercado.<br>
+        Segundo contrato del par Trade 5. El AutoTrader movio el stop a BreakEven generando el exit a 29957.0 (+19.75 pts). Con ATR=54.32 en escenario SuperExtrema, una fluctuacion de 20 pts es perfectamente normal dentro del ruido del mercado — el StBE fue prematuro para estas condiciones de volatilidad. El parametro de activacion del StBE en AutoTrader_V1 deberia revisarse para el escenario SuperExtrema: considerar mover a BE solo despues de que el precio avance al menos 0.5× ATR en beneficio (27.16 pts para este ATR). En este caso especifico, el BE temprano evito capturar la continuacion hacia T2 — si el precio hubiera seguido hasta T2, el PnL adicional habria sido significativo. Sin embargo, la logica de proteccion via StBE sigue siendo correcta en principio.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#7 &middot; NQ Long</span>
+        <span class="tag tag-win">$+330.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_4 (zona de entrada AutoTrader — sin señal HUD activa confirmada en pipeline)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ (precio 29962.5 bajo VWAP 29971.45, diferencia -8.95 pts — tecnicamente bajo VWAP pero en zona proxima) | SMA20 UP ✓ (+1.5) | SMA80 UP ✓ (+1.9313) = 3/3 indicadores en direccion alcista — Contexto OK<br>
+        
+        Trade con mejor calidad de contexto de toda la sesion (OK, 3/3). VWAP, SMA20 y SMA80 todos en direccion alcista — la entrada en HUD_En_4 fue la mas coherente con el sistema. Sin embargo hay dos alertas criticas: (1) VIOLACION DE REGLA DE CIERRE: exit a 16:34 ET — 34 minutos despues del limite de 16:00 del GamePlan (Regla #9). En un viernes de opciones semanales (OPEX), esta exposicion es un riesgo no compensado. (2) El T1 a +16.5 pts es inferior al stop minimo V5 para NQ (0.7 × ATR=45.25 = 31.68 pts) — el trade cerro con ganancia pero el target alcanzado equivale a 0.52× el stop minimo prescrito, implicando un RR < 1.0 si el stop original era el minimo V5. El AutoTrader debe tener configurado cierre automatico los viernes.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#8 &middot; NQ Long</span>
+        <span class="tag tag-win">$+360.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_4 (zona de entrada AutoTrader — sin señal HUD activa confirmada en pipeline)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> VWAP UP ✓ | SMA20 UP ✓ | SMA80 UP ✓ = 3/3 indicadores en direccion alcista — Contexto OK<br>
+        
+        Segundo contrato del par Trade 7, exit en HUD_T2_4 (+18.0 pts) — correctamente superior al T1 de Trade 7 (+16.5 pts). Contexto OK (3/3) confirma que este fue el par de mayor calidad de setup de la sesion. Las observaciones criticas son identicas a Trade 7: (1) cierre a 16:34 ET — 34 minutos sobre el limite de 16:00 del GamePlan, con riesgo de pin de opciones semanales sin compensacion; (2) T2 a +18.0 pts inferior al stop minimo V5 (31.68 pts para ATR=45.25). El AutoTrader deberia implementar regla de cierre automatico a 15:55 ET los viernes como medida de seguridad. Considerando el contexto, este es el segundo mejor trade de la sesion junto con Trade 7.
+      </div>
+    </div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 5 — SEÑALES ══════════════════════ -->
@@ -966,7 +1161,12 @@ footer .brand-ft .gold { color: var(--gold); }
       <table style='width:100%;font-size:12px;border-collapse:collapse;'><thead><tr style='color:var(--text-muted);border-bottom:1px solid var(--border);'><th style='padding:6px;text-align:left'>#</th><th>Instrumento</th><th>Dir</th><th>Hora entrada</th><th>Precio</th><th>P&L</th><th>Estrategia</th></tr></thead><tbody><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>1</td><td style='padding:5px;'>ES</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>10:23:18</td><td style='padding:5px;'>7,472.00</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$362.50</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>2x (60 Profit 30 Lost)</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>2</td><td style='padding:5px;'>ES</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>10:23:18</td><td style='padding:5px;'>7,472.00</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$225.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>2x (60 Profit 30 Lost)</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>3</td><td style='padding:5px;'>ES</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>10:46:28</td><td style='padding:5px;'>7,457.00</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$237.50</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>2x (60 Profit 30 Lost)</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>4</td><td style='padding:5px;'>ES</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>10:46:28</td><td style='padding:5px;'>7,457.00</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$137.50</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>2x (60 Profit 30 Lost)</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>5</td><td style='padding:5px;'>NQ</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>14:15:03</td><td style='padding:5px;'>29,937.25</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$765.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>EduS_AutoTrader_V1</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>6</td><td style='padding:5px;'>NQ</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>14:15:03</td><td style='padding:5px;'>29,937.25</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$395.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>EduS_AutoTrader_V1</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>7</td><td style='padding:5px;'>NQ</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>14:57:31</td><td style='padding:5px;'>29,962.50</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$330.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>EduS_AutoTrader_V1</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>8</td><td style='padding:5px;'>NQ</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>14:57:31</td><td style='padding:5px;'>29,962.50</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$360.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>EduS_AutoTrader_V1</td></tr></tbody></table>
     </div>
   </div>
-  
+  <div class="ai-insight" style="margin-top:12px;">
+    <div class="ai-label">📊 Análisis de Disciplina</div>
+    <p style="margin:6px 0;">La sesion presenta una paradoja estadistica relevante: WR=100% logrado con CERO ejecuciones de señal HUD V5. Los 8 trades se ejecutaron fuera del sistema de señales — 4 manuales en ES y 4 via AutoTrader_V1 usando zonas HUD pero sin señal activa confirmada. La unica señal disponible con resultado conocido (ES SHORT M1+ 15:36:54) habria sido un stop, correctamente ignorada. Operar fuera del sistema de señales con WR=100% genera un riesgo cognitivo critico: construir la narrativa de que el HUD V5 no es necesario. Esa conclusion es estadisticamente invalida basada en una sola sesion favorable.</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Patrón:</strong> Se identifican dos patrones operativos distintos coexistiendo en la misma sesion: (1) Discrecional manual en ES durante USA AM — opera en contexto adverso (0/3, 1/3) sin señal HUD, con alta confianza personal. Este patron es impulsivo y estadisticamente fragil. (2) AutoTrader sistematico en NQ durante USA PM — usa zonas HUD con mayor rigor pero el pipeline lo clasifica como 'fuera de señal', lo que sugiere un problema de definicion: la logica interna del AutoTrader usa el HUD pero no activa el criterio de 'señal HUD activa' del reporte. Resolver esta dicotomia es la accion de sistema mas urgente.</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Impacto:</strong> Para las 8 señales sin resultado conocido: no cuantificable. Para la señal con resultado conocido (ES SHORT M1+ 15:36:54): correctamente ignorada — su ejecucion habria reducido el PnL en un monto no especificado. Conclusion general: en esta sesion especifica, NO ejecutar señales HUD fue estadisticamente correcto para el resultado del dia (la unica señal conocida era un stop). Esto NO implica que ignorar señales HUD sea una estrategia valida — es un resultado de una sola sesion en condiciones excepcionales de mercado unidireccional.</p>
+  </div>
 </div>
   <div class="section-title"><span class="step">CONTEXTO</span><h2>Validación de Contexto por Trade</h2></div>
 <div class="card">
@@ -1100,7 +1300,13 @@ footer .brand-ft .gold { color: var(--gold); }
   <div class="section-label"><span class="num">6</span>Diagnóstico de la Sesión</div>
   <h2>Análisis General y Conclusiones</h2>
   <p class="sub">Evaluación cualitativa de la sesión, patrones identificados y aprendizajes</p>
-  
+  <div class="section-title"><span class="step">ANALISIS</span><h2>Análisis General de la Sesión</h2></div>
+<div class="ai-insight">
+  <div class="ai-label">🤖 Análisis de IA</div>
+  <p>Sesion perfecta en resultado: 8 trades, 8 winners, WR=100%, PnL=$2,812.50 — el mejor dia de la semana operando exclusivamente Long. El mercado materializo el escenario BULL del GamePlan (NQ lidera, sesgo tech, rotacion desde commodities) con NQ cotizando sobre 29,900 durante USA PM. Sin embargo, el hallazgo critico es que los 8 trades se ejecutaron COMPLETAMENTE FUERA de señal HUD V5 activa, y la unica señal disponible (ES SHORT M1+ 15:36:54) habria sido un stop — correctamente ignorada. Esta sesion genera un interrogante de coherencia de sistema: resultados excepcionales obtenidos con cero ejecuciones del marco de señales HUD V5.</p>
+</div><div class="card" style="background:var(--header-gradient);color:white;border:none;">
+  <p style="font-size:14px;line-height:1.7;text-align:center;font-style:italic;">"Dia excepcional en resultado: $2,812.50 con WR=100% y 8/8 winners operando exclusivamente Long en un mercado que materializo perfectamente el escenario BULL del GamePlan. La lectura pre-mercado fue precisa — NQ era el instrumento lider, el sesgo Long estaba justificado, y la unica señal HUD disponible (ES SHORT M1+) fue descartada correctamente. El peligro de una sesion de este tipo no esta en los numeros — esta en la narrativa que construyes a partir de ellos. Un WR=100% operando fuera del sistema de señales puede crear la ilusion de que el HUD V5 es prescindible, que los indicadores son un obstaculo, que el instinto supera al sistema. Esta narrativa es estadisticamente peligrosa y se desmonta en la primera sesion adversa. Los resultados de hoy fueron posibles porque el mercado fue cooperativo, la direccion fue unidireccional, y cada entrada se movio inmediatamente en la direccion favorable. La proxima semana es la oportunidad real: mantener la lectura de mercado que funciono hoy, añadir la disciplina de señal HUD que faltó, y construir un historial estadistico que valide el sistema — no una sesion aislada. El objetivo no es el 100% WR. Es el 100% de adherencia al sistema con resultados que se sostengan en 100 sesiones, no en 1."</p>
+</div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 7 — ESTRATEGIAS ══════════════════════ -->
@@ -1116,7 +1322,7 @@ footer .brand-ft .gold { color: var(--gold); }
 </div>
 
 <!-- ══════════════════════ SECCIÓN 8 — FONDEO ══════════════════════ -->
-<div id="fondeo-section" style="display:0">
+<div id="fondeo-section" style="display:1">
 <div class="section-divider"></div>
   <div class="section-label"><span class="num">8</span>Cuenta Fondeada</div>
   <h2>Evaluación de la Cuenta Fondeada</h2>
@@ -1126,7 +1332,7 @@ footer .brand-ft .gold { color: var(--gold); }
     <div class="kpi"><div class="kpi-label">Días Restantes</div><div class="kpi-value">—</div></div>
     <div class="kpi"><div class="kpi-label">Objetivo</div><div class="kpi-value" style="color:var(--gold)">—</div></div>
   </div>
-  <div class="ai-insight"><div class="ai-label">Evaluación</div><p>No disponible.</p></div>
+  <div class="ai-insight"><div class="ai-label">Evaluación</div><p>No se proporcionaron datos de cuenta fondeada en los datos de sesion. El PnL de la sesion de $2,812.50 representa un resultado excepcional que en la mayoria de programas de fondeo estandar (FTMO, Topstep, Apex) equivale a recuperar un drawdown significativo o cumplir un objetivo semanal completo. Continuar monitoreando las metricas de cuenta si aplica — dias de resultado excepcional como hoy deben aprovecharse para mejorar el buffer de drawdown disponible.</p></div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 9 — DOFA ══════════════════════ -->
@@ -1136,6 +1342,24 @@ footer .brand-ft .gold { color: var(--gold); }
   <h2>Análisis DOFA — 12 JUN 2026</h2>
   <p class="sub">Fortalezas · Debilidades · Oportunidades · Amenazas del período analizado</p>
   
+<div class="dofa-grid">
+  <div class="dofa-card F">
+    <div class="dofa-title F">✅ Fortalezas</div>
+    <div class="dofa-item">WR=100% en 8/8 trades con PnL=$2,812.50 — resultado que valida la lectura del sesgo de mercado BULL identificada en el GamePlan pre-mercado. La lectura macro y de instrumento fue correcta.</div><div class="dofa-item">La unica señal HUD V5 disponible con resultado conocido (ES SHORT M1+ 15:36:54) fue correctamente ignorada — habria sido un stop, y el sistema de filtrado del trader funciono en ese caso especifico.</div><div class="dofa-item">Sesgo Long exclusivo mantenido durante toda la sesion, 100% coherente con el escenario BULL y con la fortaleza real del mercado. Sin intentos de short contra la tendencia dominante.</div><div class="dofa-item">AutoTrader_V1 ejecuto correctamente en zonas HUD_En_3 y HUD_En_4 en NQ durante USA PM, generando $1,850 (65.8% del PnL) en el instrumento primario identificado por el GamePlan.</div><div class="dofa-item">Respeto de ventanas criticas: sin operaciones en los primeros 5 minutos del cash open y sin posiciones durante la ventana UMich 09:55-10:05 ET.</div>
+  </div>
+  <div class="dofa-card D">
+    <div class="dofa-title D">⚠️ Debilidades</div>
+    <div class="dofa-item">100% de trades ejecutados SIN señal HUD V5 activa confirmada — la operativa estuvo completamente desconectada del sistema de señales diseñado. Crea riesgo de replicar el patron en dias con menor cooperacion del mercado.</div><div class="dofa-item">Trades 3 y 4 (ES 10:46) ejecutados con contexto 0/3 — ningun indicador alineado para Long. VWAP 19.55 pts por encima del precio al momento de la entrada. Winners por suerte de mercado.</div><div class="dofa-item">Trade 4 (Stop1 a +2.75 pts) con distancia de exit = 0.43× ATR, inferior al StopATRx minimo de V5 (0.7× ATR = 4.49 pts) para el escenario SuperExtrema activo.</div><div class="dofa-item">Trades 7 y 8 cerrados a 16:34 ET — 34 minutos despues del limite de 16:00 del GamePlan. Violacion de regla critica #9 en un viernes de vencimiento de opciones semanales.</div>
+  </div>
+  <div class="dofa-card O">
+    <div class="dofa-title O">🔵 Oportunidades</div>
+    <div class="dofa-item">Resolver la inconsistencia de reporting entre logica de zona HUD (usada por AutoTrader) y logica de señal HUD activa — actualizar el pipeline para distinguir correctamente ambos modos y eliminar la confusion analitica.</div><div class="dofa-item">Implementar validacion dinamica del StopATRx minimo en la estrategia 2x para ES: calcular el minimo en tiempo real segun el escenario V5 activo y rechazar entradas donde el stop configurado no lo cumpla.</div><div class="dofa-item">Configurar cierre automatico por horario en AutoTrader_V1 para viernes (15:55 ET) y eliminar la dependencia del trader manual para cumplir las reglas de cierre del GamePlan.</div><div class="dofa-item">Construir estadistica de resultados hipoteticos de señales HUD ignoradas — sin esa data, es imposible evaluar objetivamente si las señales HUD son mejores o peores que las entradas actuales.</div>
+  </div>
+  <div class="dofa-card A">
+    <div class="dofa-title A">🔴 Amenazas</div>
+    <div class="dofa-item">Sesgo cognitivo post-sesion de WR=100%: el trader puede concluir que operar sin señales HUD es igual o superior a operar con señales. Esta narrativa, basada en una sola sesion con mercado cooperativo unidireccional, es estadisticamente peligrosa y puede erosionar la consistencia del sistema a largo plazo.</div><div class="dofa-item">El escenario SuperExtrema activo con stops inferiores al minimo V5 (Trade 4, StBE Trade 6) puede resultar en barredura de stops en la proxima sesion con igual volatilidad pero direccion adversa — el mismo mercado que fue favorable hoy puede ser destructivo mañana con la misma logica de stop.</div><div class="dofa-item">La operativa manual con contexto 0/3 (Trades 3-4) crea un precedente de 'funciona sin alineacion de indicadores' que puede llevar a incrementar la frecuencia de entradas de baja calidad en sesiones futuras con menor cooperacion del mercado.</div><div class="dofa-item">La exposicion post-16:00 en viernes de OPEX fue gestionada positivamente hoy, pero representa un riesgo estructural: el AutoTrader sin regla de cierre por horario puede mantener posiciones en horarios de alta volatilidad de cierre semanal de forma indefinida.</div>
+  </div>
+</div>
 </div>
 
 <!-- ══════════════════════ SECCIÓN 10 — REGLAS ══════════════════════ -->
@@ -1144,8 +1368,47 @@ footer .brand-ft .gold { color: var(--gold); }
   <div class="section-label"><span class="num">10</span>Reglas Post-Mercado</div>
   <h2>Recomendaciones y Reglas a Seguir</h2>
   <p class="sub">Reglas críticas, ajustes de calidad y mejoras para las próximas sesiones</p>
+  <div class="section-title"><span class="step">RECOMENDACIONES</span><h2>Recomendaciones Finales</h2></div>
+<div class="rec-card">
+  <h3>🔴 Regla Critica — Validar StopATRx minimo V5 antes de cada entrada</h3>
+  <ul><li>Antes de confirmar cualquier entrada, verificar que el stop configurado >= StopATRx × ATR para el escenario V5 activo. SuperExtrema ES: stop minimo = 0.7 × ATR. SuperExtrema NQ: stop minimo = 0.7 × ATR. Si el mercado no permite ese stop con el RR minimo (2.0), no hay trade.</li><li>Implementar esta validacion en codigo para la estrategia 2x en NinjaTrader 8: leer el ATR actual y el escenario V5 activo, calcular el stop minimo dinamico y rechazar la entrada si los parametros configurados son inferiores.</li><li>El Trade 4 (Stop1 a +2.75 pts con minimo V5 de 4.49 pts) debe documentarse como caso de estudio permanente: ganador por suerte de mercado con stop insuficiente es una vulnerabilidad silenciosa que se revela en la primera sesion adversa.</li></ul>
+</div><div class="rec-card">
+  <h3>🔴 Regla Critica — Cierre automatico antes de 16:00 ET los viernes (OPEX)</h3>
+  <ul><li>Configurar en AutoTrader_V1 una condicion de cierre por horario: los viernes, cerrar toda posicion abierta a las 15:55 ET. Usar la funcion ToTime() o ClosingTime en la estrategia NinjaTrader 8.</li><li>Añadir una alerta de NinjaTrader a las 15:45 ET los viernes como recordatorio de cierre manual como respaldo al cierre automatico.</li><li>Los Trades 7-8 cerraron a 16:34 ET — 34 minutos de exposicion post-limite en pin risk de opciones semanales. En un dia con VIX sobre 20 y opciones expirando, ese periodo puede generar movimientos de 50-80 pts en NQ en segundos.</li></ul>
+</div><div class="rec-card">
+  <h3>🔴 Regla Critica — Contexto minimo 2/3 para entradas manuales en ES</h3>
+  <ul><li>Para cualquier entrada manual en ES (fuera de AutoTrader): requerir minimo 2 de 3 indicadores alineados (VWAP + SMA20, VWAP + SMA80, o SMA20 + SMA80) como condicion necesaria. Contexto 0/3 es condicion de NO-ENTRADA absoluta.</li><li>Los Trades 3 y 4 con contexto 0/3 fueron winners por mercado cooperativo. En una sesion con igual estructura pero direccion opuesta, esas mismas entradas habrian sido stops con el precio 19+ pts en contra desde la entrada.</li><li>Registrar en el diario de trading el contexto (X/3) de cada entrada manual. Si se detecta que se opero con contexto < 2/3 en mas de 1 vez por semana, implementar filtro automatico en la estrategia.</li></ul>
+</div><div class="rec-card">
+  <h3>🟡 Calidad — Resolver la inconsistencia Señal HUD vs Zona HUD en el pipeline</h3>
+  <ul><li>El AutoTrader usa zonas HUD (HUD_En_3, HUD_En_4) como criterio de entrada pero el pipeline reporta esos trades como 'fuera de señal'. Definir si el uso de zona HUD constituye 'señal activa' y actualizar el reporting en consecuencia.</li><li>Si la conclusion es que zona HUD no es suficiente y se requiere señal HUD activa adicional, configurar el AutoTrader para que solo ejecute cuando ambas condiciones se cumplan simultaneamente — zona HUD + señal activa.</li><li>Hasta resolver esta inconsistencia, los reportes post-mercado tendran una lectura distorsionada de la disciplina de señales — '0 señales ejecutadas' cuando en realidad el AutoTrader si usa infraestructura HUD.</li></ul>
+</div><div class="rec-card">
+  <h3>🟡 Calidad — Optimizar el umbral de activacion del StBE en NQ para SuperExtrema</h3>
+  <ul><li>Con ATR=54.32 en escenario SuperExtrema, el StBE actual se activo a +19.75 pts (Trade 6) — equivalente a 0.36× ATR. El ruido normal del mercado puede superar ese umbral facilmente, generando exits prematuros.</li><li>Ajustar el umbral de StBE en AutoTrader_V1 para NQ en escenario SuperExtrema: mover a BE solo despues de +0.5× ATR en beneficio (minimo 27 pts para ATR=54 pts). Esto reduce el riesgo de salida prematura.</li><li>Comparar en las proximas 10 sesiones el PnL del segundo contrato con StBE actual vs StBE ajustado para validar la mejora antes de hacer el cambio permanente.</li></ul>
+</div><div class="rec-card">
+  <h3>🟢 Mejora para Proxima Sesion — Ejecutar al menos una señal HUD pura</h3>
+  <ul><li>Establecer como objetivo de la proxima sesion: ejecutar minimo 1 trade con señal HUD V5 activa confirmada (A+ o LR+) durante USA AM. Documentar el resultado y comparar contra las entradas discrecionales de esta sesion.</li><li>Revisar por que el HUD V5 genero 9 señales durante la sesion sin que el AutoTrader ejecutara ninguna — verificar si hay un problema de configuracion en los filtros del AutoTrader que esta descartando señales validas.</li><li>Añadir al pipeline post-mercado un campo de resultado hipotetico para cada señal ignorada — sin esa informacion, es imposible evaluar objetivamente si las señales HUD son superiores, iguales o inferiores a las entradas actuales de AutoTrader y discrecionales.</li></ul>
+</div>
+
+<div class="section-title"><span class="step">INCIDENCIAS</span><h2>Bugs y Diagnóstico</h2></div>
+<div class="card">
   
-  <div class="info-box" style="text-align:center;color:var(--text-muted)">No hay plan de mejoras registrado para esta sesión.</div>
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ Inconsistencia critica: Señal HUD vs Zona HUD en pipeline de reporting <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">Los trades 5-8 del AutoTrader_V1 usaron zonas de entrada HUD (HUD_En_3, HUD_En_4) pero el pipeline de post-mercado los clasifica como 'Fuera de señal HUD'. Esto genera un reporte que muestra '0 señales ejecutadas / 9 ignoradas' cuando en realidad el AutoTrader si utilizo la infraestructura de zonas del HUD V5 para sus entradas. La causa raiz puede ser que el sistema distingue entre 'zona HUD activa' y 'señal HUD activada' como dos conceptos diferentes, pero el pipeline no documenta esta distincion.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Revisar la definicion de 'señal activa' en el pipeline de post-mercado. Crear dos categorias diferenciadas: (1) 'Señal-Zona': entrada en zona HUD sin señal de activacion, (2) 'Señal-Activa': entrada con señal HUD completamente activada. Actualizar los campos del pipeline para reflejar correctamente que los trades del AutoTrader pertenecen a la categoria Señal-Zona.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ AutoTrader_V1 — Sin regla de cierre automatico por horario para viernes <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">Trades 7 y 8 cerraron a 16:34:36 y 16:34:42 ET respectivamente — 34 minutos despues del limite de 16:00 establecido en el GamePlan y en las reglas del sistema. El AutoTrader_V1 no tiene configurada una condicion de cierre por horario diferenciada para viernes (OPEX), lo que resulta en exposicion innecesaria en ventana de pin risk de opciones semanales.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Implementar en AutoTrader_V1 una condicion de cierre por dia de la semana: si DayOfWeek == Friday y Time >= 15:55 ET, cerrar todas las posiciones abiertas. En NinjaTrader 8, usar la condicion ToTime en el OnBarUpdate o implementar un TimeFilter de cierre en la estrategia.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ Estrategia 2x — Stop1 sin validacion de StopATRx minimo V5 <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">El exit Stop1 del Trade 4 (ES Long, exit a +2.75 pts) resulto en una distancia de 0.43× ATR — inferior al StopATRx minimo de 0.7× ATR prescrito por V5_VolatilityConfig para el escenario SuperExtrema activo (minimo 4.49 pts con ATR=6.41). La estrategia 2x no esta leyendo el escenario V5 activo para ajustar dinamicamente sus niveles de Stop1 y Stop2.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Añadir en la logica de la estrategia 2x una validacion pre-entrada que calcule StopMinimo = StopATRx × ATR segun el escenario V5 activo. Si el Stop1 o Stop2 configurados son inferiores a ese valor, ajustarlos automaticamente o cancelar la entrada. Esto requiere que la estrategia lea el valor de ATR y el escenario V5 activo en tiempo real antes de generar la orden.</p>
+    </div>
+</div>
+  <div class="plan-card"><h3>Disciplina</h3><p>Accion concreta para la proxima sesion: crear un checklist fisico de 3 items obligatorio antes de cualquier entrada manual en ES: (1) VWAP alineado con direccion del trade — SI/NO, (2) SMA20 o SMA80 alineadas — SI/NO, (3) Señal HUD activa — SI/NO. Requiere minimo 2 de 3 en SI para ejecutar. Si el resultado es 1/3 o 0/3, el trade NO se ejecuta sin excepcion. Para NQ en AutoTrader, verificar que la logica de zona HUD tambien incluya al menos 2/3 indicadores alineados antes de confirmar la entrada.</p></div><div class="plan-card"><h3>Sizing</h3><p>Para la proxima sesion en escenario SuperExtrema (KeltnerWidth > 33 ES / > 160 NQ): verificar manualmente antes de la apertura el ATR promedio de las ultimas 5 sesiones y calcular el stop minimo. Para ES: stop minimo aproximado = 4-5 pts. Para NQ: stop minimo aproximado = 35-40 pts. Configurar la estrategia 2x con Stop1 = 5 pts y Stop2 = 6 pts como minimos para ES en regimen SuperExtrema. Revisar si AutoTrader_V1 tiene estos parametros correctamente configurados para NQ.</p></div><div class="plan-card"><h3>Senales</h3><p>Antes de la proxima sesion: auditar la configuracion del AutoTrader_V1 para identificar por que no ejecuto ninguna señal HUD durante los 9 disponibles de la sesion. Verificar si hay un filtro adicional (VIX threshold, hora, zona especifica) que esta descartando las señales validas. Para la proxima semana: establecer el objetivo de ejecutar minimo 1 trade con señal HUD pura confirmada y documentar el resultado para comparacion estadistica.</p></div><div class="plan-card"><h3>Horario</h3><p>Implementar antes de la proxima sesion del viernes: (1) regla de cierre automatico en AutoTrader_V1 a 15:55 ET para viernes, (2) alerta manual en NinjaTrader a 15:45 ET como recordatorio de backup. Para sesiones de lunes a jueves: el limite sigue siendo antes de 16:10 ET. Los horarios de mayor calidad confirmados en esta sesion — USA AM post-UMich (10:05-11:30) y USA PM primera ventana (14:00-14:45) — deben ser las ventanas prioritarias para entradas de alta conviccion la proxima semana.</p></div><div class="plan-card"><h3>Sistema</h3><p>Tres acciones tecnicas a completar antes de la proxima sesion: (1) Implementar validacion StopATRx en estrategia 2x para ES — leer escenario V5 activo, calcular stop minimo dinamico y ajustar Stop1/Stop2 automaticamente o rechazar la entrada si no cumple. (2) Añadir condicion de cierre por horario en AutoTrader_V1 para viernes (15:55 ET ToTime condition). (3) Actualizar el pipeline de post-mercado para distinguir entre 'Señal-Zona HUD' y 'Señal-Activa HUD' — eliminar la ambiguedad que actualmente clasifica los trades del AutoTrader como 'fuera de señal' cuando en realidad usan la infraestructura de zonas del HUD V5.</p></div>
 </div>
 
 <!-- ══════════════════════ PLAN DE MEJORAS ══════════════════════ -->
