@@ -788,6 +788,7 @@ T2 = entrada &plusmn; (stopBase &times; <span class="highlight">RR2</span>)
     <tr><td><code>HoraFinOperativa</code> <span class="pill v6">V2</span></td><td>0</td><td>HHMM; bloquea nuevas entradas tras esa hora (0 = sin límite)</td></tr>
     <tr><td><code>MaxPerdidaDiariaUSD</code> <span class="pill v6">V2</span></td><td>0</td><td>Tope de pérdida diaria en USD (0 = sin límite)</td></tr>
     <tr><td><code>LimitActualizacionTicks</code> <span class="pill v6">V2</span></td><td>5</td><td>Ticks de diferencia para re-enviar la Limit cuando el HUD mueve el nivel</td></tr>
+    <tr><td><code>EntrarEnSenalActivaAlReconectar</code> <span class="pill v6">V2</span></td><td>True</td><td>Si al arrancar/reconectar el HUD ya tiene una señal activa, la toma con niveles en vivo (con guarda de stop). False = solo señales frescas</td></tr>
   </tbody>
 </table>
 </div>
@@ -811,7 +812,24 @@ T2 = entrada &plusmn; (stopBase &times; <span class="highlight">RR2</span>)
 <p><strong>Límite de pérdida diaria (<code>MaxPerdidaDiariaUSD</code>):</strong> la estrategia acumula el P&amp;L real de cada trade (T1 + Stop, o T1 + T2). Si las pérdidas del día superan el tope, deja de aceptar nuevas señales (no cierra las abiertas). El acumulado se reinicia automáticamente cada día.</p>
 <p><strong>Guarda horaria (<code>HoraFinOperativa</code>):</strong> seguro contra dejar la estrategia encendida por accidente. Tras la hora indicada (formato HHMM, ej. 1600 = 4pm), bloquea nuevas entradas sin cerrar las posiciones abiertas. Tu flujo manual (activarla solo en tu horario) no cambia; esto es una red de seguridad.</p>
 <p><strong>Actualización dinámica de la Limit (<code>LimitActualizacionTicks</code>):</strong> mientras la orden Limit espera fill, si el HUD mueve el nivel de entrada más de N ticks, la estrategia cancela y re-envía la Limit al nuevo precio. Evita cancelaciones por fluctuaciones mínimas.</p>
-<p><strong>Revalidación del HUD cada barra:</strong> si el indicador HUD se desactiva o suspende, la estrategia lo detecta y vuelve a buscarlo, evitando operar contra una referencia obsoleta.</p>
+<p><strong>Revalidación del HUD cada barra:</strong> si el indicador HUD se desactiva o suspende (por ejemplo tras recompilar, queda en <code>State=Finalized</code>), la estrategia lo detecta, lo descarta y vuelve a buscar uno vivo, evitando operar contra una referencia obsoleta.</p>
+</div>
+
+<div class="card new">
+<h4>Reconexión a una señal ya activa (<code>EntrarEnSenalActivaAlReconectar</code>) <span class="pill v6">V2</span></h4>
+<p><strong>El problema que resuelve:</strong> el AutoTrader entra en el <em>flanco de subida</em> de la señal (cuando pasa de inválida a válida). Si enciendes la estrategia —o si reconecta tras un recompile que dejó el HUD en <code>Finalized</code>— <strong>mientras una señal ya está activa</strong>, en versiones previas se sincronizaba como "ya vista" y se quedaba esperando la <em>siguiente</em> señal, sin operar la vigente. Síntoma típico: señal dibujada y activa, AutoTrader encendido, pero sin orden colocada.</p>
+<p><strong>Comportamiento en V2 al (re)conectar con señal activa:</strong></p>
+<table>
+  <thead><tr><th>Situación</th><th>Acción</th></tr></thead>
+  <tbody>
+    <tr><td>Sin señal activa</td><td>Normal: espera el próximo flanco</td></tr>
+    <tr><td>Ya operando / esperando fill</td><td>Solo sincroniza, no reentra</td></tr>
+    <tr><td>Señal activa + parámetro <code>True</code> + precio del lado correcto del stop</td><td><strong>Toma la señal en esa barra</strong> con los niveles EN VIVO del HUD</td></tr>
+    <tr><td>Señal activa pero el precio ya pasó el stop (setup muerto)</td><td>La omite y lo registra en el log</td></tr>
+    <tr><td>Parámetro <code>False</code></td><td>Comportamiento clásico: solo señales frescas</td></tr>
+  </tbody>
+</table>
+<p>La guarda de seguridad (precio del lado correcto del stop) evita tomar una señal cuyo retroceso ya falló. La decisión se evalúa en la primera barra tras conectar, donde el precio actual está disponible.</p>
 </div>
 </div>
 
@@ -1006,6 +1024,10 @@ T2 = entrada &plusmn; (stopBase &times; <span class="highlight">RR2</span>)
 <div class="card">
 <h4>¿La guarda horaria cierra mis posiciones abiertas?</h4>
 <p>No. Solo bloquea <em>nuevas</em> entradas tras la hora indicada. Las posiciones abiertas siguen su gestión normal (stop/targets/trailing).</p>
+</div>
+<div class="card">
+<h4>Encendí el AutoTrader, la señal está activa y dibujada, pero no colocó la orden. ¿Por qué?</h4>
+<p>La estrategia entra en el <em>flanco</em> de la señal. Si la enciendes (o reconecta tras un recompile) cuando la señal <strong>ya estaba activa</strong>, por diseño no la "perseguía". En V2 esto se controla con <code>EntrarEnSenalActivaAlReconectar</code> (default <code>True</code>): ahora la toma con los niveles en vivo, siempre que el precio siga del lado correcto del stop. Revisa el log: verás <code>Señal ... ACTIVA al conectar → se tomará esta barra...</code> o el motivo por el que la omitió. Verifica también que el log diga <code>[HUD V6]</code> (no V5) para confirmar que la estrategia está leyendo el indicador correcto.</p>
 </div>
 </div>
 
