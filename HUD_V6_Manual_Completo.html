@@ -256,7 +256,7 @@
   </div>
   <div class="toc-section">
     <a href="#sec4" class="toc-h2">4. Semáforo de Tendencia</a>
-    <a href="#sec4-lrflat" class="toc-h3">LR Plana Auto (BUG-01)</a>
+    <a href="#sec4-lrflat" class="toc-h3">LR Plana Local (5 barras)</a>
   </div>
   <div class="toc-section">
     <a href="#sec5" class="toc-h2">5. Las 7 Zonas</a>
@@ -264,6 +264,7 @@
     <a href="#sec5-entrada" class="toc-h3">Punto de Entrada Exacto</a>
     <a href="#sec5-direccion" class="toc-h3">Retroceso: Largos vs Cortos</a>
     <a href="#sec5-filtros" class="toc-h3">Filtros de Validez</a>
+    <a href="#sec5-cruce" class="toc-h3">El Cruce SMA20/80</a>
     <a href="#sec5-ranking" class="toc-h3">Ranking y Prioridad</a>
   </div>
   <div class="toc-section">
@@ -333,7 +334,7 @@
   <thead><tr><th>Componente</th><th>Cambio</th><th>Impacto</th></tr></thead>
   <tbody>
     <tr><td>AVWAP interno <span class="pill v6">V6</span></td><td>Reescrito para replicar exactamente el indicador visual <code>EduS_DynamicSwingAVWAP</code>: detección de swing real (MAX/MIN), media exponencial ponderada (EW), precio típico HLC/3, backfill al cambio de pierna y APT adaptativo por ATR.</td><td>La línea AVWAP que ves en el gráfico = la línea que dispara la Zona A. Entradas mucho más precisas.</td></tr>
-    <tr><td>Semáforo / LR Plana <span class="pill fix">FIX</span></td><td>El umbral de "LR plana" (<code>lrFlat</code>) se auto-escala con el ATR cuando está en 0. Antes era matemáticamente imposible de activar.</td><td>Las zonas 80 y M3 (que aceptan LR plana) ahora se activan en consolidaciones reales.</td></tr>
+    <tr><td>Semáforo / LR Plana <span class="pill fix">FIX</span></td><td>La "LR plana" (<code>lrFlat</code>) ahora mide la <strong>planitud local de las últimas 5 barras</strong> (no la pendiente de las 89, demasiado lenta), con umbral ATR-adaptativo. Antes era matemáticamente imposible de activar.</td><td>Las zonas A, 80 y M3 (que aceptan LR plana) ahora detectan la consolidación <em>actual</em> y se activan en condiciones reales.</td></tr>
     <tr><td>Panel de Señales <span class="pill new">MEJORA</span></td><td>Cada una de las 7 señales muestra su estado: <code>OFF</code> (desactivada por el usuario), activa con color por calidad, o su prioridad <code>#N</code>.</td><td>Ves de un vistazo qué señales están encendidas y cuál es la de mejor calidad.</td></tr>
     <tr><td>Líneas de Zona <span class="pill new">MEJORA</span></td><td>El gráfico dibuja todas las zonas activas con líneas diferenciadas (color por tipo, primaria sólida, secundarias punteadas, etiqueta con prioridad).</td><td>Lectura visual inmediata de todos los niveles de entrada vigentes.</td></tr>
     <tr><td>Validez de Señal <span class="pill fix">FIX</span></td><td>Cada zona exige ahora un <strong>retroceso real desde el lado correcto</strong> (largo = desde arriba, corto = desde abajo), confirmación de no-breakout en el pin (<code>Close[1]</code>) y, en la LR, separación previa mínima de <code>0.3×ATR</code>.</td><td>Se elimina la señal falsa "en la llegada" al nivel y la repetición de la LR barra a barra en tendencias suaves. Ver <a href="#sec5-direccion">Sección 5</a>.</td></tr>
@@ -555,15 +556,32 @@ ratio = ATR / ATR_RMA(50)<br>
 </table>
 
 <div id="sec4-lrflat">
-<h3>LR Plana Auto-escalada <span class="pill fix">BUG-01 FIX</span></h3>
+<h3>LR Plana: Planitud Local (5 barras) <span class="pill fix">BUG-01 FIX</span> <span class="pill fix">MEJORA V6</span></h3>
 <div class="card new">
-<p>La señal M3 y la zona 80 aceptan que la regresión esté "plana" (a favor pero casi sin pendiente). En V5, el umbral <code>LinReg_SlopeThreshold</code> tenía default <code>0.0</code>, lo que hacía la condición <em>matemáticamente imposible</em>: la pendiente debía ser <code>&gt; 0</code> y <code>&le; 0</code> a la vez. La LR plana nunca se activaba.</p>
-<p><strong>Solución V6:</strong> cuando <code>LinReg_SlopeThreshold = 0</code> (default), el umbral se calcula automáticamente en proporción al ATR:</p>
+<p>Las zonas <strong>A</strong>, <strong>80</strong> y <strong>M3</strong> aceptan que la regresión esté "plana" (a favor pero casi sin pendiente — consolidación). En V5, el umbral <code>LinReg_SlopeThreshold</code> tenía default <code>0.0</code>, lo que hacía la condición <em>matemáticamente imposible</em>: la pendiente debía ser <code>&gt; 0</code> y <code>&le; 0</code> a la vez. La LR plana nunca se activaba.</p>
+
+<h4>El problema de medir la pendiente de las 89 barras</h4>
+<p>Un primer arreglo escaló el umbral por ATR (<code>ATR×0.05/89</code>), pero usaba la pendiente de la regresión sobre <strong>las 89 barras completas</strong>. Esa pendiente es un promedio lentísimo: representa la tendencia de las últimas 89 velas, no si el precio <em>está consolidando ahora</em>. Cuando el precio se aplana en las últimas barras, el slope de 89 sigue "recordando" todo el tramo previo y tarda decenas de barras en reflejar la calma. Resultado: M3 casi nunca disparaba.</p>
+
+<h4>Solución V6: planitud LOCAL sobre 5 barras</h4>
+<p>Como la línea de la LR es <em>recta por definición</em>, "su pendiente reciente" se mide por cuánto se ha movido <strong>su valor</strong> en las últimas 5 barras:</p>
 <div class="stop-formula">
-<span class="highlight">umbral</span> = ATR &times; 0.05 / 89
+pendienteReciente = ( <span class="highlight">LR<sub>ahora</sub> − LR<sub>hace 5 barras</sub></span> ) / 5
 </div>
-<p>Es decir, "lo más plana que el mercado real permite, relativo a su volatilidad". En NQ con ATR≈12 pts, el umbral es ≈0.0067 pts/barra: una LR que se mueve menos que eso por barra se considera plana. Así las zonas de consolidación se activan en condiciones reales.</p>
-<p>Si prefieres un umbral manual, pon cualquier valor <code>&gt; 0</code> en <code>LinReg_SlopeThreshold</code> y el indicador lo usará tal cual.</p>
+<p>La LR se considera <strong>plana</strong> cuando esa pendiente reciente es pequeña <em>y</em> va a favor de la tendencia (en largos: entre 0 y +umbral; en cortos: entre −umbral y 0). Esto detecta la consolidación <strong>actual</strong>, que es justo lo que M3 necesita.</p>
+
+<h4>Umbral ATR-adaptativo</h4>
+<table>
+  <thead><tr><th><code>LinReg_SlopeThreshold</code></th><th>Umbral usado</th></tr></thead>
+  <tbody>
+    <tr><td><code>0</code> (default)</td><td>Automático: <code>ATR × 0.04</code></td></tr>
+    <tr><td><code>&gt; 0</code></td><td><strong>Multiplicador de ATR</strong>: <code>valor × ATR</code> (¡sí adaptativo entre NQ/ES/CL/GC!)</td></tr>
+  </tbody>
+</table>
+<div class="card info">
+<p><strong>Ojo — esto cambia respecto a la versión anterior:</strong> ahora un valor <code>&gt; 0</code> es un <strong>multiplicador del ATR</strong>, no un valor absoluto. Para dar <em>más</em> margen (que M3 active más seguido), <strong>sube</strong> el número: <code>0.04</code> reproduce el auto, <code>0.08</code> lo duplica, <code>0.12</code> lo triplica. Como es relativo al ATR, el mismo valor funciona en todos los mercados. Calibra con el dashboard de backtesting.</p>
+</div>
+<p>Durante las primeras ~6 barras tras cargar el indicador, aún no hay historia suficiente de la LR; en ese lapso "plana" se considera <code>false</code> (conservador), hasta que el buffer se llena.</p>
 </div>
 </div>
 </div>
@@ -654,6 +672,41 @@ ratio = ATR / ATR_RMA(50)<br>
 <div class="card info">
 <p><strong>¿Por qué la LR necesita el filtro 3 y las demás no tanto?</strong> La LinReg89 es por construcción el "centro estadístico" del precio reciente: en una tendencia limpia viaja casi pegada a las velas, por lo que la distancia precio-LR es casi siempre pequeña. Las medias (SMA20/80), el AVWAP y la BM del Keltner se separan más del precio durante el impulso, de modo que su retroceso es un evento más definido por sí mismo. Aun así, los filtros 1 y 2 se aplican a <strong>todas</strong> las zonas.</p>
 </div>
+</div>
+
+<div id="sec5-cruce">
+<h3>El cruce SMA20/80: ¿filtro o solo informativo?</h3>
+<p>El cruce de la SMA20 con la SMA80 (alcista cuando SMA20 &gt; SMA80, bajista cuando SMA20 &lt; SMA80) <strong>no es solo decorativo</strong>: es un <strong>requisito obligatorio</strong> para algunas zonas y contexto informativo para otras.</p>
+
+<table>
+  <thead><tr><th>Zona</th><th>¿Requiere el cruce?</th><th>Condición</th></tr></thead>
+  <tbody>
+    <tr><td><strong>A / A+</strong></td><td>No — informativo</td><td>Posición vs AVWAP + capas alineadas</td></tr>
+    <tr><td><strong>LR / LR+</strong></td><td>No — informativo</td><td>Posición vs LinReg + capas alineadas</td></tr>
+    <tr><td><strong>80 / 80+</strong></td><td>No — informativo</td><td>SMA80 a favor + posición del precio</td></tr>
+    <tr><td><strong>20 / 20+</strong></td><td><strong>Sí — filtro</strong></td><td>Cruce vigente <em>en la dirección de la tendencia</em></td></tr>
+    <tr><td><strong>M1 / M2 / M3</strong></td><td><strong>Sí — filtro</strong></td><td>Cruce a favor <strong>+</strong> al menos 1 retroceso real a la BM</td></tr>
+  </tbody>
+</table>
+
+<div class="card">
+<p><strong>Qué exige exactamente (zonas 20 y M).</strong> No basta con que "haya" cruce — la <strong>dirección</strong> del cruce debe coincidir con la tendencia que marca el AVWAP:</p>
+<ul>
+  <li><strong>Largo</strong> (AVWAP apuntando arriba): exige <code>SMA20 &gt; SMA80</code> (cruce alcista vigente).</li>
+  <li><strong>Corto</strong> (AVWAP apuntando abajo): exige <code>SMA20 &lt; SMA80</code> (cruce bajista vigente).</li>
+</ul>
+<p>Es la confirmación clásica de alineación de medias: el momentum de corto plazo (SMA20) debe estar del lado de la tendencia para habilitar esas entradas. Si el cruce va en contra del AVWAP, las zonas 20 y M quedan bloqueadas aunque el precio toque el nivel.</p>
+</div>
+
+<div class="card warn">
+<p><strong>Dos matices clave:</strong></p>
+<ul>
+  <li><strong>El "hay cruce" casi siempre es verdadero</strong> (la SMA20 está por encima o por debajo de la SMA80 prácticamente siempre). Por eso el verdadero filtro no es <em>si</em> hay cruce, sino su <strong>dirección</strong> respecto al AVWAP. En V6 se corrigió un bug (FIX-001-A) por el que el cruce solo se reconocía en sentido alcista, y las zonas 20/M <em>nunca</em> activaban en tendencias bajistas.</li>
+  <li><strong>Las zonas M piden además un retroceso real</strong> (<code>retrocesoCount ≥ 1</code>): debe haber un toque + rebote completo de la BM del Keltner, no solo barras laterales cerca de ella.</li>
+</ul>
+</div>
+
+<p>Para el <strong>semáforo de tendencia</strong> (las 4 capas), el cruce <strong>no es uno de los 4 votos</strong>: los votos son la posición del precio respecto a cada capa (AVWAP, LR, SMA20, SMA80). Ahí el cruce es solo contexto.</p>
 </div>
 
 <div id="sec5-ranking">
