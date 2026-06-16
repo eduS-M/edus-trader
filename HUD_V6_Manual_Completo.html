@@ -888,8 +888,19 @@ T2 = entrada &plusmn; (stopBase &times; <span class="highlight">RR2</span>)
     <tr><td><code>Resultado</code></td><td>STOP, T1, T2, BE (se completa al cierre)</td></tr>
     <tr><td><code>T1_Tocado / T2_Tocado</code></td><td>SI/NO — si el precio alcanzó cada target</td></tr>
     <tr><td><code>PrecioSalida / BarrasDuracion</code></td><td>Precio de cierre y duración en barras</td></tr>
+    <tr><td><code>MFE_R / MAE_R</code> <span class="pill new">V6</span></td><td>Excursión máxima en múltiplos de R durante la operación: <strong>MFE</strong> = recorrido máximo a favor; <strong>MAE</strong> = recorrido máximo en contra (1R = riesgo al stop). Base para afinar Stops y Targets.</td></tr>
   </tbody>
 </table>
+
+<div class="card new">
+<p><strong>MAE / MFE — para qué sirven.</strong> Estas dos columnas registran, durante la vida de cada trade, cuánto llegó el precio <em>a favor</em> (MFE) y <em>en contra</em> (MAE), expresado en R (riesgo). Con ellas el dashboard responde preguntas que antes eran intuición:</p>
+<ul>
+  <li><strong>MAE de las ganadoras</strong> → ¿cuánto sufren las operaciones que terminan ganando antes de arrancar? Si casi todas tienen MAE &lt; 0.6R, un stop más ajustado las preservaría y subiría el RR.</li>
+  <li><strong>Alcance MFE</strong> → ¿hasta dónde llega el precio a favor? Si pocas llegan a tu RR2, el target está lejos; si casi todas lo superan, podrías estirarlo o usar trailing más holgado.</li>
+  <li><strong>MFE de las perdedoras</strong> → ¿cuánto avanzaron a favor antes de revertir y frenar? Si muchas alcanzaron +1R/+1.5R, un breakeven o T1 más temprano salvaría parte de esas pérdidas.</li>
+</ul>
+<p>El dashboard de backtesting muestra este análisis en el panel <strong>"Análisis de Excursión — MAE / MFE"</strong>. Si el CSV no trae estas columnas (backtests viejos), el panel lo indica y el resto del dashboard funciona igual.</p>
+</div>
 <div class="card info"><p>El dashboard V5 usa <code>SignalID</code> para emparejar ABRE+CIERRE, ignora PENDIENTE/CANCELADA (las cuenta como "omitidas") y lee <code>T2_Tocado</code> directamente del campo, no infiriéndolo del precio.</p></div>
 </div>
 
