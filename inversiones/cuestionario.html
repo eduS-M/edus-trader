@@ -6,10 +6,16 @@
     <title>Cuestionario de Inversión - EduSTrader</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/inv-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .quest-section { margin-bottom: 2rem; border: 1px solid var(--inv-border); border-radius: 8px; overflow: hidden; }
         .quest-header { background: rgba(255,255,255,0.03); padding: 1rem 1.5rem; font-weight: 600; border-bottom: 1px solid var(--inv-border); }
         .quest-body { padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+        .risk-box { padding: 1rem; border-radius: 6px; text-align: center; background: rgba(255,255,255,0.02); border: 1px solid var(--inv-border); }
+        .risk-label { font-size: 0.85rem; color: var(--inv-muted); margin-bottom: 0.5rem; }
+        .risk-value { font-size: 1.25rem; font-weight: 700; }
+        .text-green { color: #10b981; }
+        .text-red { color: #ef4444; }
     </style>
 </head>
 <body class="inversiones-app">
@@ -32,8 +38,32 @@
             <h2 style="font-size: 2rem; margin: 0;" id="ticker-title">Cargando...</h2>
             <div id="quest-date" class="text-muted text-sm"></div>
         </div>
+        
+        <!-- Gestión de Riesgo (Dinámico) -->
+        <div class="quest-section" id="risk-section" style="display: none;">
+            <div class="quest-header" style="display: flex; justify-content: space-between;">
+                <span>Gestión de Riesgo (Basado en ATR)</span>
+                <span id="risk-atr" class="text-muted text-sm">ATR(14): ...</span>
+            </div>
+            <div class="quest-body" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="risk-box">
+                    <div class="risk-label">Precio Actual</div>
+                    <div class="risk-value" id="risk-price">...</div>
+                </div>
+                <div class="risk-box" style="border-color: rgba(239, 68, 68, 0.3);">
+                    <div class="risk-label">Stop Loss Recomendado (Largo Plazo)</div>
+                    <div class="risk-value text-red" id="risk-sl">...</div>
+                    <div class="risk-label" id="risk-sl-pct" style="margin-top:0.25rem;">...</div>
+                </div>
+                <div class="risk-box" style="border-color: rgba(16, 185, 129, 0.3);">
+                    <div class="risk-label">Target Recomendado (Mínimo >10%)</div>
+                    <div class="risk-value text-green" id="risk-tp">...</div>
+                    <div class="risk-label" id="risk-tp-pct" style="margin-top:0.25rem;">...</div>
+                </div>
+            </div>
+        </div>
 
-        <form id="quest-form" class="inv-card" style="padding: 0;">
+        <form id="quest-form" class="inv-card" style="padding: 0; margin-bottom: 2rem;">
             <!-- Sección 1: Análisis Fundamental -->
             <div class="quest-section" style="border:none; border-bottom: 1px solid var(--inv-border); border-radius: 0; margin-bottom: 0;">
                 <div class="quest-header">1. Análisis Fundamental - Indicadores</div>
@@ -108,6 +138,20 @@
                 </button>
             </div>
         </form>
+
+        <!-- Histórico y Gráficos -->
+        <div class="quest-section" id="charts-section" style="display: none;">
+            <div class="quest-header">Análisis Histórico (Últimos 5 Años)</div>
+            <div class="quest-body" style="grid-template-columns: 1fr; gap: 2rem;">
+                <div style="height: 350px; position: relative;">
+                    <canvas id="dcfChart"></canvas>
+                </div>
+                <div style="height: 300px; position: relative;">
+                    <canvas id="pegChart"></canvas>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script>
@@ -133,6 +177,114 @@
                         document.getElementById('quest-date').textContent = `Última edición: ${res.data.latest.analysis_date}`;
                     }
                 });
+                
+            // Cargar Gestión de Riesgo
+            fetch(`/api/inversiones/risk?ticker=${ticker}`)
+                .then(r => r.json())
+                .then(res => {
+                    if (res.success && res.data) {
+                        document.getElementById('risk-section').style.display = 'block';
+                        document.getElementById('risk-atr').textContent = `ATR(14): $${res.data.atr_14}`;
+                        document.getElementById('risk-price').textContent = `$${res.data.current_price}`;
+                        document.getElementById('risk-sl').textContent = `$${res.data.stop_loss}`;
+                        document.getElementById('risk-sl-pct').textContent = `-${res.data.sl_pct}% (2.5x ATR)`;
+                        document.getElementById('risk-tp').textContent = `$${res.data.target}`;
+                        document.getElementById('risk-tp-pct').textContent = `+${res.data.tp_pct}% (4.0x ATR)`;
+                    }
+                });
+                
+            // Cargar Histórico para Gráficos
+            fetch(`/api/inversiones/valuations?ticker=${ticker}&days=1825`)
+                .then(r => r.json())
+                .then(res => {
+                    if (res.success && res.data.history && res.data.history.length > 0) {
+                        document.getElementById('charts-section').style.display = 'block';
+                        renderCharts(res.data.history);
+                    }
+                });
+        }
+        
+        function renderCharts(history) {
+            // Preparar datos
+            const labels = history.map(h => h.valuation_date);
+            const priceData = history.map(h => h.price_at_date);
+            const dcfData = history.map(h => h.dcf_intrinsic_value);
+            const pegData = history.map(h => h.peg_value);
+            
+            // Gráfico DCF vs Precio
+            const ctxDcf = document.getElementById('dcfChart').getContext('2d');
+            new Chart(ctxDcf, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Precio de Mercado',
+                            data: priceData,
+                            borderColor: '#eab308',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            tension: 0.1,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Valor Intrínseco (DCF)',
+                            data: dcfData,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: true,
+                            tension: 0.1,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Valor Intrínseco (DCF) vs Precio', color: '#fff' },
+                        legend: { labels: { color: '#9ca3af' } }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#9ca3af', maxTicksLimit: 12 }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    }
+                }
+            });
+            
+            // Gráfico PEG
+            const ctxPeg = document.getElementById('pegChart').getContext('2d');
+            new Chart(ctxPeg, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'PEG Ratio',
+                        data: pegData,
+                        backgroundColor: pegData.map(v => {
+                            if (v === null) return 'rgba(156, 163, 175, 0.5)';
+                            if (v < 1) return 'rgba(16, 185, 129, 0.7)'; // verde
+                            if (v <= 2) return 'rgba(234, 179, 8, 0.7)'; // amarillo
+                            return 'rgba(239, 68, 68, 0.7)'; // rojo
+                        }),
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Evolución Histórica PEG', color: '#fff' },
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#9ca3af', maxTicksLimit: 12 }, grid: { display: false } },
+                        y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    }
+                }
+            });
         }
 
         document.getElementById('quest-form').addEventListener('submit', async (e) => {
