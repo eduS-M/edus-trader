@@ -359,6 +359,18 @@ EduSTrader - Local Free/
   </ol>
 </div>
 
+<h3>📐 Métricas Avanzadas con datos reales <span style="font-size:11px;color:var(--gold)">NUEVO</span></h3>
+<p>El postmarket ahora <strong>calcula en Python</strong> (no las inventa la IA) cuatro bloques de métricas a partir de tus trades reales, y se los pasa a la IA para que el análisis sea exacto:</p>
+<div class="card card-amber">
+  <ul>
+    <li><strong>[A] Cuentas de Fondeo — Drawdown real:</strong> arma la curva de equity de tus trades y calcula el <strong>máximo drawdown intradía (trailing)</strong>. Lo compara contra cada cuenta de <code>cuentas_fondeo</code>: si el <code>account_id</code> coincide con tu cuenta real, te dice si <em>sobreviviste o quemaste</em> la cuenta y qué % del límite usaste; si no (cuenta Sim), lo muestra como <em>what-if</em>. <strong>Clave:</strong> un día verde puede esconder un DD intradía que te liquida la cuenta de fondeo.</li>
+    <li><strong>[B] Resultado en R:</strong> empareja cada trade con su señal (por subyacente y hora) y expresa el día en <strong>R-múltiplo</strong> (riesgo = distancia al stop). Lo compara con la expectativa del sistema (<strong>+0.33R/trade</strong> del backtesting) para saber si operaste en línea con el edge.</li>
+    <li><strong>[C] Tamaño operado:</strong> cuenta cuántos trades fueron <strong>full</strong> (NQ/ES) vs <strong>micro</strong> (MNQ/MES) y avisa si usaste full en una cuenta de fondeo con DD chico (donde el sistema recomienda micro).</li>
+    <li><strong>[D] Excursión MAE/MFE:</strong> resume cuánto fueron en contra tus ganadoras (MAE) y cuánto a favor tus perdedoras antes de revertir (MFE = dinero dejado en la mesa), en USD.</li>
+  </ul>
+  <p>Estos números aparecen en la sección <strong>Análisis Cuenta de Fondeo</strong> del HTML y alimentan el DOFA y las recomendaciones. Funciona en diario, semanal y mensual.</p>
+</div>
+
 <div class="section-divider"></div>
 
 <!-- ══════════════════════ INSTALACION ══════════════════════ -->
@@ -461,12 +473,31 @@ EduSTrader - Local Free/
       <tr><td><code>ai.providers.*.enabled</code></td><td>Habilita/deshabilita un proveedor</td><td><code>true</code> / <code>false</code></td></tr>
       <tr><td><code>postmarket.path</code></td><td>Ruta base de Post-Mercado</td><td><code>".\\Post-Mercado"</code></td></tr>
       <tr><td><code>postmarket.cuenta</code></td><td>Nombre de cuenta para mostrar en el HTML</td><td><code>"Sim101"</code></td></tr>
+      <tr><td><code>senales_recomendacion.cuentas_fondeo</code></td><td><span class="new-badge">NUEVO</span> Cuentas de fondeo para el análisis de drawdown (bloque [A]). Cada una con <code>account_id</code>, <code>capital</code>, <code>drawdown</code>, <code>objetivo</code>, <code>tipo_dd</code>.</td><td>ver tarjeta ⬇</td></tr>
       <tr><td><code>publishing.auto_commit</code></td><td>Commitea automáticamente en git</td><td><code>true</code></td></tr>
       <tr><td><code>publishing.auto_push</code></td><td>Hace push a GitHub (dispara deploy Cloudflare)</td><td><code>true</code></td></tr>
       <tr><td><code>publishing.git_repo_path</code></td><td>Ruta al repositorio git local</td><td><code>"C:\\...\\GitHub\\edus-trader"</code></td></tr>
       <tr><td><code>publishing.youtube_url</code></td><td><span class="new-badge">NUEVO</span> URL del canal YouTube para el botón del reporte</td><td><code>"https://www.youtube.com/@EduSTrader"</code></td></tr>
     </tbody>
   </table>
+</div>
+
+<div class="card card-amber">
+  <div class="card-title">🏦 Cuenta de fondeo — configurala ANTES de operarla</div>
+  <p>El bloque <strong>[A] Análisis Cuenta de Fondeo</strong> mide tu drawdown real contra el límite de tu cuenta. Para que el postmarket reconozca tu cuenta fondeada (en vez de tratarla como <em>what-if</em>), completá el <code>account_id</code> con el <strong>nombre EXACTO de la cuenta como aparece en NinjaTrader</strong> (columna <code>Account</code> de los CSV). Es el mismo <code>cuentas_fondeo</code> que usa el gameplan — una sola fuente.</p>
+  <pre>"senales_recomendacion": {
+  "cuentas_fondeo": [
+    {
+      <span class="s">"nombre"</span>: <span class="s">"APEX 50K · DD $2.000"</span>,
+      <span class="s">"account_id"</span>: <span class="s">"APEX-2547813"</span>,   <span class="c">// EXACTO como en NT8</span>
+      <span class="s">"capital"</span>: <span class="n">50000</span>,
+      <span class="s">"drawdown"</span>: <span class="n">2000</span>,        <span class="c">// trailing DD que quema la cuenta</span>
+      <span class="s">"objetivo"</span>: <span class="n">3000</span>,        <span class="c">// profit target (opcional)</span>
+      <span class="s">"tipo_dd"</span>: <span class="s">"trailing"</span>
+    }
+  ]
+}</pre>
+  <p>Con <code>account_id</code> vacío, el postmarket muestra el DD real de tus trades como <em>what-if</em> contra los perfiles configurados (útil incluso en Sim para ver si tu día habría quemado una cuenta).</p>
 </div>
 
 <div class="section-divider"></div>
@@ -723,6 +754,16 @@ EduSTrader - Local Free/
 <div id="troubleshooting" style="scroll-margin-top:52px"></div>
 <div class="section-label"><span class="num">9</span>Solución de Problemas</div>
 <h2>Problemas frecuentes y soluciones</h2>
+
+<div class="card card-green">
+  <div class="card-title">✅ CORREGIDO: el HTML salía sin datos en la 1ª corrida (había que generarlo dos veces)</div>
+  <p>En el modo manual interactivo, al responder <strong>"s"</strong> ("¿ya tenés la respuesta?") el sistema seteaba el archivo pero <strong>no cargaba el JSON</strong>, así que el primer HTML salía con las secciones vacías y había que generarlo de nuevo con <code>--manual-text</code>. <strong>Ya está corregido:</strong> ahora carga el análisis en ese mismo paso y la <strong>primera corrida sale completa</strong>. Si el JSON no es válido, avisa y corta (en vez de generar un HTML vacío).</p>
+</div>
+
+<div class="card card-green">
+  <div class="card-title">✅ CORREGIDO: el .bat AUTO los viernes/fin de mes</div>
+  <p><code>INICIAR_POSTMARKET_AUTO.bat</code> tenía dos bugs: el viernes corría el diario en segundo plano (<code>start /b</code>) en paralelo con el semanal → <strong>carrera de git</strong>; y a fin de mes nunca disparaba el cierre mensual. Ambos corregidos: ahora corre <strong>secuencial</strong> (diario, luego semanal/mensual) sin colisiones de git.</p>
+</div>
 
 <div class="card card-red">
   <div class="card-title">❌ Error: No se encuentra V5_VolatilityConfig.csv</div>

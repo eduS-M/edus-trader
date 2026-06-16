@@ -313,7 +313,7 @@ eduSTrader - Local Free/
       <tr><td><code>senales_recomendacion.max_montecarlo_risk</code></td><td>% máx. de ruina admitido; define si la señal va full o micro</td><td><code>20</code></td></tr>
       <tr><td><code>senales_recomendacion.min_winrate</code></td><td>WinRate mínimo para recomendar una señal</td><td><code>40</code></td></tr>
       <tr><td><code>senales_recomendacion.min_trades</code></td><td>Trades históricos mínimos para considerar la señal</td><td><code>30</code></td></tr>
-      <tr><td><code>senales_recomendacion.cuentas_fondeo</code></td><td>Lista de cuentas de fondeo (Panel D): cada una con <code>nombre</code>, <code>capital</code> y <code>drawdown</code> (USD). La ruina es tocar ese drawdown.</td><td><code>[{capital:50000, drawdown:1000}, ...]</code></td></tr>
+      <tr><td><code>senales_recomendacion.cuentas_fondeo</code></td><td>Lista de cuentas de fondeo (Panel D): cada una con <code>nombre</code>, <code>account_id</code>, <code>capital</code>, <code>drawdown</code> (USD), <code>objetivo</code> y <code>tipo_dd</code>. La ruina es tocar ese drawdown.</td><td>ver tarjeta ⬇</td></tr>
       <tr><td><code>senales_recomendacion.max_riesgo_fondeo</code></td><td>% máx. de campañas que tocan el DD para considerar la señal operable en fondeo</td><td><code>15</code></td></tr>
       <tr><td>(Automático)</td><td>La hora ET y el estado del mercado se calculan en tiempo real</td><td><code>"10:45 AM ET"</code></td></tr>
       <tr><td><code>contract_months.*</code></td><td>Meses de contrato para cada futuro</td><td><code>"JUN26"</code></td></tr>
@@ -321,6 +321,20 @@ eduSTrader - Local Free/
       <tr><td><code>publishing.auto_push</code></td><td>Hace push a GitHub (dispara deploy Cloudflare)</td><td><code>true</code></td></tr>
     </tbody>
   </table>
+</div>
+
+<div class="card card-amber">
+  <div class="card-title">🏦 Si operás con una cuenta de fondeo — configurala ANTES</div>
+  <p>Cada cuenta de fondeo es un objeto en <code>cuentas_fondeo</code>. Si vas a operar con una cuenta fondeada (prop firm), completá su <code>account_id</code> con el <strong>nombre EXACTO de la cuenta como aparece en NinjaTrader</strong> (columna <code>Account</code>). Eso enlaza la definición con tus trades reales para que el <strong>Postmarket</strong> calcule el drawdown real de esa cuenta. Mientras esté vacío, el sistema la trata como <em>what-if</em> sobre tus trades de Sim.</p>
+  <pre>{
+  <span class="s">"nombre"</span>: <span class="s">"APEX 50K · DD $2.000"</span>,
+  <span class="s">"account_id"</span>: <span class="s">"APEX-2547813"</span>,   <span class="c">// nombre exacto de la cuenta en NT8</span>
+  <span class="s">"capital"</span>: <span class="n">50000</span>,
+  <span class="s">"drawdown"</span>: <span class="n">2000</span>,        <span class="c">// el trailing DD que te quema la cuenta</span>
+  <span class="s">"objetivo"</span>: <span class="n">3000</span>,        <span class="c">// profit target (opcional)</span>
+  <span class="s">"tipo_dd"</span>: <span class="s">"trailing"</span>     <span class="c">// trailing | static</span>
+}</pre>
+  <p>El gameplan usa estas cuentas para el <strong>Panel D</strong> (qué señal y tamaño operar sin quemar el DD). El postmarket usa el <code>account_id</code> para medir tu drawdown real vs el límite. <strong>Una sola fuente</strong> para los dos sistemas.</p>
 </div>
 
 <div class="section-divider"></div>
