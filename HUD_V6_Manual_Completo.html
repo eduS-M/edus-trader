@@ -276,6 +276,7 @@
   <div class="toc-section">
     <a href="#sec8" class="toc-h2">8. Entrada Activa</a>
     <a href="#sec8-stop" class="toc-h3">Stop Loss</a>
+    <a href="#sec8-optimstop" class="toc-h3">Optimización Stop (MAE/MFE)</a>
     <a href="#sec8-target" class="toc-h3">Targets T1/T2</a>
   </div>
   <div class="toc-section">
@@ -795,6 +796,53 @@ stopBase = <span class="highlight">MAX</span>( KeltnerVolWidth &times; Kelt_Stop
 stop = stopBase, acotado por <span class="danger">StopPct</span> (% del precio) y un mínimo de <code>StopMinTicks</code>
 </div>
 <p>El stop toma el <strong>mayor</strong> entre un 30% del ancho del Keltner de volatilidad y un múltiplo del ATR. Esto evita stops absurdamente pequeños en compresión y los adapta a la volatilidad real. Luego se limita por un porcentaje del precio para evitar stops desorbitados.</p>
+</div>
+
+<div id="sec8-optimstop">
+<h3>Optimización del Stop — análisis MAE/MFE <span class="pill new">ANÁLISIS V6</span></h3>
+
+<div class="card info">
+<p><strong>Quién manda el stop en la práctica.</strong> Sobre 258.000 operaciones del backtesting se midió el stop realizado contra sus dos componentes. Resultado: <strong>el componente Keltner domina el 100% de las veces</strong> — el stop real = <code>KeltnerWidth × Kelt_StopPct (0.30)</code> exacto en todos los mercados y escenarios. El componente <code>StopATRx × ATR</code> es ~5× más chico y nunca manda, y el cap por <code>StopPct</code> no se activa.</p>
+<p><strong>Consecuencia práctica:</strong> tocar <code>StopATRx</code> en el CSV <strong>no cambia el stop</strong>. El único parámetro que mueve el stop es <code>Kelt_StopPct</code> (grupo "4. Stop y Targets", default 0.30).</p>
+</div>
+
+<p><strong>¿Está bien dimensionado el stop?</strong> El registro de excursión máxima (MAE = cuánto fue el precio en contra antes de que el trade funcionara, en múltiplos de R) muestra que las operaciones ganadoras casi nunca sufren mucho antes de arrancar:</p>
+
+<table>
+  <thead><tr><th>% de ganadoras con MAE ≤</th><th>0.5R</th><th>0.6R</th><th>0.7R</th><th>0.8R</th><th>1.0R</th></tr></thead>
+  <tbody>
+    <tr><td>Proporción</td><td>68%</td><td><strong>76%</strong></td><td>82%</td><td><strong>89%</strong></td><td>100%</td></tr>
+  </tbody>
+</table>
+<p>MAE medio de las ganadoras = <strong>0.34R</strong>, pero el stop está en 1.0R. Es decir: <strong>el stop es más ancho de lo necesario</strong> — hay margen para ajustarlo sin perder la mayoría de las ganadoras.</p>
+
+<h4>El análisis por escenario confirma: un solo valor sirve para todos</h4>
+<p>Se desglosó el MAE de las ganadoras por mercado y escenario. La distribución es <strong>prácticamente idéntica</strong> en todos — no hay que diferenciar por escenario:</p>
+<table>
+  <thead><tr><th>Mercado / Escenario</th><th>MAE medio</th><th>k90 (conserva 90% gan.)</th><th>Kelt% sugerido</th></tr></thead>
+  <tbody>
+    <tr><td>NQ — Baja / Media / Alta / Extrema / Super</td><td>0.27–0.29R</td><td>0.81–0.85</td><td><strong>0.24–0.25</strong></td></tr>
+    <tr><td>ES — Baja / Media / Alta / Extrema / Super</td><td>0.24–0.29R</td><td>0.79–0.83</td><td><strong>0.24–0.25</strong></td></tr>
+  </tbody>
+</table>
+<p class="panel-sub" style="margin-top:-6px;"><em>k90 = nivel de stop (en R del actual) que conserva el 90% de las ganadoras. Kelt% sugerido = 0.30 × k90.</em></p>
+
+<h4>Recomendación de ajuste</h4>
+<div class="card new">
+<p>Bajar <code>Kelt_StopPct</code> de <code>0.30</code> a <strong><code>0.24</code></strong> (stop ~20% más ajustado) conserva ~90% de las ganadoras y, en la simulación, <strong>no baja el resultado ni en el peor caso</strong> (cota conservadora ≈ +0.33R, igual que ahora) con un estimado central de ~+0.45R. Curva de decisión:</p>
+<table>
+  <thead><tr><th>Perfil</th><th>Conserva ganadoras</th><th><code>Kelt_StopPct</code></th><th>Stop vs actual</th></tr></thead>
+  <tbody>
+    <tr><td>Conservador</td><td>~95%</td><td>0.27</td><td>~10% más ajustado</td></tr>
+    <tr><td><strong>Balanceado (recomendado)</strong></td><td>~90%</td><td><strong>0.24</strong></td><td>~20% más ajustado</td></tr>
+    <tr><td>Agresivo</td><td>~85%</td><td>0.22</td><td>~27% más ajustado</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="card warn">
+<p><strong>Pendiente de validación en vivo.</strong> Esta es una recomendación basada en el análisis del backtesting (con cotas, porque el MAE/MFE da máximos pero no el orden intrabar). El paso correcto es: cambiar <code>Kelt_StopPct</code> a 0.24, <strong>regenerar el backtesting</strong> con todo lo demás igual, y comparar el resultado <em>real</em> contra el actual (+0.331R). Sólo entonces fijar el valor. Barrido sugerido si mejora: 0.24 → 0.225 → 0.21.</p>
+<p><strong>Nota sobre RR2:</strong> el RR2 (=3) <strong>no se puede subir</strong> con este análisis porque el MFE está censurado en T2 (el trade cierra al tocar 3R y no se sabe si habría seguido). Bajarlo a 2.5 da una mejora marginal que no compensa capar los runners. Se mantiene en 3.</p>
+</div>
 </div>
 
 <div id="sec8-target">

@@ -94,7 +94,7 @@ tr:hover td{background:rgba(0,0,0,0.02)}
     <div class="header-text">
       <div class="brand">EduS Trader</div>
       <h1>Sistema Automatizado de Game Plan</h1>
-      <span class="version">v1.5 &middot; Junio 2026</span>
+      <span class="version">v1.6 &middot; Junio 2026</span>
     </div>
   </div>
   <nav>
@@ -119,7 +119,7 @@ tr:hover td{background:rgba(0,0,0,0.02)}
 
 <div class="card card-teal">
   <div class="card-title">Que hace?</div>
-  <p>El sistema obtiene datos actualizados de ES, NQ, CL y GC via Yahoo Finance y lee tu <strong>Backtesting de Señales HUD V5</strong>. Construye un prompt estructurado con estos datos y el estado horario del mercado (Pre-Market, Abierto, etc.), lo envia a un modelo de IA (Groq, Gemini, Ollama, etc.), recibe el analisis en formato JSON, genera un HTML profesional con el Recomendador Cuantitativo incorporado, y lo publica automaticamente en <strong>edustrader.pages.dev</strong> via git push.</p>
+  <p>El sistema obtiene datos actualizados de ES, NQ, CL y GC via Yahoo Finance y lee tu <strong>Backtesting de Señales HUD V6</strong>. Construye un prompt estructurado con estos datos y el estado horario del mercado (Pre-Market, Abierto, etc.), lo envia a un modelo de IA (Groq, Gemini, Ollama, etc.), recibe el analisis en formato JSON, genera un HTML profesional con el Recomendador Cuantitativo incorporado, y lo publica automaticamente en <strong>edustrader.pages.dev</strong> via git push.</p>
 </div>
 
 <div class="card card-green">
@@ -146,7 +146,7 @@ tr:hover td{background:rgba(0,0,0,0.02)}
     </thead>
     <tbody>
       <tr><td><strong>Groq</strong></td><td><span class="tag tag-green">GRATIS</span></td><td><code>llama-3.3-70b-versatile</code></td><td>API key (console.groq.com)</td></tr>
-      <tr><td><strong>Gemini</strong></td><td><span class="tag tag-green">GRATIS</span></td><td><code>gemini-1.5-flash</code></td><td>API key (aistudio.google.com)</td></tr>
+      <tr><td><strong>Gemini</strong></td><td><span class="tag tag-green">GRATIS</span></td><td><code>gemini-2.0-flash</code></td><td>API key (aistudio.google.com)</td></tr>
       <tr><td><strong>Ollama</strong></td><td><span class="tag tag-green">GRATIS</span></td><td><code>llama3.1</code> (local)</td><td>Instalar Ollama, descargar modelo (~4GB)</td></tr>
       <tr><td><strong>OpenAI</strong></td><td><span class="tag tag-red">PAGO</span></td><td><code>gpt-4o</code></td><td>API key (platform.openai.com)</td></tr>
       <tr><td><strong>Anthropic</strong></td><td><span class="tag tag-red">PAGO</span></td><td><code>claude-sonnet-4</code></td><td>API key (console.anthropic.com)</td></tr>
@@ -183,27 +183,29 @@ tr:hover td{background:rgba(0,0,0,0.02)}
 <pre>
 eduSTrader - Local Free/
   gameplan_system/
-    config.json                Configuracion (API keys, parametros HUD, etc)
-    template.html              Template HTML estandar (EduS Brand + Paso 06)
-    generar_gameplan.py        Script principal (>1200 lineas)
-    preprocess_backtesting.py  Motor de backtesting y Monte Carlo
-    backtesting_summary.json   (generado) Metricas de backtesting para IA
-    requirements.txt           Dependencias Python
-    INICIAR_GAMEPLAN.bat       Acceso directo modo interactivo
-    INICIAR_GAMEPLAN_AUTO.bat  Acceso directo modo automatico
-    prompt_data.txt            (generado) Prompt enviado a la IA
-    ai_raw_response.txt        (generado) Respuesta cruda si falla el parseo
+    config.json                  Configuracion (API keys, parametros HUD, etc)
+    template.html                Template HTML estandar (EduS Brand + Paso 06)
+    generar_gameplan.py          Script principal (>1200 lineas)
+    preprocess_backtesting.py    Motor de backtesting (P&L 2 contratos + Monte Carlo)
+    generar_vix_regimen_map.py   Genera el mapeo VIX->regimen POR MERCADO
+    backtesting_summary.json     (generado) Metricas de backtesting
+    vix_regimen_map.json         (generado) Cortes VIX->regimen por mercado
+    requirements.txt             Dependencias Python
+    INICIAR_GAMEPLAN.bat         Acceso directo modo interactivo
+    INICIAR_GAMEPLAN_AUTO.bat    Acceso directo modo automatico
+    prompt_data.txt              (generado) Prompt enviado a la IA
+    ai_raw_response.txt          (generado) Respuesta cruda si falla el parseo
 </pre>
 
 <h3>Template HTML - Secciones</h3>
-<p>El HTML generado contiene 6 secciones principales, incluyendo la integracion con el HUD V5:</p>
+<p>El HTML generado contiene 6 secciones principales, incluyendo la integracion con el HUD V6:</p>
 <ol>
   <li><strong>PASO 01 &mdash; Sentimiento Global &amp; Fundamentales:</strong> Barra de sentimiento, alertas principales, tabla de eventos economicos del dia.</li>
   <li><strong>PASO 02 &mdash; Analisis Estructural:</strong> 4 tarjetas de zonas (ES, NQ, CL, GC) en grid 2x2 con resistencias, soportes y analisis Wyckoff.</li>
   <li><strong>PASO 03 &mdash; Matriz de Escenarios:</strong> Barra de probabilidades y 3 escenarios (Alcista, Bajista, Lateral) con triggers, estrategia, targets para los 4 instrumentos e invalidacion.</li>
   <li><strong>PASO 04 &mdash; Market Breadth:</strong> Grid de las 7 Magnificas (AAPL, MSFT, GOOGL, AMZN, NVDA, META, TSLA) y tabla de Top Movers del dia.</li>
   <li><strong>PASO 05 &mdash; Estrategia Operativa:</strong> Setups (primario y secundario), horarios criticos y reglas de la mesa.</li>
-  <li><strong>PASO 06 &mdash; Recomendador de Señales HUD V5:</strong> Panel cuantitativo con WinRate/MonteCarlo según el horario y régimen VIX, más una narrativa sugerida por la IA.</li>
+  <li><strong>PASO 06 &mdash; Recomendador de Señales HUD V6:</strong> Panel A cuantitativo (señales rankeadas por calidad en R + tamaño sugerido full/micro según el régimen VIX por mercado), Panel B narrativo de la IA, y Panel C con la configuración recomendada del HUD y la estrategia.</li>
 </ol>
 
 <div class="section-divider"></div>
@@ -251,7 +253,7 @@ eduSTrader - Local Free/
   },
   <span class="s">"gemini"</span>: {
     <span class="s">"api_key"</span>: <span class="s">"AIzaSy_tu_key_aqui"</span>,
-    <span class="s">"model"</span>: <span class="s">"gemini-1.5-flash"</span>
+    <span class="s">"model"</span>: <span class="s">"gemini-2.0-flash"</span>
   }
 }</pre>
   <p>Donde conseguir las keys:</p>
@@ -301,7 +303,10 @@ eduSTrader - Local Free/
       <tr><td><code>ai.providers.groq.api_key</code></td><td>API key de Groq</td><td><code>"gsk_..."</code></td></tr>
       <tr><td><code>ai.providers.gemini.api_key</code></td><td>API key de Google Gemini</td><td><code>"AIzaSy..."</code></td></tr>
       <tr><td><code>ai.providers.ollama.model</code></td><td>Modelo local de Ollama</td><td><code>"llama3.1"</code></td></tr>
-      <tr><td><code>senales_recomendacion.*</code></td><td>Filtros para el HUD (capital, riesgo ruina, winrate min)</td><td><code>25000</code></td></tr>
+      <tr><td><code>senales_recomendacion.capital_base</code></td><td>Capital real de referencia para el riesgo (Monte Carlo)</td><td><code>50000</code></td></tr>
+      <tr><td><code>senales_recomendacion.max_montecarlo_risk</code></td><td>% máx. de ruina admitido; define si la señal va full o micro</td><td><code>20</code></td></tr>
+      <tr><td><code>senales_recomendacion.min_winrate</code></td><td>WinRate mínimo para recomendar una señal</td><td><code>40</code></td></tr>
+      <tr><td><code>senales_recomendacion.min_trades</code></td><td>Trades históricos mínimos para considerar la señal</td><td><code>30</code></td></tr>
       <tr><td>(Automático)</td><td>La hora ET y el estado del mercado se calculan en tiempo real</td><td><code>"10:45 AM ET"</code></td></tr>
       <tr><td><code>contract_months.*</code></td><td>Meses de contrato para cada futuro</td><td><code>"JUN26"</code></td></tr>
       <tr><td><code>publishing.auto_commit</code></td><td>Commitea automaticamente en git</td><td><code>true</code></td></tr>
@@ -314,32 +319,56 @@ eduSTrader - Local Free/
 
 <!-- ═══════════════════ BACKTESTING ═══════════════════ -->
 <div class="section-label"><span class="num">5</span>Backtesting</div>
-<h2 id="backtesting">Actualización del Backtesting (HUD V5)</h2>
-<p class="sub">Cómo mantener actualizado el motor cuantitativo del Recomendador PASO 06.</p>
+<h2 id="backtesting">Actualización del Backtesting (HUD V6)</h2>
+<p class="sub">Cómo mantener actualizado el motor cuantitativo del Recomendador PASO 06. El pipeline tiene 3 pasos: pre-procesar el CSV, generar el mapa VIX→régimen, y generar el game plan.</p>
 
-<div class="card card-blue">
-  <div class="card-title">1. Exportar datos desde NinjaTrader</div>
-  <p>Genera el reporte de backtesting desde tu estrategia HUD V5 en NinjaTrader y guárdalo como archivo CSV con el nombre <code>BT-senales-v5.csv</code>.</p>
+<div class="card card-purple">
+  <div class="card-title">Cómo modela el P&amp;L (importante)</div>
+  <p>El pre-procesador calcula el resultado de cada operación con el <strong>modelo real de 2 contratos</strong> de tu estrategia AutoTrader V2: un contrato sale en T1 (parcial) y el otro es el <em>runner</em> que va a T2 o vuelve a BreakEven. En múltiplos de R: <strong>STOP ≈ −2R · BE ≈ +2R · T2 ≈ +5R</strong>. Antes se contaba 1 solo contrato, lo que subestimaba los ganadores y sesgaba el ranking de señales (las de muchos cierres BE parecían flojas cuando en realidad son ganadoras de +2R).</p>
 </div>
 
 <div class="card card-blue">
-  <div class="card-title">2. Ubicar el archivo CSV</div>
-  <p>Copia el archivo <code>BT-senales-v5.csv</code> dentro de la carpeta del sistema:</p>
+  <div class="card-title">1. Exportar y ubicar el CSV</div>
+  <p>Genera el backtesting desde el HUD V6 en NinjaTrader (con las columnas <code>MFE_R</code> / <code>MAE_R</code> de excursión) y guárdalo como <code>BT-senales-v5.csv</code> dentro de la carpeta del sistema:</p>
   <pre>eduSTrader - Local Free\gameplan_system\BT-senales-v5.csv</pre>
+  <p style="font-size:12px;color:var(--text3)">Nota: el archivo conserva el nombre <code>-v5</code> por compatibilidad, pero ya es data del HUD V6.</p>
 </div>
 
 <div class="card card-blue">
-  <div class="card-title">3. Ejecutar el Pre-procesador</div>
-  <p>Abre PowerShell, navega a la carpeta y ejecuta el script de procesamiento de Monte Carlo:</p>
-  <pre><span class="n">python</span> <span class="n">preprocess_backtesting</span><span class="o">.</span><span class="n">py</span></pre>
-  <p>El script leerá las millones de filas del CSV, filtrará, simulará los escenarios de riesgo de ruina (Monte Carlo) y consolidará los resultados de todos los mercados y horarios.</p>
+  <div class="card-title">2. Pre-procesar el CSV</div>
+  <pre><span class="n">python</span> <span class="n">preprocess_backtesting</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">csv</span> <span class="s">"BT-senales-v5.csv"</span></pre>
+  <p>Lee el CSV (cientos de MB), calcula el P&amp;L de 2 contratos, las métricas de calidad y el Monte Carlo. Genera <code>backtesting_summary.json</code>. Parámetros útiles:</p>
+  <ul>
+    <li><code>--capital 50000</code> — capital base para el Monte Carlo (por defecto <strong>$50.000</strong>).</li>
+    <li><code>--horizonte 200</code> — trades por campaña en el Monte Carlo (ver abajo).</li>
+    <li><code>--ruin-pct 0.20</code> — drawdown que define ruina.</li>
+  </ul>
+</div>
+
+<div class="card card-amber">
+  <div class="card-title">Métricas nuevas en el resumen</div>
+  <table>
+    <thead><tr><th>Métrica</th><th>Qué es</th></tr></thead>
+    <tbody>
+      <tr><td><code>expectancy_r</code></td><td>Expectativa en R por trade (2 contratos) — <strong>independiente del tamaño del contrato</strong>. Es el criterio de ranking de calidad.</td></tr>
+      <tr><td><code>avg_mfe_r</code> / <code>avg_mae_r</code></td><td>Excursión media a favor / en contra (en R). De las columnas MFE/MAE del HUD V6.</td></tr>
+      <tr><td><code>edge_ratio</code></td><td>MFE/MAE — &gt;1 = el precio va más a favor que en contra.</td></tr>
+      <tr><td><code>montecarlo_ruin_pct</code></td><td>Riesgo de ruina con <strong>2 contratos full</strong>.</td></tr>
+      <tr><td><code>montecarlo_ruin_micro</code></td><td>Riesgo de ruina con <strong>2 micros</strong> (MNQ/MES = 1/10). Define el tamaño sugerido.</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Monte Carlo por campaña:</strong> simula una campaña realista de 200 trades (no la serie histórica completa, que daba ruina casi siempre 100%). Mide el % de campañas que tocan un 20% de drawdown.</p>
+</div>
+
+<div class="card card-blue">
+  <div class="card-title">3. Generar el mapa VIX→régimen por mercado</div>
+  <pre><span class="n">python</span> <span class="n">generar_vix_regimen_map</span><span class="o">.</span><span class="n">py</span></pre>
+  <p>Solo es necesario re-ejecutarlo si cambian los stats VIX↔ATR. El HUD clasifica el régimen por <strong>ATR por mercado</strong> (modo AtrRange), así que el <strong>mismo VIX cae en distinto régimen según el mercado</strong>. Este script calibra los cortes VIX reales por mercado (ej. NQ ≈ 16.8/21.5/31.3/34.5, ES ≈ 18.9/25/30.9/37) en lugar del fijo 18/22/27/32. Genera <code>vix_regimen_map.json</code>.</p>
 </div>
 
 <div class="card card-green">
-  <div class="card-title">4. Verificar el resultado</div>
-  <p>Una vez terminado el script, se generará el archivo:</p>
-  <pre>eduSTrader - Local Free\gameplan_system\backtesting_summary.json</pre>
-  <p>Este archivo pesa menos de 1MB y contiene toda la matriz estadística. <strong>A partir de este momento</strong>, cada vez que generes el Game Plan, la Inteligencia Artificial usará estos nuevos datos para elaborar las recomendaciones del PASO 06 automáticamente.</p>
+  <div class="card-title">4. Resultado</div>
+  <p>Quedan generados <code>backtesting_summary.json</code> (&lt;1MB) y <code>vix_regimen_map.json</code>. A partir de aquí, cada Game Plan usa ambos para el PASO 06: rankea por calidad en R, sugiere el tamaño (full/micro) según tu capital, y elige el régimen correcto por mercado.</p>
 </div>
 
 <div class="section-divider"></div>
@@ -357,7 +386,7 @@ eduSTrader - Local Free/
   METODO DE ANALISIS
 ============================================================
   1) Groq (gratis, via API)         &mdash; llama-3.3-70b / mixtral
-  2) Google Gemini (gratis, via API) &mdash; gemini-1.5-flash
+  2) Google Gemini (gratis, via API) &mdash; gemini-2.0-flash
   3) Ollama (local, sin API key)     &mdash; llama3.1 / mistral
   4) OpenAI (plan pago)              &mdash; gpt-4o / gpt-4o-mini
   5) Anthropic (plan pago)           &mdash; claude-sonnet-4
@@ -406,7 +435,7 @@ eduSTrader - Local Free/
   <div class="card-title">Caracteristicas</div>
   <ul>
     <li><strong>Costo:</strong> Gratis (sin tarjeta de credito)</li>
-    <li><strong>Modelo:</strong> <code>gemini-1.5-flash</code></li>
+    <li><strong>Modelo:</strong> <code>gemini-2.0-flash</code></li>
     <li><strong>Velocidad:</strong> Rapida</li>
     <li><strong>Limite:</strong> 60 requests/minuto (generoso)</li>
     <li><strong>Tiempo tipico:</strong> 4-10 segundos</li>
@@ -642,11 +671,18 @@ eduSTrader - Local Free/
   </ul>
 </div>
 
-<h3>PASO 06 &mdash; Recomendador HUD V5</h3>
+<h3>PASO 06 &mdash; Recomendador HUD V6</h3>
 <div class="card card-teal">
   <ul>
-    <li><strong>Panel A (Cuantitativo):</strong> Tabla generada a partir de tu archivo <code>BT-senales-v5.csv</code> cruzado con el régimen VIX actual. Te muestra los top setups rankeados por WinRate y riesgo de ruina para USA AM, Almuerzo y USA PM.</li>
-    <li><strong>Panel B (IA):</strong> Resumen narrativo donde la IA sugiere qué señales activar/apagar en el panel HUD basándose en la data dura y el momento del mercado.</li>
+    <li><strong>Panel A (Cuantitativo):</strong> Top señales por mercado y segmento (USA AM, Almuerzo, USA PM), <strong>rankeadas por calidad en R</strong> (<code>expectancy_r</code>). Cada una trae:
+      <ul>
+        <li><strong>Tamaño sugerido</strong> — badge <span class="tag tag-green">FULL</span> (2 contratos) o <span class="tag tag-amber">MICRO</span> (MNQ/MES), según si la ruina supera tu límite en tu capital.</li>
+        <li><strong>Dirección</strong> (LONG/SHORT/AMBOS) y métricas: WinRate, R por trade, <code>edge</code> (MFE/MAE), ruina full/micro, y la expectativa en USD <em>al tamaño sugerido</em>.</li>
+        <li><strong>Régimen por mercado:</strong> el mismo VIX se mapea al régimen correcto de cada mercado (NQ y ES tienen cortes distintos).</li>
+      </ul>
+    </li>
+    <li><strong>Panel B (IA):</strong> Resumen narrativo donde la IA sugiere qué señales activar/apagar basándose en la data dura y el momento del mercado.</li>
+    <li><strong>Panel C (Configuración recomendada):</strong> Parámetros sugeridos del <strong>HUD V6</strong> (Kelt Stop %, RR1/RR2, LinReg Slope Threshold por mercado, modo de detección ATR, rankings de zona) y de la <strong>estrategia</strong> (TrailingATR, 2 contratos, capital, tamaño por mercado). Lo pendiente de validar va marcado con ⚠️.</li>
   </ul>
 </div>
 
@@ -714,8 +750,8 @@ eduSTrader - Local Free/
 
 <div class="card card-purple" style="text-align:center">
   <p style="font-size:14px;color:var(--text)">
-    <strong>EduS Trader</strong> &mdash; Sistema Automatizado de Game Plan v1.5<br>
-    Documentacion actualizada en Junio 2026<br>
+    <strong>EduS Trader</strong> &mdash; Sistema Automatizado de Game Plan v1.6<br>
+    Documentacion actualizada en Junio 2026 &middot; P&amp;L 2 contratos · MAE/MFE · tamaño full/micro · régimen VIX por mercado<br>
     <span style="font-size:12px;color:var(--text3)">Para dudas o mejoras, contacta al desarrollador.</span>
   </p>
 </div>
