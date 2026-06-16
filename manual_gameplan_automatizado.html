@@ -211,7 +211,7 @@ eduSTrader - Local Free/
   <li><strong>PASO 03 &mdash; Matriz de Escenarios:</strong> Barra de probabilidades y 3 escenarios (Alcista, Bajista, Lateral) con triggers, estrategia, targets para los 4 instrumentos e invalidacion.</li>
   <li><strong>PASO 04 &mdash; Market Breadth:</strong> Grid de las 7 Magnificas (AAPL, MSFT, GOOGL, AMZN, NVDA, META, TSLA) y tabla de Top Movers del dia.</li>
   <li><strong>PASO 05 &mdash; Estrategia Operativa:</strong> Setups (primario y secundario), horarios criticos y reglas de la mesa.</li>
-  <li><strong>PASO 06 &mdash; Recomendador de Señales HUD V6:</strong> Panel A cuantitativo (señales rankeadas por calidad en R + tamaño sugerido full/micro según el régimen VIX por mercado), Panel B narrativo de la IA, y Panel C con la configuración recomendada del HUD y la estrategia.</li>
+  <li><strong>PASO 06 &mdash; Recomendador de Señales HUD V6:</strong> Panel A cuantitativo (señales rankeadas por calidad en R + tamaño sugerido full/micro según el régimen VIX por mercado), Panel B narrativo de la IA, Panel C con la configuración recomendada del HUD y la estrategia, y Panel D con la recomendación para cuentas de fondeo (tamaño según el drawdown de la cuenta).</li>
 </ol>
 
 <div class="section-divider"></div>
@@ -313,6 +313,8 @@ eduSTrader - Local Free/
       <tr><td><code>senales_recomendacion.max_montecarlo_risk</code></td><td>% máx. de ruina admitido; define si la señal va full o micro</td><td><code>20</code></td></tr>
       <tr><td><code>senales_recomendacion.min_winrate</code></td><td>WinRate mínimo para recomendar una señal</td><td><code>40</code></td></tr>
       <tr><td><code>senales_recomendacion.min_trades</code></td><td>Trades históricos mínimos para considerar la señal</td><td><code>30</code></td></tr>
+      <tr><td><code>senales_recomendacion.cuentas_fondeo</code></td><td>Lista de cuentas de fondeo (Panel D): cada una con <code>nombre</code>, <code>capital</code> y <code>drawdown</code> (USD). La ruina es tocar ese drawdown.</td><td><code>[{capital:50000, drawdown:1000}, ...]</code></td></tr>
+      <tr><td><code>senales_recomendacion.max_riesgo_fondeo</code></td><td>% máx. de campañas que tocan el DD para considerar la señal operable en fondeo</td><td><code>15</code></td></tr>
       <tr><td>(Automático)</td><td>La hora ET y el estado del mercado se calculan en tiempo real</td><td><code>"10:45 AM ET"</code></td></tr>
       <tr><td><code>contract_months.*</code></td><td>Meses de contrato para cada futuro</td><td><code>"JUN26"</code></td></tr>
       <tr><td><code>publishing.auto_commit</code></td><td>Commitea automaticamente en git</td><td><code>true</code></td></tr>
@@ -700,6 +702,7 @@ eduSTrader - Local Free/
     </li>
     <li><strong>Panel B (IA — solo narrativa):</strong> El análisis narrativo de la IA, <strong>alimentado con los datos reales</strong> del Panel A y la configuración del Panel C (la IA ya no inventa su propia tabla ni su propia config). Explica en prosa las mejores señales del día, su tamaño (full/micro) y el régimen por mercado, <strong>sin contradecir</strong> los paneles cuantitativos. El Panel A (tabla) y el Panel C (config) son la <em>autoridad</em>; el Panel B los interpreta.</li>
     <li><strong>Panel C (Configuración recomendada):</strong> Parámetros sugeridos del <strong>HUD V6</strong> (Kelt Stop %, RR1/RR2, LinReg Slope Threshold por mercado, modo de detección ATR, rankings de zona) y de la <strong>estrategia</strong> (TrailingATR, 2 contratos, capital, tamaño por mercado). Lo pendiente de validar va marcado con ⚠️.</li>
+    <li><strong>Panel D (Cuentas de Fondeo) 🏦:</strong> Recomendación aparte para cuentas de <strong>prop firm / fondeo</strong>, donde la "ruina" es <strong>tocar el drawdown absoluto</strong> de la cuenta (no un % del capital). Por cada perfil de cuenta configurado (capital + drawdown) muestra, por mercado y segmento, la mejor señal operable y su <strong>tamaño</strong> (full/micro) que mantiene baja la probabilidad de quemar la cuenta, con el <code>DD-ruina%</code> (campañas de 200 trades que tocan el DD). Con contratos full el DD se toca casi siempre en cuentas chicas, así que el panel casi siempre recomienda <strong>micro (MNQ/MES)</strong>; con más colchón de DD aparecen señales en full.</li>
   </ul>
 </div>
 
