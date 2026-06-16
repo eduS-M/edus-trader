@@ -40,6 +40,30 @@
             </div>
         </div>
 
+        <!-- Gestión de Riesgo (Dinámico) -->
+        <div class="inv-card" id="risk-section" style="display: none; margin-bottom: 2rem; border-left: 4px solid var(--inv-accent);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="margin: 0;">Gestión de Riesgo (ATR)</h3>
+                <span id="risk-atr" class="text-muted text-sm">ATR(14): ...</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 6px; text-align: center; border: 1px solid var(--inv-border);">
+                    <div class="text-sm text-muted" style="margin-bottom: 0.5rem;">Precio Actual</div>
+                    <div style="font-size: 1.25rem; font-weight: 700;" id="risk-price">...</div>
+                </div>
+                <div style="background: rgba(239, 68, 68, 0.05); padding: 1rem; border-radius: 6px; text-align: center; border: 1px solid rgba(239, 68, 68, 0.3);">
+                    <div class="text-sm text-muted" style="margin-bottom: 0.5rem;">Stop Loss Recomendado</div>
+                    <div style="font-size: 1.25rem; font-weight: 700; color: #ef4444;" id="risk-sl">...</div>
+                    <div class="text-xs" id="risk-sl-pct" style="margin-top:0.25rem;">...</div>
+                </div>
+                <div style="background: rgba(16, 185, 129, 0.05); padding: 1rem; border-radius: 6px; text-align: center; border: 1px solid rgba(16, 185, 129, 0.3);">
+                    <div class="text-sm text-muted" style="margin-bottom: 0.5rem;">Target Mínimo (>10%)</div>
+                    <div style="font-size: 1.25rem; font-weight: 700; color: #10b981;" id="risk-tp">...</div>
+                    <div class="text-xs" id="risk-tp-pct" style="margin-top:0.25rem;">...</div>
+                </div>
+            </div>
+        </div>
+
         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
             
             <!-- Columna Izquierda: Los 5 Métodos -->
@@ -107,10 +131,20 @@
 
                 <div class="inv-card" style="margin-top: 2rem;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <h3 style="margin: 0;">Histórico de Valoración DCF</h3>
+                        <h3 style="margin: 0;">Histórico de Valoración DCF (5 Años)</h3>
                         <div class="text-sm text-muted">Intrínseco vs Precio Mercado</div>
                     </div>
                     <div style="height: 300px; background: rgba(0,0,0,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--inv-text-secondary);" id="dcf-chart">
+                        [Cargando gráfico...]
+                    </div>
+                </div>
+
+                <div class="inv-card" style="margin-top: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="margin: 0;">Evolución Histórica del PEG Ratio</h3>
+                        <div class="text-sm text-muted">Crecimiento vs Precio</div>
+                    </div>
+                    <div style="height: 250px; background: rgba(0,0,0,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--inv-text-secondary);" id="peg-chart">
                         [Cargando gráfico...]
                     </div>
                 </div>
@@ -217,6 +251,21 @@
                         document.getElementById('t-bar').style.left = `calc(${safePct}% - 4px)`;
                         document.getElementById('t-range-pct').textContent = `${safePct.toFixed(1)}%`;
                     }
+
+                    // Cargar Gestión de Riesgo (ATR)
+                    fetch(`/api/inversiones/risk?ticker=${symbol}`)
+                        .then(r => r.json())
+                        .then(r => {
+                            if (r.success && r.data) {
+                                document.getElementById('risk-section').style.display = 'block';
+                                document.getElementById('risk-atr').textContent = `ATR(14): $${r.data.atr_14}`;
+                                document.getElementById('risk-price').textContent = `$${r.data.current_price}`;
+                                document.getElementById('risk-sl').textContent = `$${r.data.stop_loss}`;
+                                document.getElementById('risk-sl-pct').textContent = `-${r.data.sl_pct}% (2.5x ATR)`;
+                                document.getElementById('risk-tp').textContent = `$${r.data.target}`;
+                                document.getElementById('risk-tp-pct').textContent = `+${r.data.tp_pct}% (4.0x ATR)`;
+                            }
+                        }).catch(e => console.error("Error cargando riesgo:", e));
 
                     // Cargar gráfico
                     loadTickerChart(symbol);
