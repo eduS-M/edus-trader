@@ -2,25 +2,24 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análisis Ticker — EduS Inversión</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=DM+Sans:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/inv-styles.css?v=3">
+    <title>Análisis Ticker - EduSTrader</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/inv-styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="inversiones-app">
 
     <header class="inv-header">
-        <a class="inv-brand" href="/inversiones/">
-            <img src="/assets/logo.png" alt="EduS Inversión" onerror="this.style.display='none'">
-            <span class="inv-brand-name">Edu<span class="gold">S</span> <span class="teal">Inversión</span></span>
-        </a>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <img src="/assets/logo.png" alt="EduSTrader" height="32">
+            <h1 style="font-size: 1.25rem; font-weight: 600; margin: 0;">Análisis Fundamental y Técnico</h1>
+        </div>
         <nav class="inv-nav">
             <a href="index.html">Portafolio</a>
             <a href="watchlist.html">Watchlist</a>
             <a href="scanner.html">Scanner</a>
-            <a href="https://edustrader.pages.dev/members/" class="back-btn">← Zona Miembros</a>
+            <a href="/index.html">← Volver</a>
         </nav>
     </header>
 
@@ -31,7 +30,7 @@
             <div>
                 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
                     <h2 style="font-size: 2.5rem; margin: 0; line-height: 1;" id="t-symbol">--</h2>
-                    <a href="#" id="t-name" class="text-muted" target="_blank" style="font-size: 1.25rem; text-decoration: underline; color: var(--inv-text-secondary); transition: color 0.15s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--inv-text-secondary)'">--</a>
+                    <span id="t-name" class="text-muted" style="font-size: 1.25rem;">--</span>
                 </div>
                 <div class="text-sm text-muted" id="t-sector">Sector / Industria</div>
             </div>
@@ -184,7 +183,7 @@
         </div>
     </main>
 
-    <script src="assets/inv-dashboard.js?v=3"></script>
+    <script src="assets/inv-dashboard.js"></script>
     <script src="assets/inv-charts.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
@@ -207,9 +206,7 @@
                     
                     // Cabecera
                     document.getElementById('t-symbol').textContent = l.ticker;
-                    const nameEl = document.getElementById('t-name');
-                    nameEl.textContent = l.name || '';
-                    nameEl.href = `https://finance.yahoo.com/quote/${l.ticker}`;
+                    document.getElementById('t-name').textContent = l.name || '';
                     document.getElementById('t-sector').textContent = `${l.sector || 'N/A'}`;
                     document.getElementById('t-price').textContent = formatMoney(l.last_price);
                     

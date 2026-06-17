@@ -2,97 +2,30 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portafolio — EduS Inversión</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=DM+Sans:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/inv-styles.css?v=4">
-    <style>
-      /* ===== INLINE OVERRIDE — fuerza estilos sin caché ===== */
-      :root {
-        --edus-dark:#0d1f26;--edus-darker:#142d37;--edus-darkest:#034649;
-        --edus-teal:#3dd6c0;--edus-gold:#b38665;--edus-gold-light:#c9a84c;
-        --inv-bg-main:#0B0F14;--inv-bg-card:#141B24;--inv-bg-card-hover:#1A2330;
-        --inv-border:#1E2D3D;--inv-text-primary:#E2E8F0;--inv-text-secondary:#94A3B8;
-        --inv-accent:#3dd6c0;--inv-accent-glow:rgba(61,214,192,0.2);
-        --signal-subvalorada:#10B981;--signal-subvalorada-bg:rgba(16,185,129,0.12);
-        --signal-justo:#3dd6c0;--signal-justo-bg:rgba(61,214,192,0.12);
-        --signal-invertible:#c9a84c;--signal-invertible-bg:rgba(201,168,76,0.12);
-        --signal-sobrevalorada:#EF4444;--signal-sobrevalorada-bg:rgba(239,68,68,0.12);
-        --signal-na:#4B5563;--signal-na-bg:rgba(75,85,99,0.12);
-      }
-      *{box-sizing:border-box;margin:0;padding:0}
-      body{background:#0B0F14;color:#E2E8F0;font-family:'Inter',-apple-system,sans-serif;overflow-x:hidden}
-      body>main{padding-top:62px}
-      /* HEADER */
-      .inv-header{background:linear-gradient(135deg,#142d37 0%,#034649 100%);border-bottom:2px solid #b38665;padding:0 2rem;display:flex;justify-content:space-between;align-items:center;position:fixed;top:0;left:0;right:0;z-index:9999;height:62px;font-family:'Montserrat',sans-serif}
-      .inv-brand{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}
-      .inv-brand img{height:38px;width:auto;display:block}
-      .inv-brand-name{font-family:'DM Sans','Montserrat',sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.5px;color:#fff;white-space:nowrap;line-height:1}
-      .inv-brand-name .gold{color:#b38665}.inv-brand-name .teal{color:#3dd6c0}
-      .inv-nav{display:flex;align-items:center;gap:2px;list-style:none}
-      .inv-nav a{display:block;padding:8px 14px;text-decoration:none;color:rgba(255,255,255,.82);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;transition:background 0.15s,color 0.15s;border-radius:4px;white-space:nowrap;font-family:'Montserrat',sans-serif}
-      .inv-nav a:hover{background:rgba(255,255,255,.12);color:#fff}
-      .inv-nav a.active{background:rgba(61,214,192,0.15);color:#3dd6c0}
-      .inv-nav a.back-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7)}
-      /* LAYOUT */
-      .inv-container{max-width:98%;width:100%;margin:0 auto;padding:2rem}
-      /* STAT CARDS */
-      .inv-stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-bottom:2rem}
-      .inv-stat-card{background:#141B24;border:1px solid #1E2D3D;border-radius:12px;padding:1.25rem;display:flex;flex-direction:column;transition:border-color 0.2s,transform 0.15s}
-      .inv-stat-card:hover{border-color:rgba(61,214,192,0.25);transform:translateY(-1px)}
-      .inv-stat-label{color:#94A3B8;font-size:0.75rem;font-weight:700;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.06em;font-family:'Montserrat',sans-serif}
-      .inv-stat-value{font-size:1.875rem;font-weight:700;color:#E2E8F0}
-      .inv-stat-value.positive{color:#10B981}.inv-stat-value.negative{color:#EF4444}
-      /* CARD */
-      .inv-card{background:#141B24;border:1px solid #1E2D3D;border-radius:12px;padding:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,0.3);transition:border-color 0.2s;margin-bottom:1.5rem}
-      .inv-card:hover{border-color:rgba(61,214,192,0.2)}
-      /* TABLE */
-      .inv-table-wrapper{overflow-x:auto;border:1px solid #1E2D3D;border-radius:12px;background:#141B24;-webkit-overflow-scrolling:touch}
-      .inv-table{width:100%;border-collapse:collapse;text-align:left}
-      .inv-table th{background:rgba(61,214,192,0.04);color:#3dd6c0;font-weight:700;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.05em;padding:0.75rem 0.7rem;border-bottom:1px solid #1E2D3D;white-space:nowrap;font-family:'Montserrat',sans-serif}
-      .inv-table td{padding:0.7rem 0.7rem;border-bottom:1px solid #1E2D3D;vertical-align:middle;font-size:0.82rem}
-      .inv-table tbody tr:hover{background:rgba(61,214,192,0.03)}
-      .inv-table tbody tr:last-child td{border-bottom:none}
-      /* BADGES */
-      .signal-badge{display:inline-flex;align-items:center;justify-content:center;padding:0.18rem 0.6rem;border-radius:9999px;font-size:0.67rem;font-weight:700;text-transform:uppercase;letter-spacing:0.03em;font-family:'Montserrat',sans-serif}
-      .signal-subvalorada{background:rgba(16,185,129,0.12);color:#10B981;border:0.5px solid rgba(16,185,129,0.3)}
-      .signal-justo{background:rgba(61,214,192,0.12);color:#3dd6c0;border:0.5px solid rgba(61,214,192,0.3)}
-      .signal-invertible{background:rgba(201,168,76,0.12);color:#c9a84c;border:0.5px solid rgba(201,168,76,0.3)}
-      .signal-sobrevalorada{background:rgba(239,68,68,0.12);color:#EF4444;border:0.5px solid rgba(239,68,68,0.3)}
-      .signal-na{background:rgba(75,85,99,0.12);color:#4B5563;border:0.5px solid rgba(75,85,99,0.3)}
-      /* STARS */
-      .score-stars{display:flex;gap:3px}
-      .star{width:14px;height:14px;fill:#1E2D3D}
-      .star.filled{fill:#c9a84c}.star.excellent{fill:#10B981}
-      /* TYPOGRAPHY */
-      .text-xs{font-size:0.72rem}.text-sm{font-size:0.85rem}
-      .text-muted{color:#94A3B8}.font-bold{font-weight:700}.font-medium{font-weight:500}
-      .ticker-link{color:#3dd6c0;text-decoration:none;font-weight:700;font-size:0.88rem;transition:color 0.15s;font-family:'Montserrat',sans-serif}
-      .ticker-link:hover{color:#fff;text-decoration:underline}
-      /* form-control */
-      .form-control{background:#0B0F14;border:1px solid #1E2D3D;color:#E2E8F0;padding:0.6rem 0.75rem;border-radius:6px;font-family:'Inter',sans-serif;transition:border-color 0.15s}
-      .form-control:focus{outline:none;border-color:#3dd6c0;box-shadow:0 0 0 2px rgba(61,214,192,0.2)}
-    </style>
+    <title>Portafolio de Inversiones - EduSTrader</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/inv-styles.css">
 </head>
 <body class="inversiones-app">
 
     <header class="inv-header">
-        <a class="inv-brand" href="/inversiones/">
-            <img src="/assets/logo.png" alt="EduS Inversión" onerror="this.style.display='none'">
-            <span class="inv-brand-name">Edu<span class="gold">S</span> <span class="teal">Inversión</span></span>
-        </a>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <img src="/assets/logo.png" alt="EduSTrader" height="32">
+            <h1 style="font-size: 1.25rem; font-weight: 600; margin: 0;">Investment Dashboard</h1>
+        </div>
         <nav class="inv-nav">
             <a href="index.html" class="active">Portafolio</a>
             <a href="watchlist.html">Watchlist</a>
             <a href="scanner.html">Scanner</a>
-            <a href="https://edustrader.pages.dev/members/" class="back-btn">← Zona Miembros</a>
+            <a href="/index.html">← Volver a EduSTrader</a>
         </nav>
     </header>
 
     <main class="inv-container">
         
         <div class="inv-stat-grid" id="portfolio-summary">
+            <!-- Renderizado por JS -->
             <div class="inv-stat-card">
                 <span class="inv-stat-label">Valor Total Portafolio</span>
                 <span class="inv-stat-value">Cargando...</span>
@@ -108,9 +41,9 @@
         </div>
 
         <div class="inv-card">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
-                <h2 style="margin:0;font-size:1.1rem;font-family:'Montserrat',sans-serif;letter-spacing:-0.3px;">Posiciones Activas</h2>
-                <button class="form-control" style="cursor:pointer;background:rgba(61,214,192,0.12);color:#3dd6c0;border:1px solid rgba(61,214,192,0.3);font-weight:700;font-family:'Montserrat',sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;padding:0.5rem 1.1rem;border-radius:6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="margin:0; font-size: 1.25rem;">Posiciones Activas</h2>
+                <button class="form-control" style="cursor: pointer; background: var(--inv-accent); color: white; border: none; font-weight: 600;">
                     + Nueva Posición
                 </button>
             </div>
@@ -119,21 +52,22 @@
                 <table class="inv-table" id="portfolio-table">
                     <thead>
                         <tr>
-                            <th>Ticker / Empresa</th>
+                            <th>Ticker</th>
                             <th>Sector</th>
-                            <th style="text-align:right;">Ctd.</th>
-                            <th style="text-align:right;">Compra</th>
-                            <th style="text-align:right;">Actual</th>
-                            <th style="text-align:right;">P&amp;L %</th>
-                            <th style="text-align:right;">PEG</th>
-                            <th>DCF</th>
-                            <th>EPS Est.</th>
-                            <th style="text-align:center;">Score</th>
+                            <th style="text-align: right;">Ctd.</th>
+                            <th style="text-align: right;">Precio Compra</th>
+                            <th style="text-align: right;">Precio Actual</th>
+                            <th style="text-align: right;">P&L %</th>
+                            <th>Quick Check (PEG)</th>
+                            <th>DCF Valor</th>
+                            <th>Señal DCF</th>
+                            <th>Earning Est.</th>
+                            <th>Score</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="10" style="text-align:center;color:#94A3B8;padding:2rem;">Cargando portafolio...</td>
+                            <td colspan="11" style="text-align: center; color: var(--inv-text-secondary);">Cargando portafolio...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -142,7 +76,7 @@
 
     </main>
 
-    <script src="assets/inv-dashboard.js?v=4"></script>
+    <script src="assets/inv-dashboard.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             loadPortfolio();
