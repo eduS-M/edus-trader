@@ -156,7 +156,7 @@ footer strong{color:var(--gold-light)}
     <div class="header-text">
       <div class="brand">EduS Trader &middot; Documentación</div>
       <h1>Sistema Post-Market Automatizado</h1>
-      <span class="version">v2.0 &middot; Junio 2026 &middot; HUD V5 + V5_VolatilityConfig</span>
+      <span class="version">v2.1 &middot; Junio 2026 &middot; HUD V5 + V5_VolatilityConfig &middot; Redes</span>
     </div>
   </div>
   <nav>
@@ -170,6 +170,7 @@ footer strong{color:var(--gold-light)}
       <a href="#flujo-completo">Flujo Completo</a>
       <a href="#resultados">Resultados</a>
       <a href="#comandos">Comandos</a>
+      <a href="#redes">Publicación en Redes</a>
       <a href="#troubleshooting">Solución de Problemas</a>
     </div>
   </nav>
@@ -478,6 +479,9 @@ EduSTrader - Local Free/
       <tr><td><code>publishing.auto_push</code></td><td>Hace push a GitHub (dispara deploy Cloudflare)</td><td><code>true</code></td></tr>
       <tr><td><code>publishing.git_repo_path</code></td><td>Ruta al repositorio git local</td><td><code>"C:\\...\\GitHub\\edus-trader"</code></td></tr>
       <tr><td><code>publishing.youtube_url</code></td><td><span class="new-badge">NUEVO</span> URL del canal YouTube para el botón del reporte</td><td><code>"https://www.youtube.com/@EduSTrader"</code></td></tr>
+      <tr><td><code>redes.enabled</code></td><td><span class="new-badge">NUEVO</span> Activa la publicación en redes tras generar el HTML</td><td><code>true</code></td></tr>
+      <tr><td><code>redes.base_url</code></td><td>Dominio público; <code>base_url</code> + nombre del archivo arma el link del botón</td><td><code>"https://edustrader.pages.dev"</code></td></tr>
+      <tr><td><code>redes.telegram.enabled</code></td><td>Publica en Telegram (X e Instagram en <code>false</code> por ahora). <strong>Credenciales en <code>secrets.json</code>, no acá.</strong></td><td><code>true</code></td></tr>
     </tbody>
   </table>
 </div>
@@ -750,9 +754,54 @@ EduSTrader - Local Free/
 
 <div class="section-divider"></div>
 
+<!-- ══════════════════════ REDES ══════════════════════ -->
+<div id="redes" style="scroll-margin-top:52px"></div>
+<div class="section-label"><span class="num">9</span>Publicación en Redes <span class="new-badge">NUEVO</span></div>
+<h2>Publicación automática del cierre en redes</h2>
+<p class="sub">Al terminar de generar el HTML, el sistema puede publicar un post con una tarjeta-imagen y un botón que enlaza al cierre. Hoy está activo <strong>Telegram</strong>; X e Instagram quedan preparados.</p>
+
+<div class="card card-blue">
+  <div class="card-title">Qué publica del cierre</div>
+  <p>Una <strong>tarjeta PNG 1080×1080</strong> con la marca EduS (navy/dorado) y los números <strong>reales del día</strong>, calculados con las mismas fórmulas de los bloques [A] y [B]:</p>
+  <ul>
+    <li><strong>PnL del día</strong>, <strong>Win Rate</strong> y <strong>Trades</strong>.</li>
+    <li><strong>DD intradía máx</strong> — el peor drawdown trailing entre las cuentas operadas (bloque [A]).</li>
+    <li><strong>R por trade</strong> — riesgo = distancia al stop de la señal emparejada (bloque [B]).</li>
+    <li>Texto resumen + disclaimer + botón "📊 Ver Cierre" → <code>base_url</code> + el archivo del informe.</li>
+  </ul>
+  <p>Soporta diario, semanal y mensual. Todo corre en <code>try/except</code>: <strong>si la red falla, el HTML se genera igual</strong>. Solo publica si <code>redes.enabled</code> y <code>redes.telegram.enabled</code> están en <code>true</code>.</p>
+</div>
+
+<div class="card card-amber">
+  <div class="card-title">Credenciales y puesta a punto</div>
+  <p>El token del bot y el <code>chat_id</code> del canal (<code>-100…</code>) van en <code>gameplan_system/secrets.json</code> (en <code>.gitignore</code>) o en variables de entorno <code>TELEGRAM_TOKEN</code> / <code>TELEGRAM_CHAT_ID</code>. Copiá <code>secrets.example.json</code> a <code>secrets.json</code> y completá los valores. <strong>Nunca</strong> en <code>config.json</code> ni en git. El detalle de creación del bot/canal está en el <strong>Manual del Game Plan → Publicación en Redes</strong>.</p>
+</div>
+
+<div class="card card-blue">
+  <div class="card-title">Flags de control</div>
+  <table>
+    <thead><tr><th>Comando</th><th>Qué hace</th></tr></thead>
+    <tbody>
+      <tr><td><code>python generar_postmarket.py --auto</code></td><td>Genera y <strong>publica</strong> (si <code>redes.enabled</code>)</td></tr>
+      <tr><td><code>--dry-redes</code></td><td>Arma la tarjeta y muestra el post, <strong>sin enviar</strong></td></tr>
+      <tr><td><code>--no-redes</code></td><td>Genera el HTML pero <strong>no publica</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card card-green">
+  <div class="card-title">Re-publicar a mano (respaldo)</div>
+  <p>Si el envío automático falló, <code>publicar_hoy.py</code> re-publica el cierre (y el gameplan) con los datos reales del día, <strong>sin tocar git ni la IA</strong>:</p>
+  <pre><span class="n">python</span> <span class="n">publicar_hoy</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">only</span> <span class="n">postmarket</span> <span class="o">--</span><span class="n">dry</span>    <span class="c"># ver el cierre sin enviar</span>
+<span class="n">python</span> <span class="n">publicar_hoy</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">only</span> <span class="n">postmarket</span>          <span class="c"># publicar el cierre de hoy</span>
+<span class="n">python</span> <span class="n">publicar_hoy</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">date</span> <span class="n">20260616</span>            <span class="c"># gameplan + cierre de un dia</span></pre>
+</div>
+
+<div class="section-divider"></div>
+
 <!-- ══════════════════════ TROUBLESHOOTING ══════════════════════ -->
 <div id="troubleshooting" style="scroll-margin-top:52px"></div>
-<div class="section-label"><span class="num">9</span>Solución de Problemas</div>
+<div class="section-label"><span class="num">10</span>Solución de Problemas</div>
 <h2>Problemas frecuentes y soluciones</h2>
 
 <div class="card card-green">
@@ -810,7 +859,7 @@ EduSTrader - Local Free/
 </div><!-- /page -->
 
 <footer>
-  <strong>EduS Trader</strong> &middot; Sistema Post-Market Automatizado v2.0 &middot; HUD V5 + V5_VolatilityConfig &middot; Junio 2026
+  <strong>EduS Trader</strong> &middot; Sistema Post-Market Automatizado v2.1 &middot; HUD V5 + V5_VolatilityConfig &middot; publicación en redes (Telegram) &middot; Junio 2026
 </footer>
 
 </body>

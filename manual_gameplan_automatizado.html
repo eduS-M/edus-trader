@@ -111,6 +111,7 @@ tr:hover td{background:rgba(0,0,0,0.02)}
     <a href="#modos">Modos de Uso</a>
     <a href="#flujo-completo">Flujo Completo</a>
     <a href="#resultados">Resultados Esperados</a>
+    <a href="#redes">Publicacion en Redes</a>
     <a href="#troubleshooting">Solucion de Problemas</a>
   </nav>
 </div>
@@ -319,8 +320,16 @@ eduSTrader - Local Free/
       <tr><td><code>contract_months.*</code></td><td>Meses de contrato para cada futuro</td><td><code>"JUN26"</code></td></tr>
       <tr><td><code>publishing.auto_commit</code></td><td>Commitea automaticamente en git</td><td><code>true</code></td></tr>
       <tr><td><code>publishing.auto_push</code></td><td>Hace push a GitHub (dispara deploy Cloudflare)</td><td><code>true</code></td></tr>
+      <tr><td><code>redes.enabled</code></td><td>Activa/desactiva la publicación en redes tras generar el HTML</td><td><code>true</code></td></tr>
+      <tr><td><code>redes.base_url</code></td><td>Dominio público; <code>base_url</code> + nombre del archivo arma el link del botón del post</td><td><code>"https://edustrader.pages.dev"</code></td></tr>
+      <tr><td><code>redes.telegram.enabled</code></td><td>Publica en el canal de Telegram (X e Instagram quedan en <code>false</code> por ahora)</td><td><code>true</code></td></tr>
     </tbody>
   </table>
+</div>
+
+<div class="card card-red">
+  <div class="card-title">🔐 Las credenciales NO van en config.json</div>
+  <p>El token del bot y el <code>chat_id</code> del canal van en <code>gameplan_system/secrets.json</code> (que está en <code>.gitignore</code>, nunca se sube a git) o en variables de entorno <code>TELEGRAM_TOKEN</code> / <code>TELEGRAM_CHAT_ID</code>. Copiá <code>secrets.example.json</code> a <code>secrets.json</code> y completá los valores. Ver la sección <a href="#redes">Publicación en Redes</a>.</p>
 </div>
 
 <div class="card card-amber">
@@ -727,8 +736,58 @@ eduSTrader - Local Free/
 
 <div class="section-divider"></div>
 
+<!-- ═══════════════════ REDES ═══════════════════ -->
+<div class="section-label"><span class="num">9</span>Publicacion en Redes</div>
+<h2 id="redes">Publicación automática en redes</h2>
+<p class="sub">Al terminar de generar el HTML, el sistema puede publicar un post con una tarjeta-imagen y un botón que enlaza al informe. Hoy está activo <strong>Telegram</strong>; X e Instagram quedan preparados para más adelante.</p>
+
+<div class="card">
+  <div class="card-title">Qué publica</div>
+  <p>Un post con:</p>
+  <ul>
+    <li><strong>Tarjeta PNG 1080×1080</strong> con la marca EduS (navy/dorado): sesgo del día, VIX y régimen por mercado, y las mejores señales (señal · dirección · tamaño full/micro). La arma <code>generar_imagen_social.py</code> con los datos reales del backtesting.</li>
+    <li><strong>Texto</strong> con el resumen y el disclaimer educativo.</li>
+    <li><strong>Botón inline</strong> "📊 Ver Game Plan" → <code>base_url</code> + nombre del archivo (el informe en la bitácora).</li>
+  </ul>
+  <p>Todo corre dentro de un <code>try/except</code>: <strong>si la red falla, el HTML se genera igual</strong>. Solo se publica si <code>redes.enabled</code> y <code>redes.telegram.enabled</code> están en <code>true</code>.</p>
+</div>
+
+<div class="card card-amber">
+  <div class="card-title">Puesta a punto de Telegram (una sola vez)</div>
+  <ol>
+    <li>Creá un bot con <strong>@BotFather</strong> en Telegram → te da el <strong>token</strong>.</li>
+    <li>Creá un <strong>canal</strong> (privado si querés controlar quién ve el contenido) y agregá el bot como <strong>Administrador</strong> con permiso "Publicar mensajes".</li>
+    <li>Obtené el <strong>ID numérico</strong> del canal (empieza con <code>-100…</code>; los privados no tienen @username). Se saca con <code>getUpdates</code> tras publicar un mensaje, o reenviando un post a <strong>@getidsbot</strong>.</li>
+    <li>Copiá <code>secrets.example.json</code> a <code>secrets.json</code> y pegá <code>token</code> y <code>chat_id</code>. <strong>Nunca</strong> en <code>config.json</code> ni en git.</li>
+  </ol>
+  <p><strong>⚠ Si el token alguna vez aparece en un chat o captura, regeneralo en @BotFather con <code>/token</code>.</strong></p>
+</div>
+
+<div class="card">
+  <div class="card-title">Flags de control</div>
+  <table>
+    <thead><tr><th>Comando</th><th>Qué hace</th></tr></thead>
+    <tbody>
+      <tr><td><code>python generar_gameplan.py --auto</code></td><td>Genera y <strong>publica</strong> (si <code>redes.enabled</code>)</td></tr>
+      <tr><td><code>--dry-redes</code></td><td>Arma la tarjeta y muestra el post, <strong>sin enviar</strong> (prueba)</td></tr>
+      <tr><td><code>--no-redes</code></td><td>Genera el HTML pero <strong>no publica</strong> en redes</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card card-green">
+  <div class="card-title">Re-publicar a mano (respaldo)</div>
+  <p>Si el envío automático falló por un bug, <code>publicar_hoy.py</code> re-publica usando los datos reales del día y el último análisis guardado, <strong>sin tocar git ni la IA</strong>:</p>
+  <pre><span class="n">python</span> <span class="n">publicar_hoy</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">dry</span>                 <span class="c"># ver sin enviar</span>
+<span class="n">python</span> <span class="n">publicar_hoy</span><span class="o">.</span><span class="n">py</span>                        <span class="c"># gameplan + cierre de hoy</span>
+<span class="n">python</span> <span class="n">publicar_hoy</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">only</span> <span class="n">gameplan</span>      <span class="c"># solo el gameplan</span>
+<span class="n">python</span> <span class="n">publicar_hoy</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">date</span> <span class="n">20260616</span>     <span class="c"># un dia puntual</span></pre>
+</div>
+
+<div class="section-divider"></div>
+
 <!-- ═══════════════════ TROUBLESHOOTING ═══════════════════ -->
-<div class="section-label"><span class="num">9</span>Troubleshooting</div>
+<div class="section-label"><span class="num">10</span>Troubleshooting</div>
 <h2 id="troubleshooting">Solucion de problemas comunes</h2>
 <p class="sub">Problemas frecuentes y como resolverlos.</p>
 
@@ -767,6 +826,13 @@ eduSTrader - Local Free/
   <p><strong>Solucion:</strong> Asegurate de que el repositorio tiene un remote configurado. Ejecuta <code>git remote -v</code> dentro del repo. Si no hay remote, agrega: <code>git remote add origin &lt;url&gt;</code>. Verifica tambien que las credenciales de GitHub esten configuradas.</p>
 </div>
 
+<div class="card card-red">
+  <div class="card-title">Telegram: 404 Not Found / no publica</div>
+  <pre>[redes] Telegram: faltan token/chat_id
+[redes] Telegram: ✗ error → 404 Not Found</pre>
+  <p><strong>Solucion:</strong> 1) Revisá que <code>secrets.json</code> tenga <code>token</code> y <code>chat_id</code> (el <code>-100…</code> del canal). 2) En la URL del bot NO se escriben los signos <code>&lt; &gt;</code> del placeholder. 3) El bot debe ser <strong>Administrador</strong> del canal con permiso de publicar. 4) Probá primero con <code>--dry-redes</code> y, si el post se ve bien, sacá el flag.</p>
+</div>
+
 <div class="card card-green">
   <div class="card-title">Pro tip: atajo de un solo click</div>
   <p>Usa el archivo <code>INICIAR_GAMEPLAN_AUTO.bat</code> para ejecutar todo automaticamente sin abrir PowerShell:</p>
@@ -784,8 +850,8 @@ eduSTrader - Local Free/
 
 <div class="card card-purple" style="text-align:center">
   <p style="font-size:14px;color:var(--text)">
-    <strong>EduS Trader</strong> &mdash; Sistema Automatizado de Game Plan v1.6<br>
-    Documentacion actualizada en Junio 2026 &middot; P&amp;L 2 contratos · MAE/MFE · tamaño full/micro · régimen VIX por mercado<br>
+    <strong>EduS Trader</strong> &mdash; Sistema Automatizado de Game Plan v1.7<br>
+    Documentacion actualizada en Junio 2026 &middot; P&amp;L 2 contratos · MAE/MFE · tamaño full/micro · régimen VIX por mercado · publicación en redes (Telegram)<br>
     <span style="font-size:12px;color:var(--text3)">Para dudas o mejoras, contacta al desarrollador.</span>
   </p>
 </div>
