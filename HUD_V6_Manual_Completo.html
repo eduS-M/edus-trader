@@ -296,6 +296,7 @@
     <a href="#sec12-trail" class="toc-h3">Trailing ATR</a>
     <a href="#sec12-riesgo" class="toc-h3">Límite Diario / Sesión</a>
     <a href="#sec12-flujo" class="toc-h3">Flujo de Ejecución</a>
+    <a href="#sec12-fondeo" class="toc-h3">Cuenta Fondeada (ATM espejo)</a>
   </div>
   <div class="toc-section">
     <a href="#sec13" class="toc-h2">13. Modelo de Backtesting</a>
@@ -1047,6 +1048,63 @@ T2 = entrada &plusmn; (stopBase &times; <span class="highlight">RR2</span>)
   </tbody>
 </table>
 </div>
+
+<!-- ─────────── 12.x Cuenta Fondeada (ATM espejo) ─────────── -->
+<div id="sec12-fondeo">
+<h3>Ejecución en Cuenta Fondeada — ATM espejo <span class="pill new">GUÍA</span></h3>
+<p>Para operar una <strong>cuenta de fondeo</strong> (prop firm) sin correr el bot directamente en ella: el AutoTrader corre en <strong>Sim</strong> y vos replicás la entrada <strong>a mano</strong> en la fondeada con una plantilla <strong>ATM</strong>. Como la entrada del sistema es una <strong>orden Límite en un nivel</strong>, tenés tiempo de colocar la misma Límite al mismo precio en la fondeada — sin carrera contra el slippage.</p>
+
+<div class="card info">
+  <strong>Por qué es la forma limpia.</strong> La firma solo ve el flujo de órdenes de <em>su</em> cuenta. En este esquema, en la fondeada <strong>el click es tuyo</strong> (órdenes manuales, con tu variación humana). El bot vive en Sim, que no está sujeta a sus reglas. Igual: <strong>confirmá por escrito con soporte</strong> y <strong>nunca uses copiadores/bridges</strong> (eso sí es automatización + copy trading, prohibido).
+</div>
+
+<h4>Montaje (2 charts)</h4>
+<div class="card">
+<ol>
+  <li><strong>Chart 1 — Sim101:</strong> AutoTrader V2 activado. Dispara la Límite y te avisa (alerta del HUD). Es tu copiloto.</li>
+  <li><strong>Chart 2 — Fondeada:</strong> con la plantilla ATM seleccionada, colocás una <strong>orden Límite</strong> (BUY/SELL LIMIT) al <strong>mismo precio</strong> que la del Sim, cantidad <strong>2</strong>. Al llenar, el ATM engancha solo el stop + los 2 targets.</li>
+</ol>
+</div>
+
+<h4>Modelo de gestión (2 contratos)</h4>
+<p>Riesgo total de la operación = <strong>$250</strong> (1R = <strong>$125 por contrato</strong>). <strong>T1 = 2R</strong>, <strong>T2 = 5R</strong>. Al tocar T1 el stop va a <strong>BE + 4 ticks</strong>; luego un trailing que mantiene el stop <strong>$250 por detrás</strong> del precio, reajustando <strong>cada 1 punto</strong>.</p>
+
+<table>
+  <thead><tr><th>Concepto</th><th>NQ ($5/tick · $20/pt)</th><th>ES ($12.50/tick · $50/pt)</th></tr></thead>
+  <tbody>
+    <tr><td>1R = stop ($125/ct)</td><td>25 ticks (6.25 pts)</td><td>10 ticks (2.5 pts)</td></tr>
+    <tr><td>T1 = 2R ($250/ct)</td><td>50 ticks (12.5 pts)</td><td>20 ticks (5 pts)</td></tr>
+    <tr><td>T2 = 5R ($625/ct)</td><td>125 ticks (31.25 pts)</td><td>50 ticks (12.5 pts)</td></tr>
+    <tr><td>Trailing detrás ($250/runner)</td><td>50 ticks (12.5 pts)</td><td>20 ticks (5 pts)</td></tr>
+  </tbody>
+</table>
+
+<h4>Plantillas ATM (cargar en Chart Trader → ATM Strategy → <code>&lt;Custom&gt;</code>)</h4>
+<table>
+  <thead><tr><th>Parámetro</th><th>NQ &mdash; <code>EduS_NQ_2C</code></th><th>ES &mdash; <code>EduS_ES_2C</code></th></tr></thead>
+  <tbody>
+    <tr><td>Quantity (general)</td><td>2</td><td>2</td></tr>
+    <tr><td>Target 1 — Qty / Stop / Target</td><td>1 / 25 / 50</td><td>1 / 10 / 20</td></tr>
+    <tr><td>Target 2 — Qty / Stop / Target</td><td>1 / 25 / 125</td><td>1 / 10 / 50</td></tr>
+    <tr><td>Auto Breakeven — Trigger / Plus</td><td>50 / 4</td><td>20 / 4</td></tr>
+    <tr><td>Auto Trail — Trigger / Stop Loss / Frequency</td><td>50 / 0 / 4</td><td>20 / 0 / 4</td></tr>
+  </tbody>
+</table>
+<p class="sub">Valores en <strong>ticks</strong>. En Auto Trail la distancia que se mantiene = <em>Trigger − Stop Loss</em> (50 ticks NQ / 20 ticks ES = $250); <strong>Frequency 4</strong> = reajusta cada 1 punto. Guardar con <strong>Save As</strong>.</p>
+
+<h4>Cómo conviven las 3 protecciones</h4>
+<div class="card">
+<ol>
+  <li><strong>Antes de T1:</strong> stop fijo a −1R (25 NQ / 10 ES) en los 2 contratos.</li>
+  <li><strong>Al tocar T1 (2R = +$250/ct):</strong> sale el contrato 1; <strong>Auto Breakeven</strong> mueve el stop del runner a <strong>BE + 4 ticks</strong>.</li>
+  <li><strong>De ahí en más:</strong> <strong>Auto Trail</strong> mantiene el stop <strong>$250 por detrás</strong> y lo sube cada 1 punto, hasta T2 (5R) o hasta que el trail lo saque. NinjaTrader siempre deja el stop más protector de los dos.</li>
+</ol>
+</div>
+
+<div class="card warn">
+  <strong>Riesgo / fondeo.</strong> $250 de riesgo por trade en una cuenta de DD $2.000 es ~12.5% del colchón en una sola operación. Si la cuenta es chica, bajá a $125 (la mitad de ticks) o operá <strong>micros</strong> (MNQ/MES). Probá 2–3 trades en Sim para ver el Auto Trail en vivo antes de la fondeada.
+</div>
+</div>
 </div>
 
 <!-- ────────────────────────────── SEC 13 ────────────────────────────── -->
@@ -1243,7 +1301,7 @@ T2 = entrada &plusmn; (stopBase &times; <span class="highlight">RR2</span>)
 
 <div class="footer">
   <span style="font-family:'DM Sans',sans-serif;font-weight:700;">Edu<span class="gold">S</span> Trader</span> &middot; HUD V6 Manual Completo &middot; Junio 2026<br>
-  NinjaTrader 8 &middot; Indicador Multi-Capa &middot; EduS_AutoTrader_V2 &middot; Dashboard Backtesting V5
+  NinjaTrader 8 &middot; Indicador Multi-Capa &middot; EduS_AutoTrader_V2 &middot; Cuenta Fondeada (ATM espejo) &middot; Dashboard Backtesting V5
 </div>
 
 <script>
