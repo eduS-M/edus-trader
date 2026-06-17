@@ -162,47 +162,66 @@
         document.getElementById('quest-date').textContent = new Date().toISOString().split('T')[0];
 
         if (ticker) {
-            // Load existing data
+            // ── 1. Cargar cuestionario guardado + auto-fill desde valuations en un solo fetch ──
             fetch(`/api/inversiones/questionnaire?ticker=${ticker}`)
                 .then(r => r.json())
                 .then(res => {
-                    if (res.success && res.data.latest) {
-                        const form = document.getElementById('quest-form');
+                    if (!res.success) return;
+                    const form = document.getElementById('quest-form');
+
+                    // 1a. Si hay respuestas guardadas en la BD, cargarlas
+                    if (res.data.latest) {
                         Object.keys(res.data.latest).forEach(key => {
                             const el = form.elements[key];
                             if (el && res.data.latest[key] !== null) {
                                 el.value = res.data.latest[key];
                             }
                         });
-                        document.getElementById('quest-date').textContent = `Última edición: ${res.data.latest.analysis_date}`;
+                        document.getElementById('quest-date').textContent =
+                            `Última edición: ${res.data.latest.analysis_date}`;
+                    }
+
+                    // 1b. Auto-rellenar con datos de la última valuación (si el campo sigue vacío)
+                    const v = res.data.valuations;   // viene en la misma respuesta
+                    const t = res.data.ticker_data;  // datos básicos del ticker
+
+                    if (v) {
+                        // PEG
+                        if (!form.elements['peg'].value && v.peg_value != null)
+                            form.elements['peg'].value = parseFloat(v.peg_value).toFixed(2);
+
+                        // EPS next 5y  (viene como fraccion 0.194 → 19.4)
+                        if (!form.elements['eps_next_5y'].value && v.eps_next_5y_pct != null)
+                            form.elements['eps_next_5y'].value = (parseFloat(v.eps_next_5y_pct) * 100).toFixed(2);
+                    }
+
+                    if (t) {
+                        // Debt / Equity = total_liabilities / (total_assets - total_liabilities)
+                        if (!form.elements['debt_equity'].value &&
+                            t.total_liabilities != null && t.total_assets != null) {
+                            const equity = t.total_assets - t.total_liabilities;
+                            if (equity > 0)
+                                form.elements['debt_equity'].value = (t.total_liabilities / equity).toFixed(2);
+                        }
+
+                        // ROE = net_income / equity
+                        if (!form.elements['roe'].value &&
+                            t.net_income != null && t.total_assets != null && t.total_liabilities != null) {
+                            const equity = t.total_assets - t.total_liabilities;
+                            if (equity > 0)
+                                form.elements['roe'].value = ((t.net_income / equity) * 100).toFixed(2);
+                        }
+
+                        // EPS past 5y (si hay)
+                        if (!form.elements['eps_past_5y'].value && t.eps_past_5y_pct != null)
+                            form.elements['eps_past_5y'].value = (parseFloat(t.eps_past_5y_pct) * 100).toFixed(2);
+
+                        // Ventas creciendo (heuristica: si revenue > 0)
+                        // No podemos saber sin historial, lo dejamos vacío
                     }
                 });
                 
-            // Auto-completar desde Valuations
-            fetch(`/api/inversiones/valuations?ticker=${ticker}`)
-                .then(r => r.json())
-                .then(res => {
-                    if (res.success && res.data.latest) {
-                        const v = res.data.latest;
-                        const form = document.getElementById('quest-form');
-                        
-                        // Solo sobreescribir si el campo está vacío (no fue cargado del questionnaire)
-                        if (!form.elements['peg'].value && v.peg_value) {
-                            form.elements['peg'].value = v.peg_value.toFixed(2);
-                        }
-                        if (!form.elements['eps_next_5y'].value && v.eps_next_5y_pct) {
-                            form.elements['eps_next_5y'].value = (v.eps_next_5y_pct * 100).toFixed(2);
-                        }
-                        if (!form.elements['debt_equity'].value && v.debt_to_equity) {
-                            form.elements['debt_equity'].value = v.debt_to_equity.toFixed(2);
-                        }
-                        if (!form.elements['roe'].value && v.roe_pct) {
-                            form.elements['roe'].value = (v.roe_pct * 100).toFixed(2);
-                        }
-                    }
-                });
-                
-            // Cargar Gestión de Riesgo
+            // ── 2. Gestión de Riesgo ──
             fetch(`/api/inversiones/risk?ticker=${ticker}`)
                 .then(r => r.json())
                 .then(res => {
@@ -217,7 +236,7 @@
                     }
                 });
                 
-            // Cargar Histórico para Gráficos
+            // ── 3. Histórico para Gráficos ──
             fetch(`/api/inversiones/valuations?ticker=${ticker}&days=1825`)
                 .then(r => r.json())
                 .then(res => {
