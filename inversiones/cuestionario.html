@@ -178,6 +178,30 @@
                     }
                 });
                 
+            // Auto-completar desde Valuations
+            fetch(`/api/inversiones/valuations?ticker=${ticker}`)
+                .then(r => r.json())
+                .then(res => {
+                    if (res.success && res.data.latest) {
+                        const v = res.data.latest;
+                        const form = document.getElementById('quest-form');
+                        
+                        // Solo sobreescribir si el campo está vacío (no fue cargado del questionnaire)
+                        if (!form.elements['peg'].value && v.peg_value) {
+                            form.elements['peg'].value = v.peg_value.toFixed(2);
+                        }
+                        if (!form.elements['eps_next_5y'].value && v.eps_next_5y_pct) {
+                            form.elements['eps_next_5y'].value = (v.eps_next_5y_pct * 100).toFixed(2);
+                        }
+                        if (!form.elements['debt_equity'].value && v.debt_to_equity) {
+                            form.elements['debt_equity'].value = v.debt_to_equity.toFixed(2);
+                        }
+                        if (!form.elements['roe'].value && v.roe_pct) {
+                            form.elements['roe'].value = (v.roe_pct * 100).toFixed(2);
+                        }
+                    }
+                });
+                
             // Cargar Gestión de Riesgo
             fetch(`/api/inversiones/risk?ticker=${ticker}`)
                 .then(r => r.json())
