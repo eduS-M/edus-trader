@@ -269,6 +269,7 @@
   </div>
   <div class="toc-section">
     <a href="#sec6" class="toc-h2">6. Panel de Señales V6</a>
+    <a href="#sec6-ventana" class="toc-h3">Ventana Flotante</a>
   </div>
   <div class="toc-section">
     <a href="#sec7" class="toc-h2">7. Líneas de Zona (Chart)</a>
@@ -759,6 +760,39 @@ pendienteReciente = ( <span class="highlight">LR<sub>ahora</sub> − LR<sub>hace
   <li><strong>Naranja</strong> — prioridad #5 o superior: calidad menor.</li>
 </ul>
 <p>La <code>σ</code> (sigma) es la distancia del precio al nivel de la zona dividida por el ATR. Cuanto menor la σ, más "clavada" está la entrada en el nivel. El prefijo <code>+</code> indica variante plus.</p>
+
+<h3 id="sec6-ventana">Ventana Flotante (panel desprendible) <span class="pill new">MEJORA</span></h3>
+<p>Con la propiedad <code>Ventana_Flotante = true</code>, el panel del HUD se <strong>desprende del gráfico</strong> y se muestra en una ventana propia, independiente del chart. Ideal para tenerlo en un segundo monitor o sobre otra ventana.</p>
+
+<div class="card info">
+  <div class="card-title"><strong>Mejoras visuales</strong></div>
+  <ul>
+    <li><strong>Colores EduS</strong> — fondo navy, borde y títulos en dorado (los colores funcionales del semáforo y las señales se mantienen).</li>
+    <li><strong>Una sola caja</strong> — el panel ya no se ve como "una caja dentro de otra": un único contenedor con borde dorado llena la ventana.</li>
+    <li><strong>Redimensionable</strong> — al agrandar/achicar la ventana, <strong>todo el contenido escala</strong> (texto incluido).</li>
+    <li><strong>Controles de ventana</strong> — minimizar, maximizar y cerrar (barra de título estándar; se mueve arrastrándola).</li>
+  </ul>
+</div>
+
+<h4>Persistencia de posición y tamaño</h4>
+<p>La ventana <strong>recuerda dónde y de qué tamaño la dejaste</strong>. Al moverla o redimensionarla se guarda automáticamente, y al reabrirla (recompilar, recargar el chart o reiniciar NinjaTrader) vuelve al mismo lugar y tamaño.</p>
+
+<div class="card">
+  <div class="card-title"><strong>Dónde se guarda</strong></div>
+  <p>Un archivo de texto por instrumento:</p>
+  <pre>Documents\NinjaTrader 8\incoming\EduS_HUDPanelPos_<span class="kw">{instrumento}</span>.txt</pre>
+  <p>Por ejemplo, <code>EduS_HUDPanelPos_NQ.txt</code>. Contiene 4 números: <code>izquierda;arriba;ancho;alto</code>.</p>
+</div>
+
+<div class="card warn">
+  <div class="card-title"><strong>Notas</strong></div>
+  <ul>
+    <li><strong>Por instrumento:</strong> NQ recuerda su posición/tamaño por separado de ES, CL, etc.</li>
+    <li><strong>Primera vez:</strong> si todavía no existe el <code>.txt</code>, la ventana abre en <code>Hud_X</code>/<code>Hud_Y</code> con el tamaño por defecto (igual que antes).</li>
+    <li><strong>Resetear:</strong> si querés volver a la posición/tamaño inicial, borrá ese archivo <code>.txt</code> y vuelve al default.</li>
+    <li><strong>Mínimos de seguridad:</strong> la ventana no baja de 200×200 px, para que nunca quede imposible de agarrar.</li>
+  </ul>
+</div>
 </div>
 
 <!-- ────────────────────────────── SEC 7 ────────────────────────────── -->

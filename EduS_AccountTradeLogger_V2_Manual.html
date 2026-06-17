@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — Manual AccountTradeLogger V2</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #142d37; --navy-dark: #0d1f26; --teal: #279995; --gold: #b38665; --gold-light: #d4a982;
+    --bg: #f2f0eb; --surface: #ffffff; --surface2: #f8f6f0; --border: #e0dbd0;
+    --text: #1a1814; --text-muted: #7a7468;
+    --bull: #279995; --bull-bg: #e6f5f4; --bear: #c0392b; --bear-bg: #fdf0ee;
+    --warn-bg: #fff8e1; --warn-border: #f0c040;
+    --shadow: 0 2px 20px rgba(13,31,38,0.10); --radius: 10px;
+    --header-gradient: linear-gradient(135deg, #0d1f26 0%, #034649 100%);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.7; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--header-gradient); color: white; padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .header-left .logo-img { height: 52px; width: auto; display: block; }
+  .header-left .brand-name { font-family: 'DM Sans', sans-serif; font-size: 26px; font-weight: 700; color: white; line-height: 1; }
+  .header-left .brand-name .gold { color: var(--gold); }
+  .header-left .brand-sub { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--gold-light); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+  .header-right { text-align: right; }
+  .header-right .version { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); font-weight: 700; }
+
+  /* ── LAYOUT ── */
+  .layout { display: flex; max-width: 1400px; margin: 0 auto; width: 100%; flex: 1; }
+  .sidebar {
+    width: 280px; min-width: 280px; background: var(--surface); border-right: 1px solid var(--border);
+    height: calc(100vh - 80px); position: sticky; top: 80px; overflow-y: auto; padding: 16px 0;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .sidebar .toc-section { margin-bottom: 4px; }
+  .sidebar .toc-section a {
+    display: block; padding: 6px 20px 6px 24px;
+    font-size: 12px; color: var(--text-muted); text-decoration: none;
+    border-left: 2px solid transparent; transition: all 0.15s;
+  }
+  .sidebar .toc-section a:hover { color: var(--teal); border-left-color: var(--teal); background: var(--bull-bg); }
+  .sidebar .toc-section .toc-h2 { font-weight: 600; color: var(--navy); font-size: 13px; padding-left: 16px; border-left: 2px solid var(--gold); margin-top: 12px; }
+  .sidebar .toc-section .toc-h2:first-child { margin-top: 0; }
+  .sidebar .toc-section .toc-h3 { padding-left: 32px; font-size: 11px; }
+  .sidebar .sidebar-close { display: none; }
+  .container { flex: 1; min-width: 0; padding: 32px 40px 60px; }
+
+  /* ── TITLE ── */
+  .doc-title { margin-bottom: 32px; }
+  .doc-title h1 { font-size: 32px; font-weight: 700; color: var(--navy); }
+  .doc-title .subtitle { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-muted); letter-spacing: 1px; margin-top: 4px; }
+
+  /* ── SECTIONS ── */
+  .section { margin-bottom: 40px; }
+  .section-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+    padding-bottom: 8px; border-bottom: 2px solid var(--gold);
+  }
+  .section-header .num {
+    background: var(--navy); color: white; font-family: 'Space Mono', monospace;
+    font-size: 11px; padding: 2px 10px; border-radius: 20px; letter-spacing: 1px;
+  }
+  .section-header h2 { font-size: 22px; font-weight: 600; color: var(--navy); }
+
+  .section h3 { font-size: 17px; font-weight: 600; color: var(--navy); margin: 20px 0 10px; }
+  .section h4 { font-size: 15px; font-weight: 600; color: var(--text); margin: 14px 0 8px; }
+  [id] { scroll-margin-top: 90px; }
+
+  .section p { margin-bottom: 10px; }
+  .section ul, .section ol { margin: 8px 0 12px 24px; }
+  .section li { margin-bottom: 4px; }
+
+  /* ── CARDS ── */
+  .card { background: var(--surface); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+  .card.highlight { border-left: 4px solid var(--gold); }
+  .card.info { border-left: 4px solid var(--teal); background: var(--bull-bg); }
+  .card.warn { border-left: 4px solid var(--warn-border); background: var(--warn-bg); }
+  .card.danger { border-left: 4px solid var(--bear); background: var(--bear-bg); }
+  .card.new { border-left: 4px solid #8e44ad; background: #f6effb; }
+  .card-title { font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+
+  .pill { display:inline-block; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:1px; text-transform:uppercase; padding:2px 8px; border-radius:20px; vertical-align:middle; margin-left:6px; }
+  .pill.v6 { background:#8e44ad; color:#fff; }
+  .pill.fix { background:var(--bear); color:#fff; }
+  .pill.new { background:var(--teal); color:#fff; }
+
+  /* ── TABLES ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  th { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; text-align: left; padding: 8px 10px; border-bottom: 2px solid var(--border); background: var(--surface2); }
+  td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: var(--surface2); }
+  td.rec { color: var(--teal); font-weight: 700; }
+  td.old { color: var(--text-muted); }
+
+  /* ── PANEL MOCK ── */
+  .panelmock { background:#0d1f26; border:2px solid #b38665; border-radius:8px; padding:16px; font-family:'Space Mono',monospace; font-size:13px; color:#cfd6df; margin:12px 0; max-width:330px; }
+  .panelmock .ttl { color:#d4a982; font-weight:700; border-bottom:1px solid #2a3a42; padding-bottom:6px; margin-bottom:8px; }
+  .panelmock .row { display:flex; justify-content:space-between; padding:3px 0; }
+  .panelmock .lbl { color:#96a2ac; }
+  .pm-green { color:#3dc8a0; } .pm-red { color:#e06e60; } .pm-gold { color:#d4a982; } .pm-white { color:#fff; }
+  .panelmock .foot { color:#b38665; font-weight:700; text-align:right; margin-top:8px; font-size:11px; }
+
+  /* ── CODE ── */
+  code { background: var(--surface2); padding: 2px 6px; border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--bear); }
+  pre { background: var(--navy-dark); color: #e0e0e0; padding: 16px; border-radius: 8px; overflow-x: auto; font-family: 'Space Mono', monospace; font-size: 12px; line-height: 1.5; margin: 12px 0; }
+  pre .cmt { color: #6f8a7a; }
+  pre .kw { color: #d4a982; }
+
+  /* ── INSTALL STEPS ── */
+  .step-list { counter-reset: step; }
+  .step-item { counter-increment: step; margin-bottom: 16px; padding-left: 40px; position: relative; }
+  .step-item::before { content: counter(step); position: absolute; left: 0; top: 0; width: 28px; height: 28px; background: var(--navy); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+  .step-item h4 { margin: 0 0 4px; }
+
+  /* ── FOOTER ── */
+  .footer { background: var(--navy-dark); color: rgba(255,255,255,0.5); text-align: center; padding: 20px; font-size: 11px; font-family: 'Space Mono', monospace; }
+  .footer .gold { color: var(--gold); }
+
+  /* ── MOBILE NAV ── */
+  .mobile-nav-toggle {
+    display: none; background: none; border: none; cursor: pointer;
+    width: 36px; height: 36px; flex-direction: column; justify-content: center;
+    align-items: center; gap: 5px; padding: 4px; flex-shrink: 0;
+  }
+  .mobile-nav-toggle span {
+    display: block; width: 22px; height: 2px; background: white;
+    border-radius: 2px; transition: transform .3s, opacity .3s;
+  }
+  .mobile-nav-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+  .mobile-nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .mobile-nav-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+  .sidebar-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+    z-index: 90; opacity: 0; transition: opacity .3s;
+  }
+  .sidebar-overlay.open { display: block; opacity: 1; }
+
+  @media (max-width: 900px) {
+    .mobile-nav-toggle { display: flex; }
+    .container { padding: 20px; }
+    .sidebar {
+      position: fixed; top: 0; left: -320px; width: 300px; max-width: 80vw;
+      height: 100vh; z-index: 100; background: var(--surface);
+      transition: left .3s ease; box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+      display: block !important; padding-top: 60px;
+    }
+    .sidebar.open { left: 0; }
+    .sidebar .sidebar-close {
+      position: absolute; top: 12px; right: 12px;
+      background: none; border: none; font-size: 24px; color: var(--text-muted);
+      cursor: pointer; padding: 4px 8px; line-height: 1;
+    }
+    .sidebar .sidebar-close:hover { color: var(--text); }
+  }
+  @media (max-width: 600px) {
+    .header { padding: 10px 14px; gap: 6px; }
+    .header-left { gap: 10px; }
+    .header-left .logo-img { height: 40px; }
+    .header-left .brand-name { font-size: 20px; }
+    .header-left .brand-sub { font-size: 7px; }
+    .header-right .version { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left" style="display:flex; align-items:center;">
+    <a href="javascript:history.back()" style="color: var(--gold, #d4af37); text-decoration: none; margin-right: 15px; font-size: 28px; line-height: 1; cursor: pointer; transition: transform 0.2s ease;" onmouseover="this.style.transform='translateX(-3px)'" onmouseout="this.style.transform='translateX(0)'" title="Volver a la página anterior">&#8592;</a>
+    <img src="/assets/logo.png" alt="EduS Trader" class="logo-img">
+    <div>
+      <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
+      <div class="brand-sub">Manual de Estrategia &middot; Mesa de Dinero</div>
+    </div>
+  </div>
+  <div class="header-right" style="display:flex;align-items:center;gap:10px;">
+    <div class="version">AccountTradeLogger V2</div>
+    <button class="mobile-nav-toggle" aria-label="Menu" onclick="toggleMobileNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileNav()"></div>
+
+<div class="layout">
+
+<!-- ===== SIDEBAR ===== -->
+<nav class="sidebar" id="mainSidebar">
+  <button class="sidebar-close" onclick="toggleMobileNav()">&times;</button>
+  <div class="toc-section">
+    <a href="#sec0" class="toc-h2">0. Qué es</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec1" class="toc-h2">1. Instalación</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec2" class="toc-h2">2. Logger — Propiedades</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec3" class="toc-h2">3. El Registro CSV</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec4" class="toc-h2">4. Panel de Posición Activa</a>
+    <a href="#sec4-muestra" class="toc-h3">Qué muestra</a>
+    <a href="#sec4-calc" class="toc-h3">Cálculo de riesgo/target</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec5" class="toc-h2">5. Panel — Propiedades</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec6" class="toc-h2">6. Ventana Flotante</a>
+    <a href="#sec6-persist" class="toc-h3">Persistencia</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec7" class="toc-h2">7. Uso Típico</a>
+  </div>
+  <div class="toc-section">
+    <a href="#sec8" class="toc-h2">8. Solución de Problemas</a>
+  </div>
+</nav>
+
+<!-- ===== CONTENIDO ===== -->
+<div class="container">
+
+<div class="doc-title">
+  <h1>EduS AccountTradeLogger V2</h1>
+  <div class="subtitle">NinjaTrader 8 &middot; Registro de operaciones + Panel de Posición flotante</div>
+</div>
+
+<!-- ────────────────────────────── SEC 0 ────────────────────────────── -->
+<div class="section" id="sec0">
+<div class="section-header"><span class="num">SECCIÓN 0</span><h2>Qué es</h2></div>
+<p><code>EduS_AccountTradeLogger_V2</code> es una estrategia de NinjaTrader 8 que cumple <strong>dos funciones independientes</strong>:</p>
+<div class="card info">
+  <ol>
+    <li><strong>Registro de operaciones (Logger):</strong> escucha las ejecuciones de la cuenta y guarda cada fill en un CSV, junto con el <strong>contexto del HUD</strong> (SMA, LR, AVWAP, Keltner, ATR, etc.) en el instante exacto del trade. Ese CSV es el que alimenta el <strong>Post-Market automatizado</strong>.</li>
+    <li><strong>Panel de Posición Activa (flotante):</strong> una ventana desprendida del gráfico que muestra la <strong>posición abierta, el riesgo y el target en dólares</strong> — igual que el HUD V6 — con la cuenta identificada. Pensado para monitorear el riesgo en charts <strong>que no tienen el HUD V6</strong>.</li>
+  </ol>
+</div>
+<p>Las dos funciones se activan/desactivan por separado: podés usar solo el logger, solo el panel, o ambos.</p>
+</div>
+
+<!-- ────────────────────────────── SEC 1 ────────────────────────────── -->
+<div class="section" id="sec1">
+<div class="section-header"><span class="num">SECCIÓN 1</span><h2>Instalación</h2></div>
+<div class="step-list">
+  <div class="step-item"><h4>Copiar el archivo</h4><p>Colocá <code>EduSAccountTradeLoggerV2.cs</code> en <code>Documents\NinjaTrader 8\bin\Custom\Strategies\</code>.</p></div>
+  <div class="step-item"><h4>Compilar</h4><p>Abrí el NinjaScript Editor y compilá (<code>F5</code>). Debe compilar sin errores.</p></div>
+  <div class="step-item"><h4>Aplicar al gráfico</h4><p>Click derecho en el chart → <em>Strategies…</em> → <code>EduS_AccountTradeLogger_V2</code> → elegí la <strong>cuenta (Account)</strong> sobre la que va a operar/monitorear.</p></div>
+  <div class="step-item"><h4>Configurar</h4><p>Ajustá las propiedades del grupo <strong>01. Logger</strong> y, si lo querés, el <strong>02. Panel Posición</strong> (ver Secciones 2 y 5).</p></div>
+</div>
+<div class="card warn"><p>La estrategia <strong>no envía órdenes propias</strong>: solo escucha las ejecuciones de la cuenta y dibuja el panel. Es segura para correr junto al HUD o a tu operativa manual.</p></div>
+</div>
+
+<!-- ────────────────────────────── SEC 2 ────────────────────────────── -->
+<div class="section" id="sec2">
+<div class="section-header"><span class="num">SECCIÓN 2</span><h2>Logger — Propiedades</h2></div>
+<div class="card">
+  <table>
+    <thead><tr><th>Propiedad</th><th>Descripción</th><th>Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td><code>Nombre Estrategia / Setup</code> (<code>TradeName</code>)</td><td>Etiqueta del setup que se guarda en cada fila del CSV. Útil para distinguir manual vs sistema.</td><td><code>"Setup_Manual"</code></td></tr>
+      <tr><td><code>Ruta Archivo CSV</code> (<code>CsvPath</code>)</td><td>Dónde se escribe el registro. Debe ser la carpeta que lee el Post-Market.</td><td><code>...\NinjaTrader 8\incoming\EduS_TradesContext.csv</code></td></tr>
+      <tr><td><code>Cuentas a monitorear</code> (<code>AccountsToMonitor</code>)</td><td>Cuentas cuyas ejecuciones se loguean, separadas por coma.</td><td><code>"Sim101"</code> &middot; <code>"Sim101, APEX-2547813"</code></td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- ────────────────────────────── SEC 3 ────────────────────────────── -->
+<div class="section" id="sec3">
+<div class="section-header"><span class="num">SECCIÓN 3</span><h2>El Registro CSV</h2></div>
+<p>Por cada ejecución en las cuentas monitoreadas, la estrategia identifica si es <strong>Entry</strong> o <strong>Exit</strong> (según el cambio de posición neta), le asigna un <code>Entry_ID</code> y un <code>Fill_ID</code>, y escribe una fila con el <strong>contexto del HUD V5 del gráfico</strong> en ese instante.</p>
+
+<h3>Columnas</h3>
+<pre>Entry_ID;Fill_ID;Cuenta;Fill_Type;Fecha_Hora;Instrumento;Trade_Name;Direccion;Qty;Precio_Ejecucion;Leg_Seq;
+Pendiente_SMA20;Pendiente_SMA80;Pendiente_LinReg89;VWAP_Dir;Valor_LR89;
+Precio_SMA20;Precio_SMA80;Distancia_SMA20;Distancia_SMA80;
+Precio_VWAP;MB_Keltner;Keltner_Width;ATR_Valor;
+Window_POC;Window_AP_High;Window_AP_Low;Window_LVNs</pre>
+
+<div class="card info"><p><strong>Integración con el Post-Market:</strong> este CSV (<code>EduS_TradesContext.csv</code>) es el que el sistema de Post-Market automatizado cruza con tus trades para calcular zona, R y métricas. Por eso <code>CsvPath</code> debe apuntar a la carpeta correcta.</p></div>
+
+<div class="card warn"><p><strong>Resiliente a Excel:</strong> si el CSV está abierto en Excel y queda bloqueado, la estrategia escribe en un archivo de respaldo (<code>..._BACKUP.csv</code>) para no perder el registro. En el log vas a ver el aviso.</p></div>
+
+<div class="card"><p><strong>Contexto del HUD:</strong> si en el gráfico no hay un HUD activo, la fila se omite (se loguea un <code>[WARN]</code>). El logger necesita el HUD en el chart para capturar el contexto.</p></div>
+</div>
+
+<!-- ────────────────────────────── SEC 4 ────────────────────────────── -->
+<div class="section" id="sec4">
+<div class="section-header"><span class="num">SECCIÓN 4</span><h2>Panel de Posición Activa <span class="pill new">NUEVO</span></h2></div>
+<p>Una ventana flotante que muestra tu posición abierta con <strong>riesgo y target en dólares</strong>, calculados igual que el HUD V6. Su razón de ser: <strong>ver el riesgo en un chart que no tiene el HUD V6</strong> (por eso es importante poder activarlo/desactivarlo — en los charts con HUD no se enciende).</p>
+
+<h3 id="sec4-muestra">Qué muestra</h3>
+<div class="panelmock">
+  <div class="ttl">POSICIÓN ACTIVA · Sim101</div>
+  <div class="row"><span class="lbl">NQ 06-26</span><span class="pm-gold">[ATM]</span></div>
+  <div class="row"><span class="pm-green">LONG 2 @ 20,000.00</span></div>
+  <div class="row"><span class="lbl">P&amp;L</span><span class="pm-green">+$420 (+10.5 pts)</span></div>
+  <div class="row"><span class="lbl">Riesgo</span><span class="pm-gold">$250 &nbsp;⛊ BE</span></div>
+  <div class="row"><span class="lbl">Target</span><span class="pm-white">$625</span></div>
+  <div class="row"><span class="lbl">R:R</span><span class="pm-white">2.5</span></div>
+  <div class="foot">edustrader.com</div>
+</div>
+<ul>
+  <li><strong>Cuenta + instrumento</strong> — identifica en qué cuenta está la posición (la <code>Account</code> de la estrategia).</li>
+  <li><strong>Dirección, cantidad y precio</strong> — LONG/SHORT (verde/rojo), qty y precio promedio.</li>
+  <li><strong>P&amp;L</strong> — no realizado, en dólares y puntos.</li>
+  <li><strong>Riesgo</strong> — pérdida en $ si se ejecuta el stop. Marca <code>⛊ BE</code> si el stop ya está en ganancia, y <code>⚠ parcial</code> si el stop no cubre toda la posición.</li>
+  <li><strong>Target</strong> — ganancia en $ si se ejecuta el límite, y <strong>R:R</strong> = target / riesgo.</li>
+  <li><strong>Etiqueta</strong> — <code>[ATM]</code> o <code>[Manual]</code> según el origen de las órdenes.</li>
+</ul>
+<p>Si no hay posición, el panel muestra <em>"Sin posición · {instrumento}"</em>.</p>
+
+<h3 id="sec4-calc">Cálculo de riesgo / target</h3>
+<p>Replica exactamente la lógica del HUD V6: lee la posición de la cuenta y sus <strong>órdenes activas</strong> de stop y límite.</p>
+<div class="card">
+  <ul>
+    <li><strong>Riesgo ($)</strong> = |precio entrada − stop promedio| × cantidad con stop × valor del punto. (Promedia las órdenes Stop activas.)</li>
+    <li><strong>Target ($)</strong> = |target promedio − precio entrada| × cantidad con target × valor del punto. (Promedia las órdenes Limit activas.)</li>
+    <li><strong>R:R</strong> = Target / Riesgo.</li>
+  </ul>
+</div>
+<div class="card warn"><p>Si no hay órdenes de stop/límite activas (por ejemplo, entraste a mercado sin bracket), el riesgo/target se muestran como <code>—</code>.</p></div>
+</div>
+
+<!-- ────────────────────────────── SEC 5 ────────────────────────────── -->
+<div class="section" id="sec5">
+<div class="section-header"><span class="num">SECCIÓN 5</span><h2>Panel — Propiedades</h2></div>
+<div class="card">
+  <table>
+    <thead><tr><th>Propiedad</th><th>Default</th><th>Qué hace</th></tr></thead>
+    <tbody>
+      <tr><td><code>Mostrar panel de posición</code></td><td><code>false</code></td><td>Activa/desactiva el panel. <strong>OFF por defecto</strong> para que en charts con HUD V6 no se encienda.</td></tr>
+      <tr><td><code>Panel siempre visible (Topmost)</code></td><td><code>true</code></td><td>La ventana queda por encima de las demás.</td></tr>
+      <tr><td><code>Tamaño de fuente base</code></td><td><code>15</code></td><td>Tamaño base del texto (el contenido escala con la ventana — ver Sección 6).</td></tr>
+      <tr><td><code>Opacidad del panel</code></td><td><code>1.0</code></td><td>Transparencia de la ventana, de <code>0.4</code> a <code>1.0</code>.</td></tr>
+    </tbody>
+  </table>
+</div>
+<div class="card info"><p>Para <strong>prender/apagar</strong> el panel, cambiá la propiedad y <strong>re-aplicá</strong> la estrategia (NinjaTrader lee la configuración al iniciar).</p></div>
+</div>
+
+<!-- ────────────────────────────── SEC 6 ────────────────────────────── -->
+<div class="section" id="sec6">
+<div class="section-header"><span class="num">SECCIÓN 6</span><h2>Ventana Flotante</h2></div>
+<p>El panel vive en una <strong>ventana propia, fuera del gráfico</strong>, con la identidad EduS (fondo navy, borde y títulos dorados) y los colores funcionales (verde/rojo) para dirección y P&amp;L.</p>
+<ul>
+  <li><strong>Movible</strong> — se arrastra desde la barra de título.</li>
+  <li><strong>Redimensionable</strong> — al agrandar/achicar la ventana, <strong>todo el contenido escala</strong>.</li>
+  <li><strong>Controles</strong> — minimizar, maximizar y cerrar.</li>
+</ul>
+
+<h3 id="sec6-persist">Persistencia de posición y tamaño</h3>
+<p>La ventana <strong>recuerda dónde y de qué tamaño la dejaste</strong>. Al moverla o redimensionarla se guarda solo, y al reabrirla (recompilar, recargar el chart, reiniciar NinjaTrader) vuelve al mismo lugar y tamaño.</p>
+<div class="card">
+  <div class="card-title">Dónde se guarda</div>
+  <p>Un archivo de texto por instrumento, en la <strong>misma carpeta del CSV</strong> (<code>CsvPath</code>):</p>
+  <pre>...\NinjaTrader 8\incoming\EduS_PanelPos_<span class="kw">{instrumento}</span>.txt</pre>
+  <p>Por ejemplo <code>EduS_PanelPos_NQ.txt</code>. Contiene 4 números: <code>izquierda;arriba;ancho;alto</code>.</p>
+</div>
+<div class="card warn">
+  <div class="card-title">Notas</div>
+  <ul>
+    <li><strong>Por instrumento:</strong> NQ recuerda su posición/tamaño por separado de ES, CL, etc.</li>
+    <li><strong>Primera vez:</strong> si no existe el <code>.txt</code>, abre en una posición/tamaño por defecto.</li>
+    <li><strong>Resetear:</strong> borrá ese <code>.txt</code> para volver al default.</li>
+    <li><strong>Mínimos de seguridad:</strong> no baja de 200×200 px, para que nunca quede imposible de agarrar.</li>
+    <li><strong>Dos charts del mismo instrumento</strong> comparten el archivo (sus ventanas se superponen).</li>
+  </ul>
+</div>
+</div>
+
+<!-- ────────────────────────────── SEC 7 ────────────────────────────── -->
+<div class="section" id="sec7">
+<div class="section-header"><span class="num">SECCIÓN 7</span><h2>Uso Típico</h2></div>
+
+<div class="card">
+  <div class="card-title">A) Monitor de riesgo en cuenta fondeada (sin HUD)</div>
+  <p>En un chart sin el HUD V6, aplicás la estrategia con la cuenta fondeada, ponés <code>Mostrar panel de posición = true</code> y tenés a la vista el <strong>riesgo, target y R:R</strong> de la posición en esa cuenta — útil para vigilar el drawdown sin recargar el chart con el indicador completo.</p>
+</div>
+
+<div class="card">
+  <div class="card-title">B) Logger para el Post-Market</div>
+  <p>En el chart con el HUD, la estrategia registra cada fill con contexto al <code>EduS_TradesContext.csv</code>, que después el Post-Market automatizado procesa. Acá el panel se deja <strong>apagado</strong> (ya tenés el HUD).</p>
+</div>
+
+<div class="card info"><p>Las dos funciones conviven: podés tener el logger activo <em>y</em> el panel, o cada uno por su lado, según el chart.</p></div>
+</div>
+
+<!-- ────────────────────────────── SEC 8 ────────────────────────────── -->
+<div class="section" id="sec8">
+<div class="section-header"><span class="num">SECCIÓN 8</span><h2>Solución de Problemas</h2></div>
+
+<div class="card warn">
+  <div class="card-title">El panel no aparece</div>
+  <p>Aparece <strong>en tiempo real</strong> (tras el primer tick), con la estrategia aplicada a un <strong>chart</strong> y <code>Mostrar panel de posición = true</code>. Con mercado cerrado puede no mostrarse hasta que llegue dato. Verificá también que re-aplicaste la estrategia después de cambiar la propiedad.</p>
+</div>
+
+<div class="card warn">
+  <div class="card-title">Riesgo / Target muestran "—"</div>
+  <p>Significa que no hay órdenes de <strong>stop/límite activas</strong> para esa posición (ej. entraste a mercado sin bracket). Colocá el stop/target (o un ATM) y se completan.</p>
+</div>
+
+<div class="card warn">
+  <div class="card-title">El CSV no se escribe</div>
+  <p>Puede estar <strong>bloqueado por Excel</strong>: cerralo. La estrategia igualmente guarda en <code>..._BACKUP.csv</code> para no perder datos (mirá el log). Confirmá también que <code>CsvPath</code> apunta a una carpeta válida.</p>
+</div>
+
+<div class="card warn">
+  <div class="card-title">No loguea contexto</div>
+  <p>El logger necesita un <strong>HUD activo en el gráfico</strong> para capturar el contexto. Si no hay HUD, verás un <code>[WARN]</code> y la fila se omite.</p>
+</div>
+
+</div>
+
+</div><!-- /container -->
+</div><!-- /layout -->
+
+<div class="footer">
+  <span style="font-family:'DM Sans',sans-serif;font-weight:700;">Edu<span class="gold">S</span> Trader</span> &middot; AccountTradeLogger V2 — Manual &middot; Junio 2026<br>
+  NinjaTrader 8 &middot; Logger de ejecuciones + Panel de Posición flotante (riesgo / target / cuenta)
+</div>
+
+<script>
+function toggleMobileNav() {
+  var sidebar = document.getElementById('mainSidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var btn = document.querySelector('.mobile-nav-toggle');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+  btn.classList.toggle('open');
+  document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+}
+document.addEventListener('click', function(e) {
+  if (window.innerWidth > 900) return;
+  var link = e.target.closest('.sidebar a[href^="#"]');
+  if (link && document.getElementById('mainSidebar').classList.contains('open')) {
+    toggleMobileNav();
+  }
+});
+</script>
+</body>
+</html>
