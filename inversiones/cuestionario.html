@@ -2,105 +2,195 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuestionario de Inversión - EduSTrader</title>
+    <title>Análisis de Inversión - EduSTrader</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/inv-styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="assets/inv-styles.css?v=3">
     <style>
-        .quest-section { margin-bottom: 2rem; border: 1px solid var(--inv-border); border-radius: 8px; overflow: hidden; }
-        .quest-header { background: rgba(255,255,255,0.03); padding: 1rem 1.5rem; font-weight: 600; border-bottom: 1px solid var(--inv-border); }
-        .quest-body { padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
-        .risk-box { padding: 1rem; border-radius: 6px; text-align: center; background: rgba(255,255,255,0.02); border: 1px solid var(--inv-border); }
-        .risk-label { font-size: 0.85rem; color: var(--inv-muted); margin-bottom: 0.5rem; }
-        .risk-value { font-size: 1.25rem; font-weight: 700; }
-        .text-green { color: #10b981; }
-        .text-red { color: #ef4444; }
+        .quest-section { margin-bottom: 1.5rem; border: 1px solid var(--inv-border); border-radius: 10px; overflow: hidden; }
+        .quest-header { background: rgba(61,214,192,0.06); padding: 0.85rem 1.5rem; font-weight: 600; font-size: 0.9rem; border-bottom: 1px solid var(--inv-border); color: var(--edus-teal); letter-spacing: 0.06em; text-transform: uppercase; font-family: 'Montserrat', sans-serif; }
+        .quest-body { padding: 1.25rem 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; background: var(--inv-bg-card); }
+        .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+        .form-group label { font-size: 0.8rem; color: var(--inv-text-secondary); font-weight: 500; }
+        .form-group .auto-filled { border-color: rgba(61,214,192,0.35); background: rgba(61,214,192,0.04); }
+        .auto-badge { font-size: 0.65rem; background: rgba(61,214,192,0.12); color: var(--edus-teal); padding: 1px 6px; border-radius: 4px; margin-left: 4px; vertical-align: middle; font-family: 'Montserrat', sans-serif; }
+
+        /* History panel */
+        .history-panel { margin-bottom: 1.5rem; }
+        .history-list { display: flex; flex-direction: column; gap: 0.5rem; max-height: 200px; overflow-y: auto; }
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 1rem; background: var(--inv-bg-main); border: 1px solid var(--inv-border); border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .history-item:hover { border-color: var(--edus-teal); background: rgba(61,214,192,0.04); }
+        .history-item.active { border-color: var(--edus-teal); background: rgba(61,214,192,0.08); }
+        .hist-date { font-weight: 600; font-size: 0.875rem; }
+        .hist-decision { font-size: 0.8rem; padding: 2px 8px; border-radius: 12px; }
+        .hist-decision.yes { background: rgba(16,185,129,0.15); color: #10B981; }
+        .hist-decision.no { background: rgba(239,68,68,0.15); color: #EF4444; }
+        .hist-decision.nd { background: rgba(75,85,99,0.15); color: #94A3B8; }
+
+        .btn-new { background: var(--edus-teal); color: #0d1f26; border: none; padding: 0.5rem 1.25rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.875rem; transition: opacity 0.2s; font-family: 'Montserrat', sans-serif; }
+        .btn-new:hover { opacity: 0.85; }
+        .btn-save { background: #10B981; color: white; border: none; padding: 0.75rem 2rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.2s; }
+        .btn-save:hover { opacity: 0.9; transform: translateY(-1px); }
+        .save-feedback { display: none; padding: 0.75rem 1.25rem; background: rgba(16,185,129,0.1); border: 1px solid #10B981; border-radius: 6px; color: #10B981; font-size: 0.875rem; }
+        .save-feedback.visible { display: block; }
+
+        .data-preview { background: var(--inv-bg-main); border: 1px solid var(--inv-border); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; }
+        .dp-item { display: flex; flex-direction: column; gap: 2px; }
+        .dp-label { font-size: 0.7rem; color: var(--inv-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
+        .dp-value { font-size: 0.95rem; font-weight: 600; }
+
+        textarea.form-control { resize: vertical; min-height: 80px; }
     </style>
 </head>
 <body class="inversiones-app">
 
     <header class="inv-header">
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <img src="/assets/logo.png" alt="EduSTrader" height="32">
-            <h1 style="font-size: 1.25rem; font-weight: 600; margin: 0;">Análisis y Cuestionario</h1>
-        </div>
+        <a href="index.html" class="inv-brand">
+            <img src="/assets/logo.png" alt="EduS Inversión" onerror="this.style.display='none'">
+            <span class="inv-brand-name">Edu<span class="gold">S</span> <span class="teal">Inversión</span></span>
+        </a>
         <nav class="inv-nav">
             <a href="index.html">Portafolio</a>
             <a href="watchlist.html">Watchlist</a>
             <a href="scanner.html">Scanner</a>
-            <a href="/index.html">← Volver</a>
+            <a href="https://edustrader.pages.dev/members/" class="back-btn">← Zona Miembros</a>
         </nav>
     </header>
 
     <main class="inv-container">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem;">
-            <h2 style="font-size: 2rem; margin: 0;" id="ticker-title">Cargando...</h2>
-            <div id="quest-date" class="text-muted text-sm"></div>
-        </div>
-        
-        <!-- Gestión de Riesgo (Dinámico) -->
-        <div class="quest-section" id="risk-section" style="display: none;">
-            <div class="quest-header" style="display: flex; justify-content: space-between;">
-                <span>Gestión de Riesgo (Basado en ATR)</span>
-                <span id="risk-atr" class="text-muted text-sm">ATR(14): ...</span>
+
+        <!-- Cabecera ticker -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h2 style="font-size: 2rem; margin: 0;" id="ticker-title">Cargando...</h2>
+                <div class="text-muted text-sm" id="ticker-subtitle">—</div>
             </div>
-            <div class="quest-body" style="grid-template-columns: repeat(3, 1fr);">
-                <div class="risk-box">
-                    <div class="risk-label">Precio Actual</div>
-                    <div class="risk-value" id="risk-price">...</div>
-                </div>
-                <div class="risk-box" style="border-color: rgba(239, 68, 68, 0.3);">
-                    <div class="risk-label">Stop Loss Recomendado (Largo Plazo)</div>
-                    <div class="risk-value text-red" id="risk-sl">...</div>
-                    <div class="risk-label" id="risk-sl-pct" style="margin-top:0.25rem;">...</div>
-                </div>
-                <div class="risk-box" style="border-color: rgba(16, 185, 129, 0.3);">
-                    <div class="risk-label">Target Recomendado (Mínimo >10%)</div>
-                    <div class="risk-value text-green" id="risk-tp">...</div>
-                    <div class="risk-label" id="risk-tp-pct" style="margin-top:0.25rem;">...</div>
-                </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <span class="text-muted text-sm">Analizando:</span>
+                <span id="current-date-badge" style="background: rgba(61,214,192,0.12); color: var(--edus-teal); padding: 0.3rem 0.75rem; border-radius: 6px; font-weight: 600; font-size: 0.875rem; font-family: 'Montserrat', sans-serif;"></span>
+                <button class="btn-new" onclick="startNewAnalysis()">+ Nuevo Análisis</button>
             </div>
         </div>
 
-        <form id="quest-form" class="inv-card" style="padding: 0; margin-bottom: 2rem;">
-            <!-- Sección 1: Análisis Fundamental -->
-            <div class="quest-section" style="border:none; border-bottom: 1px solid var(--inv-border); border-radius: 0; margin-bottom: 0;">
-                <div class="quest-header">1. Análisis Fundamental - Indicadores</div>
+        <!-- Datos rápidos de referencia (auto-llenado) -->
+        <div class="data-preview" id="data-preview" style="display:none;">
+            <div class="dp-item"><span class="dp-label">Precio</span><span class="dp-value" id="dp-price">—</span></div>
+            <div class="dp-item"><span class="dp-label">PEG</span><span class="dp-value" id="dp-peg">—</span></div>
+            <div class="dp-item"><span class="dp-label">EPS Next 5Y</span><span class="dp-value" id="dp-eps5y">—</span></div>
+            <div class="dp-item"><span class="dp-label">P/E</span><span class="dp-value" id="dp-pe">—</span></div>
+            <div class="dp-item"><span class="dp-label">DCF Intrínseco</span><span class="dp-value" id="dp-dcf">—</span></div>
+            <div class="dp-item"><span class="dp-label">DDM Intrínseco</span><span class="dp-value" id="dp-ddm">—</span></div>
+            <div class="dp-item"><span class="dp-label">PBV</span><span class="dp-value" id="dp-pbv">—</span></div>
+            <div class="dp-item"><span class="dp-label">Señal DCF</span><span class="dp-value" id="dp-dcf-sig">—</span></div>
+        </div>
+
+        <!-- Historial de análisis -->
+        <div class="inv-card history-panel" id="history-panel" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
+                <h3 style="margin:0; font-size: 1rem;">Historial de Análisis</h3>
+                <span class="text-xs text-muted" id="history-count"></span>
+            </div>
+            <div class="history-list" id="history-list"></div>
+        </div>
+
+        <!-- Formulario -->
+        <form id="quest-form">
+
+            <!-- Sección 1: Fundamental -->
+            <div class="quest-section">
+                <div class="quest-header">1. Análisis Fundamental — Indicadores</div>
                 <div class="quest-body">
-                    <div class="form-group"><label>¿Ventas creciendo?</label><select name="sales_growing" class="form-control"><option value="">--</option><option value="1">Sí</option><option value="0">No</option></select></div>
-                    <div class="form-group"><label>¿Ganancias Netas creciendo?</label><select name="earnings_growing" class="form-control"><option value="">--</option><option value="1">Sí</option><option value="0">No</option></select></div>
-                    <div class="form-group"><label>¿Flujo Caja Operativo creciendo?</label><select name="cashflow_growing" class="form-control"><option value="">--</option><option value="1">Sí</option><option value="0">No</option></select></div>
-                    <div class="form-group"><label>ROE (%)</label><input type="number" step="0.01" name="roe" class="form-control"></div>
-                    <div class="form-group"><label>EPS Past 5 Yrs (%)</label><input type="number" step="0.01" name="eps_past_5y" class="form-control"></div>
-                    <div class="form-group"><label>EPS Next 5 Yrs (%)</label><input type="number" step="0.01" name="eps_next_5y" class="form-control"></div>
-                    <div class="form-group"><label>PEG Ratio</label><input type="number" step="0.01" name="peg" class="form-control"></div>
-                    <div class="form-group"><label>Debt / Equity</label><input type="number" step="0.01" name="debt_equity" class="form-control"></div>
-                    <div class="form-group"><label>¿Deuda Razonable?</label><select name="debt_reasonable" class="form-control"><option value="">--</option><option value="1">Sí</option><option value="0">No</option></select></div>
-                    <div class="form-group" style="grid-column: 1 / -1;"><label>Competidores</label><input type="text" name="competitors" class="form-control" placeholder="Ej: GOOGL, BIDU"></div>
+                    <div class="form-group">
+                        <label>¿Ventas creciendo? <span class="auto-badge">auto</span></label>
+                        <select name="sales_growing" class="form-control auto-filled">
+                            <option value="">--</option>
+                            <option value="1">Sí</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>¿Ganancias Netas creciendo? <span class="auto-badge">auto</span></label>
+                        <select name="earnings_growing" class="form-control auto-filled">
+                            <option value="">--</option>
+                            <option value="1">Sí</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>¿Flujo Caja Operativo creciendo? <span class="auto-badge">auto</span></label>
+                        <select name="cashflow_growing" class="form-control auto-filled">
+                            <option value="">--</option>
+                            <option value="1">Sí</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>EPS Next 5 Yrs (%) <span class="auto-badge">auto</span></label>
+                        <input type="number" step="0.01" name="eps_next_5y" class="form-control auto-filled">
+                    </div>
+                    <div class="form-group">
+                        <label>EPS Past 5 Yrs (%) <span class="auto-badge">auto</span></label>
+                        <input type="number" step="0.01" name="eps_past_5y" class="form-control auto-filled">
+                    </div>
+                    <div class="form-group">
+                        <label>PEG Ratio <span class="auto-badge">auto</span></label>
+                        <input type="number" step="0.01" name="peg" class="form-control auto-filled">
+                    </div>
+                    <div class="form-group">
+                        <label>Deuda L/P (miles M) <span class="auto-badge">auto</span></label>
+                        <input type="number" step="0.01" name="debt_equity" class="form-control auto-filled">
+                    </div>
+                    <div class="form-group">
+                        <label>¿Deuda Razonable? <span class="auto-badge">auto</span></label>
+                        <select name="debt_reasonable" class="form-control auto-filled">
+                            <option value="">--</option>
+                            <option value="1">Sí</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Competidores</label>
+                        <input type="text" name="competitors" class="form-control" placeholder="Ej: GOOGL, BIDU">
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Ventaja Competitiva / Moat</label>
+                        <textarea name="competitive_advantage" class="form-control" rows="2" placeholder="Describe la ventaja competitiva de la empresa..."></textarea>
+                    </div>
                 </div>
             </div>
 
             <!-- Sección 2: Valoración -->
-            <div class="quest-section" style="border:none; border-bottom: 1px solid var(--inv-border); border-radius: 0; margin-bottom: 0;">
-                <div class="quest-header">2. Análisis de Valoración</div>
+            <div class="quest-section">
+                <div class="quest-header">2. Análisis de Valoración <span class="auto-badge">datos auto-cargados arriba</span></div>
                 <div class="quest-body">
                     <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>Precio vs Valoración</label>
+                        <label>Precio vs Valoración (tu conclusión)</label>
                         <select name="price_vs_valuation" class="form-control">
                             <option value="">--</option>
-                            <option value="muy_bajo">Muy por debajo (Subvalorada)</option>
+                            <option value="muy_bajo">Muy por debajo (Gran Oportunidad)</option>
                             <option value="bajo">Por debajo (Subvalorada)</option>
                             <option value="justo">Precio Justo</option>
                             <option value="alto">Por encima (Sobrevalorada)</option>
-                            <option value="muy_alto">Muy por encima</option>
+                            <option value="muy_alto">Muy por encima (Cara)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Métodos de Valoración usados</label>
+                        <select name="valuation_methods" class="form-control">
+                            <option value="">--</option>
+                            <option value="peg">PEG</option>
+                            <option value="dcf">DCF</option>
+                            <option value="ddm">DDM</option>
+                            <option value="pbv">PBV</option>
+                            <option value="todos">Todos</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <!-- Sección 3: Técnico -->
-            <div class="quest-section" style="border:none; border-radius: 0; margin-bottom: 0;">
+            <div class="quest-section">
                 <div class="quest-header">3. Análisis Técnico & Acción del Precio</div>
                 <div class="quest-body">
                     <div class="form-group">
@@ -113,186 +203,182 @@
                             <option value="erratico">Errático</option>
                         </select>
                     </div>
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>Notas de Acción del Precio (Price Action)</label>
-                        <textarea name="price_action_notes" class="form-control" rows="3"></textarea>
-                    </div>
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>Notas del Analista & Decisión</label>
-                        <textarea name="analyst_notes" class="form-control" rows="4"></textarea>
-                    </div>
                     <div class="form-group">
-                        <label>Decisión Final (Invertir)</label>
+                        <label>Decisión Final</label>
                         <select name="final_decision" class="form-control">
                             <option value="">--</option>
-                            <option value="1">SÍ, Invertir</option>
-                            <option value="0">NO Invertir</option>
+                            <option value="1">✅ SÍ, Invertir</option>
+                            <option value="0">❌ NO Invertir</option>
                         </select>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Notas de Acción del Precio</label>
+                        <textarea name="price_action_notes" class="form-control" rows="3" placeholder="Observaciones de precio, soportes, resistencias, setup..."></textarea>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Notas del Analista (tu opinión personal)</label>
+                        <textarea name="analyst_notes" class="form-control" rows="4" placeholder="Escribe aquí tus notas, dudas, condiciones de entrada, tesis de inversión..."></textarea>
                     </div>
                 </div>
             </div>
 
-            <div style="padding: 1.5rem; background: rgba(0,0,0,0.2); text-align: right;">
-                <button type="submit" class="form-control" style="width: auto; background: var(--inv-accent); color: white; border: none; font-weight: 600; padding: 0.75rem 2rem; cursor: pointer;">
-                    Guardar Análisis
-                </button>
+            <!-- Footer de guardado -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+                <div id="save-feedback" class="save-feedback">✅ Análisis guardado correctamente</div>
+                <button type="submit" class="btn-save">💾 Guardar Análisis</button>
             </div>
+
         </form>
-
-        <!-- Histórico y Gráficos -->
-        <div class="quest-section" id="charts-section" style="display: none;">
-            <div class="quest-header">Análisis Histórico (Últimos 5 Años)</div>
-            <div class="quest-body" style="grid-template-columns: 1fr; gap: 2rem;">
-                <div style="height: 350px; position: relative;">
-                    <canvas id="dcfChart"></canvas>
-                </div>
-                <div style="height: 300px; position: relative;">
-                    <canvas id="pegChart"></canvas>
-                </div>
-            </div>
-        </div>
-
     </main>
 
+    <script src="assets/inv-dashboard.js?v=3"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const ticker = urlParams.get('symbol');
 
-        document.getElementById('ticker-title').textContent = `Checklist: ${ticker || 'No Ticker'}`;
-        document.getElementById('quest-date').textContent = new Date().toISOString().split('T')[0];
+        let currentAnalysisDate = new Date().toISOString().split('T')[0];
+        let allHistory = [];
+        let tickerData = null;
+        let valuationsData = null;
+
+        document.getElementById('ticker-title').textContent = ticker || 'No Ticker';
+        document.getElementById('current-date-badge').textContent = currentAnalysisDate;
+
+        function fmt(val, decimals = 2) {
+            if (val === null || val === undefined) return '—';
+            return Number(val).toFixed(decimals);
+        }
+        function fmtPct(val) {
+            if (val === null || val === undefined) return '—';
+            return (Number(val) * 100).toFixed(1) + '%';
+        }
+        function fmtM(val) {
+            if (val === null || val === undefined) return '—';
+            const b = Number(val);
+            if (Math.abs(b) >= 1e9) return '$' + (b / 1e9).toFixed(1) + 'B';
+            if (Math.abs(b) >= 1e6) return '$' + (b / 1e6).toFixed(1) + 'M';
+            return '$' + b.toFixed(0);
+        }
+
+        function fillDataPreview(td, vd) {
+            if (!td && !vd) return;
+            document.getElementById('data-preview').style.display = 'grid';
+            document.getElementById('dp-price').textContent = td ? fmtM(td.last_price) : '—';
+            document.getElementById('dp-peg').textContent = td ? fmt(td.peg_ratio) : '—';
+            document.getElementById('dp-eps5y').textContent = td ? fmtPct(td.eps_next_5y_pct) : '—';
+            document.getElementById('dp-pe').textContent = td ? fmt(td.pe_ratio) : '—';
+            document.getElementById('dp-dcf').textContent = vd ? fmtM(vd.dcf_intrinsic_value) : '—';
+            document.getElementById('dp-ddm').textContent = vd ? fmtM(vd.ddm_intrinsic_value) : '—';
+            document.getElementById('dp-pbv').textContent = vd && vd.pbv_ratio ? fmt(vd.pbv_ratio) : 'N/A';
+            document.getElementById('dp-dcf-sig').innerHTML = vd ? getSignalBadge(vd.dcf_signal) : '—';
+            if (td) {
+                document.getElementById('ticker-title').innerHTML = `${td.ticker} &mdash; <a href="https://finance.yahoo.com/quote/${td.ticker}" target="_blank" style="font-size: 1.25rem; color: var(--inv-text-secondary); text-decoration: underline;">${td.name || ''}</a>`;
+                document.getElementById('ticker-subtitle').textContent = `${td.sector || ''} | ${td.instrument_type || ''}`;
+            }
+        }
+
+        function autoFillForm(td, vd) {
+            if (!td) return;
+            const form = document.getElementById('quest-form');
+            // EPS next/past 5y
+            if (td.eps_next_5y_pct !== null && td.eps_next_5y_pct !== undefined)
+                form.elements['eps_next_5y'].value = (td.eps_next_5y_pct * 100).toFixed(2);
+            if (td.eps_past_5y_pct !== null && td.eps_past_5y_pct !== undefined)
+                form.elements['eps_past_5y'].value = (td.eps_past_5y_pct * 100).toFixed(2);
+            // PEG
+            if (td.peg_ratio !== null && td.peg_ratio !== undefined)
+                form.elements['peg'].value = td.peg_ratio;
+            // Debt (long_term_debt in billions)
+            if (td.long_term_debt !== null && td.long_term_debt !== undefined)
+                form.elements['debt_equity'].value = (td.long_term_debt / 1e9).toFixed(2);
+            // Revenue/cashflow growing logic
+            if (td.operating_cash_flow > 0) form.elements['cashflow_growing'].value = '1';
+            if (td.net_income > 0) form.elements['earnings_growing'].value = '1';
+            if (td.revenue > 0) form.elements['sales_growing'].value = '1';
+            // Debt reasonable: if long_term_debt < 3x operating_cash_flow
+            if (td.long_term_debt && td.operating_cash_flow && td.operating_cash_flow > 0) {
+                form.elements['debt_reasonable'].value = td.long_term_debt < 3 * td.operating_cash_flow ? '1' : '0';
+            }
+            // Valuation conclusion from DCF signal
+            if (vd) {
+                const sig = vd.dcf_signal;
+                const map = { subvalorada: 'bajo', sobrevalorada: 'alto' };
+                if (map[sig]) form.elements['price_vs_valuation'].value = map[sig];
+            }
+        }
+
+        function renderHistory(history) {
+            if (!history || history.length === 0) return;
+            document.getElementById('history-panel').style.display = 'block';
+            document.getElementById('history-count').textContent = `${history.length} análisis guardados`;
+            const list = document.getElementById('history-list');
+            list.innerHTML = history.map((h, i) => {
+                const dec = h.final_decision === 1 || h.final_decision === '1' ? 'yes' :
+                            h.final_decision === 0 || h.final_decision === '0' ? 'no' : 'nd';
+                const label = dec === 'yes' ? '✅ Invertir' : dec === 'no' ? '❌ No Invertir' : '⬜ Sin decisión';
+                return `<div class="history-item ${i === 0 ? 'active' : ''}" onclick="loadHistoryItem(${i})" data-idx="${i}">
+                    <span class="hist-date">${h.analysis_date}</span>
+                    <span class="hist-decision ${dec}">${label}</span>
+                    <span class="text-xs text-muted">${h.analyst_notes ? h.analyst_notes.substring(0,40)+'...' : 'Sin notas'}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function loadHistoryItem(idx) {
+            const h = allHistory[idx];
+            if (!h) return;
+            // Mark active
+            document.querySelectorAll('.history-item').forEach((el, i) => el.classList.toggle('active', i === idx));
+            currentAnalysisDate = h.analysis_date;
+            document.getElementById('current-date-badge').textContent = currentAnalysisDate;
+            // Fill form
+            const form = document.getElementById('quest-form');
+            const fields = ['sales_growing','earnings_growing','cashflow_growing','eps_next_5y','eps_past_5y',
+                'peg','debt_equity','debt_reasonable','competitors','competitive_advantage',
+                'price_vs_valuation','valuation_methods','market_type','final_decision',
+                'price_action_notes','analyst_notes'];
+            fields.forEach(key => {
+                const el = form.elements[key];
+                if (el && h[key] !== null && h[key] !== undefined) el.value = h[key];
+            });
+        }
+
+        function startNewAnalysis() {
+            currentAnalysisDate = new Date().toISOString().split('T')[0];
+            document.getElementById('current-date-badge').textContent = currentAnalysisDate;
+            document.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('quest-form').reset();
+            // Re-apply auto-fill
+            if (tickerData) autoFillForm(tickerData, valuationsData);
+        }
 
         if (ticker) {
-            // Load existing data
             fetch(`/api/inversiones/questionnaire?ticker=${ticker}`)
                 .then(r => r.json())
                 .then(res => {
-                    if (res.success && res.data.latest) {
-                        const form = document.getElementById('quest-form');
-                        Object.keys(res.data.latest).forEach(key => {
-                            const el = form.elements[key];
-                            if (el && res.data.latest[key] !== null) {
-                                el.value = res.data.latest[key];
-                            }
-                        });
-                        document.getElementById('quest-date').textContent = `Última edición: ${res.data.latest.analysis_date}`;
+                    if (!res.success) return;
+                    tickerData = res.data.ticker_data;
+                    valuationsData = res.data.valuations;
+                    allHistory = res.data.history || [];
+
+                    fillDataPreview(tickerData, valuationsData);
+                    renderHistory(allHistory);
+
+                    if (allHistory.length > 0) {
+                        loadHistoryItem(0);
+                    } else {
+                        // Fresh form: auto-fill from data
+                        autoFillForm(tickerData, valuationsData);
                     }
                 });
-                
-            // Cargar Gestión de Riesgo
-            fetch(`/api/inversiones/risk?ticker=${ticker}`)
-                .then(r => r.json())
-                .then(res => {
-                    if (res.success && res.data) {
-                        document.getElementById('risk-section').style.display = 'block';
-                        document.getElementById('risk-atr').textContent = `ATR(14): $${res.data.atr_14}`;
-                        document.getElementById('risk-price').textContent = `$${res.data.current_price}`;
-                        document.getElementById('risk-sl').textContent = `$${res.data.stop_loss}`;
-                        document.getElementById('risk-sl-pct').textContent = `-${res.data.sl_pct}% (2.5x ATR)`;
-                        document.getElementById('risk-tp').textContent = `$${res.data.target}`;
-                        document.getElementById('risk-tp-pct').textContent = `+${res.data.tp_pct}% (4.0x ATR)`;
-                    }
-                });
-                
-            // Cargar Histórico para Gráficos
-            fetch(`/api/inversiones/valuations?ticker=${ticker}&days=1825`)
-                .then(r => r.json())
-                .then(res => {
-                    if (res.success && res.data.history && res.data.history.length > 0) {
-                        document.getElementById('charts-section').style.display = 'block';
-                        renderCharts(res.data.history);
-                    }
-                });
-        }
-        
-        function renderCharts(history) {
-            // Preparar datos
-            const labels = history.map(h => h.valuation_date);
-            const priceData = history.map(h => h.price_at_date);
-            const dcfData = history.map(h => h.dcf_intrinsic_value);
-            const pegData = history.map(h => h.peg_value);
-            
-            // Gráfico DCF vs Precio
-            const ctxDcf = document.getElementById('dcfChart').getContext('2d');
-            new Chart(ctxDcf, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Precio de Mercado',
-                            data: priceData,
-                            borderColor: '#eab308',
-                            backgroundColor: 'transparent',
-                            borderWidth: 2,
-                            tension: 0.1,
-                            pointRadius: 0
-                        },
-                        {
-                            label: 'Valor Intrínseco (DCF)',
-                            data: dcfData,
-                            borderColor: '#3b82f6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            fill: true,
-                            tension: 0.1,
-                            pointRadius: 0
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: { display: true, text: 'Valor Intrínseco (DCF) vs Precio', color: '#fff' },
-                        legend: { labels: { color: '#9ca3af' } }
-                    },
-                    scales: {
-                        x: { ticks: { color: '#9ca3af', maxTicksLimit: 12 }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                        y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' } }
-                    }
-                }
-            });
-            
-            // Gráfico PEG
-            const ctxPeg = document.getElementById('pegChart').getContext('2d');
-            new Chart(ctxPeg, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'PEG Ratio',
-                        data: pegData,
-                        backgroundColor: pegData.map(v => {
-                            if (v === null) return 'rgba(156, 163, 175, 0.5)';
-                            if (v < 1) return 'rgba(16, 185, 129, 0.7)'; // verde
-                            if (v <= 2) return 'rgba(234, 179, 8, 0.7)'; // amarillo
-                            return 'rgba(239, 68, 68, 0.7)'; // rojo
-                        }),
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: { display: true, text: 'Evolución Histórica PEG', color: '#fff' },
-                        legend: { display: false }
-                    },
-                    scales: {
-                        x: { ticks: { color: '#9ca3af', maxTicksLimit: 12 }, grid: { display: false } },
-                        y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' } }
-                    }
-                }
-            });
         }
 
         document.getElementById('quest-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!ticker) return alert('No hay ticker seleccionado');
-            
+
             const formData = new FormData(e.target);
-            const data = { ticker, analysis_date: new Date().toISOString().split('T')[0] };
+            const data = { ticker, analysis_date: currentAnalysisDate };
             formData.forEach((value, key) => data[key] = value === '' ? null : value);
 
             try {
@@ -303,7 +389,18 @@
                 });
                 const result = await res.json();
                 if (result.success) {
-                    alert('Guardado exitosamente');
+                    const fb = document.getElementById('save-feedback');
+                    fb.classList.add('visible');
+                    setTimeout(() => fb.classList.remove('visible'), 3000);
+                    // Refresh history
+                    fetch(`/api/inversiones/questionnaire?ticker=${ticker}`)
+                        .then(r => r.json())
+                        .then(res2 => {
+                            if (res2.success) {
+                                allHistory = res2.data.history || [];
+                                renderHistory(allHistory);
+                            }
+                        });
                 } else {
                     alert('Error: ' + result.error);
                 }
