@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — Post-Market Analysis | 18 JUN 2026</title>
+<meta name="description" content="EduS Trader Post-Market Analysis 18 JUN 2026 — Post-Market Analysis">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --navy: #142d37;
+  --navy-dark: #0d1f26;
+  --teal: #279995;
+  --gold: #b38665;
+  --gold-light: #d4a982;
+  --bg: #f2f0eb;
+  --surface: #ffffff;
+  --surface2: #f8f6f0;
+  --border: #e0dbd0;
+  --border2: rgba(0,0,0,0.20);
+  --text: #1a1814;
+  --text-muted: #7a7468;
+  --bull: #279995;
+  --bull-bg: #e6f5f4;
+  --bear: #c0392b;
+  --bear-bg: #fdf0ee;
+  --amber: #b38665;
+  --amber-bg: #f6efe8;
+  --blue: #185fa5;
+  --blue-bg: #e6f1fb;
+  --shadow: 0 2px 20px rgba(13,31,38,0.10);
+  --radius: 10px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --header-gradient: linear-gradient(135deg, #142d37 0%, #034649 100%);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1e20;
+    --surface: #1e2527;
+    --surface2: #232b2e;
+    --border: #2d3b3f;
+    --border2: rgba(255,255,255,0.15);
+    --text: #e8e4dc;
+    --text-muted: #8a9a9e;
+    --bull-bg: rgba(39,153,149,0.15);
+    --bear-bg: rgba(192,57,43,0.15);
+    --amber-bg: rgba(179,134,101,0.15);
+    --blue-bg: rgba(24,95,165,0.15);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ─── HEADER ─── */
+.header {
+  background: var(--header-gradient);
+  color: white;
+  padding: 20px 36px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid var(--gold);
+  position: relative;
+  overflow: hidden;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(179,134,101,0.08);
+  pointer-events: none;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 1;
+}
+.header-left .logo-img {
+  height: 60px;
+  width: auto;
+  display: block;
+}
+.header-left .brand { display: flex; flex-direction: column; }
+.header-left .brand-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: white;
+  line-height: 1;
+}
+.header-left .brand-name .gold { color: var(--gold); }
+.header-left .brand-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: var(--gold-light);
+  letter-spacing: 3px;
+  margin-top: 3px;
+  text-transform: uppercase;
+}
+.header-right { text-align: right; z-index: 1; }
+.header-right .date {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 700;
+}
+.header-right .prices {
+  display: flex; gap: 6px; margin-top: 6px;
+  justify-content: flex-end; flex-wrap: wrap;
+}
+.price-chip {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(179,134,101,0.35);
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.85);
+}
+.price-chip span { color: var(--gold-light); font-weight: 700; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy);
+  border-bottom: 1px solid rgba(179,134,101,0.25);
+  padding: 0 2rem;
+  display: flex; align-items: center; overflow-x: auto;
+  gap: 2px;
+}
+nav .brand {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  color: var(--gold); padding: 13px 0; margin-right: 20px;
+  white-space: nowrap; letter-spacing: 2px;
+  text-transform: uppercase;
+}
+nav a {
+  font-size: 11px; color: rgba(255,255,255,0.5);
+  text-decoration: none; padding: 14px 12px;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.5px;
+}
+nav a:hover { color: white; }
+nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 980px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+.section-divider { height: 1px; background: linear-gradient(to right, var(--gold), transparent); margin: 2.5rem 0 2rem; }
+.section-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 0.8rem;
+}
+.section-label .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--navy); color: var(--gold);
+  font-size: 10px; font-weight: 700;
+  border: 1px solid rgba(179,134,101,0.35);
+}
+h2 { font-size: 20px; font-weight: 600; margin-bottom: 4px; color: var(--navy); }
+@media (prefers-color-scheme: dark) { h2 { color: var(--text); } }
+.sub { font-size: 12px; color: var(--text-muted); margin-bottom: 1.3rem; }
+.sub-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted); margin: 1.3rem 0 .6rem;
+}
+
+/* ─── KPIs ─── */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+.kpi { background: var(--surface); border-radius: var(--r-md); padding: 12px 14px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+.kpi-label { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+.kpi-value { font-size: 22px; font-weight: 700; line-height: 1.1; }
+.kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.pos { color: var(--bull); } .neg { color: var(--bear); } .neu { color: var(--amber); }
+.pnl-pos { color: var(--bull); font-weight: 600; } .pnl-neg { color: var(--bear); font-weight: 600; }
+
+/* ─── CHARTS ─── */
+.chart-wrap { position: relative; width: 100%; }
+
+/* ─── ALERTS ─── */
+.alert {
+  border-radius: var(--r-md); padding: 12px 14px;
+  font-size: 12px; margin-bottom: 10px; line-height: 1.6;
+}
+.alert.success { background: var(--bull-bg); border: 0.5px solid rgba(39,153,149,0.35); }
+.alert.danger  { background: var(--bear-bg); border: 0.5px solid rgba(192,57,43,0.35); }
+.alert.warning { background: var(--amber-bg); border: 0.5px solid rgba(179,134,101,0.35); }
+.alert.info    { background: var(--blue-bg); border: 0.5px solid rgba(24,95,165,0.35); }
+.alert-title { font-weight: 600; margin-bottom: 3px; }
+.alert.success .alert-title { color: var(--bull); }
+.alert.danger  .alert-title { color: var(--bear); }
+.alert.warning .alert-title { color: var(--amber); }
+.alert.info    .alert-title { color: var(--blue); }
+
+/* ─── REGIME ALERTS ─── */
+.regime-alert {
+  background: linear-gradient(135deg, rgba(39,153,149,0.10), rgba(39,153,149,0.03));
+  border: 1px solid rgba(39,153,149,0.35); border-radius: var(--r-lg);
+  padding: 14px 18px; margin-bottom: 14px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.regime-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.regime-title { font-size: 13px; font-weight: 600; color: var(--bull); margin-bottom: 3px; }
+.regime-sub { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+.critical-banner {
+  background: linear-gradient(135deg, rgba(192,57,43,0.12), rgba(192,57,43,0.04));
+  border: 1.5px solid rgba(192,57,43,0.5); border-radius: var(--r-lg);
+  padding: 14px 18px; margin-bottom: 14px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.critical-title { font-size: 13px; font-weight: 700; color: var(--bear); margin-bottom: 3px; }
+.critical-sub { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+
+/* ─── INSIGHT CARDS ─── */
+.icard {
+  background: var(--surface); border-radius: var(--r-md); padding: 12px 14px;
+  margin-bottom: 8px; border-left: 3px solid transparent;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+}
+.icard.crit  { border-left-color: var(--bear); }
+.icard.warn  { border-left-color: var(--amber); }
+.icard.good  { border-left-color: var(--bull); }
+.icard.info  { border-left-color: var(--blue); }
+.icard-title { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+.icard-text  { font-size: 12px; color: var(--text-muted); line-height: 1.65; }
+
+/* ─── TRADE TABLE ─── */
+.tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tbl th {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--gold-light); font-weight: 700;
+  padding: 8px 10px;
+  background: var(--navy);
+  text-align: left;
+}
+.tbl td { padding: 7px 10px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr.win td  { background: rgba(39,153,149,0.04); }
+.tbl tr.loss td { background: rgba(192,57,43,0.04); }
+.tbl tr.viol-row td { background: rgba(179,134,101,0.06); }
+.badge {
+  display: inline-block; padding: 2px 7px; border-radius: 4px;
+  font-size: 10px; font-weight: 600; font-family: 'Space Mono', monospace;
+}
+.badge.long   { background: var(--bull-bg);  color: var(--bull); }
+.badge.short  { background: var(--amber-bg); color: var(--amber); }
+.badge.ok     { background: var(--bull-bg);  color: var(--bull); }
+.badge.viol   { background: var(--bear-bg);  color: var(--bear); }
+.badge.cancel { background: rgba(0,0,0,0.06); color: var(--text-muted); }
+.zone-badge {
+  display: inline-block; font-size: 10px; padding: 1px 7px;
+  border-radius: 10px; font-family: 'Space Mono', monospace;
+}
+.zone-badge.identified { background: var(--bull-bg); color: var(--bull); }
+.zone-badge.manual     { background: var(--amber-bg); color: var(--amber); }
+.sdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin: 0 1px; }
+.dot-g { background: var(--bull); } .dot-r { background: var(--bear); }
+.sig-inline { display: flex; gap: 3px; align-items: center; }
+
+/* ─── COMP BLOCKS ─── */
+.comp-block {
+  background: var(--surface); border-radius: var(--r-md);
+  padding: 12px 14px; margin-bottom: 10px; font-size: 12px;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+}
+.comp-block-title { font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.comp-block-body { color: var(--text-muted); line-height: 1.6; }
+.tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+.tag-win  { background: var(--bull-bg); color: var(--bull); }
+.tag-loss { background: var(--bear-bg); color: var(--bear); }
+
+/* ─── TWO COLUMN ─── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ─── DOFA (estilo cierre mensual) ─── */
+.dofa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.dofa-card { border-radius: var(--r-lg); padding: 16px 18px; border: 0.5px solid var(--border2); }
+.dofa-card.F { background: rgba(39,153,149,0.06); border-color: rgba(39,153,149,0.30); }
+.dofa-card.D { background: rgba(192,57,43,0.06);  border-color: rgba(192,57,43,0.30); }
+.dofa-card.O { background: rgba(24,95,165,0.06);   border-color: rgba(24,95,165,0.30); }
+.dofa-card.A { background: rgba(179,134,101,0.06); border-color: rgba(179,134,101,0.30); }
+.dofa-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.dofa-title.F { color: var(--bull); }
+.dofa-title.D { color: var(--bear); }
+.dofa-title.O { color: var(--blue); }
+.dofa-title.A { color: var(--amber); }
+.dofa-item {
+  font-size: 12px; color: var(--text-muted); padding: 4px 0 4px 12px;
+  border-bottom: 0.5px solid var(--border); line-height: 1.55;
+  position: relative;
+}
+.dofa-item::before { content: '·'; position: absolute; left: 0; color: var(--text-muted); }
+.dofa-item:last-child { border-bottom: none; }
+
+/* ─── RULES ─── */
+.rule-item { font-size: 12px; color: var(--text-muted); padding: 6px 0; border-bottom: 0.5px solid var(--border); line-height: 1.55; }
+.rule-item:last-child { border-bottom: none; }
+.rules-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 14px 16px; margin-top: 14px;
+  box-shadow: var(--shadow);
+}
+.rules-box-title { font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 10px; font-family: 'Space Mono', monospace; letter-spacing: 0.05em; }
+@media (prefers-color-scheme: dark) { .rules-box-title { color: var(--gold-light); } }
+
+/* ─── STOP CALLOUT ─── */
+.sl-callout {
+  background: var(--bear-bg); border: 1.5px solid rgba(192,57,43,0.35);
+  border-radius: var(--r-md); padding: 12px 16px; margin: 10px 0; font-size: 12px;
+}
+.sl-callout-title { font-weight: 700; color: var(--bear); margin-bottom: 6px; font-size: 13px; }
+.sl-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 0.5px solid rgba(192,57,43,0.15); font-size: 12px; gap: 8px; flex-wrap: wrap; }
+.sl-row:last-child { border-bottom: none; }
+
+/* ─── VOLATILITY CONFIG ─── */
+.volat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin: 10px 0; }
+.volat-card {
+  background: var(--surface); border-radius: var(--r-md); padding: 12px 14px;
+  border: 1px solid var(--border); font-size: 12px;
+}
+.volat-card .vc-scenario {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 6px;
+}
+.vc-baja      { color: var(--bull); }
+.vc-media     { color: #3498db; }
+.vc-alta      { color: var(--amber); }
+.vc-extrema   { color: #e67e22; }
+.vc-superextreme { color: var(--bear); }
+.vc-active    { box-shadow: 0 0 0 2px var(--gold); }
+.vc-metric    { display: flex; justify-content: space-between; padding: 2px 0; }
+.vc-metric-label { color: var(--text-muted); }
+.vc-metric-val  { font-weight: 600; }
+
+/* ─── WEEK / MONTH BADGES ─── */
+.weekly-badge { display: inline-block; background: var(--header-gradient); color: var(--gold); padding: 4px 14px; border-radius: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1px; margin-bottom: 14px; }
+.monthly-badge { display: inline-block; background: linear-gradient(135deg, #854f0b, #b38665); color: white; padding: 4px 14px; border-radius: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1px; margin-bottom: 14px; }
+
+/* ─── YOUTUBE BLOCK ─── */
+.yt-block {
+  background: var(--surface); border: 0.5px solid var(--border);
+  border-radius: var(--r-lg); padding: 18px 22px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 2rem;
+  box-shadow: var(--shadow);
+}
+.yt-icon { width: 44px; height: 44px; border-radius: 50%; background: #c0392b; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.yt-icon svg { width: 20px; height: 20px; fill: #fff; }
+.yt-text { flex: 1; min-width: 180px; }
+.yt-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+.yt-sub   { font-size: 12px; color: var(--text-muted); }
+.yt-btn {
+  display: inline-block !important; background: #c0392b !important;
+  color: #ffffff !important; font-size: 12px; font-weight: 700;
+  padding: 10px 22px; border-radius: var(--r-md);
+  text-decoration: none !important; white-space: nowrap;
+  font-family: 'Space Mono', monospace; letter-spacing: 0.5px;
+  transition: opacity .2s;
+}
+.yt-btn:hover { opacity: .85; }
+
+/* ─── NAV BACK ─── */
+.nav-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--gold); text-decoration: none; font-size: 13px;
+  margin-bottom: 16px; font-family: 'Space Mono', monospace;
+  font-weight: 700; transition: opacity .15s;
+  letter-spacing: 0.05em;
+}
+.nav-back:hover { opacity: 0.7; }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--header-gradient);
+  color: rgba(255,255,255,0.4); text-align: center;
+  padding: 18px 1rem; font-size: 11px;
+  font-family: 'Space Mono', monospace; letter-spacing: 1px;
+  margin-top: 2rem; border-top: 3px solid var(--gold);
+}
+footer strong { color: var(--gold-light); }
+footer .brand-ft { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; color: var(--gold-light); }
+footer .brand-ft .gold { color: var(--gold); }
+
+/* ─── AI INSIGHT ─── */
+.ai-insight {
+  background: linear-gradient(135deg, rgba(39,153,149,0.07), rgba(20,45,55,0.04));
+  border-left: 4px solid var(--teal); border-radius: var(--r-md);
+  padding: 14px 18px; margin-bottom: 14px; border: 1px solid rgba(39,153,149,0.2);
+}
+.ai-label {
+  font-family: 'Space Mono', monospace; font-size: 9px;
+  color: var(--teal); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
+}
+.ai-insight p { font-size: 13px; color: var(--text); line-height: 1.7; }
+
+/* ─── GAMEPLAN COMPARE ─── */
+.gameplan-compare {
+  background: var(--surface); border-radius: var(--r-md);
+  padding: 16px 20px; border-left: 4px solid var(--gold);
+  margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border);
+}
+.gameplan-compare h3 { font-size: 14px; color: var(--navy); margin-bottom: 8px; }
+@media (prefers-color-scheme: dark) { .gameplan-compare h3 { color: var(--gold-light); } }
+.gameplan-compare ul { margin-left: 18px; font-size: 13px; }
+.gameplan-compare li { margin-bottom: 4px; }
+.cumplido   { color: var(--bull); }
+.nocumplido { color: var(--bear); }
+.parcial    { color: var(--amber); }
+
+/* ─── VIX BADGE ─── */
+.vix-badge-strip {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--bull-bg); border: 0.5px solid rgba(39,153,149,0.4);
+  border-radius: var(--r-md); padding: 8px 14px; font-size: 12px;
+  color: var(--bull); font-weight: 600; margin-bottom: 14px;
+}
+
+/* ─── VOLATILITY GAUGE ─── */
+.volatility-gauge { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.gauge-item {
+  flex: 1; min-width: 130px; background: var(--surface);
+  border-radius: var(--r-md); padding: 12px;
+  border: 1px solid var(--border); text-align: center;
+}
+.gauge-item .g-label { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+.gauge-item .g-value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+.gauge-item .g-sub   { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+/* ─── PROGRESS BAR ─── */
+.prog-wrap { background: var(--border); border-radius: 3px; height: 6px; margin-top: 4px; overflow: hidden; }
+.prog { height: 6px; border-radius: 3px; }
+
+/* ─── FINDING BOX ─── */
+.finding {
+  background: var(--surface); border: 0.5px solid var(--border2);
+  border-radius: var(--r-lg); padding: 22px 26px;
+  position: relative; overflow: hidden; box-shadow: var(--shadow);
+}
+.finding::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: linear-gradient(180deg, var(--bear) 0%, var(--amber) 60%, var(--bear) 100%);
+}
+.finding-label { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bear); margin-bottom: 8px; }
+.finding h3 { font-size: 16px; font-weight: 600; margin-bottom: 10px; line-height: 1.4; }
+.finding p { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 10px; }
+.finding p:last-child { margin-bottom: 0; }
+.finding strong { color: var(--text); font-weight: 600; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 600px) {
+  .page { padding: 1rem 1rem 3rem; }
+  .two-col { grid-template-columns: 1fr; }
+  .dofa-grid { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .header { flex-direction: column; align-items: flex-start; padding: 16px; }
+  .header-right { text-align: left; width: 100%; }
+  .header-right .prices { justify-content: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<div class="header">
+  <div class="header-left">
+    <img class="logo-img" src="/assets/logo.png" alt="EduS Trader" onerror="this.style.display='none'">
+    <div class="brand">
+      <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
+      <div class="brand-sub">Post-Market Analysis &middot; Mesa de Dinero</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="date">Jueves 18 de Junio 2026</div>
+    <div class="prices">
+      <div class="price-chip">P&L <span style="color:#c0392b">-$1,953.00</span></div>
+      <div class="price-chip">59 trades &middot; 27W / 32L</div>
+      <div class="price-chip">WR <span>45.8%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav>
+  <span class="brand">📊 Post-Market Analysis</span>
+  <a href="#resumen" class="active">Resumen</a>
+  <a href="#gameplan">GamePlan</a>
+  <a href="#volatilidad">Volatilidad</a>
+  <a href="#trades">Trades</a>
+  <a href="#senales">Señales</a>
+  <a href="#diagnostico">Diagnóstico</a>
+  <a href="#dofa">DOFA</a>
+  <a href="#reglas">Reglas</a>
+  <a href="#video">Video</a>
+</nav>
+
+<!-- ══════════ PAGE ══════════ -->
+<div class="page">
+
+<a href="javascript:history.back()" class="nav-back">← Volver</a>
+
+
+
+
+<!-- ══════════════════════ SECCIÓN 1 — RESUMEN ══════════════════════ -->
+<div id="resumen" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">1</span>Resumen Operativo</div>
+  <h2>Dashboard 18 JUN 2026</h2>
+  <p class="sub">Fuente: NinjaTrader 8 &middot; Post-Market Analysis &middot; 59 trades &middot; WR 45.8%</p>
+
+  <span class="edus-account-badge negative">DEMO1639078: -$1,728.00</span> <span class="edus-account-badge negative">Sim101: -$225.00</span> 
+
+  <div class="sub-title">KPIs del período</div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">P&L Total</div><div class="kpi-value negative">-$1,953.00</div><div class="kpi-sub">Neto del período</div></div>
+    <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-value">45.8%</div><div class="kpi-sub">27W / 32L</div></div>
+    <div class="kpi"><div class="kpi-label">Avg Trade</div><div class="kpi-value negative">-$33.10</div><div class="kpi-sub">Por operación</div></div>
+    <div class="kpi"><div class="kpi-label">Mayor Win</div><div class="kpi-value pos">+$475.00</div><div class="kpi-sub">Mejor operación</div></div>
+    <div class="kpi"><div class="kpi-label">Mayor Loss</div><div class="kpi-value neg">-$1,610.00</div><div class="kpi-sub">Peor operación</div></div>
+    <div class="kpi"><div class="kpi-label">Total Trades</div><div class="kpi-value">59</div><div class="kpi-sub">27 ganados · 32 perdidos</div></div>
+  </div>
+</div>
+
+<!-- ══════════ CURVA P&L POR TRADE ══════════ -->
+<div class="section-divider"></div>
+<div class="section-label"><span class="num">▶</span>P&L por Trade</div>
+<div class="sub-title">P&L individual por operación</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartBar"></canvas></div>
+
+<div class="sub-title">Curva de capital acumulada</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartCurve"></canvas></div>
+
+<script>
+(function() {
+  var isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+  var tc = isDark ? '#8a9a9e' : '#7a7468';
+  var gc = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+  var data = [{"t": 1, "pnl": -1610.0, "cum": -1610.0}, {"t": 2, "pnl": -790.0, "cum": -2400.0}, {"t": 3, "pnl": -795.0, "cum": -3195.0}, {"t": 4, "pnl": -425.0, "cum": -3620.0}, {"t": 5, "pnl": 312.5, "cum": -3307.5}, {"t": 6, "pnl": 225.0, "cum": -3082.5}, {"t": 7, "pnl": -400.0, "cum": -3482.5}, {"t": 8, "pnl": 412.5, "cum": -3070.0}, {"t": 9, "pnl": 250.0, "cum": -2820.0}, {"t": 10, "pnl": 362.5, "cum": -2457.5}, {"t": 11, "pnl": 287.5, "cum": -2170.0}, {"t": 12, "pnl": 270.0, "cum": -1900.0}, {"t": 13, "pnl": 450.0, "cum": -1450.0}, {"t": 14, "pnl": 362.5, "cum": -1087.5}, {"t": 15, "pnl": 312.5, "cum": -775.0}, {"t": 16, "pnl": 325.0, "cum": -450.0}, {"t": 17, "pnl": 475.0, "cum": 25.0}, {"t": 18, "pnl": -250.0, "cum": -225.0}, {"t": 19, "pnl": -255.76, "cum": -480.76}, {"t": 20, "pnl": -255.76, "cum": -736.52}, {"t": 21, "pnl": 118.36, "cum": -618.16}, {"t": 22, "pnl": -28.32, "cum": -646.48}, {"t": 23, "pnl": -28.32, "cum": -674.8}, {"t": 24, "pnl": -26.82, "cum": -701.62}, {"t": 25, "pnl": -26.82, "cum": -728.44}, {"t": 26, "pnl": -255.76, "cum": -984.2}, {"t": 27, "pnl": -255.76, "cum": -1239.96}, {"t": 28, "pnl": -26.82, "cum": -1266.78}, {"t": 29, "pnl": -26.82, "cum": -1293.6}, {"t": 30, "pnl": 48.18, "cum": -1245.42}, {"t": 31, "pnl": 63.68, "cum": -1181.74}, {"t": 32, "pnl": 269.24, "cum": -912.5}, {"t": 33, "pnl": 406.74, "cum": -505.76}, {"t": 34, "pnl": -26.82, "cum": -532.58}, {"t": 35, "pnl": -26.82, "cum": -559.4}, {"t": 36, "pnl": -268.26, "cum": -827.66}, {"t": 37, "pnl": -268.26, "cum": -1095.92}, {"t": 38, "pnl": -255.76, "cum": -1351.68}, {"t": 39, "pnl": -255.76, "cum": -1607.44}, {"t": 40, "pnl": -56.32, "cum": -1663.76}, {"t": 41, "pnl": -56.32, "cum": -1720.08}, {"t": 42, "pnl": -255.76, "cum": -1975.84}, {"t": 43, "pnl": -255.76, "cum": -2231.6}, {"t": 44, "pnl": 48.18, "cum": -2183.42}, {"t": 45, "pnl": 52.18, "cum": -2131.24}, {"t": 46, "pnl": 331.74, "cum": -1799.5}, {"t": 47, "pnl": 31.74, "cum": -1767.76}, {"t": 48, "pnl": 48.18, "cum": -1719.58}, {"t": 49, "pnl": 74.18, "cum": -1645.4}, {"t": 50, "pnl": -255.76, "cum": -1901.16}, {"t": 51, "pnl": -255.76, "cum": -2156.92}, {"t": 52, "pnl": -255.76, "cum": -2412.68}, {"t": 53, "pnl": -255.76, "cum": -2668.44}, {"t": 54, "pnl": -255.76, "cum": -2924.2}, {"t": 55, "pnl": -255.76, "cum": -3179.96}, {"t": 56, "pnl": 344.24, "cum": -2835.72}, {"t": 57, "pnl": 244.24, "cum": -2591.48}, {"t": 58, "pnl": 294.24, "cum": -2297.24}, {"t": 59, "pnl": 344.24, "cum": -1953.0}];
+  if (!data || data.length === 0) return;
+  var labels = data.map(function(d) { return '#' + d.t; });
+  var pnls   = data.map(function(d) { return d.pnl; });
+  var cums   = data.map(function(d) { return d.cum; });
+
+  new Chart(document.getElementById('chartBar'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: pnls,
+        backgroundColor: pnls.map(function(v) { return v >= 0 ? 'rgba(39,153,149,0.78)' : 'rgba(192,57,43,0.78)'; }),
+        borderRadius: 4, borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return (ctx.raw >= 0 ? '+' : '') + '$' + Math.abs(ctx.raw).toFixed(2); } } } },
+      scales: { x: { ticks: { color: tc, font: { size: 10 } }, grid: { color: gc } }, y: { ticks: { color: tc, font: { size: 10 }, callback: function(v) { return '$' + v; } }, grid: { color: gc } } }
+    }
+  });
+
+  new Chart(document.getElementById('chartCurve'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: cums,
+        borderColor: cums[cums.length-1] >= 0 ? '#279995' : '#c0392b',
+        backgroundColor: cums[cums.length-1] >= 0 ? 'rgba(39,153,149,0.09)' : 'rgba(192,57,43,0.09)',
+        fill: true, tension: 0.3,
+        pointBackgroundColor: cums.map(function(v) { return v >= 0 ? '#279995' : '#c0392b'; }),
+        pointRadius: 4, borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return 'Acum.: $' + ctx.raw.toFixed(2); } } } },
+      scales: { x: { ticks: { color: tc, font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: tc, font: { size: 10 }, callback: function(v) { return '$' + v; } }, grid: { color: gc } } }
+    }
+  });
+})();
+</script>
+
+<!-- ══════════════════════ SECCIÓN 2 — GAMEPLAN ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="gameplan" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">2</span>GamePlan vs Mercado Real</div>
+  <h2>Evaluación del Pre-Mercado</h2>
+  <p class="sub">Comparación entre el plan planteado y lo que realmente ocurrió en el mercado</p>
+  <div class="section-title"><span class="step">GAMEPLAN</span><h2>Game Plan — Evaluación de Cumplimiento</h2></div>
+<div class="gameplan-compare">
+  <h3>📋 Pre-Mercado: <span class="parcial">PARCIAL</span></h3>
+  <h4 style='margin-top:10px;color:var(--bear);font-size:13px'>❌ Desviaciones</h4><ul><li>El bot ejecutó el trade #1 (NQ Long A+, 2 contratos) en NQ régimen Media con ATR alto — el GamePlan advirtió 'cautela en NQ dado el mayor ATR', recomendación que el sizing de 2 contratos no respetó</li><li>El SafeClose runaway (#2-#3) volvió a activarse: tras el stop del #1, dos cierres adicionales (-$790 y -$795) que triplicaron la pérdida del setup NQ a -$3,195 combinados</li><li>La réplica manual en Demo (#19-#47) operó con alta frecuencia en la apertura volátil — 29 trades antes de 11:30, replicando pero también añadiendo entradas manuales propias</li><li>En la réplica manual se mezclaron contratos FULL (ES) y MICRO (MNQ) — los FULL ES generaron -$1,543 mientras los MICRO MNQ quedaron en breakeven</li></ul>
+  <h4 style='margin-top:10px;color:var(--bull);font-size:13px'>✅ Aciertos</h4><ul><li>La estructura de dos cuentas (Sim bot + Demo réplica) funcionó como prueba de concepto: permite comparar la ejecución del bot vs la réplica manual en condiciones reales de fondeo</li><li>En la cuenta Demo, los trades MICRO (MNQ) cerraron en +$0.38 (breakeven) — validando que MICRO protege el capital en fondeo incluso en una sesión difícil</li><li>Los trades del bot en ES con señales LR+ (#5-#6 ES Short, +$537.50 combinados) capturaron correctamente el movimiento, demostrando que el bot funciona cuando opera ES en régimen Baja</li><li>La réplica manual capturó algunos buenos trades en ES (#32-#33 +$675.98, #46-#47 +$363.48) consistentes con las señales del bot</li></ul>
+  <h4 style='margin-top:10px;color:var(--text-muted);font-size:13px'>📖 Lecciones</h4><p style='font-size:13px;color:var(--text-muted)'>La rutina de dos cuentas revela dos lecciones distintas por cuenta. En SIM (bot): el sizing en NQ Media es el problema — el MaxL (#1) + SafeClose (#2-#3) costaron -$3,195 en un solo setup. En DEMO/Fondeo: la mezcla FULL/MICRO es el factor decisivo — los FULL ES perdieron -$1,543 mientras los MICRO MNQ quedaron en breakeven. La conclusión es contundente: para replicar el bot en fondeo, usar MICRO en TODO (incluido ES → MES), no solo en NQ.</p>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 3 — VOLATILIDAD ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="volatilidad" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">3</span>Análisis de Volatilidad — VIX · ATR · Keltner</div>
+  <h2>Volatilidad Real de la Sesión</h2>
+  <p class="sub">VIX observado, ATR del día, Ancho del canal Keltner y validación contra V5_VolatilityConfig</p>
+  <div class="section-title"><span class="step">VOLATILIDAD</span><h2>Análisis de Volatilidad — VIX / Keltner / ATR</h2></div>
+<div class="card">
+  <div class="volatility-gauge">
+    <div class="gauge-item"><div class="g-label">VIX Observado</div><div class="g-value" style="font-size:16px">VIX en 17.40 — ES en régimen Baja, NQ en régimen Media (mayor ATR). Día post-FOMC con CL colapsando -8.50% (segundo shock energético del mes). La diferencia de régimen entre ES (Baja) y NQ (Media) es clave: el único trade del bot en NQ (#1) fue el MaxL de la sesión, confirmando que NQ en Media exige mayor cautela.</div></div>
+    <div class="gauge-item"><div class="g-label">Definiciones Correctas</div><div class="g-value" style="font-size:16px">SÍ</div></div>
+  </div>
+  <div class="info-box" style="margin-bottom:0">
+    <h3>📊 Relación VIX / Keltner / ATR</h3>
+    <p>VIX=17.40 con bifurcación ES-Baja / NQ-Media. La lógica del sistema indica que en NQ Media se debe operar MICRO o reducir contratos — el bot operó 2 contratos FULL en NQ (#1) y generó el MaxL. En ES (Baja) los trades del bot fueron más controlados. La relación confirma: cuando NQ está en Media, el AutoTrader debe limitar size en ese instrumento.</p>
+  </div>
+  <div class="info-box" style="margin-bottom:0;margin-top:10px">
+    <h3>📈 Keltner y ATR</h3>
+    <p>Sin captura de KeltnerWidth en los fills (contexto vacío, 0 entradas) — incidencia técnica recurrente. En régimen Baja-Media con VIX=17.40 el KW esperado en ES sería 10-15 y en NQ 60-85. La ausencia de captura impide validar el escenario V5 por trade.<br><br><strong>ATR Observado:</strong> Sin captura directa de ATR. Inferido de los movimientos: ES ~2-2.5 pts (stops de 4-5 pts en los trades FULL), NQ ~18-22 pts (el #1 movió 40.25 pts adversos en 31 segundos). El ATR elevado de NQ explica por qué el MaxL fue en ese instrumento.</p>
+  </div>
+  <div class="ai-insight" style="margin-top:14px">
+    <div class="ai-label">Nota de Volatilidad</div>
+    <p>El régimen fue correctamente identificado (ES Baja, NQ Media). La volatilidad no fue el problema sino el sizing en NQ: el único trade del bot en NQ (#1, 2 contratos FULL) fue el MaxL de toda la sesión (-$1,610), amplificado por el SafeClose runaway (#2-#3, -$1,585 adicionales). Los trades del bot en ES (régimen Baja) fueron mucho más manejables. La lección de volatilidad: en NQ Media, MICRO o 1 contrato máximo.</p>
+  </div>
+</div>
+  
+</div>
+
+<!-- ══════════════════════ SECCIÓN 4 — TRADES ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="trades" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">4</span>Detalle de Operaciones</div>
+  <h2>Registro Completo de Trades</h2>
+  <p class="sub">Detalle de cada operación con zona de señal, indicadores en el momento de la entrada y resultado</p>
+
+  <div class="section-title"><span class="step">STOPS</span><h2>Análisis de los Stop Loss</h2></div>
+<div class="card">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+    
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #1</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">sizing-2contratos-nq-media</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>sizing-excesivo-nq-media</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">-$1,610.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">40.25 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">2.0x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">MaxL de la sesión (bot). NQ Long A+ con 2 contratos en régimen Media (ATR ~20). El stop de 40.25 pts fue >2x ATR — el movimiento adverso fue rápido (31 seg). El problema fue el sizing: 2 contratos FULL en NQ Media. Con 1 contrato: -$805. En MICRO (como la réplica #24): -$26.82.</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 En NQ régimen Media: máximo 1 contrato FULL o MICRO. El GamePlan advirtió cautela en NQ por mayor ATR. El SafeClose agravó esto — corregir ambos.</div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #2</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">safeclose-runaway</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>bug-safeclose-loop</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">-$790.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">39.5 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.97x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">SafeClose runaway tras el stop del #1. Cierres adicionales (#2-#3) que sumaron -$1,585. Este es el bug SafeClose loop documentado — vuelve a manifestarse. No es un stop normal sino un mecanismo defectuoso que multiplica las pérdidas.</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 CORREGIR el SafeClose loop como prioridad #1 del bot. El mecanismo debe cerrar UNA vez, no en cascada. Verificar la lógica de SafeClose en el código del AutoTrader.</div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #26</span>
+        <span style="font-size:13px;font-weight:600;">ES</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">full-es-fondeo</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>sizing-full-en-fondeo</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">-$255.76</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">5.0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">2.2x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">Stop FULL ES en cuenta Demo/Fondeo. El stop en distancia fue adecuado (5 pts, 2.2x ATR en régimen Baja). El problema fue operar FULL en una cuenta de fondeo. El mismo error en MICRO (MES) habría costado -$25.58.</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 En cuenta de fondeo: SOLO MICRO (MES/MNQ). Los 14 trades FULL ES en Demo perdieron -$1,543; en MES habrían perdido ~-$154.</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:20px;margin-bottom:10px;font-size:14px;">Resumen de Stops</h3>
+  <div class="tab-wrap">
+  <table>
+    <thead><tr><th>Total Stops</th><th>Total Perdido</th><th>Stops Adecuados</th><th>Stops Ajustados</th></tr></thead>
+    <tbody>
+      <tr><td>18</td><td style="color:var(--bear)">-$5,602.80</td><td>12</td><td>6</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="info-box" style="margin-top:14px;margin-bottom:0">
+    <h3>📊 Patrón General</h3>
+    <p>Los stops se dividen en tres categorías: (1) el sizing excesivo en NQ Media del bot (#1, -$1,610), (2) el SafeClose runaway (#2-#3, -$1,585) que es un bug no un stop, y (3) los stops FULL ES en la cuenta de fondeo (-$1,543 acumulados) que debieron ser MICRO. Ningún stop tuvo distancia inadecuada — el problema fue 100% de sizing e instrumento, no de la distancia del stop.</p>
+  </div>
+  <div class="ai-insight" style="margin-top:12px">
+    <div class="ai-label">Recomendación General</div>
+    <p>Dos correcciones por cuenta. SIM (bot): corregir el SafeClose loop (prioridad #1) y limitar NQ a 1 contrato en régimen Media. DEMO/Fondeo: replicar TODO en MICRO (incluido ES→MES). La distancia de los stops es correcta — el sizing es el problema. La rutina de dos cuentas demostró con el setup NQ de las 9:54 (-$3,195 en SIM vs -$53.64 en Demo MICRO) que el sizing lo es todo en fondeo.</p>
+  </div>
+</div>
+
+  <div class="sub-title">Tabla de operaciones ejecutadas</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Cuenta</th><th>Inst</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>P&L</th><th>Zona Señal</th><th>Salida</th></tr></thead>
+      <tbody>
+      <tr class="trade-loss"><td>1</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>9:54:09</td><td>9:54:40</td><td>30,512.00</td><td>30,471.75</td><td>2</td><td>-$1,610.00</td><td><span class="zone-badge identified" title="Zona A+ — calidad óptima" style="background:rgba(255,215,0,.15);color:gold;border-color:gold">⭐ A+</span></td><td>HUD_St_1</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>2</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>9:54:09</td><td>9:54:41</td><td>30,512.00</td><td>30,472.50</td><td>1</td><td>-$790.00</td><td><span class="zone-badge identified" title="Zona A+ — calidad óptima" style="background:rgba(255,215,0,.15);color:gold;border-color:gold">⭐ A+</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>3</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>9:54:09</td><td>9:54:41</td><td>30,512.00</td><td>30,472.25</td><td>1</td><td>-$795.00</td><td><span class="zone-badge identified" title="Zona A+ — calidad óptima" style="background:rgba(255,215,0,.15);color:gold;border-color:gold">⭐ A+</span></td><td>SafeClose</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>4</td><td>EduS</td><td>ES</td><td>Long</td><td>10:25:09</td><td>10:27:04</td><td>7,560.00</td><td>7,555.75</td><td>2</td><td>-$425.00</td><td><span class="zone-badge identified" title="Zona LR+">LR+</span></td><td>HUD_St_3</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>5</td><td>EduS</td><td>ES</td><td>Short</td><td>11:27:14</td><td>11:33:39</td><td>7,555.75</td><td>7,549.50</td><td>1</td><td>+$312.50</td><td><span class="zone-badge identified" title="Zona LR+">LR+</span></td><td>HUD_T1_5</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>6</td><td>EduS</td><td>ES</td><td>Short</td><td>11:27:14</td><td>11:34:01</td><td>7,555.75</td><td>7,551.25</td><td>1</td><td>+$225.00</td><td><span class="zone-badge identified" title="Zona LR+">LR+</span></td><td>HUD_StTR_5_490907</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>7</td><td>EduS</td><td>ES</td><td>Long</td><td>11:57:39</td><td>12:03:47</td><td>7,560.50</td><td>7,556.50</td><td>2</td><td>-$400.00</td><td><span class="zone-badge identified" title="Zona A+ — calidad óptima" style="background:rgba(255,215,0,.15);color:gold;border-color:gold">⭐ A+</span></td><td>HUD_St_7</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>8</td><td>EduS</td><td>ES</td><td>Long</td><td>12:15:41</td><td>12:22:04</td><td>7,558.00</td><td>7,566.25</td><td>1</td><td>+$412.50</td><td><span class="zone-badge identified" title="Zona 80+">80+</span></td><td>HUD_T1_8</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>9</td><td>EduS</td><td>ES</td><td>Long</td><td>12:15:41</td><td>12:22:39</td><td>7,558.00</td><td>7,563.00</td><td>1</td><td>+$250.00</td><td><span class="zone-badge identified" title="Zona 80+">80+</span></td><td>HUD_StTR_8_491055</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>10</td><td>EduS</td><td>ES</td><td>Long</td><td>12:25:49</td><td>12:39:01</td><td>7,561.25</td><td>7,568.50</td><td>1</td><td>+$362.50</td><td><span class="zone-badge identified" title="Zona A+ — calidad óptima" style="background:rgba(255,215,0,.15);color:gold;border-color:gold">⭐ A+</span></td><td>HUD_T1_9</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>11</td><td>EduS</td><td>ES</td><td>Long</td><td>12:25:49</td><td>12:44:39</td><td>7,561.25</td><td>7,567.00</td><td>1</td><td>+$287.50</td><td><span class="zone-badge identified" title="Zona A+ — calidad óptima" style="background:rgba(255,215,0,.15);color:gold;border-color:gold">⭐ A+</span></td><td>HUD_StTR_9_491090</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>12</td><td>EduS_ES_2C</td><td>GC</td><td>Short</td><td>13:29:08</td><td>13:37:50</td><td>4,249.70</td><td>4,247.00</td><td>1</td><td>+$270.00</td><td><span class="zone-badge manual">Manual</span></td><td>Stop2</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>13</td><td>EduS_ES_2C</td><td>GC</td><td>Short</td><td>13:29:08</td><td>13:39:00</td><td>4,249.70</td><td>4,245.20</td><td>1</td><td>+$450.00</td><td><span class="zone-badge manual">Manual</span></td><td>Target1</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>14</td><td>EduS</td><td>ES</td><td>Short</td><td>14:08:37</td><td>15:02:56</td><td>7,565.00</td><td>7,557.75</td><td>1</td><td>+$362.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre de entrada NT8">HUD_En_10</span></td><td>HUD_T1_10</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>15</td><td>EduS</td><td>ES</td><td>Short</td><td>14:08:37</td><td>15:04:32</td><td>7,565.00</td><td>7,558.75</td><td>1</td><td>+$312.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre de entrada NT8">HUD_En_10</span></td><td>HUD_StTR_10_491357</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>16</td><td>EduS</td><td>ES</td><td>Long</td><td>15:43:29</td><td>15:50:46</td><td>7,567.25</td><td>7,573.75</td><td>1</td><td>+$325.00</td><td><span class="zone-badge identified" title="Zona LR+">LR+</span></td><td>HUD_T1_11</td><td>Sim101</td></tr>
+<tr class="trade-win"><td>17</td><td>EduS</td><td>ES</td><td>Long</td><td>15:43:29</td><td>15:51:22</td><td>7,567.25</td><td>7,576.75</td><td>1</td><td>+$475.00</td><td><span class="zone-badge identified" title="Zona LR+">LR+</span></td><td>HUD_T2_11</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>18</td><td>EduS</td><td>ES</td><td>Short</td><td>16:00:28</td><td>16:01:11</td><td>7,565.50</td><td>7,568.00</td><td>2</td><td>-$250.00</td><td><span class="zone-badge identified" title="Zona A+ — calidad óptima" style="background:rgba(255,215,0,.15);color:gold;border-color:gold">⭐ A+</span></td><td>HUD_St_12</td><td>Sim101</td></tr>
+<tr class="trade-loss"><td>19</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>9:33:02</td><td>9:33:43</td><td>7,572.25</td><td>7,567.25</td><td>1</td><td>-$255.76</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>20</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>9:33:02</td><td>9:33:43</td><td>7,572.25</td><td>7,567.25</td><td>1</td><td>-$255.76</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>21</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>9:38:01</td><td>9:38:44</td><td>30,453.00</td><td>30,422.50</td><td>2</td><td>+$118.36</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>22</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>9:39:15</td><td>9:39:27</td><td>30,447.50</td><td>30,460.75</td><td>1</td><td>-$28.32</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>23</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>9:39:15</td><td>9:39:27</td><td>30,447.50</td><td>30,460.75</td><td>1</td><td>-$28.32</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>24</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>9:54:05</td><td>9:54:18</td><td>30,511.25</td><td>30,498.75</td><td>1</td><td>-$26.82</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>25</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>9:54:05</td><td>9:54:18</td><td>30,511.25</td><td>30,498.75</td><td>1</td><td>-$26.82</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>26</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>9:54:17</td><td>9:54:41</td><td>7,549.50</td><td>7,544.50</td><td>1</td><td>-$255.76</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>27</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>9:54:17</td><td>9:54:41</td><td>7,549.50</td><td>7,544.50</td><td>1</td><td>-$255.76</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>28</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>9:59:31</td><td>9:59:31</td><td>30,431.25</td><td>30,443.75</td><td>1</td><td>-$26.82</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>29</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>9:59:31</td><td>9:59:31</td><td>30,431.25</td><td>30,443.75</td><td>1</td><td>-$26.82</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>30</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:00:35</td><td>10:00:48</td><td>30,453.50</td><td>30,478.50</td><td>1</td><td>+$48.18</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>31</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:00:35</td><td>10:01:44</td><td>30,453.50</td><td>30,486.25</td><td>1</td><td>+$63.68</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>32</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>10:01:47</td><td>10:06:03</td><td>7,544.50</td><td>7,550.00</td><td>1</td><td>+$269.24</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>33</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>10:01:47</td><td>10:08:35</td><td>7,544.50</td><td>7,552.75</td><td>1</td><td>+$406.74</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>34</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:25:09</td><td>10:26:25</td><td>30,612.25</td><td>30,599.75</td><td>1</td><td>-$26.82</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>35</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:25:09</td><td>10:26:25</td><td>30,612.25</td><td>30,599.75</td><td>1</td><td>-$26.82</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>36</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>10:25:25</td><td>10:27:03</td><td>7,561.25</td><td>7,556.00</td><td>1</td><td>-$268.26</td><td><span class="zone-badge identified" title="Zona LR+">LR+</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>37</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>10:25:25</td><td>10:27:03</td><td>7,561.25</td><td>7,556.00</td><td>1</td><td>-$268.26</td><td><span class="zone-badge identified" title="Zona LR+">LR+</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>38</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>10:27:39</td><td>10:28:41</td><td>7,554.00</td><td>7,549.00</td><td>1</td><td>-$255.76</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>39</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>10:27:39</td><td>10:28:41</td><td>7,554.00</td><td>7,549.00</td><td>1</td><td>-$255.76</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>40</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:27:57</td><td>10:28:35</td><td>30,548.00</td><td>30,520.75</td><td>1</td><td>-$56.32</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>41</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:27:57</td><td>10:28:35</td><td>30,548.00</td><td>30,520.75</td><td>1</td><td>-$56.32</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>42</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>10:33:18</td><td>10:34:17</td><td>7,548.75</td><td>7,553.75</td><td>1</td><td>-$255.76</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>43</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>10:33:18</td><td>10:34:17</td><td>7,548.75</td><td>7,553.75</td><td>1</td><td>-$255.76</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>44</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:47:14</td><td>10:47:43</td><td>30,612.75</td><td>30,637.75</td><td>1</td><td>+$48.18</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>45</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:47:14</td><td>10:50:01</td><td>30,612.75</td><td>30,639.75</td><td>1</td><td>+$52.18</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>46</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>11:27:25</td><td>11:33:39</td><td>7,556.00</td><td>7,549.25</td><td>1</td><td>+$331.74</td><td><span class="zone-badge identified" title="Zona LR+">LR+</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>47</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>11:27:25</td><td>11:34:17</td><td>7,556.00</td><td>7,555.25</td><td>1</td><td>+$31.74</td><td><span class="zone-badge identified" title="Zona LR+">LR+</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>48</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>11:41:21</td><td>11:43:30</td><td>30,564.25</td><td>30,539.25</td><td>1</td><td>+$48.18</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>49</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>11:41:21</td><td>11:43:37</td><td>30,564.25</td><td>30,526.25</td><td>1</td><td>+$74.18</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>50</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>11:43:30</td><td>11:47:15</td><td>7,546.00</td><td>7,541.00</td><td>1</td><td>-$255.76</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>51</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>11:43:30</td><td>11:47:15</td><td>7,546.00</td><td>7,541.00</td><td>1</td><td>-$255.76</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>52</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>11:49:02</td><td>11:50:19</td><td>7,548.25</td><td>7,553.25</td><td>1</td><td>-$255.76</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>53</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>11:49:02</td><td>11:50:19</td><td>7,548.25</td><td>7,553.25</td><td>1</td><td>-$255.76</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>54</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>12:01:34</td><td>12:07:23</td><td>7,560.00</td><td>7,555.00</td><td>1</td><td>-$255.76</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-loss"><td>55</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>12:01:34</td><td>12:07:23</td><td>7,560.00</td><td>7,555.00</td><td>1</td><td>-$255.76</td><td><span class="zone-badge manual">Manual</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>56</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>12:16:00</td><td>12:21:41</td><td>7,558.25</td><td>7,565.25</td><td>1</td><td>+$344.24</td><td><span class="zone-badge identified" title="Zona 80+">80+</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>57</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>12:16:00</td><td>12:24:33</td><td>7,558.25</td><td>7,563.25</td><td>1</td><td>+$244.24</td><td><span class="zone-badge identified" title="Zona 80+">80+</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>58</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>12:25:50</td><td>12:38:06</td><td>7,560.75</td><td>7,566.75</td><td>1</td><td>+$294.24</td><td><span class="zone-badge identified" title="Zona A+ — calidad óptima" style="background:rgba(255,215,0,.15);color:gold;border-color:gold">⭐ A+</span></td><td>—</td><td>DEMO1639078</td></tr>
+<tr class="trade-win"><td>59</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>12:25:50</td><td>12:40:07</td><td>7,560.75</td><td>7,567.75</td><td>1</td><td>+$344.24</td><td><span class="zone-badge identified" title="Zona A+ — calidad óptima" style="background:rgba(255,215,0,.15);color:gold;border-color:gold">⭐ A+</span></td><td>—</td><td>DEMO1639078</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  
+  <div class="sub-title" style="margin-top:20px">Análisis IA por trade — Zona, señal y evaluación</div>
+
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#1 &middot; NQ Long</span>
+        <span class="tag tag-loss">$-1610.00</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(255,215,0,.15);color:gold;border-color:gold" title="Zona/Señal de entrada">⭐ A+</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Zona A+ pero 2 contratos en NQ régimen Media con ATR alto<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> MaxL de la sesión (-$1,610). NQ Long A+ con 2 contratos. El mercado cayó 40.25 pts en 31 segundos. El stop por sí solo (HUD_St_1) habría sido manejable con 1 contrato (-$805), pero 2 contratos en NQ Media con ATR ~20 generó el MaxL. Movimiento adverso de >2x ATR en 31 seg.<br>
+        El peor trade de la sesión del bot. NQ Long A+ con 2 contratos en régimen Media — el GamePlan advirtió cautela en NQ por el mayor ATR. El stop fue correcto en lógica pero el sizing (2 contratos FULL) lo convirtió en el MaxL. Disparó el SafeClose (#2-#3) que triplicó la pérdida.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#2 &middot; NQ Long</span>
+        <span class="tag tag-loss">$-790.00</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(255,215,0,.15);color:gold;border-color:gold" title="Zona/Señal de entrada">⭐ A+</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SafeClose runaway tras el stop del #1<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> SafeClose activado tras el #1. Cierre adicional de -$790 a 1 segundo del stop principal. El mecanismo SafeClose volvió a generar cierres en cascada — bug recurrente documentado.<br>
+        SafeClose runaway. Tras el stop del #1, el mecanismo SafeClose ejecutó cierres adicionales (#2-#3) que sumaron -$1,585 al -$1,610 del #1 = -$3,195 total en el setup NQ. Este bug (SafeClose loop) ya está documentado y vuelve a manifestarse. Crítico de corregir.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#3 &middot; NQ Long</span>
+        <span class="tag tag-loss">$-795.00</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(255,215,0,.15);color:gold;border-color:gold" title="Zona/Señal de entrada">⭐ A+</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SafeClose runaway — tercer cierre del setup NQ<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Segundo SafeClose del setup. -$795. Idéntico patrón al #2.<br>
+        Tercer componente del setup NQ fallido. El bloque #1+#2+#3 (-$3,195) representa el 100%+ de la pérdida de la cuenta SIM en la ventana. Sin el SafeClose runaway, la pérdida hubiera sido solo el stop del #1. La corrección del SafeClose loop es la prioridad #1 del bot.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#4 &middot; ES Long</span>
+        <span class="tag tag-loss">$-425.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">LR+</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Zona LR+ Long, 2 contratos<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop (HUD_St_3) por retroceso de ES (-4.25 pts) con 2 contratos. ES en régimen Baja, stop razonable. El movimiento adverso fue ruido de consolidación. Con 1 contrato: -$212.50.<br>
+        Long LR+ en ES con 2 contratos, -$425. En régimen Baja el stop fue manejable. El uso de 2 contratos dobló la pérdida. Trade del bot en ES dentro de parámetros, solo el sizing fue agresivo.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#5 &middot; ES Short</span>
+        <span class="tag tag-win">$+312.50</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">LR+</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Zona LR+ Short — T1 alcanzado<br>
+        
+        Short LR+ en ES, +$312.50. Trade modelo del bot: señal LR+, ES régimen Baja, T1 capturado. Par #5+#6: +$537.50 — el mejor par del bot en la ventana, demostrando que el bot funciona en ES Baja.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#6 &middot; ES Short</span>
+        <span class="tag tag-win">$+225.00</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">LR+</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Zona LR+ — segundo contrato con trailing stop<br>
+        
+        Segundo contrato del #5, trailing +$225. Par #5+#6: +$537.50. Gestión correcta del trailing. El bot cerró la ventana <11:30 con un par ganador en ES.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#19 &middot; ES Long</span>
+        <span class="tag tag-loss">$-255.76</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — réplica manual en apertura volátil<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop en 41 seg (-5 pts) en FULL ES. Entrada en la apertura volátil post-triple-dato sin señal. Duplicado con #20.<br>
+        Primera réplica manual en Demo, FULL ES, stop en apertura. Sin señal HUD activa. Par #19+#20: -$511.52. Contrato FULL en cuenta de fondeo — el error de sizing que se repetirá.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#20 &middot; ES Long</span>
+        <span class="tag tag-loss">$-255.76</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #19<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Idéntico a #19. Par #19+#20: -$511.52.<br>
+        Duplicado de #19. Bug de duplicación activo en la réplica manual. FULL ES en fondeo.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#21 &middot; MNQ Short</span>
+        <span class="tag tag-win">$+118.36</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — pero en MICRO (MNQ)<br>
+        
+        Primer trade MICRO de la réplica, +$118.36. La diferencia con los FULL ES es clara: MICRO permite capturar el movimiento con riesgo controlado. Mejor trade MICRO de la ventana en Demo.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#22 &middot; MNQ Short</span>
+        <span class="tag tag-loss">$-28.32</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — MICRO<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop en 12 seg (-13.25 pts MNQ). Pérdida MICRO pequeña (-$28.32) vs lo que hubiera sido en FULL (-$265). Duplicado con #23.<br>
+        Stop MICRO de solo -$28.32. La virtud del MICRO: el mismo error en FULL costaría ~10x. Par #22+#23: -$56.64. Overtrading pero con daño mínimo por el tamaño MICRO.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#23 &middot; MNQ Short</span>
+        <span class="tag tag-loss">$-28.32</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #22<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Idéntico a #22. Par #22+#23: -$56.64.<br>
+        Duplicado de #22. Pérdida MICRO mínima.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#24 &middot; MNQ Long</span>
+        <span class="tag tag-loss">$-26.82</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — MICRO. Réplica del setup NQ del bot (#1)<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop en 13 seg (-12.5 pts MNQ). Esta es la réplica MICRO del mismo setup que en el bot fue el #1 (NQ Long A+ -$1,610). En MICRO la pérdida fue solo -$26.82. Duplicado con #25.<br>
+        DATO CLAVE de la rutina: este es el mismo setup NQ Long que en el bot (cuenta SIM, #1) perdió -$1,610 con 2 contratos FULL + SafeClose. En la cuenta Demo, replicado en MICRO (MNQ), perdió solo -$26.82. La diferencia (-$1,610 vs -$26.82) es la demostración perfecta de por qué fondeo = MICRO. Par #24+#25: -$53.64.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#25 &middot; MNQ Long</span>
+        <span class="tag tag-loss">$-26.82</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #24<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Idéntico a #24. Par #24+#25: -$53.64.<br>
+        Duplicado de #24. La réplica MICRO del setup que destruyó la cuenta SIM perdió aquí $53.64 total — la cuenta Demo sobrevivió donde la Sim (FULL) colapsó.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#26 &middot; ES Long</span>
+        <span class="tag tag-loss">$-255.76</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — FULL ES<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop en 24 seg (-5 pts) FULL ES. Duplicado con #27.<br>
+        Long FULL ES sin señal, stop. Par #26+#27: -$511.52. Contraste con los MICRO simultáneos (#24-#25, -$53.64): el FULL ES costó 10x más por el mismo tipo de error.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#27 &middot; ES Long</span>
+        <span class="tag tag-loss">$-255.76</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #26<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Idéntico a #26. Par #26+#27: -$511.52.<br>
+        Duplicado de #26. FULL ES en fondeo — error de sizing.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#28 &middot; MNQ Short</span>
+        <span class="tag tag-loss">$-26.82</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — MICRO, duración 0 seg<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop instantáneo (mismo segundo). Pérdida MICRO -$26.82. Duplicado con #29.<br>
+        Stop MICRO instantáneo. Daño mínimo gracias al tamaño. Par #28+#29: -$53.64. Overtrading pero contenido por MICRO.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#29 &middot; MNQ Short</span>
+        <span class="tag tag-loss">$-26.82</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #28<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Idéntico a #28. Par #28+#29: -$53.64.<br>
+        Duplicado de #28. Pérdida MICRO mínima.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#30 &middot; MNQ Long</span>
+        <span class="tag tag-win">$+48.18</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — MICRO ganador<br>
+        
+        Long MICRO ganador, +$48.18. Par #30+#31: +$111.86. El MICRO captura ganancias proporcionales con riesgo controlado.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#31 &middot; MNQ Long</span>
+        <span class="tag tag-win">$+63.68</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — MICRO, segundo contrato<br>
+        
+        Segundo contrato del #30, +$63.68. Par #30+#31: +$111.86. Buen trade MICRO.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#32 &middot; ES Long</span>
+        <span class="tag tag-win">$+269.24</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — FULL ES ganador<br>
+        
+        Long FULL ES ganador, +$269.24. Par #32+#33: +$675.98. Cuando el FULL ES gana, la ganancia es mayor que en MICRO — pero el riesgo asimétrico (las pérdidas FULL fueron mucho mayores) no compensa en fondeo.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#33 &middot; ES Long</span>
+        <span class="tag tag-win">$+406.74</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — FULL ES, segundo contrato<br>
+        
+        Segundo contrato del #32, +$406.74. Par #32+#33: +$675.98 — el mejor par FULL ES de la réplica. Demuestra que el FULL gana más cuando acierta, pero las pérdidas FULL del día (-$1,543) superan las ganancias.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#34 &middot; MNQ Long</span>
+        <span class="tag tag-loss">$-26.82</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — MICRO. Réplica del #4 del bot<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop MICRO -$26.82. Réplica del setup que en el bot (#4 ES LR+) perdió -$425. Duplicado con #35.<br>
+        Réplica MICRO, stop -$26.82. Par #34+#35: -$53.64. Otra demostración: el MICRO contiene el daño.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#35 &middot; MNQ Long</span>
+        <span class="tag tag-loss">$-26.82</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #34<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Idéntico a #34. Par #34+#35: -$53.64.<br>
+        Duplicado de #34. Pérdida MICRO mínima.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#36 &middot; ES Long</span>
+        <span class="tag tag-loss">$-268.26</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">LR+</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Zona LR+ pero FULL ES<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop FULL ES (-5.25 pts). Réplica del #4 del bot (LR+ Long ES). Duplicado con #37.<br>
+        Long LR+ FULL ES, stop -$268.26. Par #36+#37: -$536.52. La réplica en FULL del mismo setup que en MICRO (#34-#35) costó 10x más.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#37 &middot; ES Long</span>
+        <span class="tag tag-loss">$-268.26</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">LR+</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #36<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Idéntico a #36. Par #36+#37: -$536.52.<br>
+        Duplicado de #36. FULL ES en fondeo — error de sizing repetido.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#38 &middot; ES Long</span>
+        <span class="tag tag-loss">$-255.76</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — FULL ES<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop FULL ES (-5 pts). Duplicado con #39.<br>
+        Long FULL ES sin señal, stop. Par #38+#39: -$511.52. Overtrading en FULL — la combinación más costosa para fondeo.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#39 &middot; ES Long</span>
+        <span class="tag tag-loss">$-255.76</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #38<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Idéntico a #38. Par #38+#39: -$511.52.<br>
+        Duplicado de #38. FULL ES en fondeo.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#40 &middot; MNQ Long</span>
+        <span class="tag tag-loss">$-56.32</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — MICRO<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop MICRO -$56.32. Duplicado con #41.<br>
+        Stop MICRO, -$56.32. Par #40+#41: -$112.64. Daño contenido por MICRO.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#41 &middot; MNQ Long</span>
+        <span class="tag tag-loss">$-56.32</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #40<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Idéntico a #40. Par #40+#41: -$112.64.<br>
+        Duplicado de #40. Pérdida MICRO contenida.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#42 &middot; ES Short</span>
+        <span class="tag tag-loss">$-255.76</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — FULL ES Short<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Stop FULL ES (-5 pts), short revertido. Duplicado con #43.<br>
+        Short FULL ES sin señal, stop. Par #42+#43: -$511.52. FULL en fondeo.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#43 &middot; ES Short</span>
+        <span class="tag tag-loss">$-255.76</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Duplicado de #42<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Idéntico a #42. Par #42+#43: -$511.52.<br>
+        Duplicado de #42. FULL ES en fondeo.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#44 &middot; MNQ Long</span>
+        <span class="tag tag-win">$+48.18</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — MICRO ganador<br>
+        
+        Long MICRO ganador, +$48.18. Par #44+#45: +$100.36. MICRO captura ganancias con riesgo controlado.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#45 &middot; MNQ Long</span>
+        <span class="tag tag-win">$+52.18</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> SIN señal HUD — MICRO, segundo contrato<br>
+        
+        Segundo contrato del #44, +$52.18. Par #44+#45: +$100.36. Buen trade MICRO.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#46 &middot; ES Short</span>
+        <span class="tag tag-win">$+331.74</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">LR+</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Zona LR+ Short — réplica del #5 del bot<br>
+        
+        Short LR+ FULL ES, +$331.74. Réplica correcta del trade ganador del bot (#5-#6). Par #46+#47: +$363.48. Cuando la réplica sigue una señal real del bot (LR+), funciona — es el modelo a seguir.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#47 &middot; ES Short</span>
+        <span class="tag tag-win">$+31.74</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">LR+</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señales activas:</strong> Zona LR+ — segundo contrato<br>
+        
+        Segundo contrato del #46, +$31.74. Par #46+#47: +$363.48. Último trade de la ventana <11:30 en Demo, replicando la señal LR+ del bot — el comportamiento correcto.
+      </div>
+    </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 5 — SEÑALES ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="senales" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">5</span>Señales del Indicador vs Ejecución</div>
+  <h2>Análisis Comparativo — Señales HUD vs Trades</h2>
+  <p class="sub">Verificación de zonas (A, M1, etc.), señales ejecutadas, ignoradas y trades fuera de señal</p>
+  <div class="section-title"><span class="step">SEÑALES</span><h2>Señales HUD V5 — Correlación con Ejecuciones</h2></div>
+<div class="card">
+  
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #279995;">
+        <div style="font-size:24px;font-weight:700;color:#279995;">32784</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Señales emitidas</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #27ae60;">
+        <div style="font-size:24px;font-weight:700;color:#27ae60;">8</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ejecutadas <span style="color:#27ae60;font-weight:600;">(0%)</span></div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #e67e22;">
+        <div style="font-size:24px;font-weight:700;color:#e67e22;">32776</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ignoradas</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #c0392b;">
+        <div style="font-size:24px;font-weight:700;color:#c0392b;">37</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Fuera de señal</div>
+      </div>
+    </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+    <div>
+      <h3 style="font-size:13px;color:var(--text-muted);margin:0 0 10px">⚠️ Señales ignoradas que ganaron</h3>
+      <table style='width:100%;font-size:12px;border-collapse:collapse;'><thead><tr style='color:var(--text-muted);border-bottom:1px solid var(--border);'><th style='padding:6px;text-align:left'>SignalID</th><th>Mercado</th><th>Dir</th><th>Hora</th><th>Zona</th><th>Resultado</th><th>Entrada</th><th>T1</th></tr></thead><tbody><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>79865179</td><td style='padding:5px;'>ES SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>08:47:12</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>5,679.00</td><td style='padding:5px;'>5,696.56</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>ed2f3361</td><td style='padding:5px;'>ES SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>08:47:12</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>5,679.00</td><td style='padding:5px;'>5,696.56</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>b25fe71f</td><td style='padding:5px;'>ES SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>09:14:31</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>5,679.75</td><td style='padding:5px;'>5,695.36</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>09ee6a19</td><td style='padding:5px;'>NQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>09:55:38</td><td style='padding:5px;'>20+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>20,195.25</td><td style='padding:5px;'>20,238.69</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>c41af0f1</td><td style='padding:5px;'>NQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>09:55:38</td><td style='padding:5px;'>20+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>20,195.25</td><td style='padding:5px;'>20,238.69</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>930470e6</td><td style='padding:5px;'>ES SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>09:57:42</td><td style='padding:5px;'>LR+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>5,715.50</td><td style='padding:5px;'>5,725.04</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>5583a448</td><td style='padding:5px;'>ES SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>09:57:42</td><td style='padding:5px;'>LR+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>5,715.50</td><td style='padding:5px;'>5,725.04</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>43bdd7ea</td><td style='padding:5px;'>ES SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>10:05:50</td><td style='padding:5px;'>LR+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>5,722.25</td><td style='padding:5px;'>5,732.01</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>7e6b6bc8</td><td style='padding:5px;'>ES SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>10:05:50</td><td style='padding:5px;'>LR+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>5,722.25</td><td style='padding:5px;'>5,732.01</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>533414ab</td><td style='padding:5px;'>ES SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>10:12:52</td><td style='padding:5px;'>80+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>5,719.00</td><td style='padding:5px;'>5,728.50</td></tr></tbody></table>
+    </div>
+    <div>
+      <h3 style="font-size:13px;color:var(--text-muted);margin:0 0 10px">🚫 Trades ejecutados sin señal activa</h3>
+      <table style='width:100%;font-size:12px;border-collapse:collapse;'><thead><tr style='color:var(--text-muted);border-bottom:1px solid var(--border);'><th style='padding:6px;text-align:left'>#</th><th>Instrumento</th><th>Dir</th><th>Hora entrada</th><th>Precio</th><th>P&L</th><th>Estrategia</th></tr></thead><tbody><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>12</td><td style='padding:5px;'>GC</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>13:29:08</td><td style='padding:5px;'>4,249.70</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$270.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>EduS_ES_2C</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>13</td><td style='padding:5px;'>GC</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>13:29:08</td><td style='padding:5px;'>4,249.70</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$450.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>EduS_ES_2C</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>14</td><td style='padding:5px;'>ES</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>14:08:37</td><td style='padding:5px;'>7,565.00</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$362.50</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>EduS</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>15</td><td style='padding:5px;'>ES</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>14:08:37</td><td style='padding:5px;'>7,565.00</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$312.50</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>EduS</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>19</td><td style='padding:5px;'>ES</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>9:33:02</td><td style='padding:5px;'>7,572.25</td><td style='padding:5px;color:#c0392b;font-weight:600'>-$255.76</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>20</td><td style='padding:5px;'>ES</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>9:33:02</td><td style='padding:5px;'>7,572.25</td><td style='padding:5px;color:#c0392b;font-weight:600'>-$255.76</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>21</td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>9:38:01</td><td style='padding:5px;'>30,453.00</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$118.36</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>22</td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>9:39:15</td><td style='padding:5px;'>30,447.50</td><td style='padding:5px;color:#c0392b;font-weight:600'>-$28.32</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>23</td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>9:39:15</td><td style='padding:5px;'>30,447.50</td><td style='padding:5px;color:#c0392b;font-weight:600'>-$28.32</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>24</td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>9:54:05</td><td style='padding:5px;'>30,511.25</td><td style='padding:5px;color:#c0392b;font-weight:600'>-$26.82</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="ai-insight" style="margin-top:12px;">
+    <div class="ai-label">📊 Análisis de Disciplina</div>
+    <p style="margin:6px 0;">La rutina de dos cuentas muestra disciplinas distintas. SIM (bot): operó 6 trades, con el setup NQ (#1-#3) destruyendo la cuenta por el SafeClose runaway, pero los trades ES LR+ (#5-#6) ejecutaron correctamente. DEMO/Fondeo (réplica manual): 29 trades, mezclando réplica de señales del bot con entradas manuales propias sin señal. El hallazgo de disciplina más importante NO es de señales sino de SIZING: en Demo, los 15 MICRO (MNQ) cerraron en +$0.38 (breakeven) mientras los 14 FULL (ES) perdieron -$1,543. Las señales HUD ganadoras del día siguen todas en SEP26 (desalineación de contrato persistente).</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Patrón:</strong> El patrón decisivo de la sesión es la comparación directa de sizing entre cuentas en el MISMO setup. El setup NQ Long de las 9:54 fue: en SIM (bot) = #1 con 2 contratos FULL = -$1,610 + SafeClose -$1,585 = -$3,195; en DEMO (réplica) = #24-#25 con MICRO = -$53.64. El mismo setup, mismo momento, misma dirección — pero 60x más pérdida en FULL que en MICRO. Esto valida absolutamente la tesis de la rutina: replicar el bot en MICRO en la cuenta de fondeo protege el capital. El segundo patrón: en Demo, todos los FULL ES (-$1,543) vs todos los MICRO MNQ (+$0.38) confirman que incluso ES debería replicarse en MES (micro) en fondeo.</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Impacto:</strong> Si la cuenta Demo hubiera replicado TODO en MICRO (ES→MES también), los 14 trades FULL ES (-$1,543) se habrían convertido en ~-$154 en MES, llevando la cuenta Demo de -$1,543 a aproximadamente +$200 en la ventana. La disciplina pendiente no es de señales sino de sizing: MICRO en todos los instrumentos para fondeo. El bot (SIM) por su parte necesita corregir el SafeClose y reducir contratos en NQ Media.</p>
+  </div>
+</div>
+  
+</div>
+
+<!-- ══════════════════════ SECCIÓN 6 — DIAGNÓSTICO ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="diagnostico" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">6</span>Diagnóstico de la Sesión</div>
+  <h2>Análisis General y Conclusiones</h2>
+  <p class="sub">Evaluación cualitativa de la sesión, patrones identificados y aprendizajes</p>
+  <div class="section-title"><span class="step">ANALISIS</span><h2>Análisis General de la Sesión</h2></div>
+<div class="ai-insight">
+  <div class="ai-label">🤖 Análisis de IA</div>
+  <p>Análisis POST-MERCADO del jueves 18 de junio 2026 limitado a la ventana operativa real (antes de las 11:30 AM ET; el resto de la sesión fue revisión y pruebas). La rutina opera dos cuentas en paralelo: SIM101 (donde corre el bot — estrategias EduS/EduS_ES_2C) y DEMO1639078 (tratada como cuenta de Fondeo, donde NO se puede usar el bot y se REPLICAN manualmente los trades del bot vía HUD_Manual). En la ventana <11:30: SIM (bot) 6 trades PnL=-$3,082.50 WR=33% (lastrada por el MaxL #1 NQ Long A+ -$1,610 y el SafeClose runaway #2-#3 -$1,585); DEMO/Fondeo (réplica manual) 29 trades PnL=-$1,542.76 WR=31%. Hallazgo decisivo: en la cuenta Demo los 15 trades MICRO (MNQ) cerraron en +$0.38 (breakeven) mientras los 14 FULL (ES) perdieron -$1,543 — la evidencia más limpia hasta ahora de que MICRO es obligatorio para fondeo.</p>
+</div><div class="card" style="background:var(--header-gradient);color:white;border:none;">
+  <p style="font-size:14px;line-height:1.7;text-align:center;font-style:italic;">"El jueves 18 de junio entregó la lección más valiosa de la rutina de dos cuentas. El experimento de operar SIM (bot, FULL) y DEMO/Fondeo (réplica, mezcla FULL/MICRO) en paralelo produjo una comparación perfecta: el mismo setup NQ Long de las 9:54 perdió -$3,195 en SIM (2 contratos FULL + SafeClose runaway) pero solo -$53.64 en DEMO replicado en MICRO. Esa es la diferencia entre quemar una cuenta y sobrevivir. En la cuenta de fondeo, los 15 trades MICRO (MNQ) cerraron en breakeven (+$0.38) mientras los 14 FULL (ES) perdieron -$1,543 — la evidencia es incontestable: en fondeo, MICRO en TODO (MES y MNQ). Dos correcciones definen la próxima sesión: (1) corregir el SafeClose loop del bot, que volvió a triplicar una pérdida, y (2) replicar el bot exclusivamente en MICRO en la cuenta de fondeo. La rutina funciona como concepto — ahora se trata de ejecutarla con el sizing correcto. La buena noticia: el día completo cerró con R/trade +0.36, superando el benchmark del sistema, lo que confirma que cuando el sizing y las señales se alinean, el Edge existe."</p>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 7 — ESTRATEGIAS ══════════════════════ -->
+<div id="estrategias-section" style="display:block">
+  <div class="sub-title">Resultados por Estrategia</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>Estrategia</th><th>Trades</th><th>W</th><th>L</th><th>Flat</th><th>WR</th><th>P&L</th></tr></thead>
+      <tbody><tr><td>EduS</td><td>13</td><td>10</td><td>3</td><td>0</td><td>76.9%</td><td class="positive">+$2,250.00</td></tr>
+<tr><td>EduS_ES_2C</td><td>2</td><td>2</td><td>0</td><td>0</td><td>100.0%</td><td class="positive">+$720.00</td></tr>
+<tr><td>HUD_Manual</td><td>44</td><td>15</td><td>29</td><td>0</td><td>34.1%</td><td class="negative">-$4,923.00</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 8 — FONDEO ══════════════════════ -->
+<div id="fondeo-section" style="display:1">
+<div class="section-divider"></div>
+  <div class="section-label"><span class="num">8</span>Cuenta Fondeada</div>
+  <h2>Evaluación de la Cuenta Fondeada</h2>
+  <div class="kpi-grid" style="margin-bottom:14px">
+    <div class="kpi"><div class="kpi-label">Balance</div><div class="kpi-value" style="color:var(--teal)">SIM101: -$225 (día completo) · DEMO1639078: -$1,728 (día completo). En la ventana <11:30: SIM (bot) -$3,082.50, DEMO (réplica) -$1,542.76</div></div>
+    <div class="kpi"><div class="kpi-label">Drawdown</div><div class="kpi-value neg">SIM101: DD máx intradía $3,620 · DEMO1639078: DD máx intradía $2,955 (SIM101: 50K/$1,000=362% QUEMÓ, 50K/$2,000=181% QUEMÓ, 100K/$3,000=121% QUEMÓ (las tres). DEMO1639078: 50K/$1,000=295% QUEMÓ, 50K/$2,000=148% QUEMÓ, 100K/$3,000=98% SOBREVIVIÓ (al límite))</div></div>
+    <div class="kpi"><div class="kpi-label">Días Restantes</div><div class="kpi-value">—</div></div>
+    <div class="kpi"><div class="kpi-label">Objetivo</div><div class="kpi-value" style="color:var(--gold)">—</div></div>
+  </div>
+  <div class="ai-insight"><div class="ai-label">Evaluación</div><p>Ambas cuentas habrían quemado cuentas de 50K con contratos FULL. La cuenta DEMO (réplica, con mezcla FULL/MICRO) tuvo un DD menor ($2,955) que SIM ($3,620) y sobrevivió al 98% en la cuenta 100K/$3,000 — gracias a que parte de su operativa fue MICRO. La regla concreta: si la cuenta DEMO hubiera sido 100% MICRO, el DD habría sido manejable en todas las configuraciones. Para la próxima sesión: MICRO obligatorio en fondeo (MES + MNQ) y corregir el SafeClose en el bot.</p></div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 9 — DOFA ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="dofa" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">9</span>Matriz DOFA</div>
+  <h2>Análisis DOFA — 18 JUN 2026</h2>
+  <p class="sub">Fortalezas · Debilidades · Oportunidades · Amenazas del período analizado</p>
+  
+<div class="dofa-grid">
+  <div class="dofa-card F">
+    <div class="dofa-title F">✅ Fortalezas</div>
+    <div class="dofa-item">La rutina de dos cuentas (SIM bot + DEMO réplica MICRO) funcionó como prueba de concepto y entregó la lección más clara hasta ahora: el mismo setup NQ de las 9:54 perdió -$3,195 en SIM (FULL+SafeClose) vs -$53.64 en DEMO (MICRO)</div><div class="dofa-item">En la cuenta Demo, los 15 trades MICRO (MNQ) cerraron en +$0.38 (breakeven) — el MICRO protegió el capital incluso en una sesión difícil</div><div class="dofa-item">Los trades del bot en ES con señal LR+ (#5-#6, +$537.50) y su réplica en Demo (#46-#47, +$363.48) demuestran que cuando se sigue una señal real del bot, la operativa funciona en ambas cuentas</div><div class="dofa-item">El R/trade del día completo (+0.36) superó el benchmark del sistema (+0.33R), indicando que la operativa post-11:30 recuperó</div>
+  </div>
+  <div class="dofa-card D">
+    <div class="dofa-title D">⚠️ Debilidades</div>
+    <div class="dofa-item">El SafeClose runaway (#2-#3) volvió a activarse, triplicando la pérdida del setup NQ del bot a -$3,195 — bug crítico recurrente no corregido</div><div class="dofa-item">El bot operó 2 contratos FULL en NQ régimen Media (#1), el MaxL de la sesión, ignorando la advertencia del GamePlan sobre el mayor ATR de NQ</div><div class="dofa-item">En la cuenta Demo se usaron contratos FULL ES (-$1,543) en lugar de MICRO — contradice el propósito de la rutina de fondeo (replicar en MICRO)</div><div class="dofa-item">Overtrading en la réplica manual (29 trades antes de 11:30) con bug de duplicación en todos los pares</div>
+  </div>
+  <div class="dofa-card O">
+    <div class="dofa-title O">🔵 Oportunidades</div>
+    <div class="dofa-item">Replicar TODO en MICRO en la cuenta de fondeo (ES→MES también): convertiría los -$1,543 de los FULL ES en ~-$154, llevando la cuenta Demo a positivo en la ventana</div><div class="dofa-item">Corregir el SafeClose loop eliminaría -$1,585 de pérdida del bot en un solo setup — la corrección de mayor impacto inmediato</div><div class="dofa-item">Limitar NQ a 1 contrato (o MICRO) en régimen Media en el bot evitaría MaxL como el #1 (-$1,610 → -$805 o -$26.82)</div><div class="dofa-item">La estructura de dos cuentas permite validar la replicabilidad del bot en fondeo — refinar el proceso de réplica (solo seguir señales del bot, no añadir entradas manuales propias)</div>
+  </div>
+  <div class="dofa-card A">
+    <div class="dofa-title A">🔴 Amenazas</div>
+    <div class="dofa-item">El SafeClose loop es una amenaza crítica: puede multiplicar cualquier pérdida del bot por 2-3x en segundos, como ocurrió hoy (-$3,195 en un setup)</div><div class="dofa-item">Operar FULL en la cuenta de fondeo quema la cuenta: el [A] muestra que tanto SIM (DD $3,620) como DEMO (DD $2,955) habrían QUEMADO cuentas de 50K</div><div class="dofa-item">La réplica manual añade entradas propias sin señal (overtrading) que se desvían del objetivo de replicar SOLO los trades del bot</div><div class="dofa-item">El bug de duplicación persiste en la réplica manual, doblando cada operación</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 10 — REGLAS ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="reglas" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">10</span>Reglas Post-Mercado</div>
+  <h2>Recomendaciones y Reglas a Seguir</h2>
+  <p class="sub">Reglas críticas, ajustes de calidad y mejoras para las próximas sesiones</p>
+  <div class="section-title"><span class="step">RECOMENDACIONES</span><h2>Recomendaciones Finales</h2></div>
+<div class="rec-card">
+  <h3>🔴 Regla Crítica — Corregir el SafeClose runaway loop (prioridad #1 del bot)</h3>
+  <ul><li>El SafeClose (#2-#3) triplicó la pérdida del setup NQ del bot: -$1,610 (stop real) + -$1,585 (SafeClose) = -$3,195</li><li>El mecanismo debe cerrar la posición UNA sola vez, no en cascada de cierres adicionales</li><li>Verificar la lógica de SafeClose en el código del AutoTrader antes de la próxima sesión — bug recurrente documentado</li><li>Mientras no se corrija, el bot en SIM tiene riesgo de pérdidas multiplicadas en cada stop</li></ul>
+</div><div class="rec-card">
+  <h3>🔴 Regla Crítica — Cuenta de Fondeo (Demo): replicar TODO en MICRO, incluido ES→MES</h3>
+  <ul><li>En la cuenta Demo, los 14 trades FULL ES perdieron -$1,543 mientras los 15 MICRO MNQ cerraron en +$0.38 (breakeven)</li><li>El mismo setup NQ de las 9:54: SIM FULL+SafeClose -$3,195 vs Demo MICRO -$53.64 — 60x menos pérdida</li><li>Replicar el ES en MES (micro) habría convertido los -$1,543 en ~-$154, llevando Demo a positivo en la ventana</li><li>Regla absoluta: en fondeo, MICRO en TODOS los instrumentos (MES y MNQ), nunca FULL</li></ul>
+</div><div class="rec-card">
+  <h3>🟡 Regla de Calidad — Bot: limitar NQ a 1 contrato/MICRO en régimen Media</h3>
+  <ul><li>El #1 (NQ Long A+ 2 contratos) en NQ Media fue el MaxL — el GamePlan advirtió cautela por el mayor ATR de NQ</li><li>En NQ régimen Media: máximo 1 contrato FULL, o preferiblemente MICRO</li><li>Los trades del bot en ES (régimen Baja) fueron mucho más manejables — el problema es específico de NQ Media</li></ul>
+</div><div class="rec-card">
+  <h3>🟢 Mejora para siguiente sesión — Réplica disciplinada (solo señales del bot)</h3>
+  <ul><li>La réplica manual añadió entradas propias sin señal (overtrading) — debe replicar SOLO los trades del bot</li><li>Eliminar el bug de duplicación en la réplica manual (hash único instrumento+dirección+timestamp)</li><li>Sincronizar el contrato con las señales del bot (rollover a SEP26)</li></ul>
+</div>
+
+<div class="section-title"><span class="step">INCIDENCIAS</span><h2>Bugs y Diagnóstico</h2></div>
+<div class="card">
+  
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ SafeClose runaway loop — reactivado en el setup NQ del bot <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">Tras el stop del trade #1 (NQ Long), el mecanismo SafeClose ejecutó dos cierres adicionales (#2 -$790 y #3 -$795) en el mismo segundo, sumando -$1,585 al stop original de -$1,610. El SafeClose debe cerrar una vez, no en cascada.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Revisar la lógica de SafeClose en el AutoTrader. Implementar un flag de 'ya cerrado' para evitar cierres múltiples del mismo setup. Verificar en paper trading antes de reactivar.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ Bug de duplicación en la réplica manual (HUD_Manual) <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">Casi todos los trades de la réplica manual en Demo aparecen en pares idénticos (mismo timestamp, precio y PnL): #19-#20, #22-#23, #24-#25, #26-#27, #28-#29, #34-#35, #36-#37, #38-#39, #40-#41, #42-#43, #44-#45, #46-#47. El bug dobla cada operación.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Implementar deduplicación con hash único (instrumento+dirección+timestamp, ventana 2 segundos). Auditar broker statements.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#f39c12;background:#fef3e2">
+      <h4 style="color:#f39c12;font-size:13px;margin-bottom:6px;">⚠️ KeltnerWidth, ATR y contexto no capturados en los fills <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[MEDIA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">El contexto de indicadores está vacío ('Sin contexto', 0 entradas). No se capturó VWAP, SMA20, SMA80, KeltnerWidth ni ATR, impidiendo la validación del escenario V5 por trade.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Verificar el indicador de captura de contexto en NinjaTrader.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ Desalineación de contrato: señales en SEP26, operativa en contrato actual <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">Las señales HUD ganadoras del día fueron todas en SEP26 mientras la operativa (bot y réplica) usó el contrato actual. Solo 8 de 32,784 señales fueron ejecutadas.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Sincronizar el contrato de operativa con las señales (migrar a SEP26 tras el rollover de JUN26).</p>
+    </div>
+</div>
+  <div class="plan-card"><h3>Disciplina</h3><p>La réplica manual en la cuenta de fondeo debe seguir EXCLUSIVAMENTE los trades del bot (cuenta SIM), sin añadir entradas manuales propias. La ventana tuvo overtrading en Demo (29 trades) que mezcló réplica con entradas propias sin señal. El objetivo de la rutina es replicar el bot, no operar en paralelo.</p></div><div class="plan-card"><h3>Sizing</h3><p>MICRO obligatorio en la cuenta de fondeo para TODOS los instrumentos: ES→MES, NQ→MNQ. Los FULL ES (-$1,543) vs MICRO MNQ (+$0.38) lo demuestran. En el bot (SIM): limitar NQ a 1 contrato en régimen Media — el #1 con 2 contratos fue el MaxL.</p></div><div class="plan-card"><h3>Senales</h3><p>Replicar solo señales reales del bot (LR+, A+, 80+) — los trades del bot con señal LR+ (#5-#6) y su réplica (#46-#47) fueron los ganadores. Sincronizar el contrato con las señales (SEP26). Evitar entradas 'Manual' sin señal en la réplica.</p></div><div class="plan-card"><h3>Horario</h3><p>La ventana operativa real fue antes de 11:30; el resto fue pruebas. Mantener la disciplina de concentrar la operativa válida en la sesión AM. En la apertura volátil (post-triple-dato 8:30), esperar los primeros minutos antes de replicar.</p></div><div class="plan-card"><h3>Sistema</h3><p>Antes de la próxima sesión: (1) CORREGIR el SafeClose runaway loop (prioridad #1), (2) configurar la cuenta de fondeo para MICRO obligatorio (MES+MNQ), (3) eliminar el bug de duplicación en la réplica, (4) sincronizar contrato a SEP26, (5) reparar captura de contexto en NinjaTrader.</p></div>
+</div>
+
+<!-- ══════════════════════ PLAN DE MEJORAS ══════════════════════ -->
+<div id="multi-account-section" style="display:1">
+<div class="section-divider"></div>
+  <div class="section-label"><span class="num">*</span>Comparativa por Cuenta</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>Cuenta</th><th>Trades</th><th>W</th><th>L</th><th>WR</th><th>P&L</th><th>Puntos por Mercado</th></tr></thead>
+      <tbody><tr><td>DEMO1639078</td><td>41</td><td>15</td><td>26</td><td>37%</td><td class='negative'>-$1,728.00</td><td>+61.4 ptos MNQ · -37.1 ptos ES</td></tr><tr><td>Sim101</td><td>18</td><td>12</td><td>6</td><td>67%</td><td class='negative'>-$225.00</td><td>-159.8 ptos NQ · +45.0 ptos ES · +7.2 ptos GC</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════ YOUTUBE ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="video" style="scroll-margin-top:52px">
+  <div class="yt-block">
+    <div class="yt-icon">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </div>
+    <div class="yt-text">
+      <div class="yt-title">Operativa en vivo — Canal EduS Trader</div>
+      <div class="yt-sub">YouTube · Sesiones diarias · Análisis y ejecución en tiempo real &middot; 18 JUN 2026</div>
+    </div>
+    <a class="yt-btn" href="https://www.youtube.com/@EduSTrader" target="_blank" rel="noopener noreferrer">Ver en YouTube →</a>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<footer>
+  <a href="javascript:history.back()" class="nav-back">← Volver</a> &middot;
+  <span class="brand-ft">Edu<span class="gold">S</span> Trader</span> &middot;
+  Post-Market Analysis &middot; 18 JUN 2026 &middot; Fuente: NinjaTrader 8
+</footer>
+
+</body>
+</html>
