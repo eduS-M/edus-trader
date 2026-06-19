@@ -157,7 +157,7 @@ Si existe (cuestionario guardado anteriormente), sus valores tienen **prioridad*
 
 1. **Editar SIEMPRE en A)** (`EduSTrader - Local Free\inversiones\`)
 2. **Un cambio a la vez** — confirmar visualmente antes del siguiente
-3. **No tocar** colores, logo ni fuentes de `inv-styles.css` sin aprobación explícita
+3. **Mantener Identidad Visual Gameplan** en `inv-styles.css` (Navy/Teal/Gold, DM Sans/Space Mono/Bebas Neue) sin desvíos
 4. **Registrar cada cambio** en `docs/CHANGELOG.md`
 5. **Después de confirmar** → copiar a B) (GitHub) y hacer commit
 6. **URL de prueba:** `https://zestfully-retread-activism.ngrok-free.dev/inversiones/`
