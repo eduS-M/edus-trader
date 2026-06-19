@@ -16,6 +16,35 @@
         .risk-value { font-size: 1.25rem; font-weight: 700; }
         .text-green { color: #10b981; }
         .text-red { color: #ef4444; }
+
+        /* ── Auto-fill indicators ── */
+        .form-group { position: relative; }
+        .autofill-badge {
+            position: absolute;
+            top: 0; right: 0;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--inv-accent);
+            background: rgba(59,130,246,0.12);
+            border: 1px solid rgba(59,130,246,0.3);
+            padding: 1px 5px;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+        .autofilled {
+            border-color: rgba(59,130,246,0.45) !important;
+            background: rgba(59,130,246,0.04) !important;
+        }
+        .autofilled:focus {
+            border-color: var(--inv-accent) !important;
+        }
+        /* When user edits an autofilled field */
+        .user-edited {
+            border-color: var(--inv-border) !important;
+            background: var(--inv-bg-main) !important;
+        }
     </style>
 </head>
 <body class="inversiones-app">
@@ -158,85 +187,172 @@
         const urlParams = new URLSearchParams(window.location.search);
         const ticker = urlParams.get('symbol');
 
+        // ─────────────────────────────────────────────
+        // HELPER: marcar un campo como auto-rellenado
+        // ─────────────────────────────────────────────
+        function markAutoFill(el, sourceLabel) {
+            if (!el) return;
+            el.classList.add('autofilled');
+            // Badge sobre el label del form-group
+            const group = el.closest('.form-group');
+            if (group && !group.querySelector('.autofill-badge')) {
+                const badge = document.createElement('span');
+                badge.className = 'autofill-badge';
+                badge.title = `Auto-rellenado desde ${sourceLabel}`;
+                badge.textContent = '⚡ Auto';
+                group.appendChild(badge);
+            }
+            // Si el usuario edita el campo, quitar el indicador
+            el.addEventListener('change', () => {
+                el.classList.remove('autofilled');
+                el.classList.add('user-edited');
+                const badge = el.closest('.form-group')?.querySelector('.autofill-badge');
+                if (badge) badge.remove();
+            }, { once: true });
+        }
+
+        // Llenar un <input> o <textarea> si está vacío
+        function autoFillInput(form, name, value, source) {
+            const el = form.elements[name];
+            if (!el || el.value !== '' || value == null) return;
+            el.value = value;
+            markAutoFill(el, source);
+        }
+
+        // Llenar un <select> si está vacío
+        function autoFillSelect(form, name, value, source) {
+            const el = form.elements[name];
+            if (!el || el.value !== '' || value == null) return;
+            // Intentar match exacto primero, luego convertir a string
+            const strVal = String(value);
+            for (const opt of el.options) {
+                if (opt.value === strVal) {
+                    el.value = strVal;
+                    markAutoFill(el, source);
+                    return;
+                }
+            }
+        }
+
+        // Mapear señal DCF+PEG → price_vs_valuation
+        function inferPriceVsValuation(dcfSignal, pegSignal) {
+            const signals = [dcfSignal, pegSignal].filter(Boolean).map(s => s.toLowerCase());
+            const subCount = signals.filter(s => s === 'subvalorada').length;
+            const sobreCount = signals.filter(s => s === 'sobrevalorada').length;
+            if (subCount === 2) return 'muy_bajo';
+            if (subCount === 1) return 'bajo';
+            if (sobreCount === 2) return 'muy_alto';
+            if (sobreCount === 1) return 'alto';
+            if (signals.includes('justo') || signals.includes('invertible')) return 'justo';
+            return null;
+        }
+
         document.getElementById('ticker-title').textContent = `Checklist: ${ticker || 'No Ticker'}`;
         document.getElementById('quest-date').textContent = new Date().toISOString().split('T')[0];
 
         if (ticker) {
-            // ── 1. Cargar cuestionario guardado + auto-fill desde valuations en un solo fetch ──
+            // ══════════════════════════════════════════════════════
+            // 1. CUESTIONARIO GUARDADO + AUTO-FILL FUNDAMENTAL
+            // ══════════════════════════════════════════════════════
             fetch(`/api/inversiones/questionnaire?ticker=${ticker}`)
                 .then(r => r.json())
                 .then(res => {
                     if (!res.success) return;
                     const form = document.getElementById('quest-form');
 
-                    // 1a. Si hay respuestas guardadas en la BD, cargarlas
+                    // 1a. Cargar respuestas guardadas en BD (sin badge — son del usuario)
                     if (res.data.latest) {
                         Object.keys(res.data.latest).forEach(key => {
                             const el = form.elements[key];
-                            if (el && res.data.latest[key] !== null) {
+                            if (el && res.data.latest[key] !== null && res.data.latest[key] !== undefined) {
                                 el.value = res.data.latest[key];
                             }
                         });
                         document.getElementById('quest-date').textContent =
-                            `Última edición: ${res.data.latest.analysis_date}`;
+                            `\u00daltima edici\u00f3n: ${res.data.latest.analysis_date}`;
                     }
 
-                    // 1b. Auto-rellenar con datos de la última valuación (si el campo sigue vacío)
-                    const v = res.data.valuations;   // viene en la misma respuesta
-                    const t = res.data.ticker_data;  // datos básicos del ticker
+                    // 1b. Auto-fill con datos de valuaciones (solo campos vacíos)
+                    const v = res.data.valuations;
+                    const t = res.data.ticker_data;
 
                     if (v) {
-                        // PEG
-                        if (!form.elements['peg'].value && v.peg_value != null)
-                            form.elements['peg'].value = parseFloat(v.peg_value).toFixed(2);
-
-                        // EPS next 5y  (viene como fraccion 0.194 → 19.4)
-                        if (!form.elements['eps_next_5y'].value && v.eps_next_5y_pct != null)
-                            form.elements['eps_next_5y'].value = (parseFloat(v.eps_next_5y_pct) * 100).toFixed(2);
+                        autoFillInput(form, 'peg',
+                            v.peg_value != null ? parseFloat(v.peg_value).toFixed(2) : null,
+                            'Valuaci\u00f3n');
+                        autoFillInput(form, 'eps_next_5y',
+                            v.eps_next_5y_pct != null ? (parseFloat(v.eps_next_5y_pct) * 100).toFixed(2) : null,
+                            'Valuaci\u00f3n');
+                        autoFillSelect(form, 'price_vs_valuation',
+                            inferPriceVsValuation(v.dcf_signal, v.peg_signal),
+                            'Se\u00f1ales DCF+PEG');
                     }
 
                     if (t) {
-                        // Debt / Equity = total_liabilities / (total_assets - total_liabilities)
-                        if (!form.elements['debt_equity'].value &&
-                            t.total_liabilities != null && t.total_assets != null) {
-                            const equity = t.total_assets - t.total_liabilities;
-                            if (equity > 0)
-                                form.elements['debt_equity'].value = (t.total_liabilities / equity).toFixed(2);
+                        const equity = (t.total_assets || 0) - (t.total_liabilities || 0);
+
+                        if (equity > 0 && t.net_income != null) {
+                            autoFillInput(form, 'roe',
+                                ((t.net_income / equity) * 100).toFixed(2),
+                                'Financials Yahoo');
+                        }
+                        autoFillInput(form, 'eps_past_5y',
+                            t.eps_past_5y_pct != null ? (parseFloat(t.eps_past_5y_pct) * 100).toFixed(2) : null,
+                            'Financials Yahoo');
+
+                        if (equity > 0 && t.total_liabilities != null) {
+                            const de = (t.total_liabilities / equity).toFixed(2);
+                            autoFillInput(form, 'debt_equity', de, 'Financials Yahoo');
+                            autoFillSelect(form, 'debt_reasonable',
+                                parseFloat(de) < 2 ? '1' : '0', 'C\u00e1lculo D/E');
                         }
 
-                        // ROE = net_income / equity
-                        if (!form.elements['roe'].value &&
-                            t.net_income != null && t.total_assets != null && t.total_liabilities != null) {
-                            const equity = t.total_assets - t.total_liabilities;
-                            if (equity > 0)
-                                form.elements['roe'].value = ((t.net_income / equity) * 100).toFixed(2);
-                        }
+                        if (t.net_income != null)
+                            autoFillSelect(form, 'earnings_growing',
+                                t.net_income > 0 ? '1' : '0', 'Net Income');
 
-                        // EPS past 5y (si hay)
-                        if (!form.elements['eps_past_5y'].value && t.eps_past_5y_pct != null)
-                            form.elements['eps_past_5y'].value = (parseFloat(t.eps_past_5y_pct) * 100).toFixed(2);
+                        if (t.operating_cash_flow != null)
+                            autoFillSelect(form, 'cashflow_growing',
+                                t.operating_cash_flow > 0 ? '1' : '0', 'Cash Flow');
 
-                        // Ventas creciendo (heuristica: si revenue > 0)
-                        // No podemos saber sin historial, lo dejamos vacío
+                        if (t.revenue != null)
+                            autoFillSelect(form, 'sales_growing',
+                                t.revenue > 0 ? '1' : '0', 'Revenue');
                     }
                 });
-                
-            // ── 2. Gestión de Riesgo ──
+
+            // ══════════════════════════════════════════════════════
+            // 2. COMPETIDORES (por sector/industria en nuestra BD)
+            // ══════════════════════════════════════════════════════
+            fetch(`/api/inversiones/peers?ticker=${ticker}`)
+                .then(r => r.json())
+                .then(res => {
+                    if (!res.success || !res.tickers_str) return;
+                    const form = document.getElementById('quest-form');
+                    autoFillInput(form, 'competitors', res.tickers_str,
+                        `BD (${res.matched_by === 'industry' ? res.industry : res.sector})`);
+                });
+
+            // ══════════════════════════════════════════════════════
+            // 3. GESTIÓN DE RIESGO (ATR)
+            // ══════════════════════════════════════════════════════
             fetch(`/api/inversiones/risk?ticker=${ticker}`)
                 .then(r => r.json())
                 .then(res => {
                     if (res.success && res.data) {
                         document.getElementById('risk-section').style.display = 'block';
-                        document.getElementById('risk-atr').textContent = `ATR(14): $${res.data.atr_14}`;
+                        document.getElementById('risk-atr').textContent  = `ATR(14): $${res.data.atr_14}`;
                         document.getElementById('risk-price').textContent = `$${res.data.current_price}`;
-                        document.getElementById('risk-sl').textContent = `$${res.data.stop_loss}`;
+                        document.getElementById('risk-sl').textContent   = `$${res.data.stop_loss}`;
                         document.getElementById('risk-sl-pct').textContent = `-${res.data.sl_pct}% (2.5x ATR)`;
-                        document.getElementById('risk-tp').textContent = `$${res.data.target}`;
+                        document.getElementById('risk-tp').textContent   = `$${res.data.target}`;
                         document.getElementById('risk-tp-pct').textContent = `+${res.data.tp_pct}% (4.0x ATR)`;
                     }
                 });
-                
-            // ── 3. Histórico para Gráficos ──
+
+            // ══════════════════════════════════════════════════════
+            // 4. GRÁFICOS HISTÓRICOS (últimos 5 años)
+            // ══════════════════════════════════════════════════════
             fetch(`/api/inversiones/valuations?ticker=${ticker}&days=1825`)
                 .then(r => r.json())
                 .then(res => {
