@@ -5,6 +5,41 @@ Formato: `[FECHA] — Descripción — Archivos afectados`
 
 ---
 
+## [2026-06-19] — Auto-fill cuestionario + nombres de empresa
+
+### CAMBIO 1: Auto-fill completo del cuestionario ✅
+- Nuevo endpoint `/api/inversiones/peers` que devuelve competidores por industria/sector desde la BD
+- Todos los campos posibles se rellenan automáticamente al abrir el cuestionario:
+  - PEG, EPS Next/Past 5y, ROE, Debt/Equity, ¿Deuda Razonable?, Ventas/Ganancias/Cash Flow creciendo, Precio vs Valoración, Competidores
+- Campos auto-llenados muestran badge **⚡ Auto** con borde azul
+- Al editar un campo auto-llenado, el badge desaparece y el campo queda normal
+- Si hay cuestionario guardado en BD, sus valores tienen prioridad (sin badge)
+- **Archivos:** `server.py`, `inversiones/cuestionario.html`
+- **Commit:** `bf782ce`
+
+### CAMBIO 2: Nombre de empresa en cuestionario (header) ✅
+- Agregado `id="ticker-company-name"` debajo del ticker title en el header
+- Se rellena desde `ticker_data.name` al cargar el cuestionario
+- **Archivos:** `inversiones/cuestionario.html`
+
+### CAMBIO 3: Nombres de empresa en Watchlist, Scanner y Ticker ✅
+- **Causa del bug:** El campo `name` era `NULL` para 55 de 64 tickers en la BD
+- **Solución:** Script `fix_names.py` que pobló los 55 nombres faltantes desde Yahoo Finance
+- Los nombres ya estaban en el JS de Watchlist, Scanner y Ticker — solo faltaba el dato en la BD
+- **Archivos:** `inversiones.db` (55 tickers actualizados), `fix_names.py` (script utilitario)
+
+### CAMBIO 4: Tabla de Portafolio más compacta ✅
+- Reducido `padding` de celdas `th` y `td`: de `1rem` a `0.75rem 0.5rem`
+- Acortados headers: "Precio Compra"→"Compra", "Precio Actual"→"Actual", "Quick Check (PEG)"→"PEG", "DCF Valor"→"DCF", "Earning Est."→"Earn. Est."
+- **Archivos:** `inversiones/assets/inv-styles.css`, `inversiones/index.html`
+
+### CAMBIO 5: Encabezado tapando contenido ✅ (ya resuelto)
+- El header usa `position: sticky` (no `fixed`), por lo que empuja el contenido naturalmente
+- Bug fue introducido por el rediseño experimental del 17-jun que usaba `position: fixed`
+- Resuelto al revertir al diseño original. Sin cambios adicionales necesarios.
+
+---
+
 ## [2026-06-19] — Creación de docs/
 
 - Creada carpeta `inversiones/docs/` para documentación del proyecto

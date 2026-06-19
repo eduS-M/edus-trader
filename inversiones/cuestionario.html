@@ -63,9 +63,14 @@
     </header>
 
     <main class="inv-container">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem;">
-            <h2 style="font-size: 2rem; margin: 0;" id="ticker-title">Cargando...</h2>
-            <div id="quest-date" class="text-muted text-sm"></div>
+        <div style="margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <div>
+                    <h2 style="font-size: 2rem; margin: 0; line-height: 1;" id="ticker-title">Cargando...</h2>
+                    <div id="ticker-company-name" class="text-muted" style="font-size: 0.95rem; margin-top: 0.25rem;"></div>
+                </div>
+                <div id="quest-date" class="text-muted text-sm"></div>
+            </div>
         </div>
         
         <!-- Gestión de Riesgo (Dinámico) -->
@@ -270,6 +275,13 @@
                         });
                         document.getElementById('quest-date').textContent =
                             `\u00daltima edici\u00f3n: ${res.data.latest.analysis_date}`;
+                    }
+
+                    // Mostrar nombre de empresa en el header
+                    const companyName = res.data.ticker_data?.name;
+                    if (companyName) {
+                        const nameEl = document.getElementById('ticker-company-name');
+                        if (nameEl) nameEl.textContent = companyName;
                     }
 
                     // 1b. Auto-fill con datos de valuaciones (solo campos vacíos)
