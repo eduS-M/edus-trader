@@ -5,6 +5,23 @@ Formato: `[FECHA] — Descripción — Archivos afectados`
 
 ---
 
+## [2026-06-19] — Rediseño: Identidad Visual Gameplan
+
+### CAMBIO 6: Identidad visual EduS (Navy/Teal/Gold) ✅
+- Reescritura de `inv-styles.css` adoptando la paleta completa del Gameplan:
+  - Fondo `teal-dark` (`#034649`), cards `navy` (`#142d37`), bordes gold tinted
+  - Tipografías: `DM Sans` para cuerpo, `Space Mono` para datos, `Bebas Neue` para títulos
+  - Semáforo ajustado: Verde es `teal` (`#279995`), Neutro es azul (`#185fa5`), Alerta es `gold` (`#b38665`)
+- Nuevo `<header>` en las 5 páginas (`index`, `watchlist`, `scanner`, `ticker`, `cuestionario`):
+  - Incorpora logo, gradiente navy, y estructura estándar de marca EduS Inversiones
+  - Subtítulo: "PORTAFOLIO & ANÁLISIS DE INVERSIÓN · Mesa de Dinero"
+- Navegación integrada (`.inv-nav`) estilizada en `Space Mono`
+- Tablas rediseñadas con cabecera `navy` y texto `gold-light`
+- **Archivos:** `inversiones/assets/inv-styles.css`, las 5 páginas `.html`
+- **Commit:** `91a54e8`
+
+---
+
 ## [2026-06-19] — Auto-fill cuestionario + nombres de empresa
 
 ### CAMBIO 1: Auto-fill completo del cuestionario ✅
