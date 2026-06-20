@@ -153,11 +153,14 @@ Formato: `[FECHA] — Descripción — Archivos afectados`
 
 **Archivos modificados:**
 - `Proyecto-Inversion/fetcher/calculate.py` — `calculate_dcf()` reescrita
-- `server.py` — inline DCF histórico + INSERT con nuevos campos
-- `database_inversiones.py` — migración ADD COLUMN para dcf_operating_cf, dcf_debt_ps, dcf_cash_ps
-- `inversiones/ticker.html` — DCF detail lines
+- `server.py` — inline DCF histórico + INSERT con nuevos campos (37 columnas)
+- `database_inversiones.py` — migración ADD COLUMN para 6 columnas DCF detalle
+- `inversiones/ticker.html` — DCF detail lines (FCO, deuda, caja, growth, wacc)
 - `inversiones/assets/inv-dashboard.js` — color flip en scanner (diff% > 0 = sobrevalorada)
+- `inversiones/docs/ARQUITECTURA.md` — sección 8D documenta DCF completo
 - `inversiones/docs/CHANGELOG.md` — este registro
+
+**Recálculo completo BD:** 49 tickers reprocesados con nueva metodología DCF (commit aparte).
 
 - **Antes:** El ticker-símbolo (`#t-symbol`) era un `<a>` linkeando a Yahoo Finance
 - **Después:** El nombre de empresa (`#t-name`) es ahora un `<a>` con target blank; el símbolo es un `<span>` plano

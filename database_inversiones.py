@@ -163,7 +163,7 @@ def init_db():
             pass
 
         # Migración: columnas DCF detalle
-        for col in ['dcf_operating_cf', 'dcf_debt_ps', 'dcf_cash_ps']:
+        for col in ['dcf_operating_cf', 'dcf_debt_ps', 'dcf_cash_ps', 'dcf_growth_5y', 'dcf_growth_6_10', 'dcf_wacc']:
             try:
                 cursor.execute(f"ALTER TABLE inv_valuations ADD COLUMN {col} REAL")
             except Exception:

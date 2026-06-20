@@ -285,10 +285,16 @@ Yahoo Finance (yfinance)
 | `growth_revenue_pct` | REAL | Crecimiento calculado de Revenue Estimates High |
 | `growth_source` | TEXT | 'revenue_estimate' o 'earnings_growth' (fallback) |
 | `dcf_intrinsic_value` | REAL | Valor intrínseco DCF |
-| `dcf_diff_vs_price` | REAL | Diferencia (intrínseco - precio) |
-| `dcf_diff_pct` | REAL | Diferencia porcentual |
+| `dcf_diff_vs_price` | REAL | Diferencia = Precio - Intrínseco (positivo = sobrevalorado) |
+| `dcf_diff_pct` | REAL | (Precio - Intrínseco) / Precio (positivo = sobrevalorado) |
 | `dcf_applies` | INTEGER | 0/1 — DCF aplicable |
 | `dcf_signal` | TEXT | subvalorada / sobrevalorada / n/a |
+| `dcf_operating_cf` | REAL | FCO base usado en proyección DCF |
+| `dcf_debt_ps` | REAL | Deuda por acción (CP+LP / Shares) usado en DCF |
+| `dcf_cash_ps` | REAL | Caja por acción usado en DCF |
+| `dcf_growth_5y` | REAL | Tasa growth años 1-5 en DCF |
+| `dcf_growth_6_10` | REAL | Tasa growth años 6-10 en DCF (tope 15%) |
+| `dcf_wacc` | REAL | WACC usado en DCF (10% fijo) |
 | `ddm_intrinsic_value` | REAL | Valor intrínseco DDM |
 | `ddm_diff_vs_price` | REAL | Diferencia DDM vs precio |
 | `ddm_diff_pct` | REAL | Diferencia porcentual DDM |
@@ -404,7 +410,55 @@ Yahoo Finance provee su propio PEG (`pegRatio` en `stock.info`), pero su fórmul
 - **PEG manual** (`peg_value`) → Se usa para la señal y los charts. Es el que aparece en tablas (Portfolio, Watchlist, Scanner) y en los gráficos históricos.
 - **Yahoo PEG** (`peg_yahoo_value`) → Se guarda como referencia informativa en la página del ticker, sin afectar señales ni cálculos.
 
-### 8D. Cálculo actual (vía fetcher, importado en server.py)
+### 8D. DCF — Flujo de Caja Descontado
+
+Réplica exacta del Excel `Calculo Flujo de Caja Descontado.xlsx`.
+
+**Fórmula:**
+
+```
+1. Proyectar FCO para 10 años:
+   - Años 1-5: FCO_n = FCO_{n-1} × (1 + growth_5y)
+   - Años 6-10: FCO_n = FCO_{n-1} × (1 + growth_6_10)
+   - growth_5y = eps_next_5y_pct (del Revenue Estimate o Earnings Growth)
+   - growth_6_10 = min(eps_next_5y_pct, 0.15) si >15%, sino igual a growth_5y
+
+2. Descontar cada año:
+   - PV_n = FCO_n / (1 + WACC)^n
+   - WACC = 10% fijo
+
+3. Enterprise Value = Suma PV_n (sin valor terminal)
+
+4. Ajuste deuda/caja (como el Excel):
+   - Intrínseco = (EV / Shares) - (Deuda_CP + Deuda_LP) / Shares + Caja / Shares
+
+5. Diferencia %:
+   - diff% = (Precio - Intrínseco) / Precio
+   - Positivo → Sobrevalorada (precio > intrínseco)
+   - Negativo → Subvalorada (precio < intrínseco)
+```
+
+**Inputs del Excel mapeados a código:**
+| Celda Excel | Campo código | Descripción |
+|-------------|-------------|-------------|
+| C10 | `operating_cash_flow` | FCO del último año fiscal |
+| C11 | `short_term_debt` | Deuda corto plazo |
+| C12 | `long_term_debt` | Deuda largo plazo |
+| C13 | `cash_and_investments` | Caja e inversiones CP |
+| C14 | `eps_next_5y_pct` | Growth años 1-5 |
+| C15 | `min(eps_next_5y_pct, 0.15)` | Growth años 6-10 (tope 15%) |
+| C16 | `shares_outstanding` | Acciones en circulación |
+| C17 | 0.10 (WACC) | Tasa de descuento |
+
+**Señal:**
+| diff% | Señal |
+|-------|-------|
+| < 0 | Subvalorada 🟢 |
+| ≥ 0 | Sobrevalorada 🔴 |
+
+**Ubicación del código:** `calculate.py:calculate_dcf()`
+
+### 8E. Cálculo actual (vía fetcher, importado en server.py)
 
 ```
 fetch_financials_fmp() ──► fin_data (dict)
@@ -421,7 +475,7 @@ fetch_financials_fmp() ──► fin_data (dict)
 ```
 
 **Ubicación del código fuente:** `Proyecto-Inversion/fetcher/calculate.py`  
-**Parametrización:** WACC fijo 10%, crecimiento terminal 3%, proyección DCF a 10 años.
+**Parámetros clave:** WACC = 10% fijo, proyección 10 años, sin valor terminal.
 
 **Flujo de datos para PEG:**
 
@@ -432,18 +486,18 @@ fetch_financials_fmp() ──► fin_data (dict)
 5. `calculate_all_valuations()` → llama `calculate_quick_check(pe_ratio, eps_growth_next_5y)` 
 6. `calculate_quick_check` → `peg = pe_ratio / (eps_growth_next_5y * 100)` → señal
 
-### 8E. Cálculo histórico (simplificado inline en server.py)
+### 8F. Cálculo histórico (simplificado inline en server.py)
 
 Para las valoraciones históricas por año fiscal, se usa una versión simplificada que no depende del fetcher:
 
 - **PEG:** `P/E ÷ (epsGrowth × 100)` con P/E = precio ÷ EPS del año fiscal (EPS = Net Income / Shares)
-- **DCF:** Proyección a 10 años partiendo del Operating Cash Flow histórico, WACC fijo 10%
+- **DCF:** Misma metodología que el cálculo actual (sin terminal, ajuste deuda/caja, diff% invertido)
 - **PBV:** `Price ÷ ((Total Assets - Total Liabilities) / Shares)`
 - **DDM:** No se calcula en el histórico (se deja NULL)
 
-> **Diferencia clave:** El cálculo actual usa `calculate_all_valuations()` del fetcher que tiene lógica más sofisticada (DDM, EPS estimate, ajustes sectoriales). El cálculo histórico solo genera PEG, DCF y PBV para poblar los charts.
+> **Nota:** Ambos cálculos (actual e histórico) comparten la misma metodología DCF. La diferencia es que el histórico usa datos de ese año fiscal específico, mientras el actual usa TTM + Revenue Estimates.
 
-### 8F. `download_historical.py` (alternativa)
+### 8G. `download_historical.py` (alternativa)
 
 El script `Proyecto-Inversion/fetcher/download_historical.py` ofrece un procesamiento mensual (60 filas en 5 años) usando datos financieros trimestrales de FMP. No se utiliza en el flujo de "añadir ticker" porque es mucho más lento y requiere FMP API key para datos históricos trimestrales.
 

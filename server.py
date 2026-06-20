@@ -211,6 +211,7 @@ def _run_historical_valuations(ticker, sector=''):
             dcf_v, dcf_d, (round(dcf_d / close_price, 4) if dcf_d is not None and close_price > 0 else None),
             1 if dcf_v else 0, dcf_s,
             dcf_ocf, dcf_debt_ps, dcf_cash_ps,
+            eps_growth, growth_6_10, wacc,
             None, None, None, 0, 'n/a',
             pbv_v, 0, pbv_s,
             eps_growth, 'n/a',
@@ -228,11 +229,12 @@ def _run_historical_valuations(ticker, sector=''):
                          ttm_net_income, eps_ttm, pe_ratio_ttm, growth_revenue_pct, growth_source,
                          dcf_intrinsic_value, dcf_diff_vs_price, dcf_diff_pct, dcf_applies, dcf_signal,
                          dcf_operating_cf, dcf_debt_ps, dcf_cash_ps,
+                         dcf_growth_5y, dcf_growth_6_10, dcf_wacc,
                          ddm_intrinsic_value, ddm_diff_vs_price, ddm_diff_pct, ddm_applies, ddm_signal,
                          pbv_ratio, pbv_is_bank, pbv_signal,
                          eps_next_5y_pct, eps_signal,
                          positive_signals, fiscal_year_used)
-                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                 """, vals)
             conn.close()
             print(f'[server] {len(vals)} valoraciones hist\xf3ricas guardadas para {ticker}')
@@ -367,11 +369,12 @@ def _run_ticker_valuation(ticker, sector='', shares_outstanding=None):
                  ttm_net_income, eps_ttm, pe_ratio_ttm, growth_revenue_pct, growth_source,
                  dcf_intrinsic_value, dcf_diff_vs_price, dcf_diff_pct, dcf_applies, dcf_signal,
                  dcf_operating_cf, dcf_debt_ps, dcf_cash_ps,
+                 dcf_growth_5y, dcf_growth_6_10, dcf_wacc,
                  ddm_intrinsic_value, ddm_diff_vs_price, ddm_diff_pct, ddm_applies, ddm_signal,
                  pbv_ratio, pbv_is_bank, pbv_signal,
                  eps_next_5y_pct, eps_signal,
                  positive_signals, fiscal_year_used)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(ticker, valuation_date) DO UPDATE SET
                 price_at_date=excluded.price_at_date,
                 peg_value=excluded.peg_value, peg_signal=excluded.peg_signal,
@@ -383,6 +386,8 @@ def _run_ticker_valuation(ticker, sector='', shares_outstanding=None):
                 dcf_diff_vs_price=excluded.dcf_diff_vs_price, dcf_signal=excluded.dcf_signal,
                 dcf_operating_cf=excluded.dcf_operating_cf,
                 dcf_debt_ps=excluded.dcf_debt_ps, dcf_cash_ps=excluded.dcf_cash_ps,
+                dcf_growth_5y=excluded.dcf_growth_5y,
+                dcf_growth_6_10=excluded.dcf_growth_6_10, dcf_wacc=excluded.dcf_wacc,
                 ddm_intrinsic_value=excluded.ddm_intrinsic_value,
                 ddm_diff_vs_price=excluded.ddm_diff_vs_price, ddm_signal=excluded.ddm_signal,
                 pbv_ratio=excluded.pbv_ratio, pbv_signal=excluded.pbv_signal,
@@ -402,6 +407,8 @@ def _run_ticker_valuation(ticker, sector='', shares_outstanding=None):
             valuations.get('dcf_signal'),
             valuations.get('dcf_operating_cf'), valuations.get('dcf_debt_ps'),
             valuations.get('dcf_cash_ps'),
+            valuations.get('dcf_growth_5y'), valuations.get('dcf_growth_6_10'),
+            valuations.get('dcf_wacc'),
             valuations.get('ddm_intrinsic_value'), valuations.get('ddm_diff_vs_price'),
             valuations.get('ddm_diff_pct'), valuations.get('ddm_applies', 0),
             valuations.get('ddm_signal'),
