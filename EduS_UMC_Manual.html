@@ -157,7 +157,7 @@
     </div>
   </div>
   <div class="header-right" style="display:flex;align-items:center;gap:10px;">
-    <div class="version">Unified Market Context V3.1</div>
+    <div class="version">Unified Market Context V3.2</div>
     <button class="mobile-nav-toggle" aria-label="Menu" onclick="toggleMobileNav()">
       <span></span><span></span><span></span>
     </button>
@@ -195,17 +195,22 @@
     <a href="#sec5-ft" class="toc-h3">First-touch</a>
     <a href="#sec5-wilson" class="toc-h3">IC Wilson</a>
   </div>
-  <div class="toc-section"><a href="#sec6" class="toc-h2">6. Panel Flotante</a></div>
-  <div class="toc-section"><a href="#sec7" class="toc-h2">7. Propiedades</a></div>
-  <div class="toc-section"><a href="#sec8" class="toc-h2">8. Glosario de Cálculos</a></div>
-  <div class="toc-section"><a href="#sec9" class="toc-h2">9. Solución de Problemas</a></div>
+  <div class="toc-section">
+    <a href="#secgaps" class="toc-h2">6. Gaps</a>
+    <a href="#secgaps-det" class="toc-h3">Detección y colores</a>
+    <a href="#secgaps-metricas" class="toc-h3">Prob · Alcance · Resto</a>
+  </div>
+  <div class="toc-section"><a href="#sec6" class="toc-h2">7. Panel Flotante</a></div>
+  <div class="toc-section"><a href="#sec7" class="toc-h2">8. Propiedades</a></div>
+  <div class="toc-section"><a href="#sec8" class="toc-h2">9. Glosario de Cálculos</a></div>
+  <div class="toc-section"><a href="#sec9" class="toc-h2">10. Solución de Problemas</a></div>
 </nav>
 
 <div class="container">
 
 <div class="doc-title">
   <h1>EduS Unified Market Context</h1>
-  <div class="subtitle">NinjaTrader 8 &middot; V3.1 &middot; Niveles de referencia + motor estadístico de probabilidad de toque</div>
+  <div class="subtitle">NinjaTrader 8 &middot; V3.2 &middot; Niveles + motor estadístico + Gaps (RTH / Overnight) + panel flotante
 </div>
 
 <!-- ───── SEC 0 ───── -->
@@ -312,14 +317,15 @@ nivel abajo del open → <span class="kw">rango.Low ≤ nivel</span>
 <h3 id="sec3-capas">Capas adaptativas (● ◑ ○)</h3>
 <p>Si una banda angosta deja muy pocas muestras, el motor <strong>relaja</strong> progresivamente hasta juntar <code>Umbral Muestra Mínima</code>:</p>
 <table>
-  <thead><tr><th>Capa</th><th>Banda</th><th>AMT</th><th>Significa</th></tr></thead>
+  <thead><tr><th>Muestra</th><th>Banda</th><th>AMT</th><th>Significa</th></tr></thead>
   <tbody>
-    <tr><td><strong>● capa 0</strong></td><td>×1.0</td><td>Sí</td><td>Muestra fina (más exigente, más comparable).</td></tr>
-    <tr><td><strong>◑ capa 1</strong></td><td>×1.75</td><td>No</td><td>Muestra media.</td></tr>
-    <tr><td><strong>○ capa 2</strong></td><td>×3.0</td><td>No</td><td>Muestra amplia (más datos, menos específica).</td></tr>
+    <tr><td><strong>Fina</strong> (capa 0)</td><td>×1.0</td><td>Sí*</td><td>Muestra fina (más exigente, más comparable).</td></tr>
+    <tr><td><strong>Media</strong> (capa 1)</td><td>×1.75</td><td>No</td><td>Muestra media.</td></tr>
+    <tr><td><strong>Ampl</strong> (capa 2)</td><td>×3.0</td><td>No</td><td>Muestra amplia (más datos, menos específica).</td></tr>
   </tbody>
 </table>
-<p>El símbolo (● ◑ ○) en el panel/tabla indica qué capa se usó para ese nivel.</p>
+<p>La columna <strong>Muestra</strong> del panel (Fina / Media / Ampl) indica qué capa se usó para ese nivel.</p>
+<div class="card warn"><p><strong>* El filtro AMT solo se aplica en la capa Fina SI activás <code>Filtrar por Contexto AMT</code></strong> (viene apagado por defecto). Por eso, con la opción apagada, la capa Fina no usa AMT. El <strong>contexto AMT</strong> igual se muestra siempre en la cabecera del panel (línea <code>AMT: Open vs VA</code>).</p></div>
 </div>
 
 <!-- ───── SEC 4 ───── -->
@@ -367,14 +373,49 @@ nivel abajo del open → <span class="kw">rango.Low ≤ nivel</span>
 
 <h3>Columnas de distancia</h3>
 <ul>
-  <li><strong>Dist</strong> — distancia del nivel al Open RTH, en ticks (con signo).</li>
-  <li><strong>%ATR</strong> — esa distancia como fracción del rango diario actual: ¿es alcanzable hoy?</li>
+  <li><strong>Dist t</strong> — distancia del nivel al Open RTH, en ticks (con signo).</li>
+  <li><strong>× ATR</strong> — esa distancia como fracción del rango diario actual (cuántos "ATR" de distancia): ¿es alcanzable hoy? Se llama así para no confundir con el indicador ATR.</li>
 </ul>
 </div>
 
-<!-- ───── SEC 6 ───── -->
+<!-- ───── SEC 6 · GAPS ───── -->
+<div class="section" id="secgaps">
+<div class="section-header"><span class="num">SECCIÓN 6</span><h2>Gaps <span class="pill new">NUEVO</span></h2></div>
+<p>El UMC detecta y marca los <strong>gaps</strong> (saltos entre el cierre de la sesión regular previa y la apertura siguiente) y estima su <strong>probabilidad de relleno</strong> con tres métricas complementarias. Reemplaza al indicador <em>Institutional Gap Pro</em> (la lógica de VIX se descartó: no aportaba con datos de VIX no en vivo).</p>
+
+<h3 id="secgaps-det">Los dos gaps, detección y colores</h3>
+<p>Ambos se miden contra el <strong>cierre RTH previo</strong> y "se rellenan" cuando el precio vuelve a ese cierre.</p>
+<table>
+  <thead><tr><th>Gap</th><th>Apertura que compara</th><th>Colores en el chart</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Gap RTH</strong></td><td>Apertura de las <strong>9:30</strong> vs cierre RTH previo.</td><td>verde (↑) · rojo (↓) · dorado (INST)</td></tr>
+    <tr><td><strong>Gap Overnight (ON)</strong></td><td>Apertura Globex (<strong>~18:00</strong>) vs cierre RTH previo.</td><td>azul (↑) · violeta (↓) · celeste (INST)</td></tr>
+  </tbody>
+</table>
+<ul>
+  <li><strong>STD vs INST:</strong> STD = la apertura cae <strong>dentro</strong> del Área de Valor del RTH previo; INST (Gap&amp;Go) = <strong>fuera</strong>.</li>
+  <li>Cada gap dibuja un <strong>rectángulo</strong> (apertura → cierre) + etiqueta <code>RTH/ON GAP STD/INST | pts | Relleno % | fecha</code>.</li>
+  <li>Al rellenarse aparece <strong><code>✓ RTH/ON GAP FILLED</code></strong> y el gap <strong>sale del panel</strong> (queda visible solo en el chart).</li>
+  <li><code>Mínimo Gap (ticks)</code> filtra los gaps chicos. Si en el chart son muchos, subí ese valor.</li>
+</ul>
+
+<h3 id="secgaps-metricas">Las tres métricas de relleno</h3>
+<p>Cada una responde una pregunta distinta — por eso pueden diferir:</p>
+<div class="card info">
+  <ul>
+    <li><strong>Prob (IC95)</strong> — tasa de relleno histórica <strong>por TAMAÑO</strong> del gap ("gaps de este tamaño se rellenan X%"). Un gap chico se rellena fácil (% alto); uno grande, difícil (% bajo). <strong>No depende</strong> de la distancia al precio actual, por eso un gap chico más arriba puede tener mayor % que uno grande más abajo.</li>
+    <li><strong>Alcance</strong> — prob. de <strong>llegar al cierre del gap desde lo que el precio ya recorrió hoy</strong>. Es <strong>monótona</strong>: el gap más cercano siempre tiene ≥ alcance que el más lejano (responde "¿llega desde acá?").</li>
+    <li><strong>Resto</strong> — prob. de rellenar <strong>en lo que queda del día</strong>, condicionada a que aún no se rellenó a esta hora (solo Gap RTH, durante el RTH).</li>
+  </ul>
+</div>
+<div class="card warn"><p>El <strong>Alcance</strong> es la métrica que resuelve la intuición "si tengo que pasar por el nivel de abajo, ese debería ser más probable". La <strong>Prob por tamaño</strong> es la estadística clásica de gap-fill, pero mide otra cosa (el tamaño, no la distancia desde acá).</p></div>
+
+<p>Estas métricas también están disponibles para los <strong>niveles del día</strong> en el panel (columnas Prob, Resto y Alcance). Las tres se calculan de datos que el UMC ya guarda → sin recargar el chart.</p>
+</div>
+
+<!-- ───── SEC 7 · PANEL ───── -->
 <div class="section" id="sec6">
-<div class="section-header"><span class="num">SECCIÓN 6</span><h2>Panel Flotante <span class="pill new">V3.1</span></h2></div>
+<div class="section-header"><span class="num">SECCIÓN 7</span><h2>Panel Flotante <span class="pill new">V3.1</span></h2></div>
 <p>Una ventana <strong>fuera del chart</strong>, estilo EduS (navy/dorado), con más espacio para todas las variables. Se activa con <code>Panel Flotante = true</code> (grupo 9). La tabla del chart sigue funcionando aparte.</p>
 
 <div class="panelmock">
@@ -385,11 +426,12 @@ nivel abajo del open → <span class="kw">rango.Low ≤ nivel</span>
   <div class="mut">Open &gt; VA ↑</div>
   <div class="pm-y">First-touch: ↑ 58%  ↓ 42% (n=64)</div>
   <table>
-    <tr class="mut"><td>↕</td><td>Nivel</td><td>Precio</td><td>Dist</td><td>%ATR</td><td>Prob (IC95)</td><td>Resto</td><td>n</td></tr>
-    <tr><td class="pm-g">▲</td><td>Y-High</td><td>7,648</td><td>+34t</td><td>0.40</td><td class="pm-g">71% (64-77)</td><td class="pm-g">42%</td><td>180</td></tr>
-    <tr class="open"><td>◆</td><td>Open RTH</td><td>7,614</td><td>+0t</td><td>0.00</td><td>—</td><td>—</td><td>—</td></tr>
-    <tr class="hit"><td>▼</td><td>Y-Low</td><td>7,580</td><td>-34t</td><td>0.40</td><td>68% ✓</td><td>✓</td><td>175</td></tr>
+    <tr class="mut"><td>↕</td><td>Nivel</td><td>Precio</td><td>Dist t</td><td>× ATR</td><td>Prob (IC95)</td><td>Resto</td><td>n</td><td>Muestra</td></tr>
+    <tr><td class="pm-g">▲</td><td>Y-High</td><td>7,648</td><td>+34t</td><td>0.40</td><td class="pm-g">71% (64-77)</td><td class="pm-g">42%</td><td>180</td><td>Fina</td></tr>
+    <tr class="open"><td>◆</td><td>Open RTH</td><td>7,614</td><td>+0t</td><td>0.00</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+    <tr class="hit"><td>▼</td><td>Y-Low</td><td>7,580</td><td>-34t</td><td>0.40</td><td>68% ✓</td><td>✓</td><td>175</td><td>Media</td></tr>
   </table>
+  <div class="mut" style="font-size:10px;margin-top:6px;line-height:1.4">Dist t = ticks al Open · × ATR = dist ÷ rango diario · IC95 = rango probable (95%) · Resto = prob. de tocar en lo que falta · Muestra = Fina/Media/Ampl</div>
   <div class="ttl" style="text-align:right">edustrader.com</div>
 </div>
 
@@ -399,7 +441,10 @@ nivel abajo del open → <span class="kw">rango.Low ≤ nivel</span>
   <li><strong>◆ Open RTH</strong> resaltado en dorado = el <strong>punto cero</strong>.</li>
   <li><strong>Filas verdes</strong> = niveles <strong>ya tocados hoy</strong> (✓).</li>
   <li><strong>Barra de color</strong> a la izquierda de cada fila = el color del nivel en el chart.</li>
-  <li><strong>● ◑ ○</strong> = capa de muestra usada.</li>
+  <li><strong>Muestra</strong> (Fina / Media / Ampl) = cuán comparable fue la muestra usada para ese nivel.</li>
+  <li><strong>Resto</strong> (condicional por tiempo) y <strong>Alcance</strong> (condicional por recorrido, monótona) acompañan a la <strong>Prob</strong> tanto en los niveles como en los gaps. Ver <a href="#secgaps-metricas">Sección 6</a> para la diferencia entre las tres.</li>
+  <li>Abajo de la tabla de niveles está la sección <strong>GAPs PENDIENTES</strong> (Tipo, Fecha, Dir, Rango de precio, Pts, Prob, Alcance, Resto).</li>
+  <li>Al pie del panel hay una <strong>leyenda</strong> que aclara todas las abreviaturas.</li>
 </ul>
 <div class="card">
   <div class="card-title">Ventana</div>
@@ -409,7 +454,7 @@ nivel abajo del open → <span class="kw">rango.Low ≤ nivel</span>
 
 <!-- ───── SEC 7 ───── -->
 <div class="section" id="sec7">
-<div class="section-header"><span class="num">SECCIÓN 7</span><h2>Propiedades</h2></div>
+<div class="section-header"><span class="num">SECCIÓN 8</span><h2>Propiedades</h2></div>
 
 <h3>6. Probabilidad</h3>
 <table>
@@ -441,18 +486,28 @@ nivel abajo del open → <span class="kw">rango.Low ≤ nivel</span>
   </tbody>
 </table>
 
+<h3>10. Gaps</h3>
+<table>
+  <thead><tr><th>Propiedad</th><th>Default</th><th>Qué hace</th></tr></thead>
+  <tbody>
+    <tr><td><code>Mostrar Gap RTH (9:30)</code></td><td>true</td><td>Detecta y marca el gap de la sesión regular.</td></tr>
+    <tr><td><code>Mostrar Gap Overnight (Globex)</code></td><td>true</td><td>Detecta y marca el gap del overnight.</td></tr>
+    <tr><td><code>Mínimo Gap (ticks)</code></td><td>12</td><td>Tamaño mínimo para marcar un gap.</td></tr>
+  </tbody>
+</table>
+
 <p class="sub">Otros grupos: <strong>1. Horarios</strong> (RTH, Globex, ORB), <strong>2. Visual</strong>, <strong>3. Niveles Históricos</strong>, <strong>4. Horarios Globales</strong>, <strong>5. Market Profile</strong> (Value Area %, perfiles), <strong>7. Visual Badge</strong>, <strong>8. Tabla</strong> (la tabla del chart).</p>
 </div>
 
 <!-- ───── SEC 8 ───── -->
 <div class="section" id="sec8">
-<div class="section-header"><span class="num">SECCIÓN 8</span><h2>Glosario de Cálculos</h2></div>
+<div class="section-header"><span class="num">SECCIÓN 9</span><h2>Glosario de Cálculos</h2></div>
 
 <h4>Distancia al open</h4>
 <div class="formula">dist_ticks = (nivel − OpenRTH) / TickSize</div>
 
-<h4>%ATR (alcanzabilidad)</h4>
-<div class="formula">%ATR = |dist_ticks| / ATR_ticks &nbsp;&nbsp; ; &nbsp; ATR_ticks = (RTH_High − RTH_Low) / TickSize</div>
+<h4>× ATR (alcanzabilidad) — en el panel</h4>
+<div class="formula">× ATR = |dist_ticks| / ATR_ticks &nbsp;&nbsp; ; &nbsp; ATR_ticks = (RTH_High − RTH_Low) / TickSize</div>
 
 <h4>Banda de comparación</h4>
 <div class="formula">banda = Max( BandaBase × multCapa , |dist_hoy| × BandPct/100 )</div>
@@ -493,6 +548,21 @@ margen = z·√( p(1−p)/n + z²/4n² ) / (1 + z²/n)<br>
 IC = [ centro − margen , centro + margen ]
 </div>
 
+<h4>Alcance (reachability condicional)</h4>
+<div class="formula">
+excReq    = | nivel − apertura |        &nbsp;(excursión necesaria desde la apertura)<br>
+excHoy    = excursión ya recorrida hoy en esa dirección<br>
+base      = sesiones con excursión ≥ excHoy<br>
+Alcance   = (sesiones con excursión ≥ excReq) / base
+</div>
+<p class="sub">Es monótona: a mayor distancia (excReq), menor Alcance. Aplica a niveles y a gaps (donde "nivel" = el cierre del gap).</p>
+
+<h4>Gap — relleno por tamaño (Prob)</h4>
+<div class="formula">
+comparables = sesiones con un gap de tamaño similar (cualquier dirección)<br>
+Prob = (de esas, las que volvieron a su cierre) / comparables
+</div>
+
 <h4>Términos</h4>
 <table>
   <thead><tr><th>Término</th><th>Significado</th></tr></thead>
@@ -510,7 +580,7 @@ IC = [ centro − margen , centro + margen ]
 
 <!-- ───── SEC 9 ───── -->
 <div class="section" id="sec9">
-<div class="section-header"><span class="num">SECCIÓN 9</span><h2>Solución de Problemas</h2></div>
+<div class="section-header"><span class="num">SECCIÓN 10</span><h2>Solución de Problemas</h2></div>
 
 <div class="card warn">
   <div class="card-title">Las probabilidades muestran "—" o muy pocos %</div>
@@ -528,9 +598,13 @@ IC = [ centro − margen , centro + margen ]
   <div class="card-title">El panel flotante no aparece</div>
   <p>Aparece en <strong>tiempo real</strong>, con <code>Panel Flotante = true</code> y el indicador en un chart. Si lo movió fuera de pantalla, borrá <code>…\incoming\EduS_UMCPanelPos_*.txt</code> y recargá.</p>
 </div>
+<div class="card warn">
+  <div class="card-title">Un gap más lejano tiene mayor "Prob" que uno más cercano</div>
+  <p>No es un error: la <strong>Prob es por TAMAÑO</strong> (gaps chicos se rellenan más que los grandes), no por distancia desde el precio actual. Para "¿llega desde acá?" mirá la columna <strong>Alcance</strong>, que sí es monótona (el más cercano ≥ el más lejano). Ver <a href="#secgaps-metricas">Sección 6</a>.</p>
+</div>
 <div class="card info">
   <div class="card-title">Recomendación de uso</div>
-  <p>Las stats son más representativas <strong>en vivo, en horario de mercado</strong> (el segmento, el Open y los toques se actualizan). Los niveles de <strong>perfil</strong> (POC/VA) varían un poco según el marco de barras; los de <strong>precio puro</strong> (Y-High/Low, Pre-H/L) son consistentes.</p>
+  <p>Las stats son más representativas <strong>en vivo, en horario de mercado</strong> (el segmento, el Open, el Resto y el Alcance se actualizan). Los niveles de <strong>perfil</strong> (POC/VA) varían un poco según el marco de barras; los de <strong>precio puro</strong> (Y-High/Low, Pre-H/L) son consistentes.</p>
 </div>
 </div>
 
@@ -538,8 +612,8 @@ IC = [ centro − margen , centro + margen ]
 </div><!-- /layout -->
 
 <div class="footer">
-  <span style="font-family:'DM Sans',sans-serif;font-weight:700;">Edu<span class="gold">S</span> Trader</span> &middot; Unified Market Context V3.1 — Manual &middot; Junio 2026<br>
-  NinjaTrader 8 &middot; Niveles de referencia + motor estadístico de probabilidad de toque + panel flotante
+  <span style="font-family:'DM Sans',sans-serif;font-weight:700;">Edu<span class="gold">S</span> Trader</span> &middot; Unified Market Context V3.2 — Manual &middot; Junio 2026<br>
+  NinjaTrader 8 &middot; Niveles + motor estadístico (toque / Resto / Alcance) + Gaps (RTH y Overnight) + panel flotante
 </div>
 
 <script>
