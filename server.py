@@ -1180,7 +1180,7 @@ def api_inv_valuations():
         """, (ticker, f"-{days} days"))
         
         latest = database_inversiones.execute_query("""
-            SELECT v.*, t.name, t.sector, t.last_price, t.week_52_high, t.week_52_low
+            SELECT v.*, t.name, t.sector, t.last_price, t.price_change_pct, t.week_52_high, t.week_52_low
             FROM inv_valuations v JOIN inv_tickers t ON t.ticker = v.ticker
             WHERE v.ticker = ? ORDER BY v.valuation_date DESC LIMIT 1
         """, (ticker,), fetch='one')

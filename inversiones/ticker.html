@@ -33,9 +33,9 @@
             <div>
                 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
                     <h2 style="font-size: 2.5rem; margin: 0; line-height: 1;">
-                        <a id="t-symbol" style="color: inherit; text-decoration: none; border-bottom: 1px dashed var(--inv-text-secondary);" target="_blank">--</a>
+                        <span id="t-symbol" style="font-weight: 700;">--</span>
                     </h2>
-                    <span id="t-name" class="text-muted" style="font-size: 1.25rem;">--</span>
+                    <a id="t-name" class="text-muted" style="font-size: 1.25rem; color: inherit; text-decoration: none; border-bottom: 1px dashed var(--inv-text-secondary);" target="_blank">--</a>
                 </div>
                 <div class="text-sm text-muted" id="t-sector">Sector / Industria</div>
             </div>
@@ -225,8 +225,17 @@
                     
                     // Cabecera
                     document.getElementById('t-symbol').textContent = l.ticker;
-                    document.getElementById('t-symbol').href = `https://finance.yahoo.com/quote/${l.ticker}/`;
                     document.getElementById('t-name').textContent = l.name || '';
+                    document.getElementById('t-name').href = `https://finance.yahoo.com/quote/${l.ticker}/`;
+                    document.getElementById('t-name').style.cursor = 'pointer';
+                    // Ticker change
+                    if (l.price_change_pct != null) {
+                        const chg = l.price_change_pct;
+                        const sign = chg >= 0 ? '+' : '';
+                        const color = chg >= 0 ? 'var(--signal-subvalorada)' : 'var(--signal-sobrevalorada)';
+                        document.getElementById('t-change').textContent = `${sign}${chg.toFixed(2)}%`;
+                        document.getElementById('t-change').style.color = color;
+                    }
                     document.getElementById('t-sector').textContent = `${l.sector || 'N/A'}`;
                     document.getElementById('t-price').textContent = formatMoney(l.last_price);
                     
