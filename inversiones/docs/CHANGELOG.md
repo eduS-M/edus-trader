@@ -162,6 +162,38 @@ Formato: `[FECHA] — Descripción — Archivos afectados`
 
 **Recálculo completo BD:** 49 tickers reprocesados con nueva metodología DCF (commit aparte).
 
+### CAMBIO 24: WACC real calculado vía CAPM + costo deuda efectivo ✅
+
+**Antes:** WACC fijo 10% para todos los tickers.
+
+**Ahora:** WACC dinámico por ticker:
+```
+WACC = (E/V) × Re + (D/V) × Rd × (1 - Tax Rate)
+```
+Donde:
+- **Re** (Costo Equity) = Risk-Free Rate (4.5%) + Beta × Equity Risk Premium (5.5%)
+- **Rd** (Costo Deuda) = Interest Expense / Total Debt (default 5%)
+- **Tax Rate** = Income Tax Expense / Income Before Tax (default 21%)
+- **E** = Market Cap (Price × Shares)
+- **D** = Short-term Debt + Long-term Debt
+
+**Campos nuevos:**
+| Campo | Fuente |
+|-------|--------|
+| `beta` | `stock.info.beta` |
+| `interest_expense` | Income Statement |
+| `income_tax_expense` | Income Statement |
+| `income_before_tax` | Income Statement |
+| `market_cap` | `stock.info.marketCap` |
+
+**Ejemplos WACC:** AAPL=10.34%, MSFT=10.41%, NVDA=16.58%, MCD=5.80%, BRK-B=7.38%
+**Archivos:** `config.py`, `fetch_data.py`, `calculate.py`, `ticker.html`
+
+### CAMBIO 25: Recálculo completo BD con WACC real
+
+- **49 tickers** reprocesados con WACC dinámico
+- Fallback a 10% si no hay beta (PBR, PHYS, SPCX, ETFs)
+
 - **Antes:** El ticker-símbolo (`#t-symbol`) era un `<a>` linkeando a Yahoo Finance
 - **Después:** El nombre de empresa (`#t-name`) es ahora un `<a>` con target blank; el símbolo es un `<span>` plano
 - **Archivos:** `inversiones/ticker.html` (líneas 36-38)

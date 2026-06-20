@@ -213,6 +213,11 @@ def fetch_financials_fmp(ticker):
         'book_value_per_share': None,
         'shares_outstanding': None,
         'ttm_net_income': None,
+        'interest_expense': None,
+        'income_tax_expense': None,
+        'income_before_tax': None,
+        'beta': None,
+        'market_cap': None,
         'error': None
     }
 
@@ -256,9 +261,15 @@ def fetch_financials_fmp(ticker):
         result['total_goodwill'] = get_val(bs, ['Goodwill']) or 0
         result['total_intangibles'] = get_val(bs, ['Other Intangible Assets', 'Intangible Assets']) or 0
 
+        result['interest_expense'] = get_val(inc, ['Interest Expense', 'Interest Expense Non Operating']) or 0
+        result['income_tax_expense'] = get_val(inc, ['Tax Provision', 'Income Tax Expense', 'Income Tax']) or 0
+        result['income_before_tax'] = get_val(inc, ['Income Before Tax', 'Pretax Income', 'Income Before Tax Expense'])
+
         info = stock.info
         result['shares_outstanding'] = info.get('sharesOutstanding')
         result['book_value_per_share'] = info.get('bookValue')
+        result['beta'] = info.get('beta')
+        result['market_cap'] = info.get('marketCap')
 
         # TTM Net Income (suma últimos 4 trimestres)
         try:

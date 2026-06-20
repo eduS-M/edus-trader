@@ -448,7 +448,7 @@ Réplica exacta del Excel `Calculo Flujo de Caja Descontado.xlsx`.
 | C14 | `eps_next_5y_pct` | Growth años 1-5 |
 | C15 | `min(eps_next_5y_pct, 0.15)` | Growth años 6-10 (tope 15%) |
 | C16 | `shares_outstanding` | Acciones en circulación |
-| C17 | 0.10 (WACC) | Tasa de descuento |
+| C17 | WACC calculado dinámicamente | Tasa de descuento (ver WACC) |
 
 **Señal:**
 | diff% | Señal |
@@ -457,6 +457,37 @@ Réplica exacta del Excel `Calculo Flujo de Caja Descontado.xlsx`.
 | ≥ 0 | Sobrevalorada 🔴 |
 
 **Ubicación del código:** `calculate.py:calculate_dcf()`
+
+### 8E. WACC — Costo Promedio Ponderado de Capital
+
+Se calcula dinámicamente por ticker usando CAPM:
+
+```
+WACC = (E/V) × Re + (D/V) × Rd × (1 - T)
+```
+
+**Componentes:**
+
+| Variable | Fórmula | Fuente | Default |
+|----------|---------|--------|---------|
+| **Rf** (Risk-Free) | 10yr Treasury Yield | `config.RISK_FREE_RATE` | 4.5% |
+| **β** (Beta) | Beta de la acción | `stock.info.beta` | — |
+| **ERP** (Equity Risk Premium) | Prima de mercado | `config.EQUITY_RISK_PREMIUM` | 5.5% |
+| **Re** (Costo Equity) | Rf + β × ERP | Calculado | — |
+| **Rd** (Costo Deuda pre-tax) | Interest Expense / Total Debt | Income Statement | 5% |
+| **T** (Tasa Impositiva) | Income Tax / Income Before Tax | Income Statement | 21% |
+| **E** (Market Cap) | Price × Shares Outstanding | `stock.info.marketCap` | — |
+| **D** (Total Debt) | Short-term + Long-term Debt | Balance Sheet | — |
+
+**Ejemplos:**
+| Ticker | Beta | WACC | Fuente |
+|--------|------|------|--------|
+| AAPL | 1.09 | 10.34% | CAPM calculado |
+| NVDA | 2.02 | 16.58% | CAPM calculado |
+| MCD | 0.67 | 5.80% | CAPM calculado |
+| PBR | — | 10.00% | Fallback (sin beta) |
+
+**Ubicación del código:** `calculate.py:calculate_wacc()`
 
 ### 8E. Cálculo actual (vía fetcher, importado en server.py)
 

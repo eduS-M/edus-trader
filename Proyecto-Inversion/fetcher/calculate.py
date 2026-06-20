@@ -8,6 +8,7 @@ Replica exactamente la lógica de la hoja "M2 DE VALORACION ACCIONES" del Excel.
 import math
 from config import (
     DISCOUNT_RATE, DCF_PROJECTION_YEARS, TERMINAL_GROWTH_RATE,
+    RISK_FREE_RATE, EQUITY_RISK_PREMIUM, DEFAULT_COST_OF_DEBT,
     PEG_SUBVALORADA, PEG_INVERTIBLE, PBV_THRESHOLD_NORMAL,
     PBV_THRESHOLD_BANK, BANKING_SECTORS, EPS_GROWTH_THRESHOLD
 )
@@ -67,6 +68,88 @@ def calculate_quick_check(pe_ratio, eps_growth_next_5y):
 
 
 # ============================================================
+# WACC — Costo Promedio Ponderado de Capital
+# ============================================================
+
+def calculate_wacc(
+    market_cap,
+    total_debt,
+    beta=None,
+    interest_expense=None,
+    income_tax_expense=None,
+    income_before_tax=None,
+    risk_free_rate=RISK_FREE_RATE,
+    equity_risk_premium=EQUITY_RISK_PREMIUM,
+    default_cost_of_debt=DEFAULT_COST_OF_DEBT
+):
+    """
+    Calcula el WACC real usando CAPM para costo de equity
+    y tasa efectiva de interés para costo de deuda.
+    
+    Returns:
+        float: WACC como decimal (ej: 0.1045 = 10.45%)
+        dict: desglose de componentes
+    """
+    details = {
+        'risk_free_rate': risk_free_rate,
+        'equity_risk_premium': equity_risk_premium,
+        'beta': beta,
+        'cost_of_equity': None,
+        'pre_tax_cost_of_debt': default_cost_of_debt,
+        'effective_tax_rate': None,
+        'after_tax_cost_of_debt': None,
+        'equity_weight': None,
+        'debt_weight': None,
+        'wacc': DISCOUNT_RATE,
+        'wacc_source': 'default'
+    }
+
+    # Cost of Equity via CAPM
+    if beta and beta > 0:
+        cost_of_equity = risk_free_rate + beta * equity_risk_premium
+        details['cost_of_equity'] = round(cost_of_equity, 4)
+    else:
+        details['cost_of_equity'] = DISCOUNT_RATE
+        details['wacc_source'] = 'no_beta'
+        return DISCOUNT_RATE, details
+
+    # Cost of Debt
+    pre_tax_cost_of_debt = default_cost_of_debt
+    if interest_expense and interest_expense > 0 and total_debt and total_debt > 0:
+        pre_tax_cost_of_debt = interest_expense / total_debt
+    details['pre_tax_cost_of_debt'] = round(pre_tax_cost_of_debt, 4)
+
+    # Effective Tax Rate
+    effective_tax_rate = 0.21  # statutory US corporate
+    if income_tax_expense and income_before_tax and income_before_tax > 0:
+        etr = income_tax_expense / income_before_tax
+        if 0 < etr < 0.5:  # sanity check
+            effective_tax_rate = etr
+    details['effective_tax_rate'] = round(effective_tax_rate, 4)
+
+    after_tax_cost_of_debt = pre_tax_cost_of_debt * (1 - effective_tax_rate)
+    details['after_tax_cost_of_debt'] = round(after_tax_cost_of_debt, 4)
+
+    # Weights
+    total_value = (market_cap or 0) + (total_debt or 0)
+    if total_value <= 0:
+        details['wacc_source'] = 'no_value'
+        return DISCOUNT_RATE, details
+
+    e_weight = (market_cap or 0) / total_value
+    d_weight = (total_debt or 0) / total_value
+    details['equity_weight'] = round(e_weight, 4)
+    details['debt_weight'] = round(d_weight, 4)
+
+    wacc = e_weight * cost_of_equity + d_weight * after_tax_cost_of_debt
+    wacc = max(wacc, 0.05)  # floor 5%
+    details['wacc'] = round(wacc, 4)
+    details['wacc_source'] = 'calculated'
+
+    return round(wacc, 4), details
+
+
+# ============================================================
 # MÉTODO 2: Flujo de Caja Descontado (DCF)
 # ============================================================
 
@@ -105,7 +188,8 @@ def calculate_dcf(
         'dcf_cash_ps': None,
         'dcf_growth_5y': eps_growth_rate,
         'dcf_growth_6_10': None,
-        'dcf_wacc': discount_rate
+        'dcf_wacc': discount_rate,
+        'dcf_wacc_details': None
     }
 
     if not operating_cash_flow or not eps_growth_rate or not shares_outstanding:
@@ -354,6 +438,11 @@ def calculate_all_valuations(ticker_data, financial_data, price):
     short_debt = financial_data.get('short_term_debt')
     long_debt = financial_data.get('long_term_debt')
     cash_inv = financial_data.get('cash_and_investments')
+    interest_exp = financial_data.get('interest_expense')
+    income_tax = financial_data.get('income_tax_expense')
+    income_bt = financial_data.get('income_before_tax')
+    beta_val = financial_data.get('beta')
+    market_cap = financial_data.get('market_cap')
 
     # Calcular cada método
     qc = calculate_quick_check(
@@ -364,6 +453,17 @@ def calculate_all_valuations(ticker_data, financial_data, price):
     if peg_yahoo and peg_yahoo > 0:
         qc['peg_yahoo_value'] = round(peg_yahoo, 4)
 
+    # WACC real
+    total_debt = (short_debt or 0) + (long_debt or 0)
+    wacc, wacc_details = calculate_wacc(
+        market_cap=market_cap or (price * shares) if price and shares else None,
+        total_debt=total_debt,
+        beta=beta_val,
+        interest_expense=interest_exp,
+        income_tax_expense=income_tax,
+        income_before_tax=income_bt
+    )
+
     dcf = calculate_dcf(
         operating_cash_flow=operating_cf,
         eps_growth_rate=eps_growth,
@@ -371,8 +471,10 @@ def calculate_all_valuations(ticker_data, financial_data, price):
         current_price=price,
         short_term_debt=short_debt,
         long_term_debt=long_debt,
-        cash_and_investments=cash_inv
+        cash_and_investments=cash_inv,
+        discount_rate=wacc
     )
+    dcf['dcf_wacc_details'] = wacc_details
 
     ddm = calculate_ddm(
         net_income=net_income,
@@ -426,6 +528,7 @@ def calculate_all_valuations(ticker_data, financial_data, price):
         'dcf_growth_5y': dcf.get('dcf_growth_5y'),
         'dcf_growth_6_10': dcf.get('dcf_growth_6_10'),
         'dcf_wacc': dcf.get('dcf_wacc'),
+        'dcf_wacc_details': dcf.get('dcf_wacc_details'),
         # Método 3
         'ddm_intrinsic_value': ddm.get('ddm_intrinsic_value'),
         'ddm_diff_vs_price': ddm.get('ddm_diff_vs_price'),
