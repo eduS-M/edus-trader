@@ -162,6 +162,13 @@ def init_db():
         except Exception:
             pass
 
+        # Migración: columnas DCF detalle
+        for col in ['dcf_operating_cf', 'dcf_debt_ps', 'dcf_cash_ps']:
+            try:
+                cursor.execute(f"ALTER TABLE inv_valuations ADD COLUMN {col} REAL")
+            except Exception:
+                pass
+
         # 5. INV_PRICE_HISTORY
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS inv_price_history (

@@ -153,6 +153,9 @@ def _run_historical_valuations(ticker, sector=''):
         tl = fval(bs, ['Total Liabilities Net Minority Interest', 'TotalLiabilities'])
         share_count = info.get('sharesOutstanding') or fval(bs, ['Ordinary Shares Number', 'Share Issued'])
         eps_val = fval(inc, ['Diluted EPS', 'Basic EPS', 'EpsDiluted'])
+        short_debt = fval(bs, ['Current Debt And Capital Lease Obligation', 'Current Debt', 'Short Long Term Debt']) or 0
+        long_debt = fval(bs, ['Long Term Debt And Capital Lease Obligation', 'Long Term Debt']) or 0
+        cash_val = fval(bs, ['Cash Cash Equivalents And Short Term Investments', 'Cash And Cash Equivalents']) or 0
 
         # PEG
         pe_ratio = (close_price / eps_val) if eps_val and eps_val > 0 else None
@@ -161,21 +164,28 @@ def _run_historical_valuations(ticker, sector=''):
             peg_v = round(pe_ratio / (eps_growth * 100), 4)
             peg_s = 'subvalorada' if peg_v < 1 else ('invertible' if peg_v <= 2 else 'sobrevalorada')
 
-        # DCF
+        # DCF (Excel: sin valor terminal, con ajuste deuda/caja)
         dcf_v, dcf_d, dcf_s = None, None, 'n/a'
+        dcf_ocf, dcf_debt_ps, dcf_cash_ps = None, None, None
         if ocf and ocf > 0 and share_count and share_count > 0 and eps_growth > 0:
             wacc = 0.10
             pv_sum = 0.0
             proj = float(ocf)
+            growth_6_10 = min(eps_growth, 0.15) if eps_growth > 0.15 else eps_growth
             for yr in range(1, 11):
-                g = min(eps_growth, 0.15) if yr > 5 and eps_growth > 0.15 else eps_growth
+                g = growth_6_10 if yr > 5 else eps_growth
                 proj *= (1 + g)
                 pv_sum += proj / ((1 + wacc) ** yr)
-            tv = proj * 1.03 / (wacc - 0.03)
-            pv_sum += tv / ((1 + wacc) ** 10)
-            dcf_v = round(pv_sum / float(share_count), 4)
-            dcf_d = round(dcf_v - close_price, 4)
-            dcf_s = 'subvalorada' if dcf_d > 0 else 'sobrevalorada'
+            ev_share = pv_sum / float(share_count)
+            total_debt = short_debt + long_debt
+            debt_ps = total_debt / float(share_count)
+            cash_ps = cash_val / float(share_count)
+            dcf_v = round(ev_share - debt_ps + cash_ps, 4)
+            dcf_d = round(close_price - dcf_v, 4)
+            dcf_s = 'subvalorada' if dcf_d < 0 else 'sobrevalorada'
+            dcf_ocf = round(float(ocf), 2)
+            dcf_debt_ps = round(debt_ps, 4)
+            dcf_cash_ps = round(cash_ps, 4)
 
         # PBV
         pbv_v, pbv_s = None, 'n/a'
@@ -200,6 +210,7 @@ def _run_historical_valuations(ticker, sector=''):
             None, None, None, None, None,
             dcf_v, dcf_d, (round(dcf_d / close_price, 4) if dcf_d is not None and close_price > 0 else None),
             1 if dcf_v else 0, dcf_s,
+            dcf_ocf, dcf_debt_ps, dcf_cash_ps,
             None, None, None, 0, 'n/a',
             pbv_v, 0, pbv_s,
             eps_growth, 'n/a',
@@ -216,11 +227,12 @@ def _run_historical_valuations(ticker, sector=''):
                          peg_value, peg_eps_growth, peg_pe_used, peg_signal, peg_yahoo_value,
                          ttm_net_income, eps_ttm, pe_ratio_ttm, growth_revenue_pct, growth_source,
                          dcf_intrinsic_value, dcf_diff_vs_price, dcf_diff_pct, dcf_applies, dcf_signal,
+                         dcf_operating_cf, dcf_debt_ps, dcf_cash_ps,
                          ddm_intrinsic_value, ddm_diff_vs_price, ddm_diff_pct, ddm_applies, ddm_signal,
                          pbv_ratio, pbv_is_bank, pbv_signal,
                          eps_next_5y_pct, eps_signal,
                          positive_signals, fiscal_year_used)
-                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                 """, vals)
             conn.close()
             print(f'[server] {len(vals)} valoraciones hist\xf3ricas guardadas para {ticker}')
@@ -354,11 +366,12 @@ def _run_ticker_valuation(ticker, sector='', shares_outstanding=None):
                  peg_value, peg_eps_growth, peg_pe_used, peg_signal, peg_yahoo_value,
                  ttm_net_income, eps_ttm, pe_ratio_ttm, growth_revenue_pct, growth_source,
                  dcf_intrinsic_value, dcf_diff_vs_price, dcf_diff_pct, dcf_applies, dcf_signal,
+                 dcf_operating_cf, dcf_debt_ps, dcf_cash_ps,
                  ddm_intrinsic_value, ddm_diff_vs_price, ddm_diff_pct, ddm_applies, ddm_signal,
                  pbv_ratio, pbv_is_bank, pbv_signal,
                  eps_next_5y_pct, eps_signal,
                  positive_signals, fiscal_year_used)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(ticker, valuation_date) DO UPDATE SET
                 price_at_date=excluded.price_at_date,
                 peg_value=excluded.peg_value, peg_signal=excluded.peg_signal,
@@ -368,6 +381,8 @@ def _run_ticker_valuation(ticker, sector='', shares_outstanding=None):
                 growth_revenue_pct=excluded.growth_revenue_pct, growth_source=excluded.growth_source,
                 dcf_intrinsic_value=excluded.dcf_intrinsic_value,
                 dcf_diff_vs_price=excluded.dcf_diff_vs_price, dcf_signal=excluded.dcf_signal,
+                dcf_operating_cf=excluded.dcf_operating_cf,
+                dcf_debt_ps=excluded.dcf_debt_ps, dcf_cash_ps=excluded.dcf_cash_ps,
                 ddm_intrinsic_value=excluded.ddm_intrinsic_value,
                 ddm_diff_vs_price=excluded.ddm_diff_vs_price, ddm_signal=excluded.ddm_signal,
                 pbv_ratio=excluded.pbv_ratio, pbv_signal=excluded.pbv_signal,
@@ -385,6 +400,8 @@ def _run_ticker_valuation(ticker, sector='', shares_outstanding=None):
             valuations.get('dcf_intrinsic_value'), valuations.get('dcf_diff_vs_price'),
             valuations.get('dcf_diff_pct'), valuations.get('dcf_applies', 0),
             valuations.get('dcf_signal'),
+            valuations.get('dcf_operating_cf'), valuations.get('dcf_debt_ps'),
+            valuations.get('dcf_cash_ps'),
             valuations.get('ddm_intrinsic_value'), valuations.get('ddm_diff_vs_price'),
             valuations.get('ddm_diff_pct'), valuations.get('ddm_applies', 0),
             valuations.get('ddm_signal'),

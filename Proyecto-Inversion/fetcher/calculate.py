@@ -75,25 +75,23 @@ def calculate_dcf(
     eps_growth_rate,
     shares_outstanding,
     current_price,
+    short_term_debt=0,
+    long_term_debt=0,
+    cash_and_investments=0,
     discount_rate=DISCOUNT_RATE,
-    years=DCF_PROJECTION_YEARS,
-    terminal_growth=TERMINAL_GROWTH_RATE
+    years=DCF_PROJECTION_YEARS
 ):
     """
     Descuenta los flujos de caja operativos proyectados a 10 años.
-    Replica la fórmula del Excel columna por columna.
-    
-    Args:
-        operating_cash_flow: FCO del último año fiscal (en millones o miles)
-        eps_growth_rate: Tasa de crecimiento anual (decimal, ej: 0.15)
-        shares_outstanding: Acciones en circulación (misma unidad que FCO)
-        current_price: Precio actual del mercado
-        discount_rate: WACC/tasa de descuento (default 10%)
-        years: Años de proyección (default 10)
-        terminal_growth: Crecimiento terminal (default 3%)
+    Réplica exacta del Excel "Calculo Flujo de Caja Descontado.xlsx":
+      - 10 años de proyección (sin valor terminal)
+      - Años 1-5: growth = eps_growth_rate
+      - Años 6-10: growth = min(eps_growth_rate, 0.15)
+      - Valor intrínseco = (Sum PV / Shares) - Debt/Share + Cash/Share
+      - Diferencia % = (Precio - Intrínseco) / Precio  (positivo = sobrevalorado)
     
     Returns:
-        dict con valor intrínseco, diferencia y señal
+        dict con valor intrínseco, diferencia, señal y datos usados
     """
     result = {
         'dcf_intrinsic_value': None,
@@ -101,27 +99,31 @@ def calculate_dcf(
         'dcf_diff_pct': None,
         'dcf_applies': False,
         'dcf_signal': 'n/a',
-        'dcf_projections': []
+        'dcf_projections': [],
+        'dcf_operating_cf': None,
+        'dcf_debt_ps': None,
+        'dcf_cash_ps': None,
+        'dcf_growth_5y': eps_growth_rate,
+        'dcf_growth_6_10': None,
+        'dcf_wacc': discount_rate
     }
 
     if not operating_cash_flow or not eps_growth_rate or not shares_outstanding:
         return result
-    if operating_cash_flow <= 0:
-        # No aplica: FCO negativo
+    if operating_cash_flow <= 0 or eps_growth_rate <= 0:
         result['dcf_applies'] = False
-        return result
-    if eps_growth_rate <= 0:
         return result
 
     result['dcf_applies'] = True
 
-    # Proyectar FCO para cada año
+    growth_6_10 = min(eps_growth_rate, 0.15) if eps_growth_rate > 0.15 else eps_growth_rate
+    result['dcf_growth_6_10'] = growth_6_10
+
     total_pv = 0.0
     fco_proyectado = operating_cash_flow
 
     for year in range(1, years + 1):
-        # Crecimiento años 1-5 igual al estimado. Años 6-10 topado al 15%
-        current_growth = min(eps_growth_rate, 0.15) if year > 5 and eps_growth_rate > 0.15 else eps_growth_rate
+        current_growth = growth_6_10 if year > 5 else eps_growth_rate
         fco_proyectado = fco_proyectado * (1 + current_growth)
         discount_factor = 1 / ((1 + discount_rate) ** year)
         pv = fco_proyectado * discount_factor
@@ -133,23 +135,27 @@ def calculate_dcf(
             'present_value': round(pv, 2)
         })
 
-    # Valor terminal (Gordon Growth Model)
-    fco_terminal = fco_proyectado * (1 + terminal_growth)
-    terminal_value = fco_terminal / (discount_rate - terminal_growth)
-    terminal_pv = terminal_value / ((1 + discount_rate) ** years)
-    total_pv += terminal_pv
+    # Enterprise Value / Share
+    ev_per_share = total_pv / shares_outstanding
 
-    # Valor intrínseco por acción
-    intrinsic_per_share = total_pv / shares_outstanding
-    diff = intrinsic_per_share - current_price
+    # Ajuste por deuda y caja (como el Excel: F8-F9+F10)
+    total_debt = (short_term_debt or 0) + (long_term_debt or 0)
+    debt_per_share = total_debt / shares_outstanding
+    cash_per_share = (cash_and_investments or 0) / shares_outstanding
+
+    intrinsic_per_share = ev_per_share - debt_per_share + cash_per_share
+    diff = current_price - intrinsic_per_share
     diff_pct = diff / current_price if current_price else 0
 
     result['dcf_intrinsic_value'] = round(intrinsic_per_share, 4)
     result['dcf_diff_vs_price'] = round(diff, 4)
     result['dcf_diff_pct'] = round(diff_pct, 6)
+    result['dcf_operating_cf'] = round(operating_cash_flow, 2)
+    result['dcf_debt_ps'] = round(debt_per_share, 4)
+    result['dcf_cash_ps'] = round(cash_per_share, 4)
 
-    # Señal: positivo = precio mercado < intrínseco → SUBVALORADA
-    if diff > 0:
+    # Señal: diff > 0 → precio > intrínseco → sobrevalorada
+    if diff < 0:
         result['dcf_signal'] = 'subvalorada'
     else:
         result['dcf_signal'] = 'sobrevalorada'
@@ -345,6 +351,9 @@ def calculate_all_valuations(ticker_data, financial_data, price):
     shares = financial_data.get('shares_outstanding') or ticker_data.get('shares_outstanding')
     total_assets = financial_data.get('total_assets')
     total_liabilities = financial_data.get('total_liabilities')
+    short_debt = financial_data.get('short_term_debt')
+    long_debt = financial_data.get('long_term_debt')
+    cash_inv = financial_data.get('cash_and_investments')
 
     # Calcular cada método
     qc = calculate_quick_check(
@@ -359,7 +368,10 @@ def calculate_all_valuations(ticker_data, financial_data, price):
         operating_cash_flow=operating_cf,
         eps_growth_rate=eps_growth,
         shares_outstanding=shares,
-        current_price=price
+        current_price=price,
+        short_term_debt=short_debt,
+        long_term_debt=long_debt,
+        cash_and_investments=cash_inv
     )
 
     ddm = calculate_ddm(
@@ -408,6 +420,12 @@ def calculate_all_valuations(ticker_data, financial_data, price):
         'dcf_diff_pct': dcf.get('dcf_diff_pct'),
         'dcf_applies': 1 if dcf.get('dcf_applies') else 0,
         'dcf_signal': dcf.get('dcf_signal', 'n/a'),
+        'dcf_operating_cf': dcf.get('dcf_operating_cf'),
+        'dcf_debt_ps': dcf.get('dcf_debt_ps'),
+        'dcf_cash_ps': dcf.get('dcf_cash_ps'),
+        'dcf_growth_5y': dcf.get('dcf_growth_5y'),
+        'dcf_growth_6_10': dcf.get('dcf_growth_6_10'),
+        'dcf_wacc': dcf.get('dcf_wacc'),
         # Método 3
         'ddm_intrinsic_value': ddm.get('ddm_intrinsic_value'),
         'ddm_diff_vs_price': ddm.get('ddm_diff_vs_price'),

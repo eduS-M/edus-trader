@@ -104,6 +104,18 @@
                         <div class="text-xs text-muted" style="margin-top: 0.5rem;">
                             Dif. con precio: <span id="s-dcf-diff" class="font-bold">--</span>
                         </div>
+                        <div class="text-xs text-muted" style="margin-top: 0.25rem;">
+                            FCO Base: <span id="s-dcf-fco" class="font-bold">--</span> |
+                            WACC: <span id="s-dcf-wacc" class="font-bold">10%</span>
+                        </div>
+                        <div class="text-xs text-muted" style="margin-top: 0.25rem;">
+                            Deuda/Acc: <span id="s-dcf-debt" class="font-bold">--</span> |
+                            Caja/Acc: <span id="s-dcf-cash" class="font-bold">--</span>
+                        </div>
+                        <div class="text-xs text-muted" style="margin-top: 0.25rem;">
+                            Growth 1-5: <span id="s-dcf-g5" class="font-bold">--</span> |
+                            Growth 6-10: <span id="s-dcf-g6" class="font-bold">--</span>
+                        </div>
                     </div>
 
                     <!-- 3. Ganancias Descontadas (DDM) -->
@@ -260,8 +272,17 @@
                     // 2. DCF
                     document.getElementById('s-dcf-val').textContent = formatMoney(l.dcf_intrinsic_value);
                     document.getElementById('s-dcf-badge').innerHTML = getSignalBadge(l.dcf_signal);
-                    document.getElementById('s-dcf-diff').innerHTML = l.dcf_diff_pct ? 
-                        `<span style="color: ${l.dcf_diff_pct > 0 ? 'var(--signal-subvalorada)' : 'var(--signal-sobrevalorada)'}">${formatPct(l.dcf_diff_pct * 100)}</span>` : '--';
+                    document.getElementById('s-dcf-diff').innerHTML = l.dcf_diff_pct != null ? 
+                        `<span style="color: ${l.dcf_diff_pct < 0 ? 'var(--signal-subvalorada)' : 'var(--signal-sobrevalorada)'}">${formatPct(l.dcf_diff_pct * 100)}</span>` : '--';
+                    // DCF detalle
+                    if (l.dcf_operating_cf != null) {
+                        const fmt = n => '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                        document.getElementById('s-dcf-fco').textContent = fmt(l.dcf_operating_cf);
+                        document.getElementById('s-dcf-debt').textContent = l.dcf_debt_ps != null ? fmt(l.dcf_debt_ps) : '--';
+                        document.getElementById('s-dcf-cash').textContent = l.dcf_cash_ps != null ? fmt(l.dcf_cash_ps) : '--';
+                        document.getElementById('s-dcf-g5').textContent = l.dcf_growth_5y != null ? formatPct(l.dcf_growth_5y * 100) : '--';
+                        document.getElementById('s-dcf-g6').textContent = l.dcf_growth_6_10 != null ? formatPct(l.dcf_growth_6_10 * 100) : '--';
+                    }
 
                     // 3. DDM
                     document.getElementById('s-ddm-val').textContent = formatMoney(l.ddm_intrinsic_value);

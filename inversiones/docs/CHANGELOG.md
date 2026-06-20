@@ -125,6 +125,40 @@ Formato: `[FECHA] — Descripción — Archivos afectados`
 
 ### CAMBIO 22: Link Yahoo del símbolo al nombre de empresa ✅
 
+---
+
+## [2026-06-20] — DCF réplica exacta del Excel + detalle en ticker
+
+### CAMBIO 23: DCF sin valor terminal + ajuste deuda/caja + diff% corregido ✅
+
+**Réplica exacta del Excel "Calculo Flujo de Caja Descontado.xlsx":**
+
+| Aspecto | Antes | Ahora |
+|---------|-------|-------|
+| **Valor Terminal** | Gordon Growth Model (Gordon) | ❌ Eliminado — solo 10 años |
+| **Deuda/Caja** | No se ajustaba | ✅ Intrínseco = EV/Share - Deuda/Share + Caja/Share |
+| **Diff%** | `(Intrínseco - Precio) / Precio` | ✅ `(Precio - Intrínseco) / Precio` (+=sobrevalorado) |
+| **Growth 1-5y** | `eps_growth_rate` | ✅ Igual |
+| **Growth 6-10y** | `min(eps_growth_rate, 0.15)` si >15% | ✅ Igual (confirmado por usuario) |
+
+**Campos nuevos en `inv_valuations`:**
+| Columna | Descripción |
+|---------|-------------|
+| `dcf_operating_cf` | FCO base usado en la proyección |
+| `dcf_debt_ps` | (Deuda CP + LP) / Shares |
+| `dcf_cash_ps` | Caja e Inv. CP / Shares |
+
+**Frontend:** Ticker page ahora muestra debajo del DCF:
+- FCO Base, WACC (10%), Deuda/Acc, Caja/Acc, Growth 1-5y, Growth 6-10y
+
+**Archivos modificados:**
+- `Proyecto-Inversion/fetcher/calculate.py` — `calculate_dcf()` reescrita
+- `server.py` — inline DCF histórico + INSERT con nuevos campos
+- `database_inversiones.py` — migración ADD COLUMN para dcf_operating_cf, dcf_debt_ps, dcf_cash_ps
+- `inversiones/ticker.html` — DCF detail lines
+- `inversiones/assets/inv-dashboard.js` — color flip en scanner (diff% > 0 = sobrevalorada)
+- `inversiones/docs/CHANGELOG.md` — este registro
+
 - **Antes:** El ticker-símbolo (`#t-symbol`) era un `<a>` linkeando a Yahoo Finance
 - **Después:** El nombre de empresa (`#t-name`) es ahora un `<a>` con target blank; el símbolo es un `<span>` plano
 - **Archivos:** `inversiones/ticker.html` (líneas 36-38)
