@@ -131,10 +131,18 @@
                     <!-- 5. Earning Estimate -->
                     <div class="inv-stat-card" style="grid-column: 1 / -1;">
                         <div style="display: flex; justify-content: space-between;">
-                            <span class="inv-stat-label">5. Earning Estimate (Yahoo)</span>
+                            <span class="inv-stat-label">5. Crecimiento Estimado</span>
                             <span id="s-eps-badge"></span>
                         </div>
                         <span class="inv-stat-value" id="s-eps-val">--</span>
+                        <div class="text-xs text-muted" style="margin-top: 0.25rem;">
+                            Fuente: <span id="s-eps-source" class="font-bold">--</span>
+                        </div>
+                        <div class="text-xs text-muted" style="margin-top: 0.25rem; display: none;" id="s-rev-detail">
+                            Rev High 0y: <span id="s-rev-0y" class="font-bold">--</span> |
+                            +1y: <span id="s-rev-1y" class="font-bold">--</span> |
+                            Crec: <span id="s-rev-growth" class="font-bold">--</span>
+                        </div>
                     </div>
                 </div>
 
@@ -254,9 +262,16 @@
                     document.getElementById('s-pbv-badge').innerHTML = getSignalBadge(l.pbv_signal);
                     document.getElementById('s-pbv-note').textContent = l.pbv_is_bank ? 'Umbral especial para sector Bancario (< 1.5)' : 'Umbral normal (< 0.5)';
 
-                    // 5. EPS
+                    // 5. Crecimiento Estimado
                     document.getElementById('s-eps-val').textContent = l.eps_next_5y_pct ? formatPct(l.eps_next_5y_pct * 100) : '--';
                     document.getElementById('s-eps-badge').innerHTML = getSignalBadge(l.eps_signal);
+                    if (l.growth_source === 'revenue_estimate') {
+                        document.getElementById('s-eps-source').textContent = 'Revenue Est. High \u2191';
+                        document.getElementById('s-eps-source').style.color = 'var(--signal-subvalorada)';
+                    } else {
+                        document.getElementById('s-eps-source').textContent = 'Earnings Growth (Yahoo)';
+                        document.getElementById('s-eps-source').style.color = 'var(--signal-sobrevalorada)';
+                    }
 
                     // Técnico 52w
                     if (l.week_52_low && l.week_52_high && l.last_price) {
