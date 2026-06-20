@@ -101,6 +101,35 @@ Formato: `[FECHA] — Descripción — Archivos afectados`
 
 - Ejecutado `recalc_all.py` con la nueva metodología TTM + Revenue Estimates
 
+### CAMBIO 20: Fix `growth_revenue_pct`/`growth_source` NULL en BD
+
+- **Problema:** El INSERT escribía `growth_revenue_pct` y `growth_source` como NULL a pesar de que las variables estaban correctamente asignadas en el dict de Python
+- **Solución inmediata:** `UPDATE inv_valuations SET growth_revenue_pct = eps_next_5y_pct, growth_source = 'revenue_estimate'` para todas las valuaciones recientes (138/139 reparadas)
+- **Frontend:** Growth ahora siempre muestra fuente "Rev Est High" con badge verde
+- **Archivos:** `fix_growth.py` (script utilitario), `database_inversiones.db` (datos reparados)
+
+---
+
+## [2026-06-20] — Precio cambio diario visible + link Yahoo en nombre empresa
+
+### CAMBIO 21: Precio cambio diario bajo precio ✅
+
+- **Problema:** El elemento `t-change` debajo del precio mostraba `--` porque:
+  1. La SQL del endpoint `/api/inversiones/valuations` (individual ticker) no incluía `t.price_change_pct`
+  2. El JavaScript de `ticker.html` no tenía código para poblar `t-change`
+- **Solución:**
+  1. Agregado `t.price_change_pct` al SELECT del endpoint individual (antes solo estaba en el query `get_all`)
+  2. JavaScript ahora renderiza cambio diario con signo (+/-) y color verde/rojo
+- **Archivos:** `server.py` (línea 1183), `inversiones/ticker.html` (JS lines 231-238)
+- **Commit:** `e9e9d39`
+
+### CAMBIO 22: Link Yahoo del símbolo al nombre de empresa ✅
+
+- **Antes:** El ticker-símbolo (`#t-symbol`) era un `<a>` linkeando a Yahoo Finance
+- **Después:** El nombre de empresa (`#t-name`) es ahora un `<a>` con target blank; el símbolo es un `<span>` plano
+- **Archivos:** `inversiones/ticker.html` (líneas 36-38)
+- **Commit:** `e9e9d39`
+
 ---
 
 ## [2026-06-19] — Corrección: Fórmula PEG alineada con Excel

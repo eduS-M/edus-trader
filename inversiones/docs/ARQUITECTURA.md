@@ -458,7 +458,7 @@ El script `Proyecto-Inversion/fetcher/download_historical.py` ofrece un procesam
 | `/api/inversiones/watchlist/remove` | POST | `{ticker}` | `{message, success}` | Soft delete |
 | `/api/inversiones/portfolio` | GET | — | Posiciones + resumen del portafolio | Dashboard |
 | `/api/inversiones/scanner` | GET | `filter` (all/subvaloradas/...) | Tickers con valoraciones | Scanner |
-| `/api/inversiones/valuations` | GET | `ticker`, `days` (opcional), `all` | Historial + última valuación | Ticker page charts |
+| `/api/inversiones/valuations` | GET | `ticker`, `days` (opcional), `all` | Historial + última valuación con `price_change_pct`, `week_52_high`, `week_52_low` | Ticker page charts + cambio diario |
 | `/api/inversiones/price_history` | GET | `ticker`, `days` | OHLCV histórico | Ticker page chart |
 | `/api/inversiones/risk` | GET | `ticker` | ATR(14), stop loss, target | Ticker page |
 | `/api/inversiones/peers` | GET | `ticker` | Competidores del mismo sector | Cuestionario |
