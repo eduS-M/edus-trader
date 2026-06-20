@@ -20,6 +20,393 @@ import time
 # Inversiones DB Manager
 import database_inversiones
 
+# Fetcher de valoraciones (cálculo PEG, DCF, DDM, PBV)
+_FP = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Proyecto-Inversion', 'fetcher')
+_CALC_CACHED = None
+_FIN_CACHED = None
+if os.path.isdir(_FP):
+    try:
+        import sys
+        sys.path.insert(0, _FP)
+        from calculate import calculate_all_valuations as _calc_valuations
+        from fetch_data import fetch_financials_fmp as _fetch_financials
+        _CALC_CACHED = _calc_valuations
+        _FIN_CACHED = _fetch_financials
+    except Exception as _e:
+        print(f'[server] No se pudieron importar módulos de valoración: {_e}')
+
+
+def _upsert_financial_data(ticker, fin_data):
+    """Guarda datos financieros en inv_financial_data."""
+    if not fin_data or not fin_data.get('fiscal_year'):
+        return
+    record_id = str(uuid.uuid4())
+    database_inversiones.execute_query("""
+        INSERT INTO inv_financial_data
+            (id, ticker, fiscal_year, fiscal_quarter, period_type, report_date,
+             operating_cash_flow, capex, free_cash_flow, net_income, revenue,
+             eps_diluted, short_term_debt, long_term_debt, cash_and_investments,
+             total_assets, total_liabilities, total_goodwill, total_intangibles,
+             book_value_per_share, eps_next_5y_pct, eps_past_5y_pct,
+             peg_ratio, pe_ratio, forward_pe,
+             source_cashflow, source_income, source_balance, source_eps,
+             created_at, updated_at)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,
+                datetime('now'), datetime('now'))
+        ON CONFLICT(ticker, fiscal_year, fiscal_quarter, period_type) DO UPDATE SET
+            report_date=excluded.report_date,
+            operating_cash_flow=excluded.operating_cash_flow,
+            free_cash_flow=excluded.free_cash_flow,
+            net_income=excluded.net_income,
+            revenue=excluded.revenue,
+            eps_diluted=excluded.eps_diluted,
+            total_assets=excluded.total_assets,
+            total_liabilities=excluded.total_liabilities,
+            book_value_per_share=excluded.book_value_per_share,
+            eps_next_5y_pct=excluded.eps_next_5y_pct,
+            peg_ratio=excluded.peg_ratio,
+            pe_ratio=excluded.pe_ratio,
+            updated_at=datetime('now')
+    """, (
+        record_id, ticker,
+        fin_data.get('fiscal_year'), 0, 'annual', fin_data.get('report_date'),
+        fin_data.get('operating_cash_flow'), fin_data.get('capex'),
+        fin_data.get('free_cash_flow'), fin_data.get('net_income'),
+        fin_data.get('revenue'),
+        fin_data.get('eps_diluted'), fin_data.get('short_term_debt'),
+        fin_data.get('long_term_debt'), fin_data.get('cash_and_investments'),
+        fin_data.get('total_assets'), fin_data.get('total_liabilities'),
+        fin_data.get('total_goodwill'), fin_data.get('total_intangibles'),
+        fin_data.get('book_value_per_share'),
+        fin_data.get('eps_next_5y_pct'), fin_data.get('eps_past_5y_pct'),
+        fin_data.get('peg_ratio'), fin_data.get('pe_ratio'),
+        fin_data.get('forward_pe'),
+        fin_data.get('source_cashflow', 'yahoo'),
+        fin_data.get('source_income', 'yahoo'),
+        fin_data.get('source_balance', 'yahoo'),
+        fin_data.get('source_eps', 'yahoo'),
+    ), fetch=False)
+
+
+def _run_historical_valuations(ticker, sector=''):
+    """Calcula valoraciones anuales históricas (5 años) para poblar charts."""
+    import yfinance as yf
+    import pandas as pd
+
+    ymap = {'BTCUSD': 'BTC-USD', 'ETHUSD': 'ETH-USD'}
+    ysym = ymap.get(ticker, ticker)
+    stock = yf.Ticker(ysym)
+
+    cf = stock.cashflow
+    inc = stock.financials
+    bs = stock.balance_sheet
+    if cf.empty or inc.empty or bs.empty:
+        return
+
+    info = {}
+    try:
+        info = stock.info or {}
+    except Exception:
+        pass
+    eps_growth = info.get('earningsGrowth') or info.get('earningsQuarterlyGrowth') or 0.10
+
+    # Precios históricos diarios para buscar precio al cierre de cada año fiscal
+    prices = stock.history(period='5y')
+    if prices.empty:
+        return
+
+    # Índice de columnas financieras (años fiscales)
+    fy_columns = list(inc.columns)
+    vals = []
+
+    for fy_date in fy_columns:
+        year = fy_date.year
+
+        # Buscar precio de cierre más cercano a la fecha fiscal (dentro de ±30 días)
+        # prices.index tiene tz, fy_date no → convertir fy_date a tz-aware
+        fy_dt = pd.Timestamp(fy_date).tz_localize('America/New_York')
+        mask = (prices.index >= fy_dt - pd.Timedelta(days=30)) & \
+               (prices.index <= fy_dt + pd.Timedelta(days=30))
+        near = prices.loc[mask]
+        if near.empty:
+            # Usar el precio promedio del mes de la fecha fiscal
+            month_mask = (prices.index.year == fy_date.year) & (prices.index.month == fy_date.month)
+            near = prices.loc[month_mask]
+            if near.empty:
+                continue
+        close_price = float(near['Close'].iloc[-1])
+        if close_price <= 0:
+            continue
+
+        # Obtener datos financieros para este año fiscal
+        def fval(df, keys, default=None):
+            for k in keys:
+                if k in df.index:
+                    v = df.loc[k, fy_date]
+                    if pd.notna(v):
+                        return float(v)
+            return default
+
+        ocf = fval(cf, ['Operating Cash Flow', 'Cash Flow From Continuing Operating Activities', 'OperatingCashFlow'])
+        ni = fval(inc, ['Net Income', 'Net Income Common Stockholders', 'NetIncome'])
+        ta = fval(bs, ['Total Assets', 'TotalAssets'])
+        tl = fval(bs, ['Total Liabilities Net Minority Interest', 'TotalLiabilities'])
+        share_count = info.get('sharesOutstanding') or fval(bs, ['Ordinary Shares Number', 'Share Issued'])
+        eps_val = fval(inc, ['Diluted EPS', 'Basic EPS', 'EpsDiluted'])
+
+        # PEG
+        pe_ratio = (close_price / eps_val) if eps_val and eps_val > 0 else None
+        peg_v, peg_s = None, 'n/a'
+        if pe_ratio and eps_growth and eps_growth > 0:
+            peg_v = round(pe_ratio / (eps_growth * 100), 4)
+            peg_s = 'subvalorada' if peg_v < 1 else ('invertible' if peg_v <= 2 else 'sobrevalorada')
+
+        # DCF
+        dcf_v, dcf_d, dcf_s = None, None, 'n/a'
+        if ocf and ocf > 0 and share_count and share_count > 0 and eps_growth > 0:
+            wacc = 0.10
+            pv_sum = 0.0
+            proj = float(ocf)
+            for yr in range(1, 11):
+                g = min(eps_growth, 0.15) if yr > 5 and eps_growth > 0.15 else eps_growth
+                proj *= (1 + g)
+                pv_sum += proj / ((1 + wacc) ** yr)
+            tv = proj * 1.03 / (wacc - 0.03)
+            pv_sum += tv / ((1 + wacc) ** 10)
+            dcf_v = round(pv_sum / float(share_count), 4)
+            dcf_d = round(dcf_v - close_price, 4)
+            dcf_s = 'subvalorada' if dcf_d > 0 else 'sobrevalorada'
+
+        # PBV
+        pbv_v, pbv_s = None, 'n/a'
+        if ta and tl and share_count and share_count > 0:
+            bv = (float(ta) - float(tl)) / float(share_count)
+            if bv > 0:
+                pbv_v = round(close_price / bv, 4)
+                pbv_s = 'muy_bueno' if pbv_v < 1 else ('bueno' if pbv_v < 3 else ('atencion' if pbv_v < 5 else 'sobrevalorada'))
+
+        # Score
+        pos = sum([
+            1 if peg_v is not None and peg_s in ('subvalorada', 'invertible') else 0,
+            1 if dcf_s == 'subvalorada' else 0,
+            1 if pbv_s in ('muy_bueno', 'bueno') else 0,
+        ])
+
+        price_date_str = fy_date.strftime('%Y-%m-%d') if hasattr(fy_date, 'strftime') else str(fy_date.date())
+        vid = str(uuid.uuid4())
+        vals.append((
+            vid, ticker, price_date_str, round(close_price, 4),
+            peg_v, eps_growth, pe_ratio, peg_s, None,
+            None, None, None, None, None,
+            dcf_v, dcf_d, (round(dcf_d / close_price, 4) if dcf_d is not None and close_price > 0 else None),
+            1 if dcf_v else 0, dcf_s,
+            None, None, None, 0, 'n/a',
+            pbv_v, 0, pbv_s,
+            eps_growth, 'n/a',
+            pos, year
+        ))
+
+    if vals:
+        try:
+            conn = database_inversiones.get_db_connection()
+            with conn:
+                conn.executemany("""
+                    INSERT OR REPLACE INTO inv_valuations
+                        (id, ticker, valuation_date, price_at_date,
+                         peg_value, peg_eps_growth, peg_pe_used, peg_signal, peg_yahoo_value,
+                         ttm_net_income, eps_ttm, pe_ratio_ttm, growth_revenue_pct, growth_source,
+                         dcf_intrinsic_value, dcf_diff_vs_price, dcf_diff_pct, dcf_applies, dcf_signal,
+                         ddm_intrinsic_value, ddm_diff_vs_price, ddm_diff_pct, ddm_applies, ddm_signal,
+                         pbv_ratio, pbv_is_bank, pbv_signal,
+                         eps_next_5y_pct, eps_signal,
+                         positive_signals, fiscal_year_used)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                """, vals)
+            conn.close()
+            print(f'[server] {len(vals)} valoraciones hist\xf3ricas guardadas para {ticker}')
+        except Exception as e:
+            print(f'[server] Error insertando hist\xf3ricas: {e}')
+
+
+def _run_ticker_valuation(ticker, sector='', shares_outstanding=None):
+    """
+    Calcula y guarda valoraciones (PEG, DCF, DDM, PBV) para un ticker.
+    Requiere datos financieros de yfinance.
+    """
+    if not _CALC_CACHED or not _FIN_CACHED:
+        return None
+
+    try:
+        import yfinance as yf
+        ymap = {'BTCUSD': 'BTC-USD', 'ETHUSD': 'ETH-USD'}
+        ysym = ymap.get(ticker, ticker)
+        stock = yf.Ticker(ysym)
+
+        fin_data = _fetch_financials(ysym)
+        if not fin_data:
+            return None
+
+        # Guardar datos financieros en inv_financial_data
+        _upsert_financial_data(ticker, fin_data)
+
+        # Obtener precio actual y complementar financial_data con info del ticker
+        info = {}
+        try:
+            info = stock.info or {}
+        except Exception:
+            pass
+        hist = stock.history(period='5d')
+        if hist.empty:
+            return None
+        price = round(float(hist['Close'].iloc[-1]), 4)
+
+        # ── GROWTH: Revenue Estimates (High actual → High próximo año) ──
+        growth_revenue_pct = None
+        growth_source = 'earnings_growth'
+        try:
+            rev_est = stock.revenue_estimate
+            if rev_est is not None and not rev_est.empty and 'high' in rev_est.columns:
+                if '+1y' in rev_est.index and '0y' in rev_est.index:
+                    high_next = float(rev_est.loc['+1y', 'high'])
+                    high_curr = float(rev_est.loc['0y', 'high'])
+                    if high_curr and high_curr > 0:
+                        growth_revenue_pct = (high_next - high_curr) / high_curr
+                        growth_source = 'revenue_estimate'
+        except Exception:
+            pass
+
+        # ── TTM Net Income (suma 4 trimestres) ──
+        ttm_net_income = fin_data.get('ttm_net_income')
+        if ttm_net_income is None:
+            try:
+                qinc = stock.quarterly_financials
+                if qinc is not None and not qinc.empty:
+                    cols = qinc.columns[:4]
+                    ttm = 0
+                    for col in cols:
+                        if 'Net Income' in qinc.index:
+                            v = qinc.loc['Net Income', col]
+                            import pandas as pd
+                            if pd.notna(v):
+                                ttm += float(v)
+                    if ttm > 0:
+                        ttm_net_income = ttm
+            except Exception:
+                pass
+
+        # ── EPS_TTM + P/E TTM ──
+        shares = fin_data.get('shares_outstanding') or info.get('sharesOutstanding') or shares_outstanding
+        eps_ttm = (ttm_net_income / shares) if (ttm_net_income and shares and shares > 0) else None
+        pe_ratio_ttm = round(price / eps_ttm, 4) if (eps_ttm and eps_ttm > 0 and price) else None
+
+        # ── Asignar valores para el cálculo PEG ──
+        if growth_revenue_pct is not None and growth_revenue_pct > 0:
+            fin_data['eps_next_5y_pct'] = growth_revenue_pct
+        else:
+            # Fallback: earningsGrowth de info
+            eg = info.get('earningsGrowth') or info.get('earningsQuarterlyGrowth')
+            if eg is not None:
+                fin_data['eps_next_5y_pct'] = eg
+        if pe_ratio_ttm is not None and pe_ratio_ttm > 0:
+            fin_data['pe_ratio'] = pe_ratio_ttm
+        else:
+            # Fallback: P/E anual
+            eps_calc = None
+            if fin_data.get('net_income') and fin_data.get('shares_outstanding'):
+                eps_calc = fin_data['net_income'] / fin_data['shares_outstanding']
+            if eps_calc is None:
+                eps_calc = fin_data.get('eps_diluted')
+            fin_data['pe_ratio'] = round(price / eps_calc, 4) if eps_calc and eps_calc > 0 else (info.get('trailingPE') or info.get('forwardPE'))
+        if 'peg_ratio' not in fin_data or fin_data.get('peg_ratio') is None:
+            fin_data['peg_ratio'] = info.get('pegRatio')
+        if 'shares_outstanding' not in fin_data or fin_data.get('shares_outstanding') is None:
+            fin_data['shares_outstanding'] = shares
+
+        # Guardar metadata para la BD
+        fin_data['ttm_net_income'] = ttm_net_income
+        fin_data['eps_ttm'] = eps_ttm
+        fin_data['pe_ratio_ttm'] = pe_ratio_ttm
+        fin_data['growth_revenue_pct'] = growth_revenue_pct
+        fin_data['growth_source'] = growth_source
+
+        valuations = _CALC_CACHED(
+            ticker_data={'ticker': ticker, 'sector': sector, 'shares_outstanding': fin_data.get('shares_outstanding') or shares_outstanding},
+            financial_data=fin_data,
+            price=price
+        )
+
+        if not valuations or not valuations.get('ticker'):
+            return None
+
+        # Agregar metadata TTM + revenue growth al dict de retorno
+        valuations['ttm_net_income'] = ttm_net_income
+        valuations['eps_ttm'] = eps_ttm
+        valuations['pe_ratio_ttm'] = pe_ratio_ttm
+        valuations['growth_revenue_pct'] = growth_revenue_pct
+        valuations['growth_source'] = growth_source
+
+        # Guardar en inv_valuations
+        val_date = date.today().strftime('%Y-%m-%d')
+        record_id = str(uuid.uuid4())
+        database_inversiones.execute_query("""
+            INSERT INTO inv_valuations
+                (id, ticker, valuation_date, price_at_date,
+                 peg_value, peg_eps_growth, peg_pe_used, peg_signal, peg_yahoo_value,
+                 ttm_net_income, eps_ttm, pe_ratio_ttm, growth_revenue_pct, growth_source,
+                 dcf_intrinsic_value, dcf_diff_vs_price, dcf_diff_pct, dcf_applies, dcf_signal,
+                 ddm_intrinsic_value, ddm_diff_vs_price, ddm_diff_pct, ddm_applies, ddm_signal,
+                 pbv_ratio, pbv_is_bank, pbv_signal,
+                 eps_next_5y_pct, eps_signal,
+                 positive_signals, fiscal_year_used)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            ON CONFLICT(ticker, valuation_date) DO UPDATE SET
+                price_at_date=excluded.price_at_date,
+                peg_value=excluded.peg_value, peg_signal=excluded.peg_signal,
+                peg_yahoo_value=excluded.peg_yahoo_value,
+                ttm_net_income=excluded.ttm_net_income, eps_ttm=excluded.eps_ttm,
+                pe_ratio_ttm=excluded.pe_ratio_ttm,
+                growth_revenue_pct=excluded.growth_revenue_pct, growth_source=excluded.growth_source,
+                dcf_intrinsic_value=excluded.dcf_intrinsic_value,
+                dcf_diff_vs_price=excluded.dcf_diff_vs_price, dcf_signal=excluded.dcf_signal,
+                ddm_intrinsic_value=excluded.ddm_intrinsic_value,
+                ddm_diff_vs_price=excluded.ddm_diff_vs_price, ddm_signal=excluded.ddm_signal,
+                pbv_ratio=excluded.pbv_ratio, pbv_signal=excluded.pbv_signal,
+                eps_next_5y_pct=excluded.eps_next_5y_pct, eps_signal=excluded.eps_signal,
+                positive_signals=excluded.positive_signals
+        """, (
+            record_id, ticker, val_date,
+            valuations.get('price_at_date'),
+            valuations.get('peg_value'), valuations.get('peg_eps_growth'),
+            valuations.get('peg_pe_used'), valuations.get('peg_signal'),
+            valuations.get('peg_yahoo_value'),
+            valuations.get('ttm_net_income'), valuations.get('eps_ttm'),
+            valuations.get('pe_ratio_ttm'), valuations.get('growth_revenue_pct'),
+            valuations.get('growth_source'),
+            valuations.get('dcf_intrinsic_value'), valuations.get('dcf_diff_vs_price'),
+            valuations.get('dcf_diff_pct'), valuations.get('dcf_applies', 0),
+            valuations.get('dcf_signal'),
+            valuations.get('ddm_intrinsic_value'), valuations.get('ddm_diff_vs_price'),
+            valuations.get('ddm_diff_pct'), valuations.get('ddm_applies', 0),
+            valuations.get('ddm_signal'),
+            valuations.get('pbv_ratio'), valuations.get('pbv_is_bank', 0),
+            valuations.get('pbv_signal'),
+            valuations.get('eps_next_5y_pct'), valuations.get('eps_signal'),
+            valuations.get('positive_signals', 0),
+            valuations.get('fiscal_year_used'),
+        ), fetch=False)
+
+        # Calcular valoraciones históricas para charts
+        try:
+            _run_historical_valuations(ticker, sector)
+        except Exception as e_hist:
+            print(f'[server] Error en hist\xf3ricas para {ticker}: {e_hist}')
+
+        return valuations
+
+    except Exception as e:
+        print(f'[server] Error calculando valoraciones para {ticker}: {e}')
+        return None
+
 app = Flask(__name__)
 CORS(app)
 
@@ -536,7 +923,7 @@ def api_inv_portfolio():
             ROUND(p.avg_price * p.quantity, 2) AS cost_basis,
             v.peg_value, v.peg_signal, v.dcf_intrinsic_value, v.dcf_signal,
             v.ddm_intrinsic_value, v.ddm_signal, v.pbv_ratio, v.pbv_signal,
-            v.eps_signal, v.positive_signals, v.valuation_date
+            v.eps_signal, v.eps_next_5y_pct, v.positive_signals, v.valuation_date
           FROM inv_portfolio_positions p
           JOIN inv_tickers t ON t.ticker = p.ticker
           LEFT JOIN inv_valuations v ON v.ticker = p.ticker
@@ -635,6 +1022,132 @@ def api_inv_watchlist():
         return jsonify({'success': True, 'data': {'tickers': results, 'sectors': sectors, 'count': len(results)}})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/inversiones/watchlist/add', methods=['POST'])
+def api_inv_watchlist_add():
+    """Añade un ticker a la watchlist y descarga 5 años de historial."""
+    try:
+        data = request.get_json(force=True)
+        ticker = (data.get('ticker') or '').upper().strip()
+        if not ticker:
+            return jsonify({'success': False, 'error': 'Ticker requerido'}), 400
+
+        # 1. Verificar/crear el ticker en inv_tickers
+        existing = database_inversiones.execute_query(
+            "SELECT ticker, is_in_watchlist FROM inv_tickers WHERE ticker = ?", (ticker,), fetch='one'
+        )
+        if existing and existing.get('is_in_watchlist'):
+            return jsonify({'success': False, 'error': f'{ticker} ya está en la watchlist'}), 409
+
+        import yfinance as yf
+        ymap = {'BTCUSD': 'BTC-USD', 'ETHUSD': 'ETH-USD'}
+        ysym = ymap.get(ticker, ticker)
+        stock = yf.Ticker(ysym)
+
+        if existing:
+            # Ya existe en la BD → solo reactivar watchlist
+            database_inversiones.execute_query(
+                "UPDATE inv_tickers SET is_in_watchlist = 1, updated_at = datetime('now') WHERE ticker = ?",
+                (ticker,), fetch=False
+            )
+        else:
+            # Nuevo ticker → obtener info desde yfinance
+            try:
+                info = stock.info or {}
+            except Exception:
+                info = {}
+            name = info.get('longName') or info.get('shortName') or ticker
+            sector = info.get('sector') or ''
+            industry = info.get('industry') or ''
+            exchange = info.get('exchange') or ''
+            instrument_type = 'stock'
+            if sector and 'crypto' in ticker.lower():
+                instrument_type = 'crypto'
+            elif 'ETF' in (name or '').upper() or 'ETF' in (info.get('quoteType') or '').upper():
+                instrument_type = 'etf'
+
+            database_inversiones.execute_query("""
+                INSERT INTO inv_tickers (ticker, name, sector, industry, exchange, instrument_type,
+                    currency, is_in_watchlist, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, 'USD', 1, datetime('now'), datetime('now'))
+            """, (ticker, name, sector, industry, exchange, instrument_type), fetch=False)
+
+        # 2. Descargar 5 años de historial de precios
+        hist = stock.history(period='5y')
+        if not hist.empty:
+            conn = database_inversiones.get_db_connection()
+            to_insert = []
+            for dt, row in hist.iterrows():
+                to_insert.append((
+                    str(uuid.uuid4()), ticker,
+                    dt.strftime('%Y-%m-%d'),
+                    round(float(row['Open']), 4),
+                    round(float(row['High']), 4),
+                    round(float(row['Low']), 4),
+                    round(float(row['Close']), 4),
+                    int(row['Volume'])
+                ))
+            with conn:
+                conn.executemany(
+                    "INSERT OR IGNORE INTO inv_price_history (id, ticker, price_date, open_price, high_price, low_price, close_price, volume) VALUES (?,?,?,?,?,?,?,?)",
+                    to_insert
+                )
+            conn.close()
+
+            # 3. Actualizar precio actual y rango 52 semanas desde el historial
+            closes = [r[6] for r in to_insert if r[6] is not None]
+            if closes:
+                last_price = closes[-1]
+                prev_close = closes[-2] if len(closes) > 1 else last_price
+                change_pct = ((last_price - prev_close) / prev_close * 100) if prev_close else 0
+                hist_high = max(closes)
+                hist_low = min(closes)
+                database_inversiones.execute_query("""
+                    UPDATE inv_tickers SET
+                        last_price = ?, price_change_pct = ?,
+                        week_52_high = ?, week_52_low = ?,
+                        updated_at = datetime('now')
+                    WHERE ticker = ?
+                """, (round(last_price, 4), round(change_pct, 4), round(hist_high, 4), round(hist_low, 4), ticker), fetch=False)
+
+        # 4. Calcular valoraciones (PEG, DCF, DDM, PBV)
+        sector_info = ''
+        if existing:
+            sr = database_inversiones.execute_query("SELECT sector FROM inv_tickers WHERE ticker=?", (ticker,), fetch='one')
+            if sr: sector_info = sr.get('sector', '')
+        else:
+            sector_info = info.get('sector', '')
+        valuation_result = _run_ticker_valuation(ticker, sector=sector_info)
+        val_msg = f' + valoraciones calculadas' if valuation_result else ''
+
+        return jsonify({'success': True, 'message': f'{ticker} añadido a la watchlist con {len(hist)} días de historial{val_msg}'})
+
+    except ImportError:
+        return jsonify({'success': False, 'error': 'yfinance no instalado. Ejecuta: pip install yfinance'}), 500
+    except Exception as e:
+        print(f'Error añadiendo {ticker}: {e}')
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/inversiones/watchlist/remove', methods=['POST'])
+def api_inv_watchlist_remove():
+    """Quita un ticker de la watchlist (soft delete: solo marca is_in_watchlist=0)."""
+    try:
+        data = request.get_json(force=True)
+        ticker = (data.get('ticker') or '').upper().strip()
+        if not ticker:
+            return jsonify({'success': False, 'error': 'Ticker requerido'}), 400
+
+        database_inversiones.execute_query(
+            "UPDATE inv_tickers SET is_in_watchlist = 0, updated_at = datetime('now') WHERE ticker = ?",
+            (ticker,), fetch=False
+        )
+
+        return jsonify({'success': True, 'message': f'{ticker} eliminado de la watchlist. Los datos históricos se conservan.'})
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 
 @app.route('/api/inversiones/valuations', methods=['GET'])
 def api_inv_valuations():

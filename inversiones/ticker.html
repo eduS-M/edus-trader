@@ -84,6 +84,12 @@
                         <div class="text-xs text-muted" style="margin-top: 0.5rem;">
                             EPS Crec. 5A: <span id="s-peg-eps" class="font-bold">--</span> | P/E: <span id="s-peg-pe" class="font-bold">--</span>
                         </div>
+                        <div class="text-xs text-muted" style="margin-top: 0.25rem;">
+                            Growth: <span id="s-growth-rev" class="font-bold">--</span> via <span id="s-growth-src" class="font-bold">--</span>
+                        </div>
+                        <div class="text-xs text-muted" style="margin-top: 0.25rem;">
+                            Yahoo PEG ref: <span id="s-peg-yahoo" class="font-bold">--</span>
+                        </div>
                     </div>
 
                     <!-- 2. DCF -->
@@ -221,6 +227,15 @@
                     document.getElementById('s-peg-badge').innerHTML = getSignalBadge(l.peg_signal);
                     document.getElementById('s-peg-eps').textContent = l.peg_eps_growth ? formatPct(l.peg_eps_growth * 100) : '--';
                     document.getElementById('s-peg-pe').textContent = l.peg_pe_used ? l.peg_pe_used.toFixed(2) : '--';
+                    // Growth rate + source
+                    if (l.growth_revenue_pct != null) {
+                        document.getElementById('s-growth-rev').textContent = formatPct(l.growth_revenue_pct * 100);
+                        document.getElementById('s-growth-src').textContent = l.growth_source === 'revenue_estimate' ? 'Rev Est High' : 'EarningsGrowth';
+                    } else if (l.peg_eps_growth != null) {
+                        document.getElementById('s-growth-rev').textContent = formatPct(l.peg_eps_growth * 100);
+                        document.getElementById('s-growth-src').textContent = 'earningsGrowth';
+                    }
+                    document.getElementById('s-peg-yahoo').textContent = l.peg_yahoo_value != null ? l.peg_yahoo_value.toFixed(2) + ' (Yahoo)' : 'N/A';
 
                     // 2. DCF
                     document.getElementById('s-dcf-val').textContent = formatMoney(l.dcf_intrinsic_value);
