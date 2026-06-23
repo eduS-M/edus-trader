@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — Daily Strategic Game Plan | 23 JUN 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #142d37;
+    --navy-dark: #0d1f26;
+    --teal: #279995;
+    --gold: #b38665;
+    --gold-light: #d4a982;
+    --bg: #f2f0eb;
+    --surface: #ffffff;
+    --surface2: #f8f6f0;
+    --border: #e0dbd0;
+    --text: #1a1814;
+    --text-muted: #7a7468;
+    --bull: #279995;
+    --bull-bg: #e6f5f4;
+    --bear: #c0392b;
+    --bear-bg: #fdf0ee;
+    --chop: #b38665;
+    --chop-bg: #f6efe8;
+    --shadow: 0 2px 20px rgba(13,31,38,0.10);
+    --radius: 10px;
+    --header-gradient: linear-gradient(135deg, #142d37 0%, #034649 100%);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .header {
+    background: var(--header-gradient);
+    color: white;
+    padding: 24px 40px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 1;
+  }
+  .header-left .logo-img {
+    height: 68px;
+    width: auto;
+    display: block;
+  }
+  .header-left .brand {
+    display: flex;
+    flex-direction: column;
+  }
+  .header-left .brand-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: white;
+    line-height: 1;
+  }
+  .header-left .brand-name .gold {
+    color: var(--gold);
+  }
+  .header-left .brand-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--gold-light);
+    letter-spacing: 3px;
+    margin-top: 2px;
+    text-transform: uppercase;
+  }
+  .header-right {
+    text-align: right;
+    z-index: 1;
+  }
+  .header-right .date {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .header-right .time {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 2px;
+  }
+  .header-right .prices {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  .price-chip {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(179,134,101,0.35);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: white;
+  }
+  .price-chip span { color: var(--gold-light); font-weight: 700; }
+  .price-chip .chg-pos { color: var(--teal); }
+  .price-chip .chg-neg { color: #e87373; }
+  .vix-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 4px;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+  }
+  .vix-bajo { background: rgba(39,153,149,0.25); color: #6bcfcb; }
+  .vix-media { background: rgba(179,134,101,0.25); color: var(--gold-light); }
+  .vix-alta { background: rgba(224,130,50,0.25); color: #f5a623; }
+  .vix-extrema { background: rgba(224,82,82,0.25); color: #f07070; }
+  .vix-super { background: rgba(180,40,40,0.35); color: #ff5050; }
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    margin-top: 36px;
+    position: relative;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    margin-left: 4px;
+  }
+  .section-title .step {
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 1.5px;
+    border: 1px solid rgba(179,134,101,0.3);
+  }
+  .section-title h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--navy);
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead tr { background: var(--navy); color: white; }
+  thead th {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    color: var(--gold-light);
+  }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody td { padding: 10px 14px; font-size: 13px; vertical-align: top; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Space Mono', monospace;
+  }
+  .badge-high { background: var(--bear-bg); color: var(--bear); }
+  .badge-med  { background: var(--chop-bg); color: var(--chop); }
+  .badge-low  { background: var(--bull-bg); color: var(--bull); }
+  .sentiment-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .sentiment-bar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 5px;
+  }
+  .sentiment-bar.s-risk-on::before { background: var(--bull); }
+  .sentiment-bar.s-risk-off::before { background: var(--bear); }
+  .sentiment-bar.s-mixed::before { background: var(--gold); }
+  .sentiment-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .sentiment-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+  }
+  .sentiment-value.s-risk-on { color: var(--bull); }
+  .sentiment-value.s-risk-off { color: var(--bear); }
+  .sentiment-value.s-mixed { color: var(--gold); }
+  .sentiment-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    flex: 1;
+    border-left: 1px solid var(--border);
+    padding-left: 20px;
+  }
+  .sentiment-desc strong { color: var(--text); }
+  .zones-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .zone-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .zone-header {
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 2px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .zone-header .ticker { color: white; font-family: 'DM Sans', sans-serif; font-size: 13px; letter-spacing: 0; }
+  .zone-header .price-ref {
+    margin-left: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+  }
+  .zone-body { padding: 12px 16px; }
+  .zone-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .zone-row:last-child { border-bottom: none; }
+  .zone-row .label { color: var(--text-muted); font-size: 12px; }
+  .zone-row .value {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .value-res { color: var(--bear); }
+  .value-sup { color: var(--bull); }
+  .value-poc { color: var(--navy); }
+  .value-neutral { color: var(--text); }
+  .zone-type {
+    font-size: 9px;
+    font-family: 'Space Mono', monospace;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 4px;
+  }
+  .type-hvn { background: var(--bull-bg); color: var(--bull); }
+  .type-lvn { background: var(--bear-bg); color: var(--bear); }
+  .type-poc { background: #e8edf7; color: var(--navy); }
+  .zone-note {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-left: 3px solid var(--gold);
+    padding: 8px 12px;
+    line-height: 1.5;
+  }
+  .zone-note strong { color: var(--navy); }
+  .prob-bar-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .prob-bar-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--bull), var(--gold), var(--bear));
+  }
+  .prob-bar-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .prob-bar {
+    height: 16px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+  }
+  .prob-segment-bull { background: var(--bull); }
+  .prob-segment-bear { background: var(--bear); }
+  .prob-segment-chop { background: var(--gold); }
+  .prob-labels {
+    display: flex;
+    margin-top: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+  }
+  .prob-lbl { display: flex; align-items: center; gap: 5px; margin-right: 18px; }
+  .prob-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .scenarios-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .scenario-card {
+    border-radius: var(--radius);
+    border: 1.5px solid;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .scenario-card.bull { border-color: var(--bull); }
+  .scenario-card.bear { border-color: var(--bear); }
+  .scenario-card.chop { border-color: var(--gold); }
+  .scenario-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .scenario-card.bull .scenario-header { background: var(--bull-bg); }
+  .scenario-card.bear .scenario-header { background: var(--bear-bg); }
+  .scenario-card.chop .scenario-header { background: var(--chop-bg); }
+  .scenario-icon { font-size: 20px; }
+  .scenario-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 1.5px;
+  }
+  .scenario-card.bull .scenario-label { color: var(--bull); }
+  .scenario-card.bear .scenario-label { color: var(--bear); }
+  .scenario-card.chop .scenario-label { color: var(--gold); }
+  .scenario-prob {
+    margin-left: auto;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+  }
+  .scenario-card.bull .scenario-prob { color: var(--bull); }
+  .scenario-card.bear .scenario-prob { color: var(--bear); }
+  .scenario-card.chop .scenario-prob { color: var(--gold); }
+  .scenario-body {
+    background: var(--surface);
+    padding: 14px 16px;
+  }
+  .scenario-body-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .scenario-row { margin-bottom: 8px; }
+  .scenario-row .s-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+  .scenario-row .s-value {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .targets-grid {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .target-group-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+  }
+  .target-list { display: flex; gap: 4px; flex-wrap: wrap; }
+  .target-chip {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .bull .target-chip { background: var(--bull-bg); color: var(--bull); }
+  .bear .target-chip { background: var(--bear-bg); color: var(--bear); }
+  .chop .target-chip { background: var(--chop-bg); color: var(--gold); }
+  .scenario-note {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 8px 10px;
+    border-radius: 6px;
+    line-height: 1.5;
+    border-left: 3px solid var(--gold);
+  }
+  .scenario-note strong { color: var(--text); }
+  .mag7-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .mag7-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 8px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .mag7-chip .ticker {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .mag7-chip .price { font-size: 13px; font-weight: 600; margin-top: 4px; }
+  .mag7-chip .change {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    margin-top: 2px;
+    font-weight: 700;
+  }
+  .mag7-chip .bias-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    margin: 6px auto 0;
+  }
+  .pos { color: var(--bull); }
+  .neg { color: var(--bear); }
+  .neu { color: var(--gold); }
+  .dot-pos { background: var(--bull); }
+  .dot-neg { background: var(--bear); }
+  .dot-neu { background: var(--gold); }
+  .directional-summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--teal);
+  }
+  .directional-summary .icon { font-size: 20px; flex-shrink: 0; }
+  .directional-summary strong { color: var(--navy); }
+  .setup-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .setup-header {
+    background: var(--gold);
+    color: var(--navy-dark);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    padding: 10px 18px;
+  }
+  .setup-body { padding: 16px 18px; }
+  .setup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .setup-item .s-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .setup-item .s-value {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .highlight-level {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .alert-strip {
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .alert-strip .icon { font-size: 20px; flex-shrink: 0; }
+  .alert-strip.alert-info { background: #eef3fb; border: 1px solid #7da8d8; }
+  .alert-strip.alert-success { background: var(--bull-bg); border: 1px solid var(--teal); }
+  .alert-strip.alert-danger { background: var(--bear-bg); border: 1px solid var(--bear); }
+  .alert-strip.alert-warning { background: var(--chop-bg); border: 1px solid var(--gold); }
+  .mover-row-pos td:nth-child(2) { color: var(--bull); font-weight: 700; }
+  .mover-row-neg td:nth-child(2) { color: var(--bear); font-weight: 700; }
+  .banner-divider {
+    width: 100%;
+    height: 80px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: -8px 0 24px;
+    position: relative;
+    box-shadow: var(--shadow);
+  }
+  .banner-divider img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .banner-divider .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(20,45,55,0.85) 0%, rgba(3,70,73,0.6) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .banner-divider .overlay span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 8px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .footer {
+    background: var(--header-gradient);
+    color: rgba(255,255,255,0.4);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-align: center;
+    padding: 18px;
+    letter-spacing: 1px;
+    margin-top: 40px;
+    border-top: 3px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .footer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  .footer strong { color: var(--gold-light); }
+  .footer .brand-ft {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--gold-light);
+  }
+  .footer .brand-ft .gold { color: var(--gold); }
+  @media (max-width: 768px) {
+    .zones-grid { grid-template-columns: 1fr; }
+    .scenarios-grid { grid-template-columns: 1fr; }
+    .mag7-grid { grid-template-columns: repeat(4, 1fr); }
+    .header { flex-direction: column; gap: 14px; align-items: flex-start; }
+    .header-right { text-align: left; width: 100%; }
+    .header-right .prices { justify-content: flex-start; }
+    .setup-grid { grid-template-columns: 1fr; }
+    .scenario-body-inner { grid-template-columns: 1fr; }
+    .targets-grid { grid-template-columns: 1fr 1fr; }
+  }
+  /* Estado del mercado — badge dinámico */
+  .estado-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+  .estado-premarket  { background: rgba(179,134,101,.3); color: var(--gold-light); }
+  .estado-abierto    { background: rgba(39,153,149,.3);  color: #6bcfcb; }
+  .estado-postmarket { background: rgba(88,160,200,.3);  color: #88c8f0; }
+  .estado-overnight  { background: rgba(120,120,160,.2); color: #aaaacc; }
+
+  /* ─── PASO 06: Recomendador Señales HUD V5 ─── */
+  .rec-panel {
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+  .rec-panel-quant { border-top: 3px solid var(--teal); }
+  .rec-panel-ia    { border-top: 3px solid var(--gold); }
+  .rec-panel-header {
+    background: var(--navy);
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .rec-panel-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: var(--teal);
+    color: var(--navy-dark);
+  }
+  .rec-tag-ia { background: var(--gold); }
+  .rec-panel-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+  }
+  .rec-panel-meta {
+    margin-left: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,.45);
+  }
+  .rec-panel-body { background: var(--surface); padding: 16px 18px; }
+  .rec-filtros {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    letter-spacing: .5px;
+  }
+  .rec-table-wrap { overflow-x: auto; }
+  .rec-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .rec-table thead tr { background: var(--navy-dark); }
+  .rec-table .rec-mkt-head {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--gold-light);
+    padding: 8px 12px;
+    border-right: 1px solid rgba(255,255,255,.1);
+    text-align: center;
+  }
+  .rec-table .rec-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,.5);
+    padding: 5px 10px;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,.05);
+  }
+  .rec-seg-row { border-bottom: 2px solid var(--border); }
+  .rec-seg-col { width: 110px; min-width: 90px; }
+  .rec-seg-label {
+    background: var(--surface2);
+    padding: 10px 12px;
+    border-right: 1px solid var(--border);
+    vertical-align: middle;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .rec-seg-ico { font-size: 16px; display: block; margin-bottom: 2px; }
+  .rec-senal-cell {
+    padding: 10px 12px;
+    border-right: 1px solid var(--border);
+    vertical-align: middle;
+    text-align: center;
+    font-size: 12px;
+  }
+  .rec-stats-cell {
+    padding: 8px 10px;
+    border-right: 1px solid var(--border);
+    vertical-align: middle;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .rec-exp-cell {
+    padding: 8px 10px;
+    border-right: 1px solid var(--border);
+    vertical-align: middle;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .rec-cell-empty {
+    padding: 10px 12px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 11px;
+    border-right: 1px solid var(--border);
+  }
+  .rec-detail-row { background: var(--surface2); }
+  .rec-detail-seg { border-right: 1px solid var(--border); }
+  .rec-detail-cell {
+    padding: 6px 10px;
+    font-size: 11px;
+    color: var(--text-muted);
+    border-right: 1px solid var(--border);
+    line-height: 1.6;
+  }
+  .rec-nota-ia { background: rgba(179,134,101,.04); }
+  .det-rank { color: var(--text-muted); margin-right: 2px; }
+  .det-dir  { color: var(--teal); font-size: 10px; font-family: 'Space Mono', monospace; }
+  .dir-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 3px;
+    vertical-align: middle;
+  }
+  .dir-long  { background: var(--bull-bg);  color: var(--bull); }
+  .dir-short { background: var(--bear-bg);  color: var(--bear); }
+  .dir-ambos { background: var(--chop-bg);  color: var(--chop); }
+  .exp-pos { color: var(--bull); }
+  .exp-neg { color: var(--bear); }
+  .wr-ok   { color: var(--bull); font-weight: 700; }
+  .mc-riesgo { color: var(--bear); }
+  .rec-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+  }
+  .rec-legend-note { flex: 1; text-align: right; font-size: 10px; }
+  /* Panel B */
+  .rec-subtab-ia .rec-subtab-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .rec-narrativa {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+    border-left: 3px solid var(--gold);
+    padding: 10px 14px;
+    background: rgba(179,134,101,.04);
+    border-radius: 0 6px 6px 0;
+  }
+  .rec-b2-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 16px;
+    margin-top: 14px;
+  }
+  .rec-hud-card {
+    background: var(--navy-dark);
+    border: 1px solid rgba(179,134,101,.35);
+    border-radius: 8px;
+    padding: 14px 16px;
+    height: fit-content;
+  }
+  .rec-hud-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(179,134,101,.25);
+    padding-bottom: 6px;
+  }
+  .rec-hud-grid { display: flex; flex-direction: column; gap: 6px; }
+  .rec-hud-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  .rec-hud-key { color: rgba(255,255,255,.5); font-family: 'Space Mono', monospace; font-size: 10px; }
+  .rec-hud-val { color: white; font-weight: 600; }
+  .hud-on  { color: #6bcfcb; }
+  .hud-off { color: #e87373; }
+  .rec-hud-razon {
+    margin-top: 8px;
+    font-size: 11px;
+    color: rgba(255,255,255,.4);
+    line-height: 1.5;
+    font-style: italic;
+  }
+  @media (max-width: 768px) {
+    .rec-b2-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <img class="logo-img" src="/assets/logo.png" alt="EduS Trader" onerror="this.style.display='none'">
+    <div class="brand">
+      <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
+      <div class="brand-sub">Daily Strategic Game Plan &middot; Mesa de Dinero</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="date">MARTES 23 DE JUNIO 2026</div>
+    <div class="time">
+      8:53 AM ET
+      <span class="estado-badge estado-premarket">🌅 PRE-MARKET</span>
+      &middot; PRE-MARKET
+    </div>
+    <div class="prices">
+      <div class="price-chip">ES <span>7,433.00</span> <span class="chg-neg">-2.27%</span></div>
+      <div class="price-chip">NQ <span>29,751.75</span> <span class="chg-neg">-2.41%</span></div>
+      <div class="price-chip">CL <span>73.32</span> <span class="chg-neg">-2.10%</span></div>
+      <div class="price-chip">GC <span>4,137.00</span> <span class="chg-neg">-4.81%</span></div>
+      <div class="price-chip">VIX <span>20.17</span> <span class="vix-badge vix-media">Media</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="banner-divider">
+  <img src="/banner.png" alt="" onerror="this.style.display='none'">
+  <div class="overlay"><span>23 JUN 2026 &middot; Game Plan</span></div>
+</div>
+
+<div class="section-title">
+  <span class="step">PASO 01</span>
+  <h2>Sentimiento Global &amp; Fundamentales</h2>
+</div>
+
+<div class="sentiment-bar s-risk-off">
+  <div>
+    <div class="sentiment-label">Global Sentiment</div>
+    <div class="sentiment-value s-risk-off">RISK-OFF / VENTA TECNOLÓGICA</div>
+  </div>
+  <div class="sentiment-desc">
+    Reporte generado a las 8:43 AM ET — estado del mercado: PRE-MARKET, apertura en ~47 min (09:30 ET). Sesión netamente risk-off liderada por la tecnología: ES -2.26% y NQ -2.41% cotizan cerca de sus mínimos, tras el desplome de Alphabet (GOOGL -7%, su mayor caída intradía desde febrero) por la fuga de dos investigadores estrella de IA. El oro también capitula (GC -4.86%) en un movimiento de desapalancamiento amplio, el crudo cede -2.16% y el VIX repunta a ~20 desde 17.
+  </div>
+</div>
+
+<div class="alert-strip alert-warning">
+    <div class="icon">🚨</div>
+    <div>
+      <strong>Venta tecnológica: GOOGL -7% por éxodo de talento en IA</strong>
+      Alphabet pierde en 72 horas a Noam Shazeer (colíder de Gemini, coautor de 'Attention is all you need') y a John Jumper (Nobel de Química 2024 por AlphaFold, ahora en Anthropic). Sumado a un flujo de caja libre -47% interanual y capex de $180-190B, el mercado castiga al sector. Riesgo de contagio a NQ/semis (NVDA) en la apertura; operar el lado corto con disciplina y MICRO.
+    </div>
+  </div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>HORA ET</th>
+        <th>DATO / EVENTO</th>
+        <th>IMPACTO</th>
+        <th>CONSENSO</th>
+        <th>NOTA DE LIQUIDEZ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+          <td><strong>Pre-mercado</strong></td>
+          <td style="color:var(--text)">Continuidad conversaciones EE.UU.-Irán (Suiza) + digestión del shock GOOGL/IA</td>
+          <td><span class="badge badge-high">ALTO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">Sin nuevos titulares de acuerdo</td>
+          <td style="color:var(--text-muted);font-size:12px">El driver dominante hoy es la rotación fuera de tecnología; cualquier headline mueve NQ con fuerza.</td>
+        </tr>
+<tr>
+          <td><strong>09:45</strong></td>
+          <td style="color:var(--text)">S&P Global Flash PMI Manufactura y Servicios (Jun)</td>
+          <td><span class="badge badge-high">ALTO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">Manuf. ~51.0 · Serv. ~52.5</td>
+          <td style="color:var(--text-muted);font-size:12px">Primer dato fuerte tras la apertura; puede acelerar o frenar el risk-off.</td>
+        </tr>
+<tr>
+          <td><strong>10:00</strong></td>
+          <td style="color:var(--text)">Consumer Confidence — Conference Board (Jun)</td>
+          <td><span class="badge badge-high">ALTO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">~99.0</td>
+          <td style="color:var(--text-muted);font-size:12px">Sensible al sentimiento; lectura débil reforzaría el sesgo bajista.</td>
+        </tr>
+<tr>
+          <td><strong>10:00</strong></td>
+          <td style="color:var(--text)">New Home Sales (May)</td>
+          <td><span class="badge badge-med">MEDIO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">~735K (anual)</td>
+          <td style="color:var(--text-muted);font-size:12px">Impacto acotado salvo gran sorpresa.</td>
+        </tr>
+<tr>
+          <td><strong>10:00</strong></td>
+          <td style="color:var(--text)">Richmond Fed Manufacturing Index (Jun)</td>
+          <td><span class="badge badge-med">MEDIO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">~ -8</td>
+          <td style="color:var(--text-muted);font-size:12px">Pulso industrial regional; reacción usualmente limitada.</td>
+        </tr>
+<tr>
+          <td><strong>13:00</strong></td>
+          <td style="color:var(--text)">Subasta de notas del Tesoro a 2 años + discursos de la Fed (era Warsh)</td>
+          <td><span class="badge badge-med">MEDIO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">N/D</td>
+          <td style="color:var(--text-muted);font-size:12px">La demanda en la subasta y el tono de la Fed pueden mover tasas y NQ en la tarde.</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="alert-strip alert-info">
+    <div class="icon">⚠️</div>
+    <div>
+      <strong>Cuenta fondeada MFFU Flex 50K — MICRO obligatorio con VIX en 20</strong>
+      Operativa sobre cuenta MFFU Flex 50K (id MFFUEVFLX624378001): capital $50,000, DD EOD trailing $2,000, objetivo $3,000. Con VIX ~20 y régimen Media en ES/NQ, el dato de fondeo exige MICRO (ES: 80 [MICRO] ruina 0%; NQ: M2+ [MICRO] ruina 0%). Prohibido FULL: ayer 2 NQ full costaron -$1,435.
+    </div>
+  </div>
+
+<div class="section-title">
+  <span class="step">PASO 02</span>
+  <h2>Análisis Estructural — Zonas Clave</h2>
+</div>
+
+<div class="zones-grid">
+  <div class="zone-card">
+      <div class="zone-header">
+        <span>ES</span>
+        <span class="ticker">S&P 500 E-mini · 610 Tick</span>
+        <span class="price-ref">Ref: 7,434.00</span>
+      </div>
+      <div class="zone-body">
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">RESISTENCIAS</div>
+        <div class="zone-row"><span class="label">onOpen <span class="zone-type type-vwap">VWAP</span></span><span class="value value-res">7,450.75</span></div>
+<div class="zone-row"><span class="label">R1 <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">7,500.00</span></div>
+<div class="zone-row"><span class="label">Pre-High <span class="zone-type type-lvn">LVN</span></span><span class="value value-res">7,612.50</span></div>
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px">SOPORTES</div>
+        <div class="zone-row"><span class="label">Pre-Low <span class="zone-type type-lvn">LVN</span></span><span class="value value-sup">7,421.75</span></div>
+<div class="zone-row"><span class="label">S1 <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">7,400.00</span></div>
+<div class="zone-row"><span class="label">S2 <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">7,375.00</span></div>
+        <div class="zone-note"><strong>Wyckoff / Market Profile:</strong> ES en fase de markdown: cierre cerca del mínimo (7,421.75) tras perder la apertura y caer -2.26%, con vela de amplio rango bajista (Sign of Weakness). El precio opera muy por debajo del punto medio del rango previo, señal de oferta dominante. Mientras no recupere 7,450-7,500 el sesgo es vendedor en rebotes; perder 7,421.75 abre 7,400 y 7,375. Posible barrido del mínimo y rebote técnico (Automatic Rally) si llega sobreventa, pero el contexto de fondo es débil.</div>
+      </div>
+    </div>
+<div class="zone-card">
+      <div class="zone-header">
+        <span>NQ</span>
+        <span class="ticker">Nasdaq 100 E-mini · 377 Tick</span>
+        <span class="price-ref">Ref: 29,750.75</span>
+      </div>
+      <div class="zone-body">
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">RESISTENCIAS</div>
+        <div class="zone-row"><span class="label">onOpen <span class="zone-type type-vwap">VWAP</span></span><span class="value value-res">29,872.00</span></div>
+<div class="zone-row"><span class="label">R1 <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">30,000.00</span></div>
+<div class="zone-row"><span class="label">Pre-High <span class="zone-type type-lvn">LVN</span></span><span class="value value-res">30,968.00</span></div>
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px">SOPORTES</div>
+        <div class="zone-row"><span class="label">Pre-Low <span class="zone-type type-lvn">LVN</span></span><span class="value value-sup">29,735.00</span></div>
+<div class="zone-row"><span class="label">S1 <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">29,500.00</span></div>
+<div class="zone-row"><span class="label">S2 <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">29,250.00</span></div>
+        <div class="zone-note"><strong>Wyckoff / Market Profile:</strong> NQ es el epicentro del markdown: -2.41% y cotizando sobre su mínimo (29,735), con rango enorme (high 30,968) que refleja distribución y liquidación impulsada por GOOGL y semis. Estructura claramente bajista mientras opere bajo 30,000/onOpen 29,872. La pérdida de 29,735 habilita 29,500 y 29,250. Cualquier rebote hacia 30,000 sin volumen comprador es zona de venta; el régimen es de volatilidad media-alta, exige MICRO.</div>
+      </div>
+    </div>
+<div class="zone-card">
+      <div class="zone-header">
+        <span>CL</span>
+        <span class="ticker">Crude Oil WTI · Continuo</span>
+        <span class="price-ref">Ref: 73.27</span>
+      </div>
+      <div class="zone-body">
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">RESISTENCIAS</div>
+        <div class="zone-row"><span class="label">onOpen <span class="zone-type type-vwap">VWAP</span></span><span class="value value-res">73.86</span></div>
+<div class="zone-row"><span class="label">R1 <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">75.00</span></div>
+<div class="zone-row"><span class="label">Pre-High <span class="zone-type type-lvn">LVN</span></span><span class="value value-res">79.18</span></div>
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px">SOPORTES</div>
+        <div class="zone-row"><span class="label">Pre-Low <span class="zone-type type-lvn">LVN</span></span><span class="value value-sup">72.48</span></div>
+<div class="zone-row"><span class="label">S1 <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">72.00</span></div>
+<div class="zone-row"><span class="label">Round <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">70.00</span></div>
+        <div class="zone-note"><strong>Wyckoff / Market Profile:</strong> CL continúa el ajuste bajista tras la de-escalada Irán: -2.16% extendiendo la pérdida de prima geopolítica, en rango más estrecho que la sesión de capitulación previa (señal de agotamiento vendedor de corto plazo). Mientras opere bajo 73.86/75.00 el sesgo sigue bajista; soporte clave 72.48-72.00. Un rebote desde 72 sería técnico, no estructural. Volatilidad alta pero decreciente vs el desplome anterior.</div>
+      </div>
+    </div>
+<div class="zone-card">
+      <div class="zone-header">
+        <span>GC</span>
+        <span class="ticker">Gold · Continuo</span>
+        <span class="price-ref">Ref: 4,134.90</span>
+      </div>
+      <div class="zone-body">
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">RESISTENCIAS</div>
+        <div class="zone-row"><span class="label">onOpen <span class="zone-type type-vwap">VWAP</span></span><span class="value value-res">4,141.00</span></div>
+<div class="zone-row"><span class="label">R1 <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">4,200.00</span></div>
+<div class="zone-row"><span class="label">Pre-High <span class="zone-type type-lvn">LVN</span></span><span class="value value-res">4,403.60</span></div>
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px">SOPORTES</div>
+        <div class="zone-row"><span class="label">Pre-Low <span class="zone-type type-lvn">LVN</span></span><span class="value value-sup">4,108.20</span></div>
+<div class="zone-row"><span class="label">S1 <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">4,100.00</span></div>
+<div class="zone-row"><span class="label">Round <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">4,050.00</span></div>
+        <div class="zone-note"><strong>Wyckoff / Market Profile:</strong> GC en clímax de venta (Selling Climax) con -4.86%, capitulando junto a la renta variable: cuando caen a la vez acciones y oro suele ser desapalancamiento forzado / liquidación de margen. Cierre cerca del mínimo (4,108.20) tras rechazar 4,403.60. Sesgo bajista bajo 4,200/onOpen 4,141; perder 4,100 abre 4,050. Tras un clímax así puede haber rebote técnico violento — operar con tamaño reducido y no perseguir.</div>
+      </div>
+    </div>
+</div>
+
+<div class="alert-strip alert-info">
+    <div class="icon">📊</div>
+    <div>
+      <strong>Contexto Market Profile / Wyckoff:</strong><br>
+      <strong>ES:</strong> ES en fase de markdown: cierre cerca del mínimo (7,421.75) tras perder la apertura y caer -2.26%, con vela de amplio rango bajista (Sign of Weakness). El precio opera muy por debajo del punto medio del rango previo, señal de oferta dominante. Mientras no recupere 7,450-7,500 el sesgo es vendedor en rebotes; perder 7,421.75 abre 7,400 y 7,375. Posible barrido del mínimo y rebote técnico (Automatic Rally) si llega sobreventa, pero el contexto de fondo es débil.<br><strong>NQ:</strong> NQ es el epicentro del markdown: -2.41% y cotizando sobre su mínimo (29,735), con rango enorme (high 30,968) que refleja distribución y liquidación impulsada por GOOGL y semis. Estructura claramente bajista mientras opere bajo 30,000/onOpen 29,872. La pérdida de 29,735 habilita 29,500 y 29,250. Cualquier rebote hacia 30,000 sin volumen comprador es zona de venta; el régimen es de volatilidad media-alta, exige MICRO.<br><strong>CL:</strong> CL continúa el ajuste bajista tras la de-escalada Irán: -2.16% extendiendo la pérdida de prima geopolítica, en rango más estrecho que la sesión de capitulación previa (señal de agotamiento vendedor de corto plazo). Mientras opere bajo 73.86/75.00 el sesgo sigue bajista; soporte clave 72.48-72.00. Un rebote desde 72 sería técnico, no estructural. Volatilidad alta pero decreciente vs el desplome anterior.<br><strong>GC:</strong> GC en clímax de venta (Selling Climax) con -4.86%, capitulando junto a la renta variable: cuando caen a la vez acciones y oro suele ser desapalancamiento forzado / liquidación de margen. Cierre cerca del mínimo (4,108.20) tras rechazar 4,403.60. Sesgo bajista bajo 4,200/onOpen 4,141; perder 4,100 abre 4,050. Tras un clímax así puede haber rebote técnico violento — operar con tamaño reducido y no perseguir.
+    </div>
+  </div>
+
+<div class="section-title">
+  <span class="step">PASO 03</span>
+  <h2>Matriz de Escenarios — Plan de Batalla</h2>
+</div>
+
+<div class="prob-bar-container">
+  <div class="prob-bar-title">Distribución de Probabilidades Estimadas</div>
+  <div class="prob-bar">
+    <div class="prob-segment-bull" style="width:20%"></div>
+    <div class="prob-segment-chop" style="width:35%"></div>
+    <div class="prob-segment-bear" style="width:45%"></div>
+  </div>
+  <div class="prob-labels">
+    <div class="prob-lbl"><div class="prob-dot dot-pos"></div> Alcista 20%</div>
+    <div class="prob-lbl"><div class="prob-dot dot-neu"></div> Lateral 35%</div>
+    <div class="prob-lbl"><div class="prob-dot dot-neg"></div> Bajista 45%</div>
+  </div>
+</div>
+
+<div class="scenarios-grid">
+  <div class="scenario-card bull">
+    <div class="scenario-header">
+      <span class="scenario-icon">🟢</span>
+      <div>
+        <div class="scenario-label">ESCENARIO A — ALCISTA</div>
+        <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--bull)">Bullish Case</div>
+      </div>
+      <div class="scenario-prob">20%</div>
+    </div>
+    <div class="scenario-body">
+      <div class="scenario-body-inner">
+        <div class="scenario-row">
+          <div class="s-label">Trigger / Condición</div>
+          <div class="s-value">Rebote técnico por sobreventa: PMIs sólidos + ES recupera 7,450 y NQ reclama 30,000 con volumen comprador.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Estrategia</div>
+          <div class="s-value">Solo rebotes tácticos desde soporte (mean-reversion), no compras de continuación; cerrar rápido en resistencia. Favorecer ES sobre NQ por menor exposición al tema IA.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Invalidación</div>
+          <div class="s-value" style="color:var(--bear)">ES vuelve a perder 7,421.75 / NQ pierde 29,735.</div>
+        </div>
+      </div>
+      <div class="targets-grid"><div class="target-group"><div class="target-group-label">ES</div><div class="target-list"><span class="target-chip">T1: 7,500</span><span class="target-chip">T2: 7,540</span></div></div> <div class="target-group"><div class="target-group-label">NQ</div><div class="target-list"><span class="target-chip">T1: 30,000</span><span class="target-chip">T2: 30,200</span></div></div> <div class="target-group"><div class="target-group-label">CL</div><div class="target-list"><span class="target-chip">T1: 74.50</span><span class="target-chip">T2: 75.50</span></div></div> <div class="target-group"><div class="target-group-label">GC</div><div class="target-list"><span class="target-chip">T1: 4,180</span><span class="target-chip">T2: 4,220</span></div></div></div>
+      <div class="scenario-note" style="background:rgba(77,186,118,0.05)"><strong>Nota:</strong> Rebote contra-tendencia de baja probabilidad; reward limitado mientras el sentimiento siga risk-off.</div>
+    </div>
+  </div>
+<div class="scenario-card bear">
+    <div class="scenario-header">
+      <span class="scenario-icon">🔴</span>
+      <div>
+        <div class="scenario-label">ESCENARIO B — BAJISTA</div>
+        <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--bear)">Bearish Case</div>
+      </div>
+      <div class="scenario-prob">45%</div>
+    </div>
+    <div class="scenario-body">
+      <div class="scenario-body-inner">
+        <div class="scenario-row">
+          <div class="s-label">Trigger / Condición</div>
+          <div class="s-value">Continuación del markdown: ES pierde 7,421.75 y NQ pierde 29,735, o PMIs/Confidence débiles aceleran la venta.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Estrategia</div>
+          <div class="s-value">Vender rebotes a VWAP/onOpen y rupturas de mínimos con volumen; priorizar NQ (epicentro de la venta). Gestionar runner con TrailingATR.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Invalidación</div>
+          <div class="s-value" style="color:var(--bear)">ES recupera 7,500 / NQ recupera 30,000 con fuerza.</div>
+        </div>
+      </div>
+      <div class="targets-grid"><div class="target-group"><div class="target-group-label">ES</div><div class="target-list"><span class="target-chip">T1: 7,400</span><span class="target-chip">T2: 7,375</span></div></div> <div class="target-group"><div class="target-group-label">NQ</div><div class="target-list"><span class="target-chip">T1: 29,500</span><span class="target-chip">T2: 29,250</span></div></div> <div class="target-group"><div class="target-group-label">CL</div><div class="target-list"><span class="target-chip">T1: 72.48</span><span class="target-chip">T2: 72.00</span></div></div> <div class="target-group"><div class="target-group-label">GC</div><div class="target-list"><span class="target-chip">T1: 4,108</span><span class="target-chip">T2: 4,050</span></div></div></div>
+      <div class="scenario-note" style="background:rgba(224,82,82,0.05)"><strong>Nota:</strong> Escenario de mayor probabilidad por el contagio del shock GOOGL/IA y el VIX al alza; respetar MICRO por la volatilidad.</div>
+    </div>
+  </div>
+<div class="scenario-card chop">
+    <div class="scenario-header">
+      <span class="scenario-icon">🟡</span>
+      <div>
+        <div class="scenario-label">ESCENARIO C — LATERAL</div>
+        <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--chop)">Chop / Rango</div>
+      </div>
+      <div class="scenario-prob">35%</div>
+    </div>
+    <div class="scenario-body">
+      <div class="scenario-body-inner">
+        <div class="scenario-row">
+          <div class="s-label">Trigger / Condición</div>
+          <div class="s-value">Estabilización en rango tras la caída: ES atrapado 7,421-7,500, NQ 29,735-30,000 mientras el mercado digiere los datos.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Estrategia</div>
+          <div class="s-value">Fade los extremos del rango con tamaño reducido; no romper mínimos/VWAP sin volumen. Evitar quedar atrapado en el ruido de apertura.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Invalidación</div>
+          <div class="s-value" style="color:var(--chop)">Cierre de 5 min fuera del rango con volumen expansivo.</div>
+        </div>
+      </div>
+      <div class="targets-grid"><div class="target-group"><div class="target-group-label">ES</div><div class="target-list"><span class="target-chip">T1 Long: 7,430</span><span class="target-chip">T1 Short: 7,495</span></div></div> <div class="target-group"><div class="target-group-label">NQ</div><div class="target-list"><span class="target-chip">T1 Long: 29,760</span><span class="target-chip">T1 Short: 29,980</span></div></div> <div class="target-group"><div class="target-group-label">CL</div><div class="target-list"><span class="target-chip">T1: 72.50-74.50</span></div></div> <div class="target-group"><div class="target-group-label">GC</div><div class="target-list"><span class="target-chip">T1: 4,110-4,190</span></div></div></div>
+      <div class="scenario-note" style="background:rgba(138,108,0,0.05)"><strong>Regla crítica:</strong> Tras una caída fuerte y con VIX en 20, los rangos de consolidación son frecuentes hasta el próximo catalizador (PMIs/Confidence).</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-title">
+  <span class="step">PASO 04</span>
+  <h2>Contexto Corporativo — Market Breadth</h2>
+</div>
+
+<div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:10px;">4.1 &middot; Las 7 Magníficas — Sesgo Direccional</div>
+
+<div class="mag7-grid">
+  <div class="mag7-chip">
+        <div class="ticker">AAPL</div>
+        <div class="price" style="font-size:12px">$268</div>
+        <div class="change down">-1.4%</div>
+        <div class="bias-dot dot-down"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">MSFT</div>
+        <div class="price" style="font-size:12px">$487</div>
+        <div class="change down">-1.8%</div>
+        <div class="bias-dot dot-down"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">GOOGL</div>
+        <div class="price" style="font-size:12px">$192</div>
+        <div class="change down">-7.0%</div>
+        <div class="bias-dot dot-down"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">AMZN</div>
+        <div class="price" style="font-size:12px">$230</div>
+        <div class="change down">-1.9%</div>
+        <div class="bias-dot dot-down"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">NVDA</div>
+        <div class="price" style="font-size:12px">$176</div>
+        <div class="change down">-3.2%</div>
+        <div class="bias-dot dot-down"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">META</div>
+        <div class="price" style="font-size:12px">$718</div>
+        <div class="change down">-2.1%</div>
+        <div class="bias-dot dot-down"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">TSLA</div>
+        <div class="price" style="font-size:12px">$339</div>
+        <div class="change down">-2.6%</div>
+        <div class="bias-dot dot-down"></div>
+      </div>
+</div>
+
+<div class="directional-summary">
+    <div class="icon">🧭</div>
+    <div><strong>Sesgo Mag 7:</strong> Sesgo claramente bajista y amplio en las 7 Magníficas: todas en rojo, lideradas por GOOGL (-7%) por la fuga de talento de IA y por NVDA (-3.2%) por contagio en semis. La debilidad generalizada confirma que el risk-off es estructural del día (rotación fuera de tecnología), no un evento aislado; NQ es el índice más vulnerable.</div>
+  </div>
+
+<div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:10px;">4.2 &middot; Top Movers S&amp;P 500 — 23 JUN 2026</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>TICKER</th>
+        <th>% CAMBIO</th>
+        <th>VOL. RELATIVO</th>
+        <th>CAUSA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="mover-row-neg">
+          <td><strong>GOOGL</strong></td>
+          <td>-7.0%</td>
+          <td style="font-size:12px">4x</td>
+          <td style="font-size:12px">Salida de Noam Shazeer y John Jumper (a Anthropic) + FCF -47% y capex elevado.</td>
+        </tr>
+<tr class="mover-row-neg">
+          <td><strong>NVDA</strong></td>
+          <td>-3.2%</td>
+          <td style="font-size:12px">2.5x</td>
+          <td style="font-size:12px">Contagio del selloff en IA/semis tras el shock de Alphabet.</td>
+        </tr>
+<tr class="mover-row-neg">
+          <td><strong>NEM</strong></td>
+          <td>-5.0%</td>
+          <td style="font-size:12px">3x</td>
+          <td style="font-size:12px">Desplome del oro (-4.86%) por desapalancamiento amplio.</td>
+        </tr>
+<tr class="mover-row-neg">
+          <td><strong>MU</strong></td>
+          <td>-2.5%</td>
+          <td style="font-size:12px">3x</td>
+          <td style="font-size:12px">Reacción post-earnings + presión sectorial en semiconductores.</td>
+        </tr>
+<tr class="mover-row-pos">
+          <td><strong>CCL</strong></td>
+          <td>+1.5%</td>
+          <td style="font-size:12px">2x</td>
+          <td style="font-size:12px">Resiliencia relativa por la caída del petróleo (menor costo de combustible).</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section-title">
+  <span class="step">PASO 05</span>
+  <h2>Estrategia Operativa — Mesa &lt; 11:30 AM ET</h2>
+</div>
+
+<div class="setup-box">
+    <div class="setup-header">⚡ SETUP PRIMARIO — Short NQ en retest de VWAP/onOpen (segmento UsaAm, MICRO)</div>
+    <div class="setup-body">
+      <div class="setup-item">
+        <div class="s-label">Descripción</div>
+        <div class="s-value">Aprovechar el markdown de NQ vendiendo rebotes hacia la apertura/VWAP (29,872) o el nivel redondo 30,000 mientras no los recupere, alineado con el contexto risk-off. Ejecutar en MICRO (MNQ) por VIX 20 y cuenta fondeada; gestionar runner con TrailingATR.</div>
+      </div>
+      <div class="setup-grid"><div class="setup-item"><div class="s-label">Entry</div><div class="s-value" style="font-weight:600">29,860-30,000 (rechazo de VWAP/round)</div></div><div class="setup-item"><div class="s-label">Stop</div><div class="s-value" style="font-weight:600">30,060</div></div><div class="setup-item"><div class="s-label">Target T1</div><div class="s-value" style="font-weight:600">29,735</div></div><div class="setup-item"><div class="s-label">Target T2</div><div class="s-value" style="font-weight:600">29,500</div></div><div class="setup-item"><div class="s-label">R:R</div><div class="s-value" style="font-weight:600">1:2 a 1:3</div></div><div class="setup-item"><div class="s-label">Tamaño</div><div class="s-value" style="font-weight:600">MICRO (MNQ)</div></div><div class="setup-item"><div class="s-label">Prob.</div><div class="s-value" style="font-weight:600">Media-Alta</div></div></div>
+    </div>
+  </div>
+<div class="setup-box">
+    <div class="setup-header">⚡ SETUP SECUNDARIO — ES — '80+ Ambos' en Almuerzo (mean-reversion del rango)</div>
+    <div class="setup-body">
+      <div class="setup-item">
+        <div class="s-label">Descripción</div>
+        <div class="s-value">En la franja de Almuerzo, operar la señal 80+ en ambas direcciones según el extremo del rango (la de mayor WR/R del día en ES), fadeando 7,500/7,421.75. Solo con confirmación de contexto HUD; MICRO en la cuenta fondeada.</div>
+      </div>
+      <div class="setup-grid"><div class="setup-item"><div class="s-label">Condicion</div><div class="s-value" style="font-weight:600">ES en extremo del rango 7,421-7,500 con señal 80+</div></div><div class="setup-item"><div class="s-label">Entry</div><div class="s-value" style="font-weight:600">Rechazo confirmado en el extremo</div></div><div class="setup-item"><div class="s-label">Stop</div><div class="s-value" style="font-weight:600">Según Kelt Stop 0.24 / ATR</div></div><div class="setup-item"><div class="s-label">Tamaño</div><div class="s-value" style="font-weight:600">MICRO</div></div></div>
+    </div>
+  </div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>HORA ET</th>
+        <th>ZONA CRÍTICA</th>
+        <th>ACCIÓN RECOMENDADA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+          <td><strong>09:30-09:45</strong></td>
+          <td><span class="badge badge-high">ALTA VOLATILIDAD Cash Open + gap risk-off</span></td>
+          <td style="font-size:12px">Esperar 5-15 min; dejar formar el rango de apertura, no perseguir</td>
+        </tr>
+<tr>
+          <td><strong>09:45-10:00</strong></td>
+          <td><span class="badge badge-low">PMIs Flash + Consumer Confidence</span></td>
+          <td style="font-size:12px">Operar con cautela; no anticipar dirección al dato</td>
+        </tr>
+<tr>
+          <td><strong>11:30-13:30</strong></td>
+          <td><span class="badge badge-low">Almuerzo — señal ES 80+ Ambos</span></td>
+          <td style="font-size:12px">Ventana del setup secundario en ES</td>
+        </tr>
+<tr>
+          <td><strong>13:30-15:30</strong></td>
+          <td><span class="badge badge-low">UsaPm — M3 LONG NQ/ES</span></td>
+          <td style="font-size:12px">Buscar continuación o reversión según contexto; MICRO</td>
+        </tr>
+<tr>
+          <td><strong>Todo el día</strong></td>
+          <td><span class="badge badge-low">Cuenta fondeada DD $2,000</span></td>
+          <td style="font-size:12px">MICRO obligatorio; cortar el día si se acerca al límite de DD</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="alert-strip alert-success">
+    <div class="icon">✅</div>
+    <div>
+      <strong>Reglas de la Mesa — 23 JUN 2026:</strong><br>
+            1. Respetar los datos económicos y titulares de IA/Suiza — no anticipar dirección.<br>      2. Stops SIEMPRE activos; Kelt Stop 0.24 y RR1/RR2 2/3.<br>      3. MICRO obligatorio en la cuenta fondeada (ES 80 y NQ M2+ en micro, ruina 0%).<br>      4. Prohibido FULL en NQ con VIX 20 (ayer 2 NQ full = -$1,435).<br>      5. No operar largos de NQ hasta recuperar 30,000; sesgo del día bajista.<br>      6. Mantener todas las zonas activas (20 y A son el motor del profit).<br>
+    </div>
+  </div>
+
+</div>
+
+<div class="section-title">
+  <span class="step">PASO 06</span>
+  <h2>Recomendador HUD V5 &mdash; Se&ntilde;ales &Oacute;ptimas por Segmento</h2>
+</div>
+
+<div class="rec-panel rec-panel-quant">
+  <div class="rec-panel-header">
+    <span class="rec-panel-tag">PANEL A</span>
+    <span class="rec-panel-title">📊 Análisis Cuantitativo de Backtesting</span>
+    <span class="rec-panel-meta">VIX 20.2 — Régimen: ES: Media · NQ: Media</span>
+  </div>
+  <div class="rec-panel-body">
+    <div class="rec-filtros">WinRate ≥ 40% &middot; Riesgo MC ≤ 20% &middot; Mín. 30 trades &middot; Régimen VIX: ES: Media · NQ: Media</div>
+    <div class="rec-table-wrap">
+      <table class="rec-table">
+        <thead>
+          <tr><th class='rec-seg-col'></th><th colspan="3" class="rec-mkt-head">ES</th><th colspan="3" class="rec-mkt-head">NQ</th></tr>
+          <tr><th></th><th class="rec-sub">SEÑAL</th><th class="rec-sub">WR / MC</th><th class="rec-sub">EXP $</th><th class="rec-sub">SEÑAL</th><th class="rec-sub">WR / MC</th><th class="rec-sub">EXP $</th></tr>
+        </thead>
+        <tbody>
+          
+        <tr class="rec-seg-row">
+          <td class="rec-seg-label">
+            <span class="rec-seg-ico">🌅</span>
+            <strong>USA AM</strong><br>
+            <small>09:00–11:30 ET</small>
+          </td>
+          <td class="rec-senal-cell">
+            🟡 <strong>80</strong> <span class="dir-badge dir-long">↑ LONG</span> <span class="dir-badge" style="background:#1b4332;color:#74c69d;">FULL</span>
+          </td>
+          <td class="rec-stats-cell">
+            <span class="">46.0%</span>
+            &nbsp;/&nbsp;
+            <span class="mc-riesgo">0.4%</span>
+            <br><small>R +0.68 · edge 2.26</small>
+          </td>
+          <td class="rec-exp-cell exp-pos">
+            +$150
+            <br><small>full</small>
+          </td>
+          <td class="rec-senal-cell">
+            🟡 <strong>M2+</strong> <span class="dir-badge dir-short">↓ SHORT</span> <span class="dir-badge" style="background:#1b4332;color:#74c69d;">FULL</span>
+          </td>
+          <td class="rec-stats-cell">
+            <span class="">43.8%</span>
+            &nbsp;/&nbsp;
+            <span class="mc-riesgo">3.8%</span>
+            <br><small>R +0.69 · edge 2.15</small>
+          </td>
+          <td class="rec-exp-cell exp-pos">
+            +$280
+            <br><small>full</small>
+          </td>
+        </tr><tr class="rec-detail-row"><td class="rec-detail-seg"></td><td colspan="3" class="rec-detail-cell"><span class='det-rank'>1.</span> 🟡 <strong>80</strong> <span class='det-dir'>LONG</span> <strong>[FULL]</strong> — WR 46.0% | R +0.68 | MC full 0% / micro 0% | Exp: +$150 | N=74<br><span class='det-rank'>2.</span> 🟡 <strong>M3</strong> <span class='det-dir'>LONG</span> <strong>[FULL]</strong> — WR 40.0% | R +0.56 | MC full 0% / micro 0% | Exp: +$123 | N=50<br><span class='det-rank'>3.</span> 🟡 <strong>M2+</strong> <span class='det-dir'>LONG</span> <strong>[FULL]</strong> — WR 43.8% | R +0.46 | MC full 0% / micro 0% | Exp: +$81 | N=32</td><td colspan="3" class="rec-detail-cell"><span class='det-rank'>1.</span> 🟡 <strong>M2+</strong> <span class='det-dir'>SHORT</span> <strong>[FULL]</strong> — WR 43.8% | R +0.69 | MC full 4% / micro 0% | Exp: +$280 | N=48<br><span class='det-rank'>2.</span> 🟡 <strong>M2</strong> <span class='det-dir'>SHORT</span> <strong>[FULL]</strong> — WR 43.2% | R +0.62 | MC full 13% / micro 0% | Exp: +$274 | N=352<br><span class='det-rank'>3.</span> 🟡 <strong>20+</strong> <span class='det-dir'>SHORT</span> <strong>[FULL]</strong> — WR 42.5% | R +0.59 | MC full 18% / micro 0% | Exp: +$257 | N=631</td></tr>
+        <tr class="rec-seg-row">
+          <td class="rec-seg-label">
+            <span class="rec-seg-ico">🥪</span>
+            <strong>ALMUERZO</strong><br>
+            <small>11:30–13:30 ET</small>
+          </td>
+          <td class="rec-senal-cell">
+            🟢 <strong>80+</strong> <span class="dir-badge dir-ambos">↕ AMBOS</span> <span class="dir-badge" style="background:#1b4332;color:#74c69d;">FULL</span>
+          </td>
+          <td class="rec-stats-cell">
+            <span class="wr-ok">56.9%</span>
+            &nbsp;/&nbsp;
+            <span class="mc-riesgo">0.0%</span>
+            <br><small>R +1.44 · edge 3.12</small>
+          </td>
+          <td class="rec-exp-cell exp-pos">
+            +$287
+            <br><small>full</small>
+          </td>
+          <td class="rec-senal-cell">
+            🟡 <strong>M3</strong> <span class="dir-badge dir-long">↑ LONG</span> <span class="dir-badge" style="background:#1b4332;color:#74c69d;">FULL</span>
+          </td>
+          <td class="rec-stats-cell">
+            <span class="">45.7%</span>
+            &nbsp;/&nbsp;
+            <span class="mc-riesgo">0.0%</span>
+            <br><small>R +0.92 · edge 2.00</small>
+          </td>
+          <td class="rec-exp-cell exp-pos">
+            +$241
+            <br><small>full</small>
+          </td>
+        </tr><tr class="rec-detail-row"><td class="rec-detail-seg"></td><td colspan="3" class="rec-detail-cell"><span class='det-rank'>1.</span> 🟢 <strong>80+</strong> <span class='det-dir'>Ambos</span> <strong>[FULL]</strong> — WR 56.9% | R +1.44 | MC full 0% / micro 0% | Exp: +$287 | N=51<br><span class='det-rank'>2.</span> 🟡 <strong>A+</strong> <span class='det-dir'>LONG</span> <strong>[FULL]</strong> — WR 47.7% | R +0.96 | MC full 0% / micro 0% | Exp: +$210 | N=174<br><span class='det-rank'>3.</span> 🟡 <strong>80</strong> <span class='det-dir'>LONG</span> <strong>[FULL]</strong> — WR 48.4% | R +0.95 | MC full 0% / micro 0% | Exp: +$204 | N=64</td><td colspan="3" class="rec-detail-cell"><span class='det-rank'>1.</span> 🟡 <strong>M3</strong> <span class='det-dir'>LONG</span> <strong>[FULL]</strong> — WR 45.7% | R +0.92 | MC full 0% / micro 0% | Exp: +$241 | N=35<br><span class='det-rank'>2.</span> 🟡 <strong>M3</strong> <span class='det-dir'>Ambos</span> <strong>[FULL]</strong> — WR 46.0% | R +0.79 | MC full 0% / micro 0% | Exp: +$214 | N=50<br><span class='det-rank'>3.</span> 🟡 <strong>M2</strong> <span class='det-dir'>SHORT</span> <strong>[FULL]</strong> — WR 46.3% | R +0.68 | MC full 7% / micro 0% | Exp: +$301 | N=177</td></tr>
+        <tr class="rec-seg-row">
+          <td class="rec-seg-label">
+            <span class="rec-seg-ico">🌆</span>
+            <strong>USA PM</strong><br>
+            <small>13:30–17:00 ET</small>
+          </td>
+          <td class="rec-senal-cell">
+            🟢 <strong>M3</strong> <span class="dir-badge dir-long">↑ LONG</span> <span class="dir-badge" style="background:#1b4332;color:#74c69d;">FULL</span>
+          </td>
+          <td class="rec-stats-cell">
+            <span class="wr-ok">50.0%</span>
+            &nbsp;/&nbsp;
+            <span class="mc-riesgo">0.0%</span>
+            <br><small>R +1.18 · edge 2.18</small>
+          </td>
+          <td class="rec-exp-cell exp-pos">
+            +$249
+            <br><small>full</small>
+          </td>
+          <td class="rec-senal-cell">
+            🟡 <strong>M3</strong> <span class="dir-badge dir-long">↑ LONG</span> <span class="dir-badge" style="background:#1b4332;color:#74c69d;">FULL</span>
+          </td>
+          <td class="rec-stats-cell">
+            <span class="">48.5%</span>
+            &nbsp;/&nbsp;
+            <span class="mc-riesgo">0.0%</span>
+            <br><small>R +1.07 · edge 2.72</small>
+          </td>
+          <td class="rec-exp-cell exp-pos">
+            +$237
+            <br><small>full</small>
+          </td>
+        </tr><tr class="rec-detail-row"><td class="rec-detail-seg"></td><td colspan="3" class="rec-detail-cell"><span class='det-rank'>1.</span> 🟢 <strong>M3</strong> <span class='det-dir'>LONG</span> <strong>[FULL]</strong> — WR 50.0% | R +1.18 | MC full 0% / micro 0% | Exp: +$249 | N=30<br><span class='det-rank'>2.</span> 🟡 <strong>80+</strong> <span class='det-dir'>SHORT</span> <strong>[FULL]</strong> — WR 48.9% | R +1.13 | MC full 0% / micro 0% | Exp: +$244 | N=47<br><span class='det-rank'>3.</span> 🟢 <strong>M2</strong> <span class='det-dir'>SHORT</span> <strong>[FULL]</strong> — WR 53.5% | R +1.07 | MC full 0% / micro 0% | Exp: +$239 | N=43</td><td colspan="3" class="rec-detail-cell"><span class='det-rank'>1.</span> 🟡 <strong>M3</strong> <span class='det-dir'>LONG</span> <strong>[FULL]</strong> — WR 48.5% | R +1.07 | MC full 0% / micro 0% | Exp: +$237 | N=33<br><span class='det-rank'>2.</span> 🟡 <strong>M3</strong> <span class='det-dir'>Ambos</span> <strong>[FULL]</strong> — WR 47.6% | R +0.69 | MC full 0% / micro 0% | Exp: +$139 | N=82<br><span class='det-rank'>3.</span> 🟡 <strong>A+</strong> <span class='det-dir'>LONG</span> <strong>[MICRO]</strong> — WR 43.8% | R +0.51 | MC full 27% / micro 0% | Exp: +$21 | N=235</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="rec-legend">
+      <span>🟢 Óptima: WR≥50% &amp; R≥0.40</span>
+      <span>🟡 Viable: pasa filtros</span>
+      <span><strong>FULL</strong>=2 contratos full · <strong>MICRO</strong>=2 micros (riesgo MC ≤ 20% define el tamaño)</span>
+      <span class="rec-legend-note">WR=WinRate | R=Expectancia en R (2 contratos, indep. del tamaño) | edge=MFE/MAE | MC=Riesgo Ruina | Exp$=al tamaño sugerido | N=Nº trades</span>
+    </div>
+  </div>
+</div>
+<div class="rec-panel rec-panel-ia">
+  <div class="rec-panel-header">
+    <span class="rec-panel-tag rec-tag-ia">PANEL B</span>
+    <span class="rec-panel-title">🧠 Análisis Narrativo IA — Recomendador HUD V6</span>
+  </div>
+  <div class="rec-panel-body">
+    <div class="rec-subtab-ia">
+      <div class="rec-subtab-title">B.2 — Análisis Narrativo (basado en los datos del Panel A y C)</div>
+      <div class="rec-narrativa">Hoy ES y NQ comparten régimen Media con VIX en 20, por lo que el tamaño se decide por la cuenta: en la fondeada MFFU Flex 50K todo va en MICRO. En ES la señal más robusta es la de Almuerzo '80+ Ambos' (WR 57%, R +1.44), seguida del M3 LONG de UsaPm (WR 50%, R +1.18) y del 80 LONG de UsaAm (WR 46%, R +0.68); todas con ruina 0% en full y micro. En NQ las mejores expectativas son los M3 LONG de la tarde — UsaPm (WR 48%, R +1.07) y Almuerzo (WR 46%, R +0.92) —, mientras que el M2+ SHORT de UsaAm (WR 44%, R +0.69) debe ir en MICRO por su 4% de ruina en full. Mantener la configuración recomendada (detección ATR, Kelt Stop 0.24, RR1/RR2 2/3, LinReg ES 0.10 / NQ 0.16, todas las zonas activas — 20 y A son el motor del profit). Advertencia: con el risk-off tecnológico y la volatilidad al alza, respetar el MICRO y evitar el lado largo de NQ hasta que recupere 30,000.</div>
+    </div>
+  </div>
+</div>
+<div class="rec-panel rec-panel-quant" style="margin-top:18px;">
+  <div class="rec-panel-header">
+    <span class="rec-panel-tag">PANEL C</span>
+    <span class="rec-panel-title">⚙️ Configuración Recomendada — HUD + Estrategia</span>
+    <span class="rec-panel-meta">derivada del backtesting</span>
+  </div>
+  <div class="rec-panel-body">
+    <div class="rec-b2-grid">
+      <div class="rec-b2-left">
+        <h4 style="margin:0 0 8px;">Indicador HUD V6</h4>
+        <table class="rec-table" style="font-size:13px;">
+          <tr><td><strong>Modo Detección Vol</strong></td><td>AtrRange</td><td>clasifica régimen por ATR/mercado</td></tr>
+          <tr><td><strong>Kelt Stop %</strong></td><td>0.24 ⚠️</td><td>~20% más ajustado (76% gan. MAE≤0.6R) — <em>validar regenerando BT</em></td></tr>
+          <tr><td><strong>RR1 / RR2</strong></td><td>2 / 3</td><td>validado; subir RR2 no evaluable (MFE censurado en T2)</td></tr>
+          <tr><td><strong>LinReg Slope Thr.</strong></td><td>ES 0.10 · NQ 0.16</td><td>planitud LR local 5 barras (M3 dispara limpio)</td></tr>
+          <tr><td><strong>Rankings de zona</strong></td><td>todas activas</td><td>ninguna zona es perdedora; <strong>20</strong> y <strong>A</strong> son el motor del profit</td></tr>
+        </table>
+      </div>
+      <div class="rec-b2-right">
+        <h4 style="margin:0 0 8px;">Estrategia AutoTrader V2</h4>
+        <table class="rec-table" style="font-size:13px;">
+          <tr><td><strong>TrailingModo</strong></td><td>TrailingATR</td><td>default; el BT lo subestima (los runners BE rinden más en vivo)</td></tr>
+          <tr><td><strong>Contratos</strong></td><td>2 (T1 + runner)</td><td>tu objetivo operativo</td></tr>
+          <tr><td><strong>Capital base</strong></td><td>$50,000</td><td>capital real de referencia para el riesgo</td></tr>
+        </table>
+        <h4 style="margin:12px 0 6px;">Tamaño sugerido por mercado</h4>
+        <table class="rec-table" style="font-size:13px;"><tr><td><strong>ES</strong></td><td>Full (2 contratos) en todas las recomendadas</td></tr><tr><td><strong>NQ</strong></td><td>8 full · 1 micro (MNQ) — según la ruina de cada señal</td></tr></table>
+      </div>
+    </div>
+    <div class="rec-legend">
+      <span class="rec-legend-note">⚠️ = recomendación del análisis pendiente de validar en vivo (regenerar BT con el cambio). El resto está validado sobre 257.949 trades.</span>
+    </div>
+  </div>
+</div>
+<div class="rec-panel rec-panel-quant" style="margin-top:18px;">
+  <div class="rec-panel-header">
+    <span class="rec-panel-tag">PANEL D</span>
+    <span class="rec-panel-title">🏦 Cuentas de Fondeo — Tamaño por Drawdown</span>
+    <span class="rec-panel-meta">ruina = tocar el drawdown</span>
+  </div>
+  <div class="rec-panel-body">
+    <div class="rec-filtros">Riesgo aceptado: ≤ 15% de campañas que tocan el DD &middot; misma calidad de señal (R) que el Panel A</div>
+    <div class="rec-subtab-ia" style="margin-bottom:14px"><div class="rec-subtab-title">50K · DD $1.000 — quema al tocar $1,000 de drawdown</div><div class="rec-table-wrap"><table class="rec-table"><thead><tr><th></th><th class="rec-sub">ES</th><th class="rec-sub">NQ</th></tr></thead><tbody><tr class="rec-seg-row"><td class="rec-seg-label"><strong>🌅 USA AM</strong></td><td><strong>80</strong> ↑ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 0% · R +0.68</small></td><td><strong>M2+</strong> ↓ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 6% · R +0.69</small></td></tr><tr class="rec-seg-row"><td class="rec-seg-label"><strong>🥪 ALMUERZO</strong></td><td><strong>80+</strong> ↕ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 0% · R +1.44</small></td><td><strong>M3</strong> ↑ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 0% · R +0.92</small></td></tr><tr class="rec-seg-row"><td class="rec-seg-label"><strong>🌆 USA PM</strong></td><td><strong>M3</strong> ↑ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 0% · R +1.18</small></td><td><strong>M3</strong> ↑ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 0% · R +1.07</small></td></tr></tbody></table></div></div><div class="rec-subtab-ia" style="margin-bottom:14px"><div class="rec-subtab-title">50K · DD $2.000 — quema al tocar $2,000 de drawdown</div><div class="rec-table-wrap"><table class="rec-table"><thead><tr><th></th><th class="rec-sub">ES</th><th class="rec-sub">NQ</th></tr></thead><tbody><tr class="rec-seg-row"><td class="rec-seg-label"><strong>🌅 USA AM</strong></td><td><strong>80</strong> ↑ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 0% · R +0.68</small></td><td><strong>M2+</strong> ↓ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 0% · R +0.69</small></td></tr><tr class="rec-seg-row"><td class="rec-seg-label"><strong>🥪 ALMUERZO</strong></td><td><strong>80+</strong> ↕ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 0% · R +1.44</small></td><td><strong>M3</strong> ↑ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 0% · R +0.92</small></td></tr><tr class="rec-seg-row"><td class="rec-seg-label"><strong>🌆 USA PM</strong></td><td><strong>M3</strong> ↑ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 0% · R +1.18</small></td><td><strong>M3</strong> ↑ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 0% · R +1.07</small></td></tr></tbody></table></div></div><div class="rec-subtab-ia" style="margin-bottom:14px"><div class="rec-subtab-title">100K · DD $3.000 — quema al tocar $3,000 de drawdown</div><div class="rec-table-wrap"><table class="rec-table"><thead><tr><th></th><th class="rec-sub">ES</th><th class="rec-sub">NQ</th></tr></thead><tbody><tr class="rec-seg-row"><td class="rec-seg-label"><strong>🌅 USA AM</strong></td><td><strong>80</strong> ↑ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 0% · R +0.68</small></td><td><strong>M2+</strong> ↓ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 0% · R +0.69</small></td></tr><tr class="rec-seg-row"><td class="rec-seg-label"><strong>🥪 ALMUERZO</strong></td><td><strong>80+</strong> ↕ <span class="tag tag-green">FULL</span><br><small>DD-ruina 12% · R +1.44</small></td><td><strong>M3</strong> ↑ <span class="tag tag-amber">MICRO</span><br><small>DD-ruina 0% · R +0.92</small></td></tr><tr class="rec-seg-row"><td class="rec-seg-label"><strong>🌆 USA PM</strong></td><td><strong>M3</strong> ↑ <span class="tag tag-green">FULL</span><br><small>DD-ruina 9% · R +1.18</small></td><td><strong>M3</strong> ↑ <span class="tag tag-green">FULL</span><br><small>DD-ruina 11% · R +1.07</small></td></tr></tbody></table></div></div>
+    <div class="rec-legend">
+      <span><strong>DD-ruina</strong> = % de campañas (200 trades) que tocan el drawdown de la cuenta (la quema).</span>
+      <span>Con contratos <strong>full</strong> el DD se toca casi siempre en cuentas chicas → casi todo va <strong>MICRO</strong> (MNQ/MES).</span>
+      <span class="rec-legend-note">✗ no operable = ni en micro el riesgo de tocar el DD baja del límite.</span>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="footer">
+  <span class="brand-ft">Edu<span class="gold">S</span> Trader</span> &middot; DAILY STRATEGIC GAME PLAN &middot; 23 JUN 2026 &middot; 8:53 AM ET &mdash; <span style="opacity:.7">PRE-MARKET</span><br>
+  Este documento es solo para uso interno de la mesa de dinero. No constituye asesoramiento financiero.<br>
+  ES JUN26 &middot; NQ JUN26 &middot; CL JUL26 &middot; GC JUN26
+</div>
+
+</body>
+</html>
