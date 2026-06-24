@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>EduS Trader · Market Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <link rel="apple-touch-icon" href="/assets/favicon.png"/>
   <!-- <script src="https://zestfully-retread-activism.ngrok-free.dev/chartjs"></script>
   <!-- <script src="/chartjs"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -20,101 +21,80 @@
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-/* TOPBAR */
-.topbar {
-  background: linear-gradient(135deg, #06111e 0%, #0c2038 50%, #082b22 100%);
-  border-bottom: 2px solid var(--border);
-  padding: 0 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 85px; /* Incrementado ligeramente para albergar los 44px cómodamente */
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 30px rgba(0, 200, 160, 0.1);
+/* NAVBAR — EduS Trader Brand */
+#edus-nb{
+  display:block;width:100%;
+  background:linear-gradient(135deg, #142d37 0%, #034649 100%);
+  border-bottom:2px solid #b38665;
+  position:sticky;top:0;z-index:9999
 }
-
-/* BRAND & LOGO LOGIC */
-.logo-wrapper {
-  display: flex;
-  align-items: center; /* Alineación vertical centralizada */
-  gap: 15px; /* Espacio entre logo y texto */
+#edus-nb *{box-sizing:border-box;font-family:'Montserrat',sans-serif}
+#edus-nb .nb-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  max-width:1500px;margin:0 auto;padding:0 20px
 }
-
-.logo-circle {
-  width: 1.1em; /* Proporcional al H1 */
-  height: 1.1em;
-  font-size: 44px; /* Referencia para el em */
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid var(--gold2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg2);
-  flex-shrink: 0; /* Evita que el logo se aplaste */
+#edus-nb .nb-brand{
+  display:flex;align-items:center;gap:12px;
+  text-decoration:none;flex-shrink:0
 }
-
-.logo-circle img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+#edus-nb .nb-brand .nb-logo{height:42px;width:auto;display:block}
+#edus-nb .nb-brand .nb-name{
+  font-family:'DM Sans','Montserrat',sans-serif;
+  font-size:22px;font-weight:700;letter-spacing:-0.5px;
+  color:#fff;white-space:nowrap;line-height:1
 }
-
-.brand-text h1 {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 44px;
-  letter-spacing: 2px;
-  font-weight: 700;
-  text-transform: none; /* Respeta tus mayúsculas/minúsculas */
-  line-height: 1;
-  background: linear-gradient(90deg, #fff 0%, var(--gold2) 80%, var(--gold) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+#edus-nb .nb-brand .nb-name .gold{color:#b38665}
+#edus-nb .nb-right{
+  display:flex;align-items:center;gap:14px
 }
-
-.brand-text p {
-  font-size: 11px;
-  color: var(--gold);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  margin-top: 2px;
-  opacity: 0.8;
+#edus-nb .nb-toggle{
+  display:none;background:none;border:none;cursor:pointer;padding:12px 8px
 }
+#edus-nb .nb-toggle span{
+  display:block;width:22px;height:2px;background:#fff;
+  margin:4px 0;border-radius:2px;transition:.2s
+}
+#edus-nb .nb-links{
+  display:flex;align-items:center;list-style:none;gap:2px;margin:0;padding:0
+}
+#edus-nb .nb-links a{
+  display:block;padding:14px 14px;text-decoration:none;
+  color:rgba(255,255,255,.85);font-size:11px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.04em;
+  transition:background .15s,color .15s;white-space:nowrap;
+  border-radius:4px
+}
+#edus-nb .nb-links a:hover{background:rgba(255,255,255,.12);color:#fff}
+#edus-nb .nb-links a.active{background:rgba(255,255,255,.08);color:#fff;font-weight:700}
 
 /* TOPRIGHT ELEMENTS */
-.topright { display: flex; align-items: center; gap: 16px; }
-
 .clock {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  color: var(--muted);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border);
-  padding: 8px 16px;
-  border-radius: 8px;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+  font-size: 12px;
+  color: rgba(255,255,255,.6);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255,255,255,.12);
+  padding: 6px 14px;
+  border-radius: 6px;
 }
 
 .live-badge {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(30, 207, 130, 0.08);
+  gap: 7px;
+  background: rgba(30, 207, 130, 0.1);
   border: 1px solid rgba(30, 207, 130, 0.3);
   color: #1ecf82;
-  padding: 8px 18px;
+  padding: 6px 14px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.1em;
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: #1ecf82;
   animation: pulse 1.6s infinite;
@@ -124,6 +104,19 @@
   0% { box-shadow: 0 0 0 0 rgba(30, 207, 130, 0.7); }
   70% { box-shadow: 0 0 0 8px rgba(30, 207, 130, 0); }
   100% { box-shadow: 0 0 0 0 rgba(30, 207, 130, 0); }
+}
+
+@media(max-width:768px){
+  #edus-nb .nb-toggle{display:block}
+  #edus-nb .nb-links{
+    display:none;flex-direction:column;
+    position:absolute;top:100%;left:0;right:0;
+    background:#0d1f26;border-bottom:2px solid #b38665;
+    box-shadow:0 8px 16px rgba(0,0,0,.3)
+  }
+  #edus-nb .nb-links.open{display:flex}
+  #edus-nb .nb-links a{padding:12px 20px;border-top:.5px solid rgba(255,255,255,.08)}
+  .clock{display:none}
 }
     /* GRID */
     .app{max-width:1500px;margin:0 auto;padding:20px;display:grid;gap:16px;
@@ -273,27 +266,29 @@
 </head>
 <body>
 
-<div class="topbar">
-  <div class="brand">
-    <div class="logo-wrapper">
-      <div class="logo-circle">
-        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgJuV-7IgSRetOyG4Ox2ZfuC-S3PwzaKm7qo3osmZoQAe8qK5-L41uDW7uElDg9Kadg1esBwBheOz95nxNPd2yXT8nCjSVRL3feq4yibCo_sxIoo5BDMtLxYm9P4ap9X8p-kDoZZksnez-SO7zZDwodOjKn8IkRn3P9Sdz8iSnQpgEAkDZGa2QRTfHISt6w/s320/Gemini_Generated_Image_8eexa18eexa18eex.png" alt="EduS Logo">
-      </div>
-      <div class="brand-text">
-        <h1>EduS Trader</h1>
-        <p>La Realidad en el Camino hacia la Rentabilidad</p>
+<!-- NAVBAR -->
+<nav id="edus-nb">
+  <div class="nb-inner">
+    <a class="nb-brand" href="/">
+      <img class="nb-logo" src="/assets/logo.png" alt="EduS Trader">
+      <span class="nb-name">Edu<span class="gold">S</span> Trader</span>
+    </a>
+    <button class="nb-toggle" id="nbToggle" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nb-right">
+      <ul class="nb-links" id="nbLinks">
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/dashboard/" class="active">Dashboard</a></li>
+      </ul>
+      <div class="clock" id="clock">--:--:-- NY</div>
+      <div class="live-badge">
+        <span class="dot"></span>
+        MARKET LIVE
       </div>
     </div>
   </div>
-
-  <div class="topright">
-    <div class="clock" id="clock">--:--:-- NY</div>
-    <div class="live-badge">
-      <span class="dot"></span>
-      MARKET LIVE
-    </div>
-  </div>
-</div>  
+</nav>  
 
 
 
@@ -1046,6 +1041,11 @@ setInterval(loadNews, REFRESH.news*1000);
 setInterval(()=>loadGex(gexIdx), REFRESH.gex*1000);  
 
 init();
+
+// Navbar toggle
+document.getElementById('nbToggle').addEventListener('click', () => {
+  document.getElementById('nbLinks').classList.toggle('open');
+});
 </script>
 </body>
 </html>

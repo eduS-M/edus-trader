@@ -198,7 +198,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@400;600;700;800&family=DM+Sans:wght@700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
@@ -217,6 +217,66 @@
     summary::-webkit-details-marker { display: none; }
     summary { list-style: none; }
     .glass { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+
+    /* NAVBAR — EduS Trader Brand */
+    #edus-nb{
+      display:block;width:100%;
+      background:linear-gradient(135deg, #142d37 0%, #034649 100%);
+      border-bottom:2px solid #b38665;
+      position:sticky;top:0;z-index:9999
+    }
+    #edus-nb *{box-sizing:border-box;font-family:'Montserrat',sans-serif}
+    #edus-nb .nb-inner{
+      display:flex;align-items:center;justify-content:space-between;
+      max-width:1200px;margin:0 auto;padding:0 16px
+    }
+    #edus-nb .nb-brand{
+      display:flex;align-items:center;gap:12px;
+      text-decoration:none;flex-shrink:0
+    }
+    #edus-nb .nb-brand .nb-logo{height:42px;width:auto;display:block}
+    #edus-nb .nb-brand .nb-name{
+      font-family:'DM Sans','Montserrat',sans-serif;
+      font-size:22px;font-weight:700;letter-spacing:-0.5px;
+      color:#fff;white-space:nowrap;line-height:1
+    }
+    #edus-nb .nb-brand .nb-name .gold{color:#b38665}
+    #edus-nb .nb-toggle{
+      display:none;background:none;border:none;cursor:pointer;padding:12px 8px
+    }
+    #edus-nb .nb-toggle span{
+      display:block;width:22px;height:2px;background:#fff;
+      margin:4px 0;border-radius:2px;transition:.2s
+    }
+    #edus-nb .nb-links{
+      display:flex;align-items:center;list-style:none;gap:2px;margin:0;padding:0
+    }
+    #edus-nb .nb-links a{
+      display:block;padding:14px 14px;text-decoration:none;
+      color:rgba(255,255,255,.85);font-size:11px;font-weight:600;
+      text-transform:uppercase;letter-spacing:.04em;
+      transition:background .15s,color .15s;white-space:nowrap;
+      border-radius:4px
+    }
+    #edus-nb .nb-links a:hover{background:rgba(255,255,255,.12);color:#fff}
+    #edus-nb .nb-links a.active{background:rgba(255,255,255,.08);color:#fff;font-weight:700}
+    #edus-nb .nb-links a.members-btn{
+      background:rgba(255,255,255,.1);color:#fff;
+      border:1px solid rgba(255,255,255,.2);font-weight:700
+    }
+    #edus-nb .nb-links a.members-btn:hover{background:#fff;color:#0d1f26}
+    @media(max-width:768px){
+      #edus-nb .nb-toggle{display:block}
+      #edus-nb .nb-links{
+        display:none;flex-direction:column;
+        position:absolute;top:100%;left:0;right:0;
+        background:#0d1f26;border-bottom:2px solid #b38665;
+        box-shadow:0 8px 16px rgba(0,0,0,.3)
+      }
+      #edus-nb .nb-links.open{display:flex}
+      #edus-nb .nb-links a{padding:12px 20px;border-top:.5px solid rgba(255,255,255,.08)}
+      #edus-nb .nb-links a.members-btn{border:none}
+    }
   </style>
     <link rel="icon" type="image/png" href="/assets/favicon.png">
     <link rel="apple-touch-icon" href="/assets/favicon.png">
@@ -229,28 +289,24 @@
     <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(61,214,192,0.08),transparent_50%)]"></div>
   </div>
 
-  <header class="sticky top-0 z-40 border-b border-white/5 bg-[#050709]/80 glass">
-    <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 h-[72px] flex items-center justify-between">
-      <div class="flex items-center gap-3.5">
-        <div class="size-10 rounded-2xl bg-gradient-to-br from-[#3dd6c0] to-[#22a892] flex items-center justify-center shadow-[0_0_30px_rgba(61,214,192,0.25)]">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M3 17L9 11L13 15L21 7" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
-            <path d="M21 7H16M21 7V12" stroke="black" stroke-width="2.5" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div>
-          <div class="text-[24px] font-semibold tracking-tight leading-none">
-            <span class="text-white">EduS</span><span class="text-[#3dd6c0] ml-[3px]">TRADER</span>
-          </div>
-          <div class="text-[11px] text-slate-400 font-medium tracking-[0.18em] uppercase -mt-0.5">NT8 Indicators</div>
-        </div>
-      </div>
-      <a href="https://edustrader.pages.dev" target="_blank" class="hidden md:flex items-center gap-2 text-xs text-slate-400 hover:text-[#3dd6c0] transition">
-        <span class="size-1.5 rounded-full bg-[#3dd6c0] animate-pulse"></span>
-        edustrader.pages.dev
+  <!-- NAVBAR -->
+  <nav id="edus-nb">
+    <div class="nb-inner">
+      <a class="nb-brand" href="/">
+        <img class="nb-logo" src="assets/logo.png" alt="EduS Trader">
+        <span class="nb-name">Edu<span class="gold">S</span> Trader</span>
       </a>
+      <button class="nb-toggle" id="nbToggle" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nb-links" id="nbLinks">
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/repositorio-NT8.html" class="active">Repositorio NT8</a></li>
+        <li><a href="/pricing.html">Cursos y Mentorías</a></li>
+        <li><a href="/members/" class="members-btn">🔒 Zona Miembros</a></li>
+      </ul>
     </div>
-  </header>
+  </nav>
 
   <main class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
     <!-- Config -->
@@ -338,9 +394,9 @@
   </main>
 
   <footer class="border-t border-white/5 py-8 mt-16">
-    <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] text-slate-500">
+    <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center text-[10px] text-slate-500 leading-relaxed">
       <p>© 2025 EduS Trader — Herramientas para NinjaTrader 8</p>
-      <p class="flex items-center gap-1.5"><span>Diseñado para traders institucionales</span><span class="text-[#3dd6c0]">•</span><span>Dark Mode</span></p>
+      <p style="margin-top:4px;color:#64748b">Contenido educativo · No es asesoría financiera · Trading con futuros implica riesgo de pérdida</p>
     </div>
   </footer>
 
@@ -549,6 +605,11 @@
     // Enter para cargar
     [userEl, repoEl, branchEl, folderEl].forEach(el => {
       el.addEventListener('keydown', e => { if (e.key === 'Enter') cargar(); });
+    });
+
+    // Navbar toggle
+    document.getElementById('nbToggle').addEventListener('click', () => {
+      document.getElementById('nbLinks').classList.toggle('open');
     });
   </script>
 </body>
