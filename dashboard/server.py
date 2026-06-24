@@ -69,6 +69,11 @@ def get_cached(key, ttl, fn):
 def index():
     return send_file('index.html')
 
+@app.route('/assets/<path:filename>')
+def serve_assets(filename):
+    assets_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
+    return send_file(os.path.join(assets_dir, filename))
+
 @app.route('/debug/calendar')
 def debug_calendar():
     """Diagnóstico: muestra qué pasa al conectar a FF, sin caché"""
