@@ -41,23 +41,25 @@ const AUTH_PATHS = new Set([
 // Mapa de rutas → plan minimo requerido
 // ------------------------------------------------------------
 const ROUTE_PLAN_MAP = [
-  { prefix: '/EduS_',            plan: 'premium', tier: 3 },
-  { prefix: '/manual_',          plan: 'premium', tier: 3 },
-  { prefix: '/edus-trader-dofa', plan: 'premium', tier: 3 },
-  { prefix: '/EduS_MasterPanel', plan: 'premium', tier: 3 },
+  // Premium: Módulo de Inversión en Acciones
+  { prefix: '/inversiones',      plan: 'premium', tier: 3 },
 
+  // Pro: Mentoría, Indicadores, Manuales, Análisis Histórico
   { prefix: '/repositorio-NT8',  plan: 'pro',     tier: 2 },
+  { prefix: '/EduS_',            plan: 'pro',     tier: 2 },
+  { prefix: '/manual_',          plan: 'pro',     tier: 2 },
+  { prefix: '/EduS_MasterPanel', plan: 'pro',     tier: 2 },
+  { prefix: '/edus-trader-dofa', plan: 'pro',     tier: 2 },
   { prefix: '/backtesting',      plan: 'pro',     tier: 2 },
+  { prefix: '/HUD_',             plan: 'pro',     tier: 2 },
+  { prefix: '/EduS_AccountTrade',plan: 'pro',     tier: 2 },
+  { prefix: '/EduS_UMC',        plan: 'pro',     tier: 2 },
 
-  { prefix: '/reporte',          plan: 'basic',   tier: 1 },
-  { prefix: '/analisis_',        plan: 'basic',   tier: 1 },
-  { prefix: '/gameplan',         plan: 'basic',   tier: 1 },
-  { prefix: '/postmarket',       plan: 'basic',   tier: 1 },
-  { prefix: '/cierresemanal',    plan: 'basic',   tier: 1 },
-  { prefix: '/cierremensual',    plan: 'basic',   tier: 1 },
-  { prefix: '/cierre-de-mes',    plan: 'basic',   tier: 1 },
-  { prefix: '/premercado',       plan: 'basic',   tier: 1 },
-  { prefix: '/reporte-',         plan: 'basic',   tier: 1 },
+  // Basic: Cursos (en construcción)
+  { prefix: '/cursos',           plan: 'basic',   tier: 1 },
+
+  // Free: Bitácora, Game Plan, Post-Mercado (público — no necesitan entrada aquí)
+  // Se acceden sin restricción porque están en /bitacora/ que es público
 ];
 
 const PLAN_TIER = { free: 0, basic: 1, pro: 2, premium: 3 };

@@ -15,10 +15,10 @@ export async function onRequestGet({ request, env }) {
   try {
     // Definimos los permisos harcodeados en _middleware.js para mostrarlos en Admin
     const routePermissions = {
-      free:    [],
-      basic:   ['/members/portal'],
-      pro:     ['/repositorio-NT8'],
-      premium: ['/EduS_', '/manual_', '/edus-trader-dofa', '/EduS_MasterPanel']
+      free:    ['/bitacora/ (Game Plan, Post-Mercado, Reportes)'],
+      basic:   ['/cursos'],
+      pro:     ['/repositorio-NT8', '/EduS_*', '/manual_*', '/HUD_*', '/backtesting', '/EduS_UMC'],
+      premium: ['/inversiones']
     };
 
     const plansData = Object.keys(PRICES).map(plan => {
