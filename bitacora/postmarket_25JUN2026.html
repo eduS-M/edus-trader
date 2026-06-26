@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — Post-Market Analysis | 25 JUN 2026</title>
+<meta name="description" content="EduS Trader Post-Market Analysis 25 JUN 2026 — Post-Market Analysis">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --navy: #142d37;
+  --navy-dark: #0d1f26;
+  --teal: #279995;
+  --gold: #b38665;
+  --gold-light: #d4a982;
+  --bg: #f2f0eb;
+  --surface: #ffffff;
+  --surface2: #f8f6f0;
+  --border: #e0dbd0;
+  --border2: rgba(0,0,0,0.20);
+  --text: #1a1814;
+  --text-muted: #7a7468;
+  --bull: #279995;
+  --bull-bg: #e6f5f4;
+  --bear: #c0392b;
+  --bear-bg: #fdf0ee;
+  --amber: #b38665;
+  --amber-bg: #f6efe8;
+  --blue: #185fa5;
+  --blue-bg: #e6f1fb;
+  --shadow: 0 2px 20px rgba(13,31,38,0.10);
+  --radius: 10px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --header-gradient: linear-gradient(135deg, #142d37 0%, #034649 100%);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1e20;
+    --surface: #1e2527;
+    --surface2: #232b2e;
+    --border: #2d3b3f;
+    --border2: rgba(255,255,255,0.15);
+    --text: #e8e4dc;
+    --text-muted: #8a9a9e;
+    --bull-bg: rgba(39,153,149,0.15);
+    --bear-bg: rgba(192,57,43,0.15);
+    --amber-bg: rgba(179,134,101,0.15);
+    --blue-bg: rgba(24,95,165,0.15);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ─── HEADER ─── */
+.header {
+  background: var(--header-gradient);
+  color: white;
+  padding: 20px 36px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid var(--gold);
+  position: relative;
+  overflow: hidden;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(179,134,101,0.08);
+  pointer-events: none;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 1;
+}
+.header-left .logo-img {
+  height: 60px;
+  width: auto;
+  display: block;
+}
+.header-left .brand { display: flex; flex-direction: column; }
+.header-left .brand-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: white;
+  line-height: 1;
+}
+.header-left .brand-name .gold { color: var(--gold); }
+.header-left .brand-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: var(--gold-light);
+  letter-spacing: 3px;
+  margin-top: 3px;
+  text-transform: uppercase;
+}
+.header-right { text-align: right; z-index: 1; }
+.header-right .date {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 700;
+}
+.header-right .prices {
+  display: flex; gap: 6px; margin-top: 6px;
+  justify-content: flex-end; flex-wrap: wrap;
+}
+.price-chip {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(179,134,101,0.35);
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.85);
+}
+.price-chip span { color: var(--gold-light); font-weight: 700; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy);
+  border-bottom: 1px solid rgba(179,134,101,0.25);
+  padding: 0 2rem;
+  display: flex; align-items: center; overflow-x: auto;
+  gap: 2px;
+}
+nav .brand {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  color: var(--gold); padding: 13px 0; margin-right: 20px;
+  white-space: nowrap; letter-spacing: 2px;
+  text-transform: uppercase;
+}
+nav a {
+  font-size: 11px; color: rgba(255,255,255,0.5);
+  text-decoration: none; padding: 14px 12px;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.5px;
+}
+nav a:hover { color: white; }
+nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 980px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+.section-divider { height: 1px; background: linear-gradient(to right, var(--gold), transparent); margin: 2.5rem 0 2rem; }
+.section-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 0.8rem;
+}
+.section-label .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--navy); color: var(--gold);
+  font-size: 10px; font-weight: 700;
+  border: 1px solid rgba(179,134,101,0.35);
+}
+h2 { font-size: 20px; font-weight: 600; margin-bottom: 4px; color: var(--navy); }
+@media (prefers-color-scheme: dark) { h2 { color: var(--text); } }
+.sub { font-size: 12px; color: var(--text-muted); margin-bottom: 1.3rem; }
+.sub-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted); margin: 1.3rem 0 .6rem;
+}
+
+/* ─── KPIs ─── */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+.kpi { background: var(--surface); border-radius: var(--r-md); padding: 12px 14px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+.kpi-label { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+.kpi-value { font-size: 22px; font-weight: 700; line-height: 1.1; }
+.kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.pos { color: var(--bull); } .neg { color: var(--bear); } .neu { color: var(--amber); }
+.pnl-pos { color: var(--bull); font-weight: 600; } .pnl-neg { color: var(--bear); font-weight: 600; }
+
+/* ─── CHARTS ─── */
+.chart-wrap { position: relative; width: 100%; }
+
+/* ─── ALERTS ─── */
+.alert {
+  border-radius: var(--r-md); padding: 12px 14px;
+  font-size: 12px; margin-bottom: 10px; line-height: 1.6;
+}
+.alert.success { background: var(--bull-bg); border: 0.5px solid rgba(39,153,149,0.35); }
+.alert.danger  { background: var(--bear-bg); border: 0.5px solid rgba(192,57,43,0.35); }
+.alert.warning { background: var(--amber-bg); border: 0.5px solid rgba(179,134,101,0.35); }
+.alert.info    { background: var(--blue-bg); border: 0.5px solid rgba(24,95,165,0.35); }
+.alert-title { font-weight: 600; margin-bottom: 3px; }
+.alert.success .alert-title { color: var(--bull); }
+.alert.danger  .alert-title { color: var(--bear); }
+.alert.warning .alert-title { color: var(--amber); }
+.alert.info    .alert-title { color: var(--blue); }
+
+/* ─── REGIME ALERTS ─── */
+.regime-alert {
+  background: linear-gradient(135deg, rgba(39,153,149,0.10), rgba(39,153,149,0.03));
+  border: 1px solid rgba(39,153,149,0.35); border-radius: var(--r-lg);
+  padding: 14px 18px; margin-bottom: 14px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.regime-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.regime-title { font-size: 13px; font-weight: 600; color: var(--bull); margin-bottom: 3px; }
+.regime-sub { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+.critical-banner {
+  background: linear-gradient(135deg, rgba(192,57,43,0.12), rgba(192,57,43,0.04));
+  border: 1.5px solid rgba(192,57,43,0.5); border-radius: var(--r-lg);
+  padding: 14px 18px; margin-bottom: 14px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.critical-title { font-size: 13px; font-weight: 700; color: var(--bear); margin-bottom: 3px; }
+.critical-sub { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+
+/* ─── INSIGHT CARDS ─── */
+.icard {
+  background: var(--surface); border-radius: var(--r-md); padding: 12px 14px;
+  margin-bottom: 8px; border-left: 3px solid transparent;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+}
+.icard.crit  { border-left-color: var(--bear); }
+.icard.warn  { border-left-color: var(--amber); }
+.icard.good  { border-left-color: var(--bull); }
+.icard.info  { border-left-color: var(--blue); }
+.icard-title { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+.icard-text  { font-size: 12px; color: var(--text-muted); line-height: 1.65; }
+
+/* ─── TRADE TABLE ─── */
+.tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tbl th {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--gold-light); font-weight: 700;
+  padding: 8px 10px;
+  background: var(--navy);
+  text-align: left;
+}
+.tbl td { padding: 7px 10px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr.win td  { background: rgba(39,153,149,0.04); }
+.tbl tr.loss td { background: rgba(192,57,43,0.04); }
+.tbl tr.viol-row td { background: rgba(179,134,101,0.06); }
+.badge {
+  display: inline-block; padding: 2px 7px; border-radius: 4px;
+  font-size: 10px; font-weight: 600; font-family: 'Space Mono', monospace;
+}
+.badge.long   { background: var(--bull-bg);  color: var(--bull); }
+.badge.short  { background: var(--amber-bg); color: var(--amber); }
+.badge.ok     { background: var(--bull-bg);  color: var(--bull); }
+.badge.viol   { background: var(--bear-bg);  color: var(--bear); }
+.badge.cancel { background: rgba(0,0,0,0.06); color: var(--text-muted); }
+.zone-badge {
+  display: inline-block; font-size: 10px; padding: 1px 7px;
+  border-radius: 10px; font-family: 'Space Mono', monospace;
+}
+.zone-badge.identified { background: var(--bull-bg); color: var(--bull); }
+.zone-badge.manual     { background: var(--amber-bg); color: var(--amber); }
+.sdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin: 0 1px; }
+.dot-g { background: var(--bull); } .dot-r { background: var(--bear); }
+.sig-inline { display: flex; gap: 3px; align-items: center; }
+
+/* ─── COMP BLOCKS ─── */
+.comp-block {
+  background: var(--surface); border-radius: var(--r-md);
+  padding: 12px 14px; margin-bottom: 10px; font-size: 12px;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+}
+.comp-block-title { font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.comp-block-body { color: var(--text-muted); line-height: 1.6; }
+.tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+.tag-win  { background: var(--bull-bg); color: var(--bull); }
+.tag-loss { background: var(--bear-bg); color: var(--bear); }
+
+/* ─── TWO COLUMN ─── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ─── DOFA (estilo cierre mensual) ─── */
+.dofa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.dofa-card { border-radius: var(--r-lg); padding: 16px 18px; border: 0.5px solid var(--border2); }
+.dofa-card.F { background: rgba(39,153,149,0.06); border-color: rgba(39,153,149,0.30); }
+.dofa-card.D { background: rgba(192,57,43,0.06);  border-color: rgba(192,57,43,0.30); }
+.dofa-card.O { background: rgba(24,95,165,0.06);   border-color: rgba(24,95,165,0.30); }
+.dofa-card.A { background: rgba(179,134,101,0.06); border-color: rgba(179,134,101,0.30); }
+.dofa-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.dofa-title.F { color: var(--bull); }
+.dofa-title.D { color: var(--bear); }
+.dofa-title.O { color: var(--blue); }
+.dofa-title.A { color: var(--amber); }
+.dofa-item {
+  font-size: 12px; color: var(--text-muted); padding: 4px 0 4px 12px;
+  border-bottom: 0.5px solid var(--border); line-height: 1.55;
+  position: relative;
+}
+.dofa-item::before { content: '·'; position: absolute; left: 0; color: var(--text-muted); }
+.dofa-item:last-child { border-bottom: none; }
+
+/* ─── RULES ─── */
+.rule-item { font-size: 12px; color: var(--text-muted); padding: 6px 0; border-bottom: 0.5px solid var(--border); line-height: 1.55; }
+.rule-item:last-child { border-bottom: none; }
+.rules-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 14px 16px; margin-top: 14px;
+  box-shadow: var(--shadow);
+}
+.rules-box-title { font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 10px; font-family: 'Space Mono', monospace; letter-spacing: 0.05em; }
+@media (prefers-color-scheme: dark) { .rules-box-title { color: var(--gold-light); } }
+
+/* ─── STOP CALLOUT ─── */
+.sl-callout {
+  background: var(--bear-bg); border: 1.5px solid rgba(192,57,43,0.35);
+  border-radius: var(--r-md); padding: 12px 16px; margin: 10px 0; font-size: 12px;
+}
+.sl-callout-title { font-weight: 700; color: var(--bear); margin-bottom: 6px; font-size: 13px; }
+.sl-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 0.5px solid rgba(192,57,43,0.15); font-size: 12px; gap: 8px; flex-wrap: wrap; }
+.sl-row:last-child { border-bottom: none; }
+
+/* ─── VOLATILITY CONFIG ─── */
+.volat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin: 10px 0; }
+.volat-card {
+  background: var(--surface); border-radius: var(--r-md); padding: 12px 14px;
+  border: 1px solid var(--border); font-size: 12px;
+}
+.volat-card .vc-scenario {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 6px;
+}
+.vc-baja      { color: var(--bull); }
+.vc-media     { color: #3498db; }
+.vc-alta      { color: var(--amber); }
+.vc-extrema   { color: #e67e22; }
+.vc-superextreme { color: var(--bear); }
+.vc-active    { box-shadow: 0 0 0 2px var(--gold); }
+.vc-metric    { display: flex; justify-content: space-between; padding: 2px 0; }
+.vc-metric-label { color: var(--text-muted); }
+.vc-metric-val  { font-weight: 600; }
+
+/* ─── WEEK / MONTH BADGES ─── */
+.weekly-badge { display: inline-block; background: var(--header-gradient); color: var(--gold); padding: 4px 14px; border-radius: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1px; margin-bottom: 14px; }
+.monthly-badge { display: inline-block; background: linear-gradient(135deg, #854f0b, #b38665); color: white; padding: 4px 14px; border-radius: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1px; margin-bottom: 14px; }
+
+/* ─── YOUTUBE BLOCK ─── */
+.yt-block {
+  background: var(--surface); border: 0.5px solid var(--border);
+  border-radius: var(--r-lg); padding: 18px 22px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 2rem;
+  box-shadow: var(--shadow);
+}
+.yt-icon { width: 44px; height: 44px; border-radius: 50%; background: #c0392b; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.yt-icon svg { width: 20px; height: 20px; fill: #fff; }
+.yt-text { flex: 1; min-width: 180px; }
+.yt-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+.yt-sub   { font-size: 12px; color: var(--text-muted); }
+.yt-btn {
+  display: inline-block !important; background: #c0392b !important;
+  color: #ffffff !important; font-size: 12px; font-weight: 700;
+  padding: 10px 22px; border-radius: var(--r-md);
+  text-decoration: none !important; white-space: nowrap;
+  font-family: 'Space Mono', monospace; letter-spacing: 0.5px;
+  transition: opacity .2s;
+}
+.yt-btn:hover { opacity: .85; }
+
+/* ─── NAV BACK ─── */
+.nav-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--gold); text-decoration: none; font-size: 13px;
+  margin-bottom: 16px; font-family: 'Space Mono', monospace;
+  font-weight: 700; transition: opacity .15s;
+  letter-spacing: 0.05em;
+}
+.nav-back:hover { opacity: 0.7; }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--header-gradient);
+  color: rgba(255,255,255,0.4); text-align: center;
+  padding: 18px 1rem; font-size: 11px;
+  font-family: 'Space Mono', monospace; letter-spacing: 1px;
+  margin-top: 2rem; border-top: 3px solid var(--gold);
+}
+footer strong { color: var(--gold-light); }
+footer .brand-ft { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; color: var(--gold-light); }
+footer .brand-ft .gold { color: var(--gold); }
+
+/* ─── AI INSIGHT ─── */
+.ai-insight {
+  background: linear-gradient(135deg, rgba(39,153,149,0.07), rgba(20,45,55,0.04));
+  border-left: 4px solid var(--teal); border-radius: var(--r-md);
+  padding: 14px 18px; margin-bottom: 14px; border: 1px solid rgba(39,153,149,0.2);
+}
+.ai-label {
+  font-family: 'Space Mono', monospace; font-size: 9px;
+  color: var(--teal); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
+}
+.ai-insight p { font-size: 13px; color: var(--text); line-height: 1.7; }
+
+/* ─── GAMEPLAN COMPARE ─── */
+.gameplan-compare {
+  background: var(--surface); border-radius: var(--r-md);
+  padding: 16px 20px; border-left: 4px solid var(--gold);
+  margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border);
+}
+.gameplan-compare h3 { font-size: 14px; color: var(--navy); margin-bottom: 8px; }
+@media (prefers-color-scheme: dark) { .gameplan-compare h3 { color: var(--gold-light); } }
+.gameplan-compare ul { margin-left: 18px; font-size: 13px; }
+.gameplan-compare li { margin-bottom: 4px; }
+.cumplido   { color: var(--bull); }
+.nocumplido { color: var(--bear); }
+.parcial    { color: var(--amber); }
+
+/* ─── VIX BADGE ─── */
+.vix-badge-strip {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--bull-bg); border: 0.5px solid rgba(39,153,149,0.4);
+  border-radius: var(--r-md); padding: 8px 14px; font-size: 12px;
+  color: var(--bull); font-weight: 600; margin-bottom: 14px;
+}
+
+/* ─── VOLATILITY GAUGE ─── */
+.volatility-gauge { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.gauge-item {
+  flex: 1; min-width: 130px; background: var(--surface);
+  border-radius: var(--r-md); padding: 12px;
+  border: 1px solid var(--border); text-align: center;
+}
+.gauge-item .g-label { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+.gauge-item .g-value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+.gauge-item .g-sub   { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+/* ─── PROGRESS BAR ─── */
+.prog-wrap { background: var(--border); border-radius: 3px; height: 6px; margin-top: 4px; overflow: hidden; }
+.prog { height: 6px; border-radius: 3px; }
+
+/* ─── FINDING BOX ─── */
+.finding {
+  background: var(--surface); border: 0.5px solid var(--border2);
+  border-radius: var(--r-lg); padding: 22px 26px;
+  position: relative; overflow: hidden; box-shadow: var(--shadow);
+}
+.finding::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: linear-gradient(180deg, var(--bear) 0%, var(--amber) 60%, var(--bear) 100%);
+}
+.finding-label { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bear); margin-bottom: 8px; }
+.finding h3 { font-size: 16px; font-weight: 600; margin-bottom: 10px; line-height: 1.4; }
+.finding p { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 10px; }
+.finding p:last-child { margin-bottom: 0; }
+.finding strong { color: var(--text); font-weight: 600; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 600px) {
+  .page { padding: 1rem 1rem 3rem; }
+  .two-col { grid-template-columns: 1fr; }
+  .dofa-grid { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .header { flex-direction: column; align-items: flex-start; padding: 16px; }
+  .header-right { text-align: left; width: 100%; }
+  .header-right .prices { justify-content: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<div class="header">
+  <div class="header-left">
+    <img class="logo-img" src="/assets/logo.png" alt="EduS Trader" onerror="this.style.display='none'">
+    <div class="brand">
+      <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
+      <div class="brand-sub">Post-Market Analysis &middot; Mesa de Dinero</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="date">Jueves 25 de Junio 2026</div>
+    <div class="prices">
+      <div class="price-chip">P&L <span style="color:#279995">+$0.00</span></div>
+      <div class="price-chip">2 trades &middot; 0W / 0L</div>
+      <div class="price-chip">WR <span>0.0%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav>
+  <span class="brand">📊 Post-Market Analysis</span>
+  <a href="#resumen" class="active">Resumen</a>
+  <a href="#gameplan">GamePlan</a>
+  <a href="#volatilidad">Volatilidad</a>
+  <a href="#trades">Trades</a>
+  <a href="#senales">Señales</a>
+  <a href="#diagnostico">Diagnóstico</a>
+  <a href="#dofa">DOFA</a>
+  <a href="#reglas">Reglas</a>
+  <a href="#video">Video</a>
+</nav>
+
+<!-- ══════════ PAGE ══════════ -->
+<div class="page">
+
+<a href="javascript:history.back()" class="nav-back">← Volver</a>
+
+
+
+
+<!-- ══════════════════════ SECCIÓN 1 — RESUMEN ══════════════════════ -->
+<div id="resumen" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">1</span>Resumen Operativo</div>
+  <h2>Dashboard 25 JUN 2026</h2>
+  <p class="sub">Fuente: NinjaTrader 8 &middot; Post-Market Analysis &middot; 2 trades &middot; WR 0.0%</p>
+
+  <span class="edus-account-badge positive">Sim: +$0.00</span> 
+
+  <div class="sub-title">KPIs del período</div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">P&L Total</div><div class="kpi-value positive">+$0.00</div><div class="kpi-sub">Neto del período</div></div>
+    <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-value">0.0%</div><div class="kpi-sub">0W / 0L &middot; 2 flat</div></div>
+    <div class="kpi"><div class="kpi-label">Avg Trade</div><div class="kpi-value positive">+$0.00</div><div class="kpi-sub">Por operación</div></div>
+    <div class="kpi"><div class="kpi-label">Mayor Win</div><div class="kpi-value pos">+$0.00</div><div class="kpi-sub">Mejor operación</div></div>
+    <div class="kpi"><div class="kpi-label">Mayor Loss</div><div class="kpi-value neg">+$0.00</div><div class="kpi-sub">Peor operación</div></div>
+    <div class="kpi"><div class="kpi-label">Total Trades</div><div class="kpi-value">2</div><div class="kpi-sub">0 ganados · 0 perdidos</div></div>
+  </div>
+
+  <div class="sub-title" style="margin-top:16px">Sim/Demo — 2T | 0W/0L | WR 0%</div>
+<div class="kpi-grid">
+  <div class="kpi"><div class="kpi-label">P&L</div><div class="kpi-value positive">+$0.00</div></div>
+  <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-value">0%</div><div class="kpi-sub">0W / 0L</div></div>
+  <div class="kpi"><div class="kpi-label">Avg Trade</div><div class="kpi-value pos">+$0.00</div></div>
+  <div class="kpi"><div class="kpi-label">Mayor Win</div><div class="kpi-value pos">+$0.00</div></div>
+  <div class="kpi"><div class="kpi-label">Mayor Loss</div><div class="kpi-value neg">+$0.00</div></div>
+  <div class="kpi"><div class="kpi-label">Trades</div><div class="kpi-value">2</div></div>
+</div>
+  
+</div>
+
+<!-- ══════════ CURVA P&L POR TRADE ══════════ -->
+<div class="section-divider"></div>
+<div class="section-label"><span class="num">▶</span>P&L por Trade</div>
+
+<div class="sub-title">P&L individual — Sim/Demo</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartBarSim"></canvas></div>
+
+<div class="sub-title">Curva de capital — Sim/Demo</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartCurveSim"></canvas></div>
+
+<div class="sub-title" style="margin-top:20px">P&L individual — Cuenta Fondeada</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartBarFunded"></canvas></div>
+
+<div class="sub-title">Curva de capital — Cuenta Fondeada</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartCurveFunded"></canvas></div>
+
+<script>
+(function() {
+  var isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+  var tc = isDark ? '#8a9a9e' : '#7a7468';
+  var gc = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+  function makeBarChart(canvasId, data) {
+    if (!data || data.length === 0) { document.getElementById(canvasId).parentElement.style.display='none'; return; }
+    var labels = data.map(function(d) { return '#' + d.t; });
+    var pnls = data.map(function(d) { return d.pnl; });
+    new Chart(document.getElementById(canvasId), {
+      type: 'bar',
+      data: { labels: labels, datasets: [{ data: pnls, backgroundColor: pnls.map(function(v) { return v >= 0 ? 'rgba(39,153,149,0.78)' : 'rgba(192,57,43,0.78)'; }), borderRadius: 4, borderSkipped: false }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return (ctx.raw >= 0 ? '+' : '') + '$' + Math.abs(ctx.raw).toFixed(2); } } } }, scales: { x: { ticks: { color: tc, font: { size: 10 } }, grid: { color: gc } }, y: { ticks: { color: tc, font: { size: 10 }, callback: function(v) { return '$' + v; } }, grid: { color: gc } } } }
+    });
+  }
+
+  function makeCurveChart(canvasId, data, color) {
+    if (!data || data.length === 0) { document.getElementById(canvasId).parentElement.style.display='none'; return; }
+    var labels = data.map(function(d) { return '#' + d.t; });
+    var cums = data.map(function(d) { return d.cum; });
+    var lineColor = color || (cums[cums.length-1] >= 0 ? '#279995' : '#c0392b');
+    var fillColor = color ? color.replace(')', ',0.09)').replace('rgb(', 'rgba(') : (cums[cums.length-1] >= 0 ? 'rgba(39,153,149,0.09)' : 'rgba(192,57,43,0.09)');
+    new Chart(document.getElementById(canvasId), {
+      type: 'line',
+      data: { labels: labels, datasets: [{ data: cums, borderColor: lineColor, backgroundColor: fillColor, fill: true, tension: 0.3, pointBackgroundColor: cums.map(function(v) { return v >= 0 ? '#279995' : '#c0392b'; }), pointRadius: 4, borderWidth: 2 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return 'Acum.: $' + ctx.raw.toFixed(2); } } } }, scales: { x: { ticks: { color: tc, font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: tc, font: { size: 10 }, callback: function(v) { return '$' + v; } }, grid: { color: gc } } } }
+    });
+  }
+
+  var simData = [{"t": 1, "pnl": 0.0, "cum": 0.0}, {"t": 2, "pnl": 0.0, "cum": 0.0}];
+  var fundedData = [];
+
+  makeBarChart('chartBarSim', simData);
+  makeCurveChart('chartCurveSim', simData);
+  makeBarChart('chartBarFunded', fundedData);
+  makeCurveChart('chartCurveFunded', fundedData);
+})();
+</script>
+
+<!-- ══════════════════════ SECCIÓN 2 — GAMEPLAN ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="gameplan" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">2</span>GamePlan vs Mercado Real</div>
+  <h2>Evaluación del Pre-Mercado</h2>
+  <p class="sub">Comparación entre el plan planteado y lo que realmente ocurrió en el mercado</p>
+  <div class="section-title"><span class="step">GAMEPLAN</span><h2>Game Plan — Evaluación de Cumplimiento</h2></div>
+<div class="gameplan-compare">
+  <h3>📋 Pre-Mercado: <span class="parcial">PARCIAL</span></h3>
+  <h4 style='margin-top:10px;color:var(--bear);font-size:13px'>❌ Desviaciones</h4><ul><li>No se ejecutó ninguna de las 292 señales HUD del día; los 2 trades quedaron flat sin seguir señal.</li><li>Se dejó pasar el setup primario previsto (largos NQ en pullback) pese a que se materializó.</li></ul>
+  <h4 style='margin-top:10px;color:var(--bull);font-size:13px'>✅ Aciertos</h4><ul><li>La proyección de volatilidad (Baja→Media/Alta) se cumplió: régimen Alta con ATR 3.0.</li><li>Disciplina de riesgo extrema: 0% de DD usado, cuenta intacta.</li><li>Se respetó el MICRO en la cuenta fondeada (sin FULL).</li></ul>
+  <h4 style='margin-top:10px;color:var(--text-muted);font-size:13px'>📖 Lecciones</h4><p style='font-size:13px;color:var(--text-muted)'>El plan acertó dirección y régimen, pero la inactividad del AutoTrader/ejecución dejó el día en blanco. Verificar que el AutoTrader esté activo en los charts correctos y que las órdenes limit se llenen, para no perder los setups A+ que el propio plan anticipó.</p>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 3 — VOLATILIDAD ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="volatilidad" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">3</span>Análisis de Volatilidad — VIX · ATR · Keltner</div>
+  <h2>Volatilidad Real de la Sesión</h2>
+  <p class="sub">VIX observado, ATR del día, Ancho del canal Keltner y validación contra V5_VolatilityConfig</p>
+  <div class="section-title"><span class="step">VOLATILIDAD</span><h2>Análisis de Volatilidad — VIX / Keltner / ATR</h2></div>
+<div class="card">
+  <div class="volatility-gauge">
+    <div class="gauge-item"><div class="g-label">VIX Observado</div><div class="g-value" style="font-size:16px">VIX en torno a 18-20 (régimen Alta/Media al abrir, en línea con la proyección del game plan de ~20.6) — volatilidad elevada.</div></div>
+    <div class="gauge-item"><div class="g-label">Definiciones Correctas</div><div class="g-value" style="font-size:16px">SÍ</div></div>
+  </div>
+  <div class="info-box" style="margin-bottom:0">
+    <h3>📊 Relación VIX / Keltner / ATR</h3>
+    <p>VIX elevado + Keltner 20.6 + ATR 3.0 confirman régimen Alta: el sizing correcto era MICRO con stops amplios (mín 1.50 pts MES). La proyección del game plan (Baja→Media/Alta al abrir) se cumplió.</p>
+  </div>
+  <div class="info-box" style="margin-bottom:0;margin-top:10px">
+    <h3>📈 Keltner y ATR</h3>
+    <p>MES KeltnerWidth 20.60 (rango 'Alta' 16-23) → canal medio-ancho, coherente con régimen Alta. Exige stops según V5 y, en cuenta fondeada, MICRO.<br><br><strong>ATR Observado:</strong> MES ATR 3.00 (techo del rango 'Alta' 2.4-3.0) — volatilidad alta en ES/MES durante la sesión.</p>
+  </div>
+  <div class="ai-insight" style="margin-top:14px">
+    <div class="ai-label">Nota de Volatilidad</div>
+    <p>La clasificación de volatilidad fue correcta (Alta, ATR 3.0). Sin operativa efectiva, el aprendizaje es de proceso: en régimen Alta con catalizador alcista (Micron) hubo señales A+ válidas que no se capturaron por inactividad del AutoTrader.</p>
+  </div>
+</div>
+  
+<div class="sub-title">Escenario V5_VolatilityConfig activo</div>
+<div class="volat-grid">
+    <div class="volat-card vc-active">
+      <div class="vc-scenario vc-alta">MES — ALTA</div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Obs.</span><span class="vc-metric-val">20.60</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Rango</span><span class="vc-metric-val">[16.0, 23.0]</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">ATR Obs.</span><span class="vc-metric-val">3.00</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Stop Mín (x0.5×ATR)</span><span class="vc-metric-val" style="color:var(--bear)">1.50 pts</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">RR Objetivo</span><span class="vc-metric-val">2.0:3.0</span></div>
+    </div>
+    <div class="volat-card vc-active">
+      <div class="vc-scenario vc-media">MNQ — MEDIA</div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Obs.</span><span class="vc-metric-val">76.88</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Rango</span><span class="vc-metric-val">[63.0, 90.0]</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">ATR Obs.</span><span class="vc-metric-val">11.71</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Stop Mín (x0.5×ATR)</span><span class="vc-metric-val" style="color:var(--bear)">5.86 pts</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">RR Objetivo</span><span class="vc-metric-val">2.0:3.0</span></div>
+    </div>
+</div>
+<div class="ai-insight" style="margin-top:14px"><div class="ai-label">🤖 Validación IA</div><p>MES='Alta' (KeltW 20.60, ATR 3.00, dentro de rango). El escenario estaba bien definido, pero no hubo operativa real para evaluar la ejecución dentro de él.</p></div><div class="icard info" style="margin-top:8px"><div class="icard-title">📊 Profit Factor</div><div class="icard-text">N/A — no hubo ganancias ni pérdidas (2 trades flat, PnL $0).</div></div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 4 — TRADES ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="trades" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">4</span>Detalle de Operaciones</div>
+  <h2>Registro Completo de Trades</h2>
+  <p class="sub">Detalle de cada operación con zona de señal, indicadores en el momento de la entrada y resultado</p>
+
+  
+
+  <div class="sub-title">Trades Sim/Demo (agrupados por señal)</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Estrategia</th><th>Inst</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>P&L</th><th>Zona/Señal</th><th>Salidas (T1/T2/Stop)</th><th>Cuenta</th></tr></thead>
+      <tbody>
+      <tr class=""><td></td><td>HUD_Manual</td><td>MNQ</td><td></td><td></td><td></td><td>—</td><td>—</td><td>6</td><td>+$0.00</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class=""><td></td><td>HUD_Manual</td><td>MES</td><td></td><td></td><td></td><td>—</td><td>—</td><td>42</td><td>+$0.00</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-title" style="margin-top:20px">Trades Cuenta Fondeada / Live (agrupados por señal)</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Estrategia</th><th>Inst</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>P&L</th><th>Señal Espejo</th><th>Salidas</th><th>Cuenta</th></tr></thead>
+      <tbody>
+      
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title"><span class="step">CONTEXTO</span><h2>Contexto de Indicadores por Entry</h2></div>
+<div class="card">
+  
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MES SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,399.50</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 7,406.93</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.375</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.2</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">20.60</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">3.00</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.71</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-12.78</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,416.00</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,405.35</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MES SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,403.00</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 7,402.34</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.4</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.2813</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">22.91</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">3.73</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">5.02</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-5.63</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,400.25</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,402.93</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MES SEP26</span>
+        <span style="font-size:12px;color:#27ae60;font-weight:600;">🟢 Long</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,398.25</strong> &nbsp;|&nbsp; VWAP 🟢 UP @ 7,398.99</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.2375</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.0875</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">23.19</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">3.36</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.16</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-1.51</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,400.25</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,399.58</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MES SEP26</span>
+        <span style="font-size:12px;color:#27ae60;font-weight:600;">🟢 Long</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,446.00</strong> &nbsp;|&nbsp; VWAP 🟢 UP @ 7,438.91</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.1</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.325</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">20.16</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">2.82</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-4.41</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7.91</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,451.75</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,443.06</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MES SEP26</span>
+        <span style="font-size:12px;color:#27ae60;font-weight:600;">🟢 Long</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,446.00</strong> &nbsp;|&nbsp; VWAP 🔴  @ —</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">None</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">None</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MES SEP26</span>
+        <span style="font-size:12px;color:#27ae60;font-weight:600;">🟢 Long</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,435.75</strong> &nbsp;|&nbsp; VWAP 🟢 UP @ 7,413.36</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.375</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.0063</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">20.52</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">3.09</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-4.30</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-6.71</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,441.25</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,441.84</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MES SEP26</span>
+        <span style="font-size:12px;color:#27ae60;font-weight:600;">🟢 Long</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,435.75</strong> &nbsp;|&nbsp; VWAP 🔴  @ —</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">None</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">None</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MES SEP26</span>
+        <span style="font-size:12px;color:#27ae60;font-weight:600;">🟢 Long</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,451.75</strong> &nbsp;|&nbsp; VWAP 🟢 UP @ 7,454.54</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.0875</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.0938</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">22.64</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">3.18</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-6.05</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7.98</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,458.50</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,449.54</div>
+        </div>
+      </div>
+    </div>
+  <p style="margin-top:12px;font-size:11px;color:var(--text-muted);text-align:center">Mostrando 8 de 14 entradas registradas</p>
+</div>
+  <div class="sub-title" style="margin-top:20px">Trades Sim/Demo — Evaluación de Estrategia</div>
+
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#1 &middot; MNQ Flat</span>
+        <span class="tag tag-win">$+0.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> Sin señal HUD activa; tamaño 6 micros (set 3@1R + 3@5R)<br>
+        
+        Trade MNQ registrado flat con el sizing micro correcto (6 contratos) pero sin resultado; probable orden no llenada o cierre a break-even. No siguió ninguna de las señales del día.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#2 &middot; MES Flat</span>
+        <span class="tag tag-win">$+0.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> Sin señal HUD activa; tamaño 42 contratos (atípicamente alto para MES)<br>
+        
+        Trade MES flat con qty 42 (muy por encima del set estándar) pero PnL $0; revisar por qué se registró ese tamaño y por qué no hubo fill/resultado. Sin señal HUD asociada.
+      </div>
+    </div><div class="sub-title" style="margin-top:20px">Trades Cuenta Fondeada — Análisis Espejo vs Señales</div>
+
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#1 &middot; MNQ Flat</span>
+        <span class="tag tag-win">$+0.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Ninguna señal coincidió con el registro flat; el día tuvo señales MNQ A+ (09:04-09:05 SHORT → T2) no ejecutadas<br><strong>Coincidió con señal:</strong> <span class="badge viol">NO</span><br><strong>Análisis espejo:</strong> No hubo trade real con resultado; quedó flat ($0). Como espejo, el sistema marcaba señales MNQ A+ que sí ganaron, pero no se tomaron. Ni suerte ni desviación: simplemente no se operó.<br><strong style="color:var(--bear)">Desviación:</strong> Inactividad total — no se ejecutó la señal A+ disponible (sizing/timing N/A por no haber fill).<br>
+        
+        
+        El espejo muestra oportunidad perdida: la cuenta fondeada no capturó la señal MNQ A+ ganadora del día. Lo positivo: 0% de DD, capital intacto.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#2 &middot; MES Flat</span>
+        <span class="tag tag-win">$+0.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Ninguna; el contexto MES mostró régimen Alta (ATR 3.0)<br><strong>Coincidió con señal:</strong> <span class="badge viol">NO</span><br><strong>Análisis espejo:</strong> Registro flat sin señal asociada. No hubo desviación de sizing porque no hubo operativa efectiva; el qty 42 reportado no se tradujo en P&L.<br><strong style="color:var(--bear)">Desviación:</strong> N/A — sin operativa real.<br>
+        
+        
+        Sin impacto en P&L ni en DD. La regla a vigilar es la activación del AutoTrader y el tamaño registrado (42), que no corresponde al set MICRO definido.
+      </div>
+    </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 5 — SEÑALES ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="senales" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">5</span>Señales del Indicador vs Ejecución</div>
+  <h2>Análisis Comparativo — Señales HUD vs Trades</h2>
+  <p class="sub">Verificación de zonas (A, M1, etc.), señales ejecutadas, ignoradas y trades fuera de señal</p>
+  <div class="section-title"><span class="step">SEÑALES</span><h2>Señales HUD V5 — Correlación con Ejecuciones</h2></div>
+<div class="card">
+  
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #279995;">
+        <div style="font-size:24px;font-weight:700;color:#279995;">292</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Señales emitidas</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #27ae60;">
+        <div style="font-size:24px;font-weight:700;color:#27ae60;">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ejecutadas <span style="color:#27ae60;font-weight:600;">(0%)</span></div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #e67e22;">
+        <div style="font-size:24px;font-weight:700;color:#e67e22;">292</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ignoradas</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #c0392b;">
+        <div style="font-size:24px;font-weight:700;color:#c0392b;">2</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Fuera de señal</div>
+      </div>
+    </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+    <div>
+      <h3 style="font-size:13px;color:var(--text-muted);margin:0 0 10px">⚠️ Señales ignoradas que ganaron</h3>
+      <table style='width:100%;font-size:12px;border-collapse:collapse;'><thead><tr style='color:var(--text-muted);border-bottom:1px solid var(--border);'><th style='padding:6px;text-align:left'>SignalID</th><th>Mercado</th><th>Dir</th><th>Hora</th><th>Zona</th><th>Resultado</th><th>Entrada</th><th>T1</th></tr></thead><tbody><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>717d3634</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>01:12:21</td><td style='padding:5px;'>20+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>30,059.50</td><td style='padding:5px;'>30,092.18</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>1931826b</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>01:12:21</td><td style='padding:5px;'>20+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>30,059.50</td><td style='padding:5px;'>30,092.18</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>d5b99f6b</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>01:12:21</td><td style='padding:5px;'>20+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>30,059.50</td><td style='padding:5px;'>30,092.18</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>ae3afb48</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>01:12:21</td><td style='padding:5px;'>20+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>30,059.50</td><td style='padding:5px;'>30,092.18</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>8318b05d</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>01:12:21</td><td style='padding:5px;'>20+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>30,059.50</td><td style='padding:5px;'>30,092.18</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>26210305</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>SHORT</span></td><td style='padding:5px;'>09:04:49</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>30,178.00</td><td style='padding:5px;'>30,147.64</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>c8ad9777</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>SHORT</span></td><td style='padding:5px;'>09:04:49</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>30,178.00</td><td style='padding:5px;'>30,147.64</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>2ef3c8f0</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>SHORT</span></td><td style='padding:5px;'>09:04:49</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>30,178.00</td><td style='padding:5px;'>30,147.64</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>7fbad7ba</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>SHORT</span></td><td style='padding:5px;'>09:04:49</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>30,178.00</td><td style='padding:5px;'>30,147.64</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>8e47d854</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>SHORT</span></td><td style='padding:5px;'>09:04:49</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>30,178.00</td><td style='padding:5px;'>30,147.64</td></tr></tbody></table>
+    </div>
+    <div>
+      <h3 style="font-size:13px;color:var(--text-muted);margin:0 0 10px">🚫 Trades ejecutados sin señal activa</h3>
+      <table style='width:100%;font-size:12px;border-collapse:collapse;'><thead><tr style='color:var(--text-muted);border-bottom:1px solid var(--border);'><th style='padding:6px;text-align:left'>#</th><th>Instrumento</th><th>Dir</th><th>Hora entrada</th><th>Precio</th><th>P&L</th><th>Estrategia</th></tr></thead><tbody><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'></td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'></span></td><td style='padding:5px;'></td><td style='padding:5px;'>—</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$0.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'></td><td style='padding:5px;'>MES</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'></span></td><td style='padding:5px;'></td><td style='padding:5px;'>—</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$0.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="ai-insight" style="margin-top:12px;">
+    <div class="ai-label">📊 Análisis de Disciplina</div>
+    <p style="margin:6px 0;">Disciplina de ejecución nula en cuanto a señales: de 292 señales HUD V6 del día, 0 ejecutadas y 292 no ejecutadas, con 2 trades flat sin señal. El sistema identificó 60 señales ganadoras (notablemente MNQ A+ a T2) que no se capturaron. El lado positivo es que tampoco se asumió riesgo (0 DD).</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Patrón:</strong> Patrón del día: inactividad. No se ejecutaron señales (probables causas: AutoTrader no activo, limit no llenada, cooldown) y los 2 registros quedaron flat. No hubo selección de setups ni gestión — el día fue en blanco.</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Impacto:</strong> Si se hubiesen ejecutado las señales MNQ A+ de las 09:04-09:05 (ambas a T2) en MICRO, el día habría sido positivo sin comprometer el DD. El costo de la inactividad fue de oportunidad, no de capital.</p>
+  </div>
+</div>
+  
+</div>
+
+<!-- ══════════════════════ SECCIÓN 6 — DIAGNÓSTICO ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="diagnostico" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">6</span>Diagnóstico de la Sesión</div>
+  <h2>Análisis General y Conclusiones</h2>
+  <p class="sub">Evaluación cualitativa de la sesión, patrones identificados y aprendizajes</p>
+  <div class="section-title"><span class="step">ANALISIS</span><h2>Análisis General de la Sesión</h2></div>
+<div class="ai-insight">
+  <div class="ai-label">🤖 Análisis de IA</div>
+  <p>Sesión prácticamente sin operativa: Sim: 2 trades, $0 | Cuenta Fondeada: 2 trades flat, $0 (DD $0). Ambos trades quedaron planos (sin dirección/fill efectivo) en un día en que el mercado intentó rebotar tras el impulso de Micron, con régimen de volatilidad Alta (MES ATR 3.0). El sistema HUD V6 generó 292 señales del día y NO se ejecutó ninguna; se dejaron 60 oportunidades ganadoras sobre la mesa, destacando MNQ SHORT A+ a las 09:04-09:05 que alcanzó T2.</p>
+</div><div class="card" style="background:var(--header-gradient);color:white;border:none;">
+  <p style="font-size:14px;line-height:1.7;text-align:center;font-style:italic;">"Día en blanco (PnL $0, 0% DD): no se perdió capital, pero se perdieron oportunidades — el sistema V6 marcó señales A+ ganadoras (MNQ a T2) que la inactividad del AutoTrader dejó pasar. Lo bueno: la corrección de escala de precios ya está en V6 y la cuenta sigue intacta. Mañana: checklist de ejecución, sizing MICRO fijo y presencia en las ventanas de edge para convertir las señales válidas en resultados."</p>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 7 — ESTRATEGIAS ══════════════════════ -->
+<div id="estrategias-section" style="display:block">
+  <div class="sub-title">Resultados por Estrategia</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>Estrategia</th><th>Trades</th><th>W</th><th>L</th><th>Flat</th><th>WR</th><th>P&L</th></tr></thead>
+      <tbody><tr><td>HUD_Manual</td><td>2</td><td>0</td><td>0</td><td>2</td><td>0.0%</td><td class="positive">+$0.00</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 8 — FONDEO ══════════════════════ -->
+<div id="fondeo-section" style="display:1">
+<div class="section-divider"></div>
+  <div class="section-label"><span class="num">8</span>Cuenta Fondeada</div>
+  <h2>Evaluación de la Cuenta Fondeada</h2>
+  <div class="kpi-grid" style="margin-bottom:14px">
+    <div class="kpi"><div class="kpi-label">Balance</div><div class="kpi-value" style="color:var(--teal)">$0 (día flat)</div></div>
+    <div class="kpi"><div class="kpi-label">Drawdown</div><div class="kpi-value neg">$0 (0% del límite $2,000 → SOBREVIVIÓ (sin riesgo asumido))</div></div>
+    <div class="kpi"><div class="kpi-label">Días Restantes</div><div class="kpi-value">—</div></div>
+    <div class="kpi"><div class="kpi-label">Objetivo</div><div class="kpi-value" style="color:var(--gold)">$3,000 — sin avance hoy; pendiente íntegro</div></div>
+  </div>
+  <div class="ai-insight"><div class="ai-label">Evaluación</div><p>PnL Sim y Fondeada idénticos en $0: día sin operativa efectiva. La diferencia no vino de seguir/ignorar señales sino de no ejecutar ninguna; el tamaño fue irrelevante (sin fills). Regla concreta para la próxima sesión: asegurar la activación del AutoTrader y capturar señales A+ en MICRO para no perder días con setups válidos como los de hoy (MNQ A+ a T2).</p></div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 9 — DOFA ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="dofa" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">9</span>Matriz DOFA</div>
+  <h2>Análisis DOFA — 25 JUN 2026</h2>
+  <p class="sub">Fortalezas · Debilidades · Oportunidades · Amenazas del período analizado</p>
+  <div class="sub-title" style="margin-top:16px">DOFA — Sim/Demo</div>
+<div class="dofa-grid">
+  <div class="dofa-card F"><div class="dofa-title F">✅ Fortalezas</div><div class="dofa-item">El sizing micro (6 contratos) en el trade MNQ coincide con el set definido (3@1R + 3@5R).</div><div class="dofa-item">La estrategia identificó correctamente el régimen Alta (ATR 3.0).</div></div>
+  <div class="dofa-card D"><div class="dofa-title D">⚠️ Debilidades</div><div class="dofa-item">0 de 292 señales ejecutadas — el bot/ejecución no operó.</div><div class="dofa-item">Trade MES con qty 42 atípico, fuera del set estándar.</div></div>
+  <div class="dofa-card O"><div class="dofa-title O">🔵 Oportunidades</div><div class="dofa-item">Capturar las señales MNQ A+ ganadoras (09:04-09:05 a T2) que el sistema sí marcó.</div></div>
+  <div class="dofa-card A"><div class="dofa-title A">🔴 Amenazas</div><div class="dofa-item">La inactividad del AutoTrader hace inútil el sistema de señales si no se ejecutan.</div></div>
+</div><div class="sub-title" style="margin-top:16px">DOFA — Cuenta Fondeada</div>
+<div class="dofa-grid">
+  <div class="dofa-card F"><div class="dofa-title F">✅ Fortalezas</div><div class="dofa-item">Capital totalmente protegido: 0% de DD usado.</div><div class="dofa-item">Cero exposición a la volatilidad Alta del día.</div></div>
+  <div class="dofa-card D"><div class="dofa-title D">⚠️ Debilidades</div><div class="dofa-item">No se avanzó hacia el objetivo de $3,000 (día en blanco).</div><div class="dofa-item">No se aprovechó el catalizador alcista de Micron previsto en el plan.</div></div>
+  <div class="dofa-card O"><div class="dofa-title O">🔵 Oportunidades</div><div class="dofa-item">Reanudar ejecución MICRO disciplinada para capturar señales A+ sin riesgo de ruina.</div></div>
+  <div class="dofa-card A"><div class="dofa-title A">🔴 Amenazas</div><div class="dofa-item">La inactividad repetida retrasa el objetivo y puede llevar a forzar trades de baja calidad después.</div></div>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 10 — REGLAS ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="reglas" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">10</span>Reglas Post-Mercado</div>
+  <h2>Recomendaciones y Reglas a Seguir</h2>
+  <p class="sub">Reglas críticas, ajustes de calidad y mejoras para las próximas sesiones</p>
+  <div class="section-title"><span class="step">RECOMENDACIONES</span><h2>Recomendaciones Finales</h2></div>
+<div class="sub-title" style="margin-top:16px">Recomendaciones — Sim/Demo</div><div class="rec-card"><h3>🔴 Regla Crítica Sim — Garantizar la ejecución del AutoTrader</h3><ul><li>Verificar antes de la apertura que el AutoTrader esté activo en los charts de MNQ/MES correctos.</li><li>Confirmar que las órdenes limit estén configuradas para llenarse (revisar offset y nº de barras).</li></ul></div><div class="rec-card"><h3>🟡 Regla de Calidad Sim — Coherencia de tamaño</h3><ul><li>Estandarizar el sizing al set definido (Micro 6 ctr: 3@1R + 3@5R); revisar el qty 42 del MES.</li><li>Registrar dirección y fills para poder evaluar cada señal (hoy quedaron sin datos).</li></ul></div><div class="sub-title" style="margin-top:16px">Recomendaciones — Cuenta Fondeada</div><div class="rec-card"><h3>🔴 Regla Crítica Fondeada — Ejecutar señales A+ en MICRO</h3><ul><li>Operar las señales A+ con el set MICRO (6 contratos 3@1R + 3@5R) para avanzar al objetivo sin tocar el DD.</li><li>Nunca FULL; mantener la regla de no promediar 2º lote en pérdida.</li></ul></div><div class="rec-card"><h3>🟡 Regla de Calidad Fondeada — Disciplina de presencia</h3><ul><li>Estar operativo en las ventanas de mayor edge (10:00-11:30 y 13:30-16:00).</li><li>No forzar trades de baja calidad para 'compensar' un día en blanco.</li></ul></div><div class="sub-title" style="margin-top:16px">Recomendaciones — Generales</div><div class="rec-card"><h3>🟢 Mejora general para la siguiente sesión</h3><ul><li>Checklist pre-apertura: AutoTrader activo, instrumentos correctos, limit fills y sizing MICRO confirmados.</li><li>Priorizar señales A+/20+ con VWAP a favor; el sistema las marca bien (V6 ya alinea precios).</li></ul></div>
+
+<div class="section-title"><span class="step">INCIDENCIAS</span><h2>Bugs y Diagnóstico</h2></div>
+<div class="card">
+  
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ Trades registrados flat sin dirección ni fill ($0) <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">Los 2 trades del día (MNQ qty 6, MES qty 42) se registraron sin dirección, sin precios de entrada/salida y PnL $0, sin señal asociada.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Revisar conexión/activación del AutoTrader y el registro de órdenes en NinjaTrader; confirmar que las limit se llenan o se cancelan correctamente.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#f39c12;background:#fef3e2">
+      <h4 style="color:#f39c12;font-size:13px;margin-bottom:6px;">⚠️ Tamaño atípico en MES (qty 42) <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[MEDIA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">El trade MES figura con 42 contratos, muy por encima del set definido (6 micros). Posible error de configuración de tamaño.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Fijar el sizing del AutoTrader al set MICRO (6 ctr) y bloquear cantidades fuera de rango.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#279995;background:#fef3e2">
+      <h4 style="color:#279995;font-size:13px;margin-bottom:6px;">⚠️ Escala de precios en señales — CORREGIDA en HUD V6 <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[BAJA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">A diferencia de días previos, las señales V6 ya muestran precios coherentes (MNQ ~30,059-30,178 vs NQ real ~30,200). El desfase de escala reportado antes parece resuelto.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Confirmar que la corrección V6 es estable en próximas sesiones; cerrar la incidencia si persiste correcta.</p>
+    </div>
+</div>
+  <div class="plan-card"><h3>Disciplina</h3><p>Checklist pre-apertura obligatorio: AutoTrader activo en MNQ/MES, limit fills y cooldown revisados. Estar presente en las ventanas de mayor edge y no operar fuera de ellas.</p></div><div class="plan-card"><h3>Sizing</h3><p>Fijar el set MICRO (6 contratos: 3@1R + 3@5R) como tamaño por defecto y bloquear cantidades atípicas como el qty 42 del MES de hoy. Mini solo si la cuenta lo permite: 2 contratos (1@1R + 1@3R).</p></div><div class="plan-card"><h3>Senales</h3><p>Priorizar la EJECUCIÓN de señales A+/20+ con VWAP a favor (V6 ya entrega precios correctos). Capturar los setups MNQ A+ de la apertura (hoy a T2) en MICRO.</p></div><div class="plan-card"><h3>Horario</h3><p>Concentrar en 10:00-11:30 (UsaAm) y 13:30-16:00 (UsaPm); evitar inactividad total. En régimen Alta, esperar rango los primeros minutos pero NO ausentarse de la sesión.</p></div><div class="plan-card"><h3>Sistema</h3><p>Resolver el registro flat de trades (conexión/activación del AutoTrader), fijar el sizing al set MICRO y confirmar la estabilidad de la corrección de escala de precios en V6.</p></div>
+</div>
+
+<!-- ══════════════════════ PLAN DE MEJORAS ══════════════════════ -->
+<div id="multi-account-section" style="display:0">
+<div class="section-divider"></div>
+  <div class="section-label"><span class="num">*</span>Comparativa por Cuenta</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>Cuenta</th><th>Trades</th><th>W</th><th>L</th><th>WR</th><th>P&L</th><th>Puntos por Mercado</th></tr></thead>
+      <tbody><tr><td>Sim</td><td>2</td><td>0</td><td>0</td><td>0%</td><td class='positive'>+$0.00</td><td>0 ptos</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════ YOUTUBE ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="video" style="scroll-margin-top:52px">
+  <div class="yt-block">
+    <div class="yt-icon">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </div>
+    <div class="yt-text">
+      <div class="yt-title">Operativa en vivo — Canal EduS Trader</div>
+      <div class="yt-sub">YouTube · Sesiones diarias · Análisis y ejecución en tiempo real &middot; 25 JUN 2026</div>
+    </div>
+    <a class="yt-btn" href="https://www.youtube.com/@EduSTrader" target="_blank" rel="noopener noreferrer">Ver en YouTube →</a>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<footer>
+  <a href="javascript:history.back()" class="nav-back">← Volver</a> &middot;
+  <span class="brand-ft">Edu<span class="gold">S</span> Trader</span> &middot;
+  Post-Market Analysis &middot; 25 JUN 2026 &middot; Fuente: NinjaTrader 8
+</footer>
+
+</body>
+</html>
