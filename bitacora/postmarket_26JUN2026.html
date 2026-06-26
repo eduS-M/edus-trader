@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — Post-Market Analysis | 26 JUN 2026</title>
+<meta name="description" content="EduS Trader Post-Market Analysis 26 JUN 2026 — Post-Market Analysis">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --navy: #142d37;
+  --navy-dark: #0d1f26;
+  --teal: #279995;
+  --gold: #b38665;
+  --gold-light: #d4a982;
+  --bg: #f2f0eb;
+  --surface: #ffffff;
+  --surface2: #f8f6f0;
+  --border: #e0dbd0;
+  --border2: rgba(0,0,0,0.20);
+  --text: #1a1814;
+  --text-muted: #7a7468;
+  --bull: #279995;
+  --bull-bg: #e6f5f4;
+  --bear: #c0392b;
+  --bear-bg: #fdf0ee;
+  --amber: #b38665;
+  --amber-bg: #f6efe8;
+  --blue: #185fa5;
+  --blue-bg: #e6f1fb;
+  --shadow: 0 2px 20px rgba(13,31,38,0.10);
+  --radius: 10px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --header-gradient: linear-gradient(135deg, #142d37 0%, #034649 100%);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1e20;
+    --surface: #1e2527;
+    --surface2: #232b2e;
+    --border: #2d3b3f;
+    --border2: rgba(255,255,255,0.15);
+    --text: #e8e4dc;
+    --text-muted: #8a9a9e;
+    --bull-bg: rgba(39,153,149,0.15);
+    --bear-bg: rgba(192,57,43,0.15);
+    --amber-bg: rgba(179,134,101,0.15);
+    --blue-bg: rgba(24,95,165,0.15);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ─── HEADER ─── */
+.header {
+  background: var(--header-gradient);
+  color: white;
+  padding: 20px 36px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid var(--gold);
+  position: relative;
+  overflow: hidden;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(179,134,101,0.08);
+  pointer-events: none;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 1;
+}
+.header-left .logo-img {
+  height: 60px;
+  width: auto;
+  display: block;
+}
+.header-left .brand { display: flex; flex-direction: column; }
+.header-left .brand-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: white;
+  line-height: 1;
+}
+.header-left .brand-name .gold { color: var(--gold); }
+.header-left .brand-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: var(--gold-light);
+  letter-spacing: 3px;
+  margin-top: 3px;
+  text-transform: uppercase;
+}
+.header-right { text-align: right; z-index: 1; }
+.header-right .date {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 700;
+}
+.header-right .prices {
+  display: flex; gap: 6px; margin-top: 6px;
+  justify-content: flex-end; flex-wrap: wrap;
+}
+.price-chip {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(179,134,101,0.35);
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.85);
+}
+.price-chip span { color: var(--gold-light); font-weight: 700; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy);
+  border-bottom: 1px solid rgba(179,134,101,0.25);
+  padding: 0 2rem;
+  display: flex; align-items: center; overflow-x: auto;
+  gap: 2px;
+}
+nav .brand {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  color: var(--gold); padding: 13px 0; margin-right: 20px;
+  white-space: nowrap; letter-spacing: 2px;
+  text-transform: uppercase;
+}
+nav a {
+  font-size: 11px; color: rgba(255,255,255,0.5);
+  text-decoration: none; padding: 14px 12px;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.5px;
+}
+nav a:hover { color: white; }
+nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 980px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+.section-divider { height: 1px; background: linear-gradient(to right, var(--gold), transparent); margin: 2.5rem 0 2rem; }
+.section-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 0.8rem;
+}
+.section-label .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--navy); color: var(--gold);
+  font-size: 10px; font-weight: 700;
+  border: 1px solid rgba(179,134,101,0.35);
+}
+h2 { font-size: 20px; font-weight: 600; margin-bottom: 4px; color: var(--navy); }
+@media (prefers-color-scheme: dark) { h2 { color: var(--text); } }
+.sub { font-size: 12px; color: var(--text-muted); margin-bottom: 1.3rem; }
+.sub-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted); margin: 1.3rem 0 .6rem;
+}
+
+/* ─── KPIs ─── */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+.kpi { background: var(--surface); border-radius: var(--r-md); padding: 12px 14px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+.kpi-label { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+.kpi-value { font-size: 22px; font-weight: 700; line-height: 1.1; }
+.kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.pos { color: var(--bull); } .neg { color: var(--bear); } .neu { color: var(--amber); }
+.pnl-pos { color: var(--bull); font-weight: 600; } .pnl-neg { color: var(--bear); font-weight: 600; }
+
+/* ─── CHARTS ─── */
+.chart-wrap { position: relative; width: 100%; }
+
+/* ─── ALERTS ─── */
+.alert {
+  border-radius: var(--r-md); padding: 12px 14px;
+  font-size: 12px; margin-bottom: 10px; line-height: 1.6;
+}
+.alert.success { background: var(--bull-bg); border: 0.5px solid rgba(39,153,149,0.35); }
+.alert.danger  { background: var(--bear-bg); border: 0.5px solid rgba(192,57,43,0.35); }
+.alert.warning { background: var(--amber-bg); border: 0.5px solid rgba(179,134,101,0.35); }
+.alert.info    { background: var(--blue-bg); border: 0.5px solid rgba(24,95,165,0.35); }
+.alert-title { font-weight: 600; margin-bottom: 3px; }
+.alert.success .alert-title { color: var(--bull); }
+.alert.danger  .alert-title { color: var(--bear); }
+.alert.warning .alert-title { color: var(--amber); }
+.alert.info    .alert-title { color: var(--blue); }
+
+/* ─── REGIME ALERTS ─── */
+.regime-alert {
+  background: linear-gradient(135deg, rgba(39,153,149,0.10), rgba(39,153,149,0.03));
+  border: 1px solid rgba(39,153,149,0.35); border-radius: var(--r-lg);
+  padding: 14px 18px; margin-bottom: 14px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.regime-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.regime-title { font-size: 13px; font-weight: 600; color: var(--bull); margin-bottom: 3px; }
+.regime-sub { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+.critical-banner {
+  background: linear-gradient(135deg, rgba(192,57,43,0.12), rgba(192,57,43,0.04));
+  border: 1.5px solid rgba(192,57,43,0.5); border-radius: var(--r-lg);
+  padding: 14px 18px; margin-bottom: 14px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.critical-title { font-size: 13px; font-weight: 700; color: var(--bear); margin-bottom: 3px; }
+.critical-sub { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+
+/* ─── INSIGHT CARDS ─── */
+.icard {
+  background: var(--surface); border-radius: var(--r-md); padding: 12px 14px;
+  margin-bottom: 8px; border-left: 3px solid transparent;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+}
+.icard.crit  { border-left-color: var(--bear); }
+.icard.warn  { border-left-color: var(--amber); }
+.icard.good  { border-left-color: var(--bull); }
+.icard.info  { border-left-color: var(--blue); }
+.icard-title { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+.icard-text  { font-size: 12px; color: var(--text-muted); line-height: 1.65; }
+
+/* ─── TRADE TABLE ─── */
+.tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tbl th {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--gold-light); font-weight: 700;
+  padding: 8px 10px;
+  background: var(--navy);
+  text-align: left;
+}
+.tbl td { padding: 7px 10px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr.win td  { background: rgba(39,153,149,0.04); }
+.tbl tr.loss td { background: rgba(192,57,43,0.04); }
+.tbl tr.viol-row td { background: rgba(179,134,101,0.06); }
+.badge {
+  display: inline-block; padding: 2px 7px; border-radius: 4px;
+  font-size: 10px; font-weight: 600; font-family: 'Space Mono', monospace;
+}
+.badge.long   { background: var(--bull-bg);  color: var(--bull); }
+.badge.short  { background: var(--amber-bg); color: var(--amber); }
+.badge.ok     { background: var(--bull-bg);  color: var(--bull); }
+.badge.viol   { background: var(--bear-bg);  color: var(--bear); }
+.badge.cancel { background: rgba(0,0,0,0.06); color: var(--text-muted); }
+.zone-badge {
+  display: inline-block; font-size: 10px; padding: 1px 7px;
+  border-radius: 10px; font-family: 'Space Mono', monospace;
+}
+.zone-badge.identified { background: var(--bull-bg); color: var(--bull); }
+.zone-badge.manual     { background: var(--amber-bg); color: var(--amber); }
+.sdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin: 0 1px; }
+.dot-g { background: var(--bull); } .dot-r { background: var(--bear); }
+.sig-inline { display: flex; gap: 3px; align-items: center; }
+
+/* ─── COMP BLOCKS ─── */
+.comp-block {
+  background: var(--surface); border-radius: var(--r-md);
+  padding: 12px 14px; margin-bottom: 10px; font-size: 12px;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+}
+.comp-block-title { font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.comp-block-body { color: var(--text-muted); line-height: 1.6; }
+.tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+.tag-win  { background: var(--bull-bg); color: var(--bull); }
+.tag-loss { background: var(--bear-bg); color: var(--bear); }
+
+/* ─── TWO COLUMN ─── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ─── DOFA (estilo cierre mensual) ─── */
+.dofa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.dofa-card { border-radius: var(--r-lg); padding: 16px 18px; border: 0.5px solid var(--border2); }
+.dofa-card.F { background: rgba(39,153,149,0.06); border-color: rgba(39,153,149,0.30); }
+.dofa-card.D { background: rgba(192,57,43,0.06);  border-color: rgba(192,57,43,0.30); }
+.dofa-card.O { background: rgba(24,95,165,0.06);   border-color: rgba(24,95,165,0.30); }
+.dofa-card.A { background: rgba(179,134,101,0.06); border-color: rgba(179,134,101,0.30); }
+.dofa-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.dofa-title.F { color: var(--bull); }
+.dofa-title.D { color: var(--bear); }
+.dofa-title.O { color: var(--blue); }
+.dofa-title.A { color: var(--amber); }
+.dofa-item {
+  font-size: 12px; color: var(--text-muted); padding: 4px 0 4px 12px;
+  border-bottom: 0.5px solid var(--border); line-height: 1.55;
+  position: relative;
+}
+.dofa-item::before { content: '·'; position: absolute; left: 0; color: var(--text-muted); }
+.dofa-item:last-child { border-bottom: none; }
+
+/* ─── RULES ─── */
+.rule-item { font-size: 12px; color: var(--text-muted); padding: 6px 0; border-bottom: 0.5px solid var(--border); line-height: 1.55; }
+.rule-item:last-child { border-bottom: none; }
+.rules-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 14px 16px; margin-top: 14px;
+  box-shadow: var(--shadow);
+}
+.rules-box-title { font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 10px; font-family: 'Space Mono', monospace; letter-spacing: 0.05em; }
+@media (prefers-color-scheme: dark) { .rules-box-title { color: var(--gold-light); } }
+
+/* ─── STOP CALLOUT ─── */
+.sl-callout {
+  background: var(--bear-bg); border: 1.5px solid rgba(192,57,43,0.35);
+  border-radius: var(--r-md); padding: 12px 16px; margin: 10px 0; font-size: 12px;
+}
+.sl-callout-title { font-weight: 700; color: var(--bear); margin-bottom: 6px; font-size: 13px; }
+.sl-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 0.5px solid rgba(192,57,43,0.15); font-size: 12px; gap: 8px; flex-wrap: wrap; }
+.sl-row:last-child { border-bottom: none; }
+
+/* ─── VOLATILITY CONFIG ─── */
+.volat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin: 10px 0; }
+.volat-card {
+  background: var(--surface); border-radius: var(--r-md); padding: 12px 14px;
+  border: 1px solid var(--border); font-size: 12px;
+}
+.volat-card .vc-scenario {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 6px;
+}
+.vc-baja      { color: var(--bull); }
+.vc-media     { color: #3498db; }
+.vc-alta      { color: var(--amber); }
+.vc-extrema   { color: #e67e22; }
+.vc-superextreme { color: var(--bear); }
+.vc-active    { box-shadow: 0 0 0 2px var(--gold); }
+.vc-metric    { display: flex; justify-content: space-between; padding: 2px 0; }
+.vc-metric-label { color: var(--text-muted); }
+.vc-metric-val  { font-weight: 600; }
+
+/* ─── WEEK / MONTH BADGES ─── */
+.weekly-badge { display: inline-block; background: var(--header-gradient); color: var(--gold); padding: 4px 14px; border-radius: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1px; margin-bottom: 14px; }
+.monthly-badge { display: inline-block; background: linear-gradient(135deg, #854f0b, #b38665); color: white; padding: 4px 14px; border-radius: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1px; margin-bottom: 14px; }
+
+/* ─── YOUTUBE BLOCK ─── */
+.yt-block {
+  background: var(--surface); border: 0.5px solid var(--border);
+  border-radius: var(--r-lg); padding: 18px 22px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 2rem;
+  box-shadow: var(--shadow);
+}
+.yt-icon { width: 44px; height: 44px; border-radius: 50%; background: #c0392b; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.yt-icon svg { width: 20px; height: 20px; fill: #fff; }
+.yt-text { flex: 1; min-width: 180px; }
+.yt-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+.yt-sub   { font-size: 12px; color: var(--text-muted); }
+.yt-btn {
+  display: inline-block !important; background: #c0392b !important;
+  color: #ffffff !important; font-size: 12px; font-weight: 700;
+  padding: 10px 22px; border-radius: var(--r-md);
+  text-decoration: none !important; white-space: nowrap;
+  font-family: 'Space Mono', monospace; letter-spacing: 0.5px;
+  transition: opacity .2s;
+}
+.yt-btn:hover { opacity: .85; }
+
+/* ─── NAV BACK ─── */
+.nav-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--gold); text-decoration: none; font-size: 13px;
+  margin-bottom: 16px; font-family: 'Space Mono', monospace;
+  font-weight: 700; transition: opacity .15s;
+  letter-spacing: 0.05em;
+}
+.nav-back:hover { opacity: 0.7; }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--header-gradient);
+  color: rgba(255,255,255,0.4); text-align: center;
+  padding: 18px 1rem; font-size: 11px;
+  font-family: 'Space Mono', monospace; letter-spacing: 1px;
+  margin-top: 2rem; border-top: 3px solid var(--gold);
+}
+footer strong { color: var(--gold-light); }
+footer .brand-ft { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; color: var(--gold-light); }
+footer .brand-ft .gold { color: var(--gold); }
+
+/* ─── AI INSIGHT ─── */
+.ai-insight {
+  background: linear-gradient(135deg, rgba(39,153,149,0.07), rgba(20,45,55,0.04));
+  border-left: 4px solid var(--teal); border-radius: var(--r-md);
+  padding: 14px 18px; margin-bottom: 14px; border: 1px solid rgba(39,153,149,0.2);
+}
+.ai-label {
+  font-family: 'Space Mono', monospace; font-size: 9px;
+  color: var(--teal); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
+}
+.ai-insight p { font-size: 13px; color: var(--text); line-height: 1.7; }
+
+/* ─── GAMEPLAN COMPARE ─── */
+.gameplan-compare {
+  background: var(--surface); border-radius: var(--r-md);
+  padding: 16px 20px; border-left: 4px solid var(--gold);
+  margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border);
+}
+.gameplan-compare h3 { font-size: 14px; color: var(--navy); margin-bottom: 8px; }
+@media (prefers-color-scheme: dark) { .gameplan-compare h3 { color: var(--gold-light); } }
+.gameplan-compare ul { margin-left: 18px; font-size: 13px; }
+.gameplan-compare li { margin-bottom: 4px; }
+.cumplido   { color: var(--bull); }
+.nocumplido { color: var(--bear); }
+.parcial    { color: var(--amber); }
+
+/* ─── VIX BADGE ─── */
+.vix-badge-strip {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--bull-bg); border: 0.5px solid rgba(39,153,149,0.4);
+  border-radius: var(--r-md); padding: 8px 14px; font-size: 12px;
+  color: var(--bull); font-weight: 600; margin-bottom: 14px;
+}
+
+/* ─── VOLATILITY GAUGE ─── */
+.volatility-gauge { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.gauge-item {
+  flex: 1; min-width: 130px; background: var(--surface);
+  border-radius: var(--r-md); padding: 12px;
+  border: 1px solid var(--border); text-align: center;
+}
+.gauge-item .g-label { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+.gauge-item .g-value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+.gauge-item .g-sub   { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+/* ─── PROGRESS BAR ─── */
+.prog-wrap { background: var(--border); border-radius: 3px; height: 6px; margin-top: 4px; overflow: hidden; }
+.prog { height: 6px; border-radius: 3px; }
+
+/* ─── FINDING BOX ─── */
+.finding {
+  background: var(--surface); border: 0.5px solid var(--border2);
+  border-radius: var(--r-lg); padding: 22px 26px;
+  position: relative; overflow: hidden; box-shadow: var(--shadow);
+}
+.finding::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: linear-gradient(180deg, var(--bear) 0%, var(--amber) 60%, var(--bear) 100%);
+}
+.finding-label { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bear); margin-bottom: 8px; }
+.finding h3 { font-size: 16px; font-weight: 600; margin-bottom: 10px; line-height: 1.4; }
+.finding p { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 10px; }
+.finding p:last-child { margin-bottom: 0; }
+.finding strong { color: var(--text); font-weight: 600; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 600px) {
+  .page { padding: 1rem 1rem 3rem; }
+  .two-col { grid-template-columns: 1fr; }
+  .dofa-grid { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .header { flex-direction: column; align-items: flex-start; padding: 16px; }
+  .header-right { text-align: left; width: 100%; }
+  .header-right .prices { justify-content: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<div class="header">
+  <div class="header-left">
+    <img class="logo-img" src="/assets/logo.png" alt="EduS Trader" onerror="this.style.display='none'">
+    <div class="brand">
+      <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
+      <div class="brand-sub">Post-Market Analysis &middot; Mesa de Dinero</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="date">Viernes 26 de Junio 2026</div>
+    <div class="prices">
+      <div class="price-chip">P&L <span style="color:#279995">+$70.25</span></div>
+      <div class="price-chip">29 trades &middot; 12W / 17L</div>
+      <div class="price-chip">WR <span>41.4%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav>
+  <span class="brand">📊 Post-Market Analysis</span>
+  <a href="#resumen" class="active">Resumen</a>
+  <a href="#gameplan">GamePlan</a>
+  <a href="#volatilidad">Volatilidad</a>
+  <a href="#trades">Trades</a>
+  <a href="#senales">Señales</a>
+  <a href="#diagnostico">Diagnóstico</a>
+  <a href="#dofa">DOFA</a>
+  <a href="#reglas">Reglas</a>
+  <a href="#video">Video</a>
+</nav>
+
+<!-- ══════════ PAGE ══════════ -->
+<div class="page">
+
+<a href="javascript:history.back()" class="nav-back">← Volver</a>
+
+
+
+
+<!-- ══════════════════════ SECCIÓN 1 — RESUMEN ══════════════════════ -->
+<div id="resumen" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">1</span>Resumen Operativo</div>
+  <h2>Dashboard 26 JUN 2026</h2>
+  <p class="sub">Fuente: NinjaTrader 8 &middot; Post-Market Analysis &middot; 29 trades &middot; WR 41.4%</p>
+
+  <span class="edus-account-badge negative">Cuenta Fondeada: -$27.00</span> <span class="edus-account-badge positive">Sim: +$97.25</span> 
+
+  <div class="sub-title">KPIs del período</div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">P&L Total</div><div class="kpi-value positive">+$70.25</div><div class="kpi-sub">Neto del período</div></div>
+    <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-value">41.4%</div><div class="kpi-sub">12W / 17L</div></div>
+    <div class="kpi"><div class="kpi-label">Avg Trade</div><div class="kpi-value positive">+$2.42</div><div class="kpi-sub">Por operación</div></div>
+    <div class="kpi"><div class="kpi-label">Mayor Win</div><div class="kpi-value pos">+$383.10</div><div class="kpi-sub">Mejor operación</div></div>
+    <div class="kpi"><div class="kpi-label">Mayor Loss</div><div class="kpi-value neg">-$167.40</div><div class="kpi-sub">Peor operación</div></div>
+    <div class="kpi"><div class="kpi-label">Total Trades</div><div class="kpi-value">29</div><div class="kpi-sub">12 ganados · 17 perdidos</div></div>
+  </div>
+
+  <div class="sub-title" style="margin-top:16px">Sim/Demo — 18T | 8W/10L | WR 44%</div>
+<div class="kpi-grid">
+  <div class="kpi"><div class="kpi-label">P&L</div><div class="kpi-value positive">+$97.25</div></div>
+  <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-value">44%</div><div class="kpi-sub">8W / 10L</div></div>
+  <div class="kpi"><div class="kpi-label">Avg Trade</div><div class="kpi-value pos">+$5.40</div></div>
+  <div class="kpi"><div class="kpi-label">Mayor Win</div><div class="kpi-value pos">+$195.50</div></div>
+  <div class="kpi"><div class="kpi-label">Mayor Loss</div><div class="kpi-value neg">-$154.50</div></div>
+  <div class="kpi"><div class="kpi-label">Trades</div><div class="kpi-value">18</div></div>
+</div>
+  <div class="sub-title" style="margin-top:16px">Cuenta Fondeada — 11T | 4W/7L | WR 36%</div>
+<div class="kpi-grid">
+  <div class="kpi"><div class="kpi-label">P&L</div><div class="kpi-value negative">-$27.00</div></div>
+  <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-value">36%</div><div class="kpi-sub">4W / 7L</div></div>
+  <div class="kpi"><div class="kpi-label">Avg Trade</div><div class="kpi-value neg">-$2.45</div></div>
+  <div class="kpi"><div class="kpi-label">Mayor Win</div><div class="kpi-value pos">+$383.10</div></div>
+  <div class="kpi"><div class="kpi-label">Mayor Loss</div><div class="kpi-value neg">-$167.40</div></div>
+  <div class="kpi"><div class="kpi-label">Trades</div><div class="kpi-value">11</div></div>
+</div>
+</div>
+
+<!-- ══════════ CURVA P&L POR TRADE ══════════ -->
+<div class="section-divider"></div>
+<div class="section-label"><span class="num">▶</span>P&L por Trade</div>
+
+<div class="sub-title">P&L individual — Sim/Demo</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartBarSim"></canvas></div>
+
+<div class="sub-title">Curva de capital — Sim/Demo</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartCurveSim"></canvas></div>
+
+<div class="sub-title" style="margin-top:20px">P&L individual — Cuenta Fondeada</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartBarFunded"></canvas></div>
+
+<div class="sub-title">Curva de capital — Cuenta Fondeada</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartCurveFunded"></canvas></div>
+
+<script>
+(function() {
+  var isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+  var tc = isDark ? '#8a9a9e' : '#7a7468';
+  var gc = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+  function makeBarChart(canvasId, data) {
+    if (!data || data.length === 0) { document.getElementById(canvasId).parentElement.style.display='none'; return; }
+    var labels = data.map(function(d) { return '#' + d.t; });
+    var pnls = data.map(function(d) { return d.pnl; });
+    new Chart(document.getElementById(canvasId), {
+      type: 'bar',
+      data: { labels: labels, datasets: [{ data: pnls, backgroundColor: pnls.map(function(v) { return v >= 0 ? 'rgba(39,153,149,0.78)' : 'rgba(192,57,43,0.78)'; }), borderRadius: 4, borderSkipped: false }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return (ctx.raw >= 0 ? '+' : '') + '$' + Math.abs(ctx.raw).toFixed(2); } } } }, scales: { x: { ticks: { color: tc, font: { size: 10 } }, grid: { color: gc } }, y: { ticks: { color: tc, font: { size: 10 }, callback: function(v) { return '$' + v; } }, grid: { color: gc } } } }
+    });
+  }
+
+  function makeCurveChart(canvasId, data, color) {
+    if (!data || data.length === 0) { document.getElementById(canvasId).parentElement.style.display='none'; return; }
+    var labels = data.map(function(d) { return '#' + d.t; });
+    var cums = data.map(function(d) { return d.cum; });
+    var lineColor = color || (cums[cums.length-1] >= 0 ? '#279995' : '#c0392b');
+    var fillColor = color ? color.replace(')', ',0.09)').replace('rgb(', 'rgba(') : (cums[cums.length-1] >= 0 ? 'rgba(39,153,149,0.09)' : 'rgba(192,57,43,0.09)');
+    new Chart(document.getElementById(canvasId), {
+      type: 'line',
+      data: { labels: labels, datasets: [{ data: cums, borderColor: lineColor, backgroundColor: fillColor, fill: true, tension: 0.3, pointBackgroundColor: cums.map(function(v) { return v >= 0 ? '#279995' : '#c0392b'; }), pointRadius: 4, borderWidth: 2 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return 'Acum.: $' + ctx.raw.toFixed(2); } } } }, scales: { x: { ticks: { color: tc, font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: tc, font: { size: 10 }, callback: function(v) { return '$' + v; } }, grid: { color: gc } } } }
+    });
+  }
+
+  var simData = [{"t": 1, "pnl": 16.25, "cum": 16.25}, {"t": 2, "pnl": 195.5, "cum": 211.75}, {"t": 3, "pnl": -65.0, "cum": 146.75}, {"t": 4, "pnl": 79.5, "cum": 226.25}, {"t": 5, "pnl": -70.0, "cum": 156.25}, {"t": 6, "pnl": -70.0, "cum": 86.25}, {"t": 7, "pnl": 102.5, "cum": 188.75}, {"t": 8, "pnl": 183.5, "cum": 372.25}, {"t": 9, "pnl": 63.0, "cum": 435.25}, {"t": 10, "pnl": -67.0, "cum": 368.25}, {"t": 11, "pnl": -154.5, "cum": 213.75}, {"t": 12, "pnl": 161.5, "cum": 375.25}, {"t": 13, "pnl": -82.5, "cum": 292.75}, {"t": 14, "pnl": -89.0, "cum": 203.75}, {"t": 15, "pnl": -93.0, "cum": 110.75}, {"t": 16, "pnl": -80.0, "cum": 30.75}, {"t": 17, "pnl": 134.5, "cum": 165.25}, {"t": 18, "pnl": -68.0, "cum": 97.25}];
+  var fundedData = [{"t": 1, "pnl": -161.4, "cum": -161.4}, {"t": 2, "pnl": -139.5, "cum": -300.9}, {"t": 3, "pnl": -27.9, "cum": -328.8}, {"t": 4, "pnl": -161.4, "cum": -490.2}, {"t": 5, "pnl": -161.4, "cum": -651.6}, {"t": 6, "pnl": 383.1, "cum": -268.5}, {"t": 7, "pnl": -167.4, "cum": -435.9}, {"t": 8, "pnl": -161.4, "cum": -597.3}, {"t": 9, "pnl": 51.6, "cum": -545.7}, {"t": 10, "pnl": 251.1, "cum": -294.6}, {"t": 11, "pnl": 267.6, "cum": -27.0}];
+
+  makeBarChart('chartBarSim', simData);
+  makeCurveChart('chartCurveSim', simData);
+  makeBarChart('chartBarFunded', fundedData);
+  makeCurveChart('chartCurveFunded', fundedData);
+})();
+</script>
+
+<!-- ══════════════════════ SECCIÓN 2 — GAMEPLAN ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="gameplan" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">2</span>GamePlan vs Mercado Real</div>
+  <h2>Evaluación del Pre-Mercado</h2>
+  <p class="sub">Comparación entre el plan planteado y lo que realmente ocurrió en el mercado</p>
+  <div class="section-title"><span class="step">GAMEPLAN</span><h2>Game Plan — Evaluación de Cumplimiento</h2></div>
+<div class="gameplan-compare">
+  <h3>📋 Pre-Mercado: <span class="parcial">PARCIAL</span></h3>
+  <h4 style='margin-top:10px;color:var(--bear);font-size:13px'>❌ Desviaciones</h4><ul><li>Sobre-trading en chop: 29 ejecuciones, muchas en la misma zona MNQ 29,500 con stops encadenados (10:38-11:09).</li><li>0 de 170 señales HUD ejecutadas; toda la operativa fue discrecional/manual.</li><li>Trades de contexto MIXTO (VWAP/SMA no alineados, algunos con ATR=0 por bug) que restaron -$140.</li></ul>
+  <h4 style='margin-top:10px;color:var(--bull);font-size:13px'>✅ Aciertos</h4><ul><li>100% MICRO — sizing impecable, sin un solo trade FULL (gran cambio respecto a la semana).</li><li>Cuenta fondeada protegida: DD $652 (33% del límite), lejos de quemar.</li><li>Los trades de contexto OK fueron rentables (+$194); el AutoTrader/manual capturó ganadores como el +$383 fondeado.</li></ul>
+  <h4 style='margin-top:10px;color:var(--text-muted);font-size:13px'>📖 Lecciones</h4><p style='font-size:13px;color:var(--text-muted)'>El tamaño ya está resuelto (MICRO). El siguiente nivel es REDUCIR el número de trades en chop y filtrar por contexto OK (VWAP+SMA alineados), que es donde está el edge.</p>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 3 — VOLATILIDAD ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="volatilidad" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">3</span>Análisis de Volatilidad — VIX · ATR · Keltner</div>
+  <h2>Volatilidad Real de la Sesión</h2>
+  <p class="sub">VIX observado, ATR del día, Ancho del canal Keltner y validación contra V5_VolatilityConfig</p>
+  <div class="section-title"><span class="step">VOLATILIDAD</span><h2>Análisis de Volatilidad — VIX / Keltner / ATR</h2></div>
+<div class="card">
+  <div class="volatility-gauge">
+    <div class="gauge-item"><div class="g-label">VIX Observado</div><div class="g-value" style="font-size:16px">VIX ~20 (régimen Media) — volatilidad elevada; coherente con el risk-off tecnológico del día.</div></div>
+    <div class="gauge-item"><div class="g-label">Definiciones Correctas</div><div class="g-value" style="font-size:16px">SÍ</div></div>
+  </div>
+  <div class="info-box" style="margin-bottom:0">
+    <h3>📊 Relación VIX / Keltner / ATR</h3>
+    <p>VIX 20 + Keltner MNQ 66-82 + ATR 8.75-12 confirman régimen Media con tendencia a Alta intradía. La lógica del sistema se respetó en TAMAÑO (todo MICRO); el problema fue de selección/cantidad de trades, no de volatilidad mal leída.</p>
+  </div>
+  <div class="info-box" style="margin-bottom:0;margin-top:10px">
+    <h3>📈 Keltner y ATR</h3>
+    <p>MNQ KeltnerWidth 66.02 (rango 'Media' 63-90) y subiendo a 82 a mediodía (acercándose a Alta). MES KeltnerWidth 23.38 (rango 'Extrema' 23-33). El ensanche del Keltner de MNQ hacia el mediodía coincidió con la racha de stops del chop.<br><br><strong>ATR Observado:</strong> MNQ ATR 8.75 al inicio, subiendo a ~12 a media mañana (10:53-11:05). MES ATR 3.48 (escenario Extrema). La volatilidad de MNQ aumentó justo en la franja de mayor sobre-trading.</p>
+  </div>
+  <div class="ai-insight" style="margin-top:14px">
+    <div class="ai-label">Nota de Volatilidad</div>
+    <p>La volatilidad estuvo bien gestionada por primera vez en la semana: 0 trades FULL. El ATR de MNQ subió a 12 a media mañana y ahí se concentraron los stops del chop (10:53-11:09). El filtro de contexto habría ayudado: los 15 trades de contexto OK ganaron +$194 y los 13 MIXTO perdieron -$140.</p>
+  </div>
+</div>
+  
+<div class="sub-title">Escenario V5_VolatilityConfig activo</div>
+<div class="volat-grid">
+    <div class="volat-card vc-active">
+      <div class="vc-scenario vc-media">MNQ — MEDIA</div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Obs.</span><span class="vc-metric-val">66.02</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Rango</span><span class="vc-metric-val">[63.0, 90.0]</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">ATR Obs.</span><span class="vc-metric-val">8.75</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Stop Mín (x0.5×ATR)</span><span class="vc-metric-val" style="color:var(--bear)">4.38 pts</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">RR Objetivo</span><span class="vc-metric-val">2.0:3.0</span></div>
+    </div>
+    <div class="volat-card vc-active">
+      <div class="vc-scenario vc-extrema">MES — EXTREMA</div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Obs.</span><span class="vc-metric-val">23.38</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Rango</span><span class="vc-metric-val">[23.0, 33.0]</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">ATR Obs.</span><span class="vc-metric-val">3.48</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Stop Mín (x0.6×ATR)</span><span class="vc-metric-val" style="color:var(--bear)">2.09 pts</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">RR Objetivo</span><span class="vc-metric-val">2.0:3.0</span></div>
+    </div>
+</div>
+<div class="ai-insight" style="margin-top:14px"><div class="ai-label">🤖 Validación IA</div><p>MNQ='Media' (KeltW 66, ATR 8.75, dentro de rango); MES='Extrema' (KeltW 23.38, ATR 3.48). Se operó dentro del régimen y, esta vez, 100% MICRO — sizing correcto para ambos escenarios.</p></div><div class="icard info" style="margin-top:8px"><div class="icard-title">📊 Profit Factor</div><div class="icard-text">Profit Factor global = 1,889.65 / 1,819.40 = 1.04 (Sim 1.12; Fondeada 0.97).</div></div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 4 — TRADES ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="trades" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">4</span>Detalle de Operaciones</div>
+  <h2>Registro Completo de Trades</h2>
+  <p class="sub">Detalle de cada operación con zona de señal, indicadores en el momento de la entrada y resultado</p>
+
+  <div class="section-title"><span class="step">STOPS</span><h2>Análisis de los Stop Loss</h2></div>
+<div class="card">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+    
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #7</span>
+        <span style="font-size:13px;font-weight:600;">MNQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">timing</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>indicador</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">-$167.40</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">13.0 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.5x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">Reentrada fondeada 2s después de un ganador, contra el rebote; barrida al instante. El stop fue adecuado pero el timing/selección no.</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 Cooldown obligatorio tras un ganador; no reentrar sin nuevo setup confirmado.</div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #11</span>
+        <span style="font-size:13px;font-weight:600;">MNQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">size-chop</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>volatilidad</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">-$154.50</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">17.5 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.92x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">Short Sim con qty 4 en chop (ATR=0 por bug); barrido. El tamaño mayor amplificó la pérdida en una zona sin tendencia.</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 Sizing fijo (no qty 4); evitar operar el rango medio sin tendencia.</div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #4</span>
+        <span style="font-size:13px;font-weight:600;">MNQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">adecuado</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>volatilidad</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">-$161.40</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">12.5 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.43x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">Short fondeado sin señal barrido en 6s en el chop; stop dimensionalmente correcto, problema de selección.</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 Exigir señal/contexto OK antes de entrar; no operar el chop.</div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #14</span>
+        <span style="font-size:13px;font-weight:600;">MNQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>volatilidad</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">-$89.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">9.5 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.79x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">Largo Sim con ATR 12 (Alta), barrido en 24s; stop algo ajustado para la volatilidad del momento.</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 Con ATR >12 ampliar stop al mínimo V5 y reducir frecuencia.</div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #15</span>
+        <span style="font-size:13px;font-weight:600;">MNQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">tight-stop</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>volatilidad</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">-$93.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">9.75 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.78x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">Tercer largo seguido en el rango con ATR 12.5; barrido. Sobre-trading en chop.</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 Máximo 2 intentos por zona; parar tras 2 stops seguidos.</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:20px;margin-bottom:10px;font-size:14px;">Resumen de Stops</h3>
+  <div class="tab-wrap">
+  <table>
+    <thead><tr><th>Total Stops</th><th>Total Perdido</th><th>Stops Adecuados</th><th>Stops Ajustados</th></tr></thead>
+    <tbody>
+      <tr><td>17</td><td style="color:var(--bear)">-$1,819.40</td><td>14</td><td>3</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="info-box" style="margin-top:14px;margin-bottom:0">
+    <h3>📊 Patrón General</h3>
+    <p>La mayoría de stops fueron dimensionalmente adecuados (14 de 17); el problema fue SELECCIÓN y FRECUENCIA: sobre-trading en el chop de MNQ 29,500 (10:38-11:09) y reentradas impulsivas tras ganadores. A diferencia de la semana, NO hubo stops por sizing FULL — todo MICRO.</p>
+  </div>
+  <div class="ai-insight" style="margin-top:12px">
+    <div class="ai-label">Recomendación General</div>
+    <p>Mantener MICRO y stops V5, pero añadir filtros de SELECCIÓN: operar solo contexto OK, cooldown tras ganador/perdedor, y tope de intentos por zona. El edge está en menos trades de mayor calidad.</p>
+  </div>
+</div>
+
+  <div class="sub-title">Trades Sim/Demo (agrupados por señal)</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Estrategia</th><th>Inst</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>P&L</th><th>Zona/Señal</th><th>Salidas (T1/T2/Stop)</th><th>Cuenta</th></tr></thead>
+      <tbody>
+      <tr class="trade-win"><td>1</td><td>1x (200 Profit 100 Lost)</td><td>MES</td><td>Short</td><td>8:56:54</td><td>9:00:22</td><td>7,384.00</td><td>7,380.75</td><td>1</td><td>+$16.25</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">Target1</td><td>Sim</td></tr>
+<tr class="trade-win"><td>2</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>9:27:40</td><td>9:29:57</td><td>29,310.00</td><td>29,356.25</td><td>2</td><td>+$195.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_1</span></td><td style="font-size:11px">HUD_T1_1</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>4</td><td>EduS</td><td>MES</td><td>Long</td><td>9:32:04</td><td>9:33:01</td><td>7,381.00</td><td>7,374.50</td><td>2</td><td>-$65.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_2</span></td><td style="font-size:11px">HUD_St_2</td><td>Sim</td></tr>
+<tr class="trade-win"><td>6</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>9:30:00</td><td>9:37:43</td><td>29,361.50</td><td>29,321.75</td><td>1</td><td>+$79.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">StopCancelClose</span></td><td style="font-size:11px">Close</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>7</td><td>EduS</td><td>MES</td><td>Short</td><td>9:40:21</td><td>9:43:22</td><td>7,375.75</td><td>7,382.75</td><td>2</td><td>-$70.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_4</span></td><td style="font-size:11px">HUD_St_4</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>9</td><td>EduS</td><td>MES</td><td>Long</td><td>9:43:55</td><td>9:45:10</td><td>7,382.75</td><td>7,375.75</td><td>2</td><td>-$70.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_5</span></td><td style="font-size:11px">HUD_St_5</td><td>Sim</td></tr>
+<tr class="trade-win"><td>11</td><td>EduS</td><td>MES</td><td>Long</td><td>9:58:27</td><td>10:00:19</td><td>7,399.75</td><td>7,412.75</td><td>2</td><td>+$102.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_9</span></td><td style="font-size:11px">HUD_T1_9</td><td>Sim</td></tr>
+<tr class="trade-win"><td>13</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:38:07</td><td>10:40:14</td><td>29,516.50</td><td>29,479.25</td><td>2</td><td>+$183.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_1</span></td><td style="font-size:11px">HUD_T1_1</td><td>Sim</td></tr>
+<tr class="trade-win"><td>15</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:40:45</td><td>10:41:17</td><td>29,476.50</td><td>29,490.50</td><td>4</td><td>+$63.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_2</span></td><td style="font-size:11px">HUD_St_2</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>17</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:42:47</td><td>10:43:08</td><td>29,539.00</td><td>29,522.25</td><td>2</td><td>-$67.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_3</span></td><td style="font-size:11px">HUD_St_3</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>19</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:43:56</td><td>10:46:20</td><td>29,508.00</td><td>29,525.50</td><td>4</td><td>-$154.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_4</span></td><td style="font-size:11px">HUD_St_4</td><td>Sim</td></tr>
+<tr class="trade-win"><td>21</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:47:38</td><td>10:49:21</td><td>29,517.75</td><td>29,564.75</td><td>2</td><td>+$161.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_5</span></td><td style="font-size:11px">HUD_T1_5</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>23</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:53:30</td><td>10:57:02</td><td>29,511.00</td><td>29,531.50</td><td>2</td><td>-$82.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_7</span></td><td style="font-size:11px">HUD_St_7</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>25</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:59:27</td><td>10:59:51</td><td>29,523.75</td><td>29,501.50</td><td>2</td><td>-$89.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_8</span></td><td style="font-size:11px">HUD_St_8</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>27</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>11:00:31</td><td>11:05:25</td><td>29,521.75</td><td>29,498.50</td><td>2</td><td>-$93.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_9</span></td><td style="font-size:11px">HUD_St_9</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>29</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>11:09:03</td><td>11:09:23</td><td>29,496.25</td><td>29,516.25</td><td>2</td><td>-$80.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_11</span></td><td style="font-size:11px">HUD_St_11</td><td>Sim</td></tr>
+<tr class="trade-win"><td>31</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>11:14:03</td><td>11:15:27</td><td>29,453.00</td><td>29,415.75</td><td>2</td><td>+$134.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_13</span></td><td style="font-size:11px">HUD_T1_13</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>35</td><td>EduS_AutoTrader_V2</td><td>MNQ</td><td>Short</td><td>12:19:03</td><td>12:20:01</td><td>29,545.75</td><td>29,562.75</td><td>2</td><td>-$68.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_3</span></td><td style="font-size:11px">HUD_St_3</td><td>Sim</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-title" style="margin-top:20px">Trades Cuenta Fondeada / Live (agrupados por señal)</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Estrategia</th><th>Inst</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>P&L</th><th>Señal Espejo</th><th>Salidas</th><th>Cuenta</th></tr></thead>
+      <tbody>
+      <tr class="trade-loss"><td>38</td><td>HUD_Manual</td><td>MES</td><td>Long</td><td>9:45:06</td><td>9:45:48</td><td>7,377.75</td><td>7,372.75</td><td>6</td><td>-$161.40</td><td><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>40</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:22:24</td><td>10:22:28</td><td>29,618.25</td><td>29,605.25</td><td>5</td><td>-$139.50</td><td><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>42</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:22:25</td><td>10:22:28</td><td>29,618.25</td><td>29,605.25</td><td>1</td><td>-$27.90</td><td><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>43</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:33:47</td><td>10:33:53</td><td>29,567.75</td><td>29,580.25</td><td>6</td><td>-$161.40</td><td><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>45</td><td>HUD_Manual</td><td>MES</td><td>Long</td><td>10:35:22</td><td>10:36:26</td><td>7,425.00</td><td>7,420.00</td><td>6</td><td>-$161.40</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>47</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:38:18</td><td>10:38:35</td><td>29,523.25</td><td>29,510.75</td><td>6</td><td>+$383.10</td><td><span class="zone-badge" title="Señal espejo 20+" style="border-style:dashed;color:var(--text-muted)">🪞 20+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>49</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:41:05</td><td>10:41:07</td><td>29,474.25</td><td>29,487.25</td><td>6</td><td>-$167.40</td><td><span class="zone-badge" title="Señal espejo 20+" style="border-style:dashed;color:var(--text-muted)">🪞 20+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>51</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:43:23</td><td>10:43:23</td><td>29,519.25</td><td>29,506.75</td><td>6</td><td>-$161.40</td><td><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>53</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:46:17</td><td>10:46:52</td><td>29,524.25</td><td>29,511.75</td><td>6</td><td>+$51.60</td><td><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>55</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:48:15</td><td>10:48:28</td><td>29,511.50</td><td>29,524.00</td><td>6</td><td>+$251.10</td><td><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>58</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>12:20:43</td><td>12:20:45</td><td>29,567.50</td><td>29,555.00</td><td>6</td><td>+$267.60</td><td><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title"><span class="step">CONTEXTO</span><h2>Contexto de Indicadores por Entry</h2></div>
+<div class="card">
+  
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MNQ SEP26</span>
+        <span style="font-size:12px;color:#27ae60;font-weight:600;">🟢 Long</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>29,310.00</strong> &nbsp;|&nbsp; VWAP 🟢 UP @ 29,315.92</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.6625</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.9781</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">66.02</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">8.75</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.20</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">33.79</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,295.98</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MNQ SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>29,361.50</strong> &nbsp;|&nbsp; VWAP 🟢 UP @ 29,331.43</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.625</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.3344</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">68.89</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">9.23</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">21.17</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">54.37</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,321.67</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MES SEP26</span>
+        <span style="font-size:12px;color:#27ae60;font-weight:600;">🟢 Long</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,381.00</strong> &nbsp;|&nbsp; VWAP 🟢 UP @ 7,387.95</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.1</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.1031</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">23.38</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">3.48</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">2.68</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.37</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,378.86</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MES SEP26</span>
+        <span style="font-size:12px;color:#27ae60;font-weight:600;">🟢 Long</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,381.00</strong> &nbsp;|&nbsp; VWAP 🟢 UP @ 7,387.95</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.1</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.1031</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">23.38</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">3.48</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">2.68</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.37</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,378.86</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MES SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,375.75</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 7,375.68</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.1625</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.0344</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">25.14</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">3.79</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.29</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.67</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,377.25</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,374.64</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MES SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,375.75</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 7,375.68</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.1625</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.0344</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">25.14</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">3.79</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.29</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.67</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,377.25</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,374.64</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MES SEP26</span>
+        <span style="font-size:12px;color:#27ae60;font-weight:600;">🟢 Long</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,382.75</strong> &nbsp;|&nbsp; VWAP 🟢 UP @ 7,383.58</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.7</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.0656</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">25.02</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">3.63</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">6.61</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7.80</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,375.96</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MES SEP26</span>
+        <span style="font-size:12px;color:#27ae60;font-weight:600;">🟢 Long</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,382.75</strong> &nbsp;|&nbsp; VWAP 🟢 UP @ 7,383.58</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.7</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.0656</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">25.02</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">3.63</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">6.61</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7.80</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">—</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,375.96</div>
+        </div>
+      </div>
+    </div>
+  <p style="margin-top:12px;font-size:11px;color:var(--text-muted);text-align:center">Mostrando 8 de 61 entradas registradas</p>
+</div>
+  <div class="sub-title" style="margin-top:20px">Trades Sim/Demo — Evaluación de Estrategia</div>
+
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#1 &middot; MES Short</span>
+        <span class="tag tag-win">$+16.25</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (Target1)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> Sin señal HUD; scalp pre-apertura<br>
+        
+        Scalp pre-open menor (+$16); sin señal pero alineado al sesgo bajista.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#2 &middot; MNQ Long</span>
+        <span class="tag tag-win">$+195.50</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_1 (HUD_T1_1)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> VWAP UP + SMA OK (contexto OK), ATR 8.75<br>
+        
+        Mejor trade Sim (+$195.50): largo MNQ con contexto OK en el rebote de apertura. Ejecución modelo.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#3 &middot; MES Long</span>
+        <span class="tag tag-loss">$-65.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_2 (HUD_St_2)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> VWAP UP + SMA divergente (MIXTO), ATR 3.48<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Indicador: SMA no acompañaba; barrido.<br>
+        Largo MES en contexto MIXTO; -$65. El filtro de SMA lo habría evitado.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#4 &middot; MNQ Short</span>
+        <span class="tag tag-win">$+79.50</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">StopCancelClose (Close)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> VWAP divergente (MIXTO), ATR 9.23<br>
+        
+        Short MNQ gestionado a cierre; +$79.50 pese a contexto MIXTO, alineado al sesgo bajista.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#5 &middot; MES Short</span>
+        <span class="tag tag-loss">$-70.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_4 (HUD_St_4)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> VWAP DOWN + SMA OK (OK), ATR 3.79<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Indicador: rebote contra el short; barrido.<br>
+        Short MES con contexto OK pero barrido por rebote; -$70. Parte del whipsaw de apertura.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#6 &middot; MES Long</span>
+        <span class="tag tag-loss">$-70.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_5 (HUD_St_5)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> Contexto OK, ATR 3.63<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Indicador: reversión inmediata; barrido.<br>
+        Largo MES barrido tras el short anterior; -$70. Whipsaw: dos stops seguidos en la apertura.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#7 &middot; MES Long</span>
+        <span class="tag tag-win">$+102.50</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_9 (HUD_T1_9)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> VWAP UP + SMA OK (OK), ATR 2.88<br>
+        
+        Largo MES con contexto OK; +$102.50. Buen trade en la mejor ventana (UsaAm).
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#8 &middot; MNQ Short</span>
+        <span class="tag tag-win">$+183.50</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_1 (HUD_T1_1)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> VWAP DOWN + SMA OK (OK), ATR 8.16<br>
+        
+        Short MNQ con contexto OK; +$183.50. Capturó el tramo bajista de 29,516.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#9 &middot; MNQ Short</span>
+        <span class="tag tag-win">$+63.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_2 (HUD_St_2)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> Contexto OK, ATR 7.09 (qty 4)<br>
+        
+        Short con qty 4 (mayor al estándar); +$63 a stop gestionado. Cuidar el sizing variable.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#10 &middot; MNQ Long</span>
+        <span class="tag tag-loss">$-67.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_3 (HUD_St_3)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> Contexto OK, ATR 8.64<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Indicador: largo contra el sesgo bajista; barrido en 21s.<br>
+        Largo contra-tendencia barrido; -$67. Inicio del chop de media mañana.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#11 &middot; MNQ Short</span>
+        <span class="tag tag-loss">$-154.50</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_4 (HUD_St_4)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> MIXTO, ATR 0.00 (bug, qty 4)<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Volatilidad/chop: barrido con qty 4 (MaxL Sim).<br>
+        Peor trade Sim (-$154.50): short con qty 4 en chop y contexto MIXTO (ATR=0 por bug). Reducir tamaño y evitar el chop.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#12 &middot; MNQ Long</span>
+        <span class="tag tag-win">$+161.50</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_5 (HUD_T1_5)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> VWAP UP + SMA divergente (MIXTO), ATR 10.86<br>
+        
+        Largo MNQ; +$161.50 pese a contexto MIXTO, capturó el rebote del rango.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#13 &middot; MNQ Short</span>
+        <span class="tag tag-loss">$-82.50</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_7 (HUD_St_7)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> Contexto OK, ATR 9.88<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Volatilidad: ATR subiendo (~10-12); barrido en el chop.<br>
+        Short barrido en el rango; -$82.50. El ATR creciente avisaba de chop, no de tendencia.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#14 &middot; MNQ Long</span>
+        <span class="tag tag-loss">$-89.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_8 (HUD_St_8)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> Contexto OK, ATR 12.04<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Volatilidad: ATR 12 (Alta), barrido en 24s.<br>
+        Largo barrido con ATR alto; -$89. Sobre-trading en zona sin tendencia.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#15 &middot; MNQ Long</span>
+        <span class="tag tag-loss">$-93.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_9 (HUD_St_9)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> Contexto OK, ATR 12.55<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Volatilidad: ATR 12.5; barrido.<br>
+        Tercer largo seguido fallido en el rango; -$93. Patrón de revenge/chop a cortar.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#16 &middot; MNQ Short</span>
+        <span class="tag tag-loss">$-80.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_11 (HUD_St_11)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> MIXTO, ATR 10.02<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Chop: barrido en 20s.<br>
+        Short barrido en 20s; -$80. La franja 10:53-11:09 fue puro chop (-$344 acumulado).
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#17 &middot; MNQ Short</span>
+        <span class="tag tag-win">$+134.50</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_13 (HUD_T1_13)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> VWAP DOWN + SMA OK (OK), ATR 8.38<br>
+        
+        Short con contexto OK tras salir del chop; +$134.50. Recuperó parte de la racha.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#18 &middot; MNQ Short</span>
+        <span class="tag tag-loss">$-68.00</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">HUD_En_3 (HUD_St_3)</span>
+      </div>
+      <div class="comp-block-body">
+        
+        <strong>Señales activas:</strong> Contexto OK, ATR 9.13<br>
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Indicador: barrido en almuerzo.<br>
+        Único trade del AutoTrader V2; -$68 en almuerzo (baja liquidez, peor ventana).
+      </div>
+    </div><div class="sub-title" style="margin-top:20px">Trades Cuenta Fondeada — Análisis Espejo vs Señales</div>
+
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#1 &middot; MES Long</span>
+        <span class="tag tag-loss">$-161.40</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Ninguna señal HUD activa (contexto MES MIXTO, ATR capturado en 0)<br><strong>Coincidió con señal:</strong> <span class="badge viol">NO</span><br><strong>Análisis espejo:</strong> Largo discrecional sin señal; perdió por barrido en la apertura volátil. No hubo señal que validara la entrada.<br><strong style="color:var(--bear)">Desviación:</strong> Operó sin señal (timing discrecional); sizing correcto (6 micros).<br>
+        
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Indicador/chop en apertura.<br>
+        Largo sin señal en la apertura; -$161.40. El sizing MICRO (6 ctr) fue correcto, el timing no.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#2 &middot; MNQ Long</span>
+        <span class="tag tag-loss">$-139.50</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Ninguna (MIXTO, ATR=0 bug)<br><strong>Coincidió con señal:</strong> <span class="badge viol">NO</span><br><strong>Análisis espejo:</strong> Largo discrecional barrido en 4s; sin señal de respaldo. El sistema no marcaba largo ahí.<br><strong style="color:var(--bear)">Desviación:</strong> Entrada sin señal; sizing 5 micros (parte del set de 6).<br>
+        
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Chop: barrido en 4s.<br>
+        Largo sin señal barrido al instante; -$139.50. Entrada impulsiva.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#3 &middot; MNQ Long</span>
+        <span class="tag tag-loss">$-27.90</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Ninguna<br><strong>Coincidió con señal:</strong> <span class="badge viol">NO</span><br><strong>Análisis espejo:</strong> Resto del lote del largo #2 (1 micro); mismo barrido.<br><strong style="color:var(--bear)">Desviación:</strong> Sin señal; completa el set de 6 (#2+#3).<br>
+        
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Chop.<br>
+        Cola del largo impulsivo; -$27.90 adicional (-$167 combinado #2/#3).
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#4 &middot; MNQ Short</span>
+        <span class="tag tag-loss">$-161.40</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Ninguna<br><strong>Coincidió con señal:</strong> <span class="badge viol">NO</span><br><strong>Análisis espejo:</strong> Short discrecional barrido en 6s; sin señal. Entrada en chop sin confirmación.<br><strong style="color:var(--bear)">Desviación:</strong> Sin señal; sizing 6 micros correcto.<br>
+        
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Chop: barrido en 6s.<br>
+        Short sin señal barrido; -$161.40. Parte de la racha de stops del chop.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#5 &middot; MES Long</span>
+        <span class="tag tag-loss">$-161.40</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Ninguna<br><strong>Coincidió con señal:</strong> <span class="badge viol">NO</span><br><strong>Análisis espejo:</strong> Largo MES sin señal barrido; sin confluencia clara.<br><strong style="color:var(--bear)">Desviación:</strong> Sin señal; sizing 6 micros.<br>
+        
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Indicador/chop.<br>
+        Largo sin señal; -$161.40. La racha 9:45-10:43 acumuló pérdidas en el chop.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#6 &middot; MNQ Short</span>
+        <span class="tag tag-win">$+383.10</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Ninguna formal, pero coincidió con el tramo bajista que el Sim capturó (#8)<br><strong>Coincidió con señal:</strong> <span class="badge cancel">PARCIAL</span><br><strong>Análisis espejo:</strong> Short ganador (+$383, MaxW del día) en la misma dirección/zona que el short Sim #8 (que sí siguió HUD_En_1). Confluencia técnica con el sesgo bajista, no suerte.<br><strong style="color:var(--bear)">Desviación:</strong> Sin señal formal pero alineado; sizing 6 micros correcto.<br>
+        
+        
+        Mejor trade del día (+$383.10): short MNQ alineado al sesgo y con tamaño MICRO. El modelo a replicar.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#7 &middot; MNQ Short</span>
+        <span class="tag tag-loss">$-167.40</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Ninguna<br><strong>Coincidió con señal:</strong> <span class="badge viol">NO</span><br><strong>Análisis espejo:</strong> Short barrido en 2s (MaxL del día); reentrada inmediata tras el ganador #6, contra el rebote.<br><strong style="color:var(--bear)">Desviación:</strong> Sin señal; reentrada demasiado rápida.<br>
+        
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Chop: barrido en 2s.<br>
+        Peor trade del día (-$167.40): reentrada impulsiva tras ganar. No reentrar sin nuevo setup.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#8 &middot; MNQ Long</span>
+        <span class="tag tag-loss">$-161.40</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Ninguna<br><strong>Coincidió con señal:</strong> <span class="badge viol">NO</span><br><strong>Análisis espejo:</strong> Largo barrido instantáneo en el chop; sin señal.<br><strong style="color:var(--bear)">Desviación:</strong> Sin señal; entrada en zona sin tendencia.<br>
+        
+        <strong style="color:var(--bear)">Motivo Stop:</strong> Chop.<br>
+        Largo sin señal en chop; -$161.40. Exceso de intentos en la misma zona.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#9 &middot; MNQ Short</span>
+        <span class="tag tag-win">$+51.60</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Ninguna, alineado al sesgo bajista<br><strong>Coincidió con señal:</strong> <span class="badge cancel">PARCIAL</span><br><strong>Análisis espejo:</strong> Short ganador menor; confluencia con el sesgo bajista del rango.<br><strong style="color:var(--bear)">Desviación:</strong> Sin señal formal; sizing 6 micros.<br>
+        
+        
+        Short MICRO ganador (+$51.60); dirección correcta.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#10 &middot; MNQ Long</span>
+        <span class="tag tag-win">$+251.10</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Ninguna formal; coincidió con el rebote que el Sim capturó (#12)<br><strong>Coincidió con señal:</strong> <span class="badge cancel">PARCIAL</span><br><strong>Análisis espejo:</strong> Largo ganador (+$251) en la misma zona/rebote que el Sim #12. Confluencia técnica con el rebote del rango, no suerte.<br><strong style="color:var(--bear)">Desviación:</strong> Sin señal formal pero alineado; sizing 6 micros.<br>
+        
+        
+        Largo MICRO bien ejecutado; +$251.10. Segundo mejor del día.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#11 &middot; MNQ Short</span>
+        <span class="tag tag-win">$+267.60</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Ninguna formal; sesgo bajista en almuerzo<br><strong>Coincidió con señal:</strong> <span class="badge cancel">PARCIAL</span><br><strong>Análisis espejo:</strong> Short ganador rápido (+$267) alineado al sesgo bajista; buena lectura aunque sin señal formal.<br><strong style="color:var(--bear)">Desviación:</strong> Sin señal; sizing 6 micros correcto.<br>
+        
+        
+        Cierre fuerte (+$267.60): short MICRO en almuerzo bien ejecutado. Los 3 mejores fondeados (#6, #11, #10) fueron MICRO alineados al sesgo.
+      </div>
+    </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 5 — SEÑALES ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="senales" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">5</span>Señales del Indicador vs Ejecución</div>
+  <h2>Análisis Comparativo — Señales HUD vs Trades</h2>
+  <p class="sub">Verificación de zonas (A, M1, etc.), señales ejecutadas, ignoradas y trades fuera de señal</p>
+  <div class="section-title"><span class="step">SEÑALES</span><h2>Señales HUD V5 — Correlación con Ejecuciones</h2></div>
+<div class="card">
+  
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #279995;">
+        <div style="font-size:24px;font-weight:700;color:#279995;">170</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Señales emitidas</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #27ae60;">
+        <div style="font-size:24px;font-weight:700;color:#27ae60;">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ejecutadas <span style="color:#27ae60;font-weight:600;">(0%)</span></div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #e67e22;">
+        <div style="font-size:24px;font-weight:700;color:#e67e22;">170</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ignoradas</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #c0392b;">
+        <div style="font-size:24px;font-weight:700;color:#c0392b;">29</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Fuera de señal</div>
+      </div>
+    </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+    <div>
+      <h3 style="font-size:13px;color:var(--text-muted);margin:0 0 10px">⚠️ Señales ignoradas que ganaron</h3>
+      <table style='width:100%;font-size:12px;border-collapse:collapse;'><thead><tr style='color:var(--text-muted);border-bottom:1px solid var(--border);'><th style='padding:6px;text-align:left'>SignalID</th><th>Mercado</th><th>Dir</th><th>Hora</th><th>Zona</th><th>Resultado</th><th>Entrada</th><th>T1</th></tr></thead><tbody><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>08680e81</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>01:14:16</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,332.00</td><td style='padding:5px;'>29,376.25</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>dd4bf085</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>01:14:16</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,332.00</td><td style='padding:5px;'>29,376.25</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>9a1cd901</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>01:17:09</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,335.00</td><td style='padding:5px;'>29,378.20</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>9c890f05</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>01:17:09</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,335.00</td><td style='padding:5px;'>29,378.20</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>157e9c33</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>02:15:55</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,331.00</td><td style='padding:5px;'>29,371.53</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>36552f1a</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>02:15:55</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,331.00</td><td style='padding:5px;'>29,371.53</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>302f3d1a</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>02:19:10</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,332.75</td><td style='padding:5px;'>29,372.66</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>3d0ce1e6</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>02:19:10</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,332.75</td><td style='padding:5px;'>29,372.66</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>e444e74a</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>02:40:35</td><td style='padding:5px;'>20+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,411.75</td><td style='padding:5px;'>29,449.65</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>0335cdbd</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>02:40:35</td><td style='padding:5px;'>20+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,411.75</td><td style='padding:5px;'>29,449.65</td></tr></tbody></table>
+    </div>
+    <div>
+      <h3 style="font-size:13px;color:var(--text-muted);margin:0 0 10px">🚫 Trades ejecutados sin señal activa</h3>
+      <table style='width:100%;font-size:12px;border-collapse:collapse;'><thead><tr style='color:var(--text-muted);border-bottom:1px solid var(--border);'><th style='padding:6px;text-align:left'>#</th><th>Instrumento</th><th>Dir</th><th>Hora entrada</th><th>Precio</th><th>P&L</th><th>Estrategia</th></tr></thead><tbody><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>1</td><td style='padding:5px;'>MES</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>8:56:54</td><td style='padding:5px;'>7,384.00</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$16.25</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>1x (200 Profit 100 Lost)</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>2</td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>9:27:40</td><td style='padding:5px;'>29,310.00</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$195.50</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>4</td><td style='padding:5px;'>MES</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>9:32:04</td><td style='padding:5px;'>7,381.00</td><td style='padding:5px;color:#c0392b;font-weight:600'>-$65.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>EduS</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>6</td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>9:30:00</td><td style='padding:5px;'>29,361.50</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$79.50</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>7</td><td style='padding:5px;'>MES</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>9:40:21</td><td style='padding:5px;'>7,375.75</td><td style='padding:5px;color:#c0392b;font-weight:600'>-$70.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>EduS</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>9</td><td style='padding:5px;'>MES</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>9:43:55</td><td style='padding:5px;'>7,382.75</td><td style='padding:5px;color:#c0392b;font-weight:600'>-$70.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>EduS</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>11</td><td style='padding:5px;'>MES</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>9:58:27</td><td style='padding:5px;'>7,399.75</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$102.50</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>EduS</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>13</td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>10:38:07</td><td style='padding:5px;'>29,516.50</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$183.50</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>15</td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>10:40:45</td><td style='padding:5px;'>29,476.50</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$63.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>17</td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>Long</span></td><td style='padding:5px;'>10:42:47</td><td style='padding:5px;'>29,539.00</td><td style='padding:5px;color:#c0392b;font-weight:600'>-$67.00</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="ai-insight" style="margin-top:12px;">
+    <div class="ai-label">📊 Análisis de Disciplina</div>
+    <p style="margin:6px 0;">0 de 170 señales HUD V6 ejecutadas; toda la operativa (29 trades) fue discrecional/manual. El sistema marcó 26 señales ganadoras (MNQ A+/20+ a T2, varias overnight). La disciplina de SEÑAL sigue sin existir, aunque la disciplina de TAMAÑO mejoró radicalmente (100% MICRO).</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Patrón:</strong> Patrón: operativa 100% discrecional concentrada en MNQ 29,500, con buenos trades cuando hay contexto OK y dirección con el sesgo (ganadores +$383, +$251, +$267, +$195), pero un cúmulo de stops por sobre-trading en el chop de 10:38-11:09 y reentradas impulsivas. El tamaño ya es correcto (MICRO); falta filtrar cantidad y contexto.</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Impacto:</strong> El edge fue marginal (+0.05R/trade). Si se hubiera operado SOLO con contexto OK (los 15 OK dieron +$194) y evitado el chop de media mañana, el día habría sido claramente positivo en ambas cuentas. La mejora pendiente es disciplina de SELECCIÓN, no de tamaño.</p>
+  </div>
+</div>
+  <div class="section-title"><span class="step">CONTEXTO</span><h2>Validación de Contexto por Trade</h2></div>
+<div class="card">
+  
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #8e44ad;">
+        <div style="font-size:22px;font-weight:700;color:#8e44ad;">28</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Trades validados</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #27ae60;">
+        <div style="font-size:22px;font-weight:700;color:#27ae60;">15 <span style="font-size:13px;">(54%)</span></div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Contexto OK</div>
+        <div style="font-size:11px;font-weight:600;color:#27ae60;margin-top:3px;">+$193.80</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #e67e22;">
+        <div style="font-size:22px;font-weight:700;color:#e67e22;">13</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Contexto Mixto/No OK</div>
+        <div style="font-size:11px;font-weight:600;color:#c0392b;margin-top:3px;">-$139.80</div>
+      </div>
+    </div>
+  <div style="overflow-x:auto;">
+    <table style="width:100%;font-size:12px;border-collapse:collapse;">
+      <thead><tr style="color:var(--text-muted);border-bottom:1px solid var(--border);background:var(--surface);">
+        <th style="padding:6px 8px;text-align:left">Trade#</th>
+        <th style="padding:6px 8px;text-align:left">Inst</th>
+        <th style="padding:6px 8px;text-align:left">Dir</th>
+        <th style="padding:6px 8px;text-align:center">Qty</th>
+        <th style="padding:6px 8px;text-align:center">Zona/Espejo</th>
+        <th style="padding:6px 8px;text-align:center">VWAP</th>
+        <th style="padding:6px 8px;text-align:center">SMA</th>
+        <th style="padding:6px 8px;text-align:left">ATR</th>
+        <th style="padding:6px 8px;text-align:center">Ctx</th>
+        <th style="padding:6px 8px;text-align:right">P&L</th>
+        <th style="padding:6px 8px;text-align:left">Cuenta</th>
+        <th style="padding:6px 8px;text-align:left">Nota IA</th>
+      </tr></thead>
+      <tbody><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">2,3</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">2</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_1</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 8.75</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$195.50</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">4,5</td>
+          <td style="padding:6px;">MES</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">2</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_2</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">❌</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 3.48</td>
+          <td style="padding:6px;text-align:center;">🟠</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">-$65.00</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">6</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">SHORT</td>
+          <td style="padding:6px;text-align:center;">1</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">StopCancelClose</span></td>
+          <td style="padding:6px;text-align:center;">❌</td>
+          <td style="padding:6px;text-align:center;">❌</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 9.23</td>
+          <td style="padding:6px;text-align:center;">🟠</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$79.50</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">7,8</td>
+          <td style="padding:6px;">MES</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">SHORT</td>
+          <td style="padding:6px;text-align:center;">2</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_4</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 3.79</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">-$70.00</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">9,10</td>
+          <td style="padding:6px;">MES</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">2</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_5</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 3.63</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">-$70.00</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">11,12</td>
+          <td style="padding:6px;">MES</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">2</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_9</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 2.88</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$102.50</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">13,14</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">SHORT</td>
+          <td style="padding:6px;text-align:center;">2</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_1</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 8.16</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$183.50</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">15,16,33,34</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">SHORT</td>
+          <td style="padding:6px;text-align:center;">4</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_2</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 7.09</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$63.00</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">17,18</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">2</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_3</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 8.64</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">-$67.00</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">19,20,37</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">SHORT</td>
+          <td style="padding:6px;text-align:center;">4</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_4</span></td>
+          <td style="padding:6px;text-align:center;">❌</td>
+          <td style="padding:6px;text-align:center;">❌</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 0.00</td>
+          <td style="padding:6px;text-align:center;">🟠</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">-$154.50</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">21,22</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">2</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_5</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">❌</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 10.86</td>
+          <td style="padding:6px;text-align:center;">🟠</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$161.50</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">23,24</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">SHORT</td>
+          <td style="padding:6px;text-align:center;">2</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_7</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 9.88</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">-$82.50</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">25,26</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">2</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_8</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 12.04</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">-$89.00</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">27,28</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">2</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_9</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 12.55</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">-$93.00</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">29,30</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">SHORT</td>
+          <td style="padding:6px;text-align:center;">2</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_11</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">❌</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 10.02</td>
+          <td style="padding:6px;text-align:center;">🟠</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">-$80.00</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">31,32</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">SHORT</td>
+          <td style="padding:6px;text-align:center;">2</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_13</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 8.38</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$134.50</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">35,36</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">SHORT</td>
+          <td style="padding:6px;text-align:center;">2</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_3</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 9.13</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">-$68.00</td>
+          <td style="padding:6px;font-size:10px;">Sim</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">38,39</td>
+          <td style="padding:6px;">MES</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">6</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge manual">Manual</span></td>
+          <td style="padding:6px;text-align:center;">❌</td>
+          <td style="padding:6px;text-align:center;">❌</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 0.00</td>
+          <td style="padding:6px;text-align:center;">🟠</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">-$161.40</td>
+          <td style="padding:6px;font-size:10px;">Cuenta Fondeada</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">40,41</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">5</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge manual">Manual</span></td>
+          <td style="padding:6px;text-align:center;">❌</td>
+          <td style="padding:6px;text-align:center;">❌</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 0.00</td>
+          <td style="padding:6px;text-align:center;">🟠</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">-$139.50</td>
+          <td style="padding:6px;font-size:10px;">Cuenta Fondeada</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">42</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">LONG</td>
+          <td style="padding:6px;text-align:center;">1</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td>
+          <td style="padding:6px;text-align:center;">❌</td>
+          <td style="padding:6px;text-align:center;">❌</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 0.00</td>
+          <td style="padding:6px;text-align:center;">🟠</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">-$27.90</td>
+          <td style="padding:6px;font-size:10px;">Cuenta Fondeada</td>
+          <td style='padding:6px;'></td>
+        </tr></tbody>
+    </table></div>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 6 — DIAGNÓSTICO ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="diagnostico" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">6</span>Diagnóstico de la Sesión</div>
+  <h2>Análisis General y Conclusiones</h2>
+  <p class="sub">Evaluación cualitativa de la sesión, patrones identificados y aprendizajes</p>
+  <div class="section-title"><span class="step">ANALISIS</span><h2>Análisis General de la Sesión</h2></div>
+<div class="ai-insight">
+  <div class="ai-label">🤖 Análisis de IA</div>
+  <p>Sim: 18 trades, $97 (WR 44%) | Cuenta Fondeada: 11 trades, -$27 (WR 36%). Día neto +$70 (PF 1.04) de scalping en un mercado choppy alrededor de NQ 29,500, en jornada risk-off (NQ -4% por el golpe a megacaps + PCE caliente). El gran avance del día: 100% MICRO (0 trades FULL), lo que mantuvo el riesgo controlado — la cuenta fondeada solo usó 33% del DD ($652). El edge quedó por debajo del benchmark (+0.05R/trade vs +0.33R) por el sobre-trading en chop, y los trades de contexto OK ganaron (+$194) mientras los de contexto MIXTO perdieron (-$140).</p>
+</div><div class="card" style="background:var(--header-gradient);color:white;border:none;">
+  <p style="font-size:14px;line-height:1.7;text-align:center;font-style:italic;">"Día neto positivo (+$70) y, sobre todo, el primero de la semana con disciplina de TAMAÑO impecable: 100% MICRO, DD de la cuenta fondeada en solo 33%. Sim (+$97) batió a la Fondeada (-$27) por el sobre-trading y las reentradas impulsivas en el chop. El tamaño ya está resuelto; el siguiente paso es operar menos y mejor — contexto OK, cooldown tras cada cierre y empezar a ejecutar las señales A+ de V6. Vamos por buen camino hacia los $3,000."</p>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 7 — ESTRATEGIAS ══════════════════════ -->
+<div id="estrategias-section" style="display:block">
+  <div class="sub-title">Resultados por Estrategia</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>Estrategia</th><th>Trades</th><th>W</th><th>L</th><th>Flat</th><th>WR</th><th>P&L</th></tr></thead>
+      <tbody><tr><td>HUD_Manual</td><td>23</td><td>10</td><td>13</td><td>0</td><td>43.5%</td><td class="positive">+$224.50</td></tr>
+<tr><td>1x (200 Profit 100 Lost)</td><td>1</td><td>1</td><td>0</td><td>0</td><td>100.0%</td><td class="positive">+$16.25</td></tr>
+<tr><td>EduS_AutoTrader_V2</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0.0%</td><td class="negative">-$68.00</td></tr>
+<tr><td>EduS</td><td>4</td><td>1</td><td>3</td><td>0</td><td>25.0%</td><td class="negative">-$102.50</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 8 — FONDEO ══════════════════════ -->
+<div id="fondeo-section" style="display:1">
+<div class="section-divider"></div>
+  <div class="section-label"><span class="num">8</span>Cuenta Fondeada</div>
+  <h2>Evaluación de la Cuenta Fondeada</h2>
+  <div class="kpi-grid" style="margin-bottom:14px">
+    <div class="kpi"><div class="kpi-label">Balance</div><div class="kpi-value" style="color:var(--teal)">-$27 (PnL del día de la cuenta fondeada, 11 trades)</div></div>
+    <div class="kpi"><div class="kpi-label">Drawdown</div><div class="kpi-value neg">$652 (33% del límite $2,000 → SOBREVIVIÓ)</div></div>
+    <div class="kpi"><div class="kpi-label">Días Restantes</div><div class="kpi-value">—</div></div>
+    <div class="kpi"><div class="kpi-label">Objetivo</div><div class="kpi-value" style="color:var(--gold)">$3,000 — el día restó -$27; pendiente prácticamente íntegro</div></div>
+  </div>
+  <div class="ai-insight"><div class="ai-label">Evaluación</div><p>Sim (+$97) superó a la Fondeada (-$27): la diferencia vino del sobre-trading y las reentradas impulsivas en la cuenta fondeada durante el chop. El TAMAÑO fue correcto por primera vez en la semana (100% MICRO), lo que mantuvo el DD en 33%. Regla concreta para la próxima sesión: cooldown tras cada cierre, operar solo con contexto OK y mantener el set MICRO (6 ctr) para proteger el avance hacia los $3,000.</p></div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 9 — DOFA ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="dofa" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">9</span>Matriz DOFA</div>
+  <h2>Análisis DOFA — 26 JUN 2026</h2>
+  <p class="sub">Fortalezas · Debilidades · Oportunidades · Amenazas del período analizado</p>
+  <div class="sub-title" style="margin-top:16px">DOFA — Sim/Demo</div>
+<div class="dofa-grid">
+  <div class="dofa-card F"><div class="dofa-title F">✅ Fortalezas</div><div class="dofa-item">100% MICRO; sizing impecable.</div><div class="dofa-item">Buenos trades con contexto OK (+$194 en 15 trades).</div><div class="dofa-item">Recuperó la racha de chop con el +$134 (#17).</div></div>
+  <div class="dofa-card D"><div class="dofa-title D">⚠️ Debilidades</div><div class="dofa-item">Sobre-trading en el chop 10:38-11:09 (varios stops encadenados).</div><div class="dofa-item">Trades con qty 4 (#9, #11) fuera del estándar.</div><div class="dofa-item">0 señales HUD ejecutadas; todo discrecional.</div></div>
+  <div class="dofa-card O"><div class="dofa-title O">🔵 Oportunidades</div><div class="dofa-item">Filtrar por contexto OK (VWAP+SMA) donde está el edge.</div><div class="dofa-item">Capturar señales A+ de la apertura (08:01-08:38 a T2).</div></div>
+  <div class="dofa-card A"><div class="dofa-title A">🔴 Amenazas</div><div class="dofa-item">El chop de media mañana erosiona el PnL con muchos stops pequeños.</div></div>
+</div><div class="sub-title" style="margin-top:16px">DOFA — Cuenta Fondeada</div>
+<div class="dofa-grid">
+  <div class="dofa-card F"><div class="dofa-title F">✅ Fortalezas</div><div class="dofa-item">100% MICRO (6 ctr); riesgo controlado, DD solo 33%.</div><div class="dofa-item">Los 3 mejores fondeados (+$383, +$267, +$251) fueron MICRO alineados al sesgo.</div></div>
+  <div class="dofa-card D"><div class="dofa-title D">⚠️ Debilidades</div><div class="dofa-item">Racha de stops sin señal 9:45-10:43 (varios -$161).</div><div class="dofa-item">Reentrada impulsiva tras ganador (-$167, peor del día).</div><div class="dofa-item">0 trades con señal HUD activa (todo manual).</div></div>
+  <div class="dofa-card O"><div class="dofa-title O">🔵 Oportunidades</div><div class="dofa-item">Replicar el patrón de los ganadores (MICRO + sesgo + contexto OK).</div><div class="dofa-item">Cooldown tras ganador para evitar reentradas.</div></div>
+  <div class="dofa-card A"><div class="dofa-title A">🔴 Amenazas</div><div class="dofa-item">El sobre-trading discrecional puede convertir un día plano en perdedor si falla el filtro.</div></div>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 10 — REGLAS ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="reglas" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">10</span>Reglas Post-Mercado</div>
+  <h2>Recomendaciones y Reglas a Seguir</h2>
+  <p class="sub">Reglas críticas, ajustes de calidad y mejoras para las próximas sesiones</p>
+  <div class="section-title"><span class="step">RECOMENDACIONES</span><h2>Recomendaciones Finales</h2></div>
+<div class="sub-title" style="margin-top:16px">Recomendaciones — Sim/Demo</div><div class="rec-card"><h3>🔴 Regla Crítica Sim — Filtro de contexto OK y tope de intentos</h3><ul><li>Operar solo con contexto OK (VWAP+SMA alineados): los 15 OK dieron +$194; los 13 MIXTO, -$140.</li><li>Máximo 2 intentos por zona; parar tras 2 stops seguidos (evitar el chop 10:38-11:09).</li></ul></div><div class="rec-card"><h3>🟡 Regla de Calidad Sim — Sizing fijo</h3><ul><li>Mantener el set estándar (2 ctr Mini / 6 micros); evitar qty 4 atípicos (#9, #11).</li><li>No operar el rango medio sin tendencia; esperar ruptura/contexto.</li></ul></div><div class="sub-title" style="margin-top:16px">Recomendaciones — Cuenta Fondeada</div><div class="rec-card"><h3>🔴 Regla Crítica Fondeada — Cooldown tras cada cierre y exigir confluencia</h3><ul><li>Cooldown obligatorio tras un ganador/perdedor; no reentrar en 2s (el -$167 fue eso).</li><li>Entrar solo con sesgo + contexto OK (los ganadores +$383/+$251/+$267 lo tenían).</li></ul></div><div class="rec-card"><h3>🟡 Regla de Calidad Fondeada — Mantener MICRO y proteger el DD</h3><ul><li>Continuar 100% MICRO (6 ctr 3@1R + 3@5R); fue clave para el DD de solo 33%.</li><li>Cortar el día si se encadenan 3 stops; hoy la racha 9:45-10:43 casi tuerce el resultado.</li></ul></div><div class="sub-title" style="margin-top:16px">Recomendaciones — Generales</div><div class="rec-card"><h3>🟢 Mejora general para la siguiente sesión</h3><ul><li>Menos trades, mayor calidad: filtrar por contexto OK y operar las ventanas de edge (UsaAm/UsaPm).</li><li>Aprovechar que V6 ya entrega precios correctos para empezar a EJECUTAR señales A+, no solo discrecional.</li></ul></div>
+
+<div class="section-title"><span class="step">INCIDENCIAS</span><h2>Bugs y Diagnóstico</h2></div>
+<div class="card">
+  
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ Captura de contexto en 0.00 (ATR/SMA) en varios fills de micros <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">Trades 19-20-37, 38-42 y otros registran ATR=0.00 y SMA=None, marcando contexto MIXTO por defecto e impidiendo validar la entrada.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Corregir el indicador de captura de contexto para micros (MNQ/MES) en NinjaTrader; debe heredar el contexto del full equivalente.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#f39c12;background:#fef3e2">
+      <h4 style="color:#f39c12;font-size:13px;margin-bottom:6px;">⚠️ Sizing variable no estándar (qty 4) <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[MEDIA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">Algunos trades Sim usaron qty 4 (#9, #11), fuera del set definido (2 Mini / 6 micros), amplificando pérdidas en chop.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Fijar el sizing del bot/manual al set estándar y bloquear cantidades intermedias.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#279995;background:#fef3e2">
+      <h4 style="color:#279995;font-size:13px;margin-bottom:6px;">⚠️ Escala de precios en señales — estable y correcta en HUD V6 <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[BAJA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">Las señales V6 muestran MNQ ~29,300-29,500, coherentes con el mercado real. La corrección de escala se mantiene estable.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Incidencia de escala cerrada; mantener V6.</p>
+    </div>
+</div>
+  <div class="plan-card"><h3>Disciplina</h3><p>Cooldown obligatorio tras cada cierre (ganador o perdedor), tope de 2 intentos por zona y parada tras 3 stops encadenados. Operar solo con contexto OK (VWAP+SMA alineados).</p></div><div class="plan-card"><h3>Sizing</h3><p>Mantener 100% MICRO (set 6 contratos: 3@1R + 3@5R) — fue el gran acierto del día (DD solo 33%). Eliminar qty atípicos (4). Mini solo si la cuenta lo permite: 2 contratos (1@1R + 1@3R).</p></div><div class="plan-card"><h3>Senales</h3><p>Empezar a EJECUTAR señales HUD V6 A+/20+ (ya entregan precios correctos) en lugar de operar 100% discrecional; priorizar las de la apertura (08:01-08:38 a T2 hoy).</p></div><div class="plan-card"><h3>Horario</h3><p>Concentrar en UsaAm (10:00-11:30) y UsaPm; evitar el rango medio sin tendencia (hoy el chop 10:38-11:09 restó). En almuerzo, reducir frecuencia (peor ventana).</p></div><div class="plan-card"><h3>Sistema</h3><p>Corregir la captura de contexto en 0.00 para micros y bloquear sizing fuera del set estándar; mantener la escala de precios V6 ya estable.</p></div>
+</div>
+
+<!-- ══════════════════════ PLAN DE MEJORAS ══════════════════════ -->
+<div id="multi-account-section" style="display:1">
+<div class="section-divider"></div>
+  <div class="section-label"><span class="num">*</span>Comparativa por Cuenta</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>Cuenta</th><th>Trades</th><th>W</th><th>L</th><th>WR</th><th>P&L</th><th>Puntos por Mercado</th></tr></thead>
+      <tbody><tr><td>Cuenta Fondeada</td><td>11</td><td>4</td><td>7</td><td>36%</td><td class='negative'>-$27.00</td><td>+147.9 ptos MNQ · -64.6 ptos MES</td></tr><tr><td>Sim</td><td>18</td><td>8</td><td>10</td><td>44%</td><td class='positive'>+$97.25</td><td>+91.8 ptos MNQ · -17.2 ptos MES</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════ YOUTUBE ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="video" style="scroll-margin-top:52px">
+  <div class="yt-block">
+    <div class="yt-icon">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </div>
+    <div class="yt-text">
+      <div class="yt-title">Operativa en vivo — Canal EduS Trader</div>
+      <div class="yt-sub">YouTube · Sesiones diarias · Análisis y ejecución en tiempo real &middot; 26 JUN 2026</div>
+    </div>
+    <a class="yt-btn" href="https://www.youtube.com/@EduSTrader" target="_blank" rel="noopener noreferrer">Ver en YouTube →</a>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<footer>
+  <a href="javascript:history.back()" class="nav-back">← Volver</a> &middot;
+  <span class="brand-ft">Edu<span class="gold">S</span> Trader</span> &middot;
+  Post-Market Analysis &middot; 26 JUN 2026 &middot; Fuente: NinjaTrader 8
+</footer>
+
+</body>
+</html>
