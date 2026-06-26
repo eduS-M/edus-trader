@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — CIERRE SEMANAL | 22-26 JUN 2026</title>
+<meta name="description" content="EduS Trader Post-Market Analysis 22-26 JUN 2026 — CIERRE SEMANAL">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --navy: #142d37;
+  --navy-dark: #0d1f26;
+  --teal: #279995;
+  --gold: #b38665;
+  --gold-light: #d4a982;
+  --bg: #f2f0eb;
+  --surface: #ffffff;
+  --surface2: #f8f6f0;
+  --border: #e0dbd0;
+  --border2: rgba(0,0,0,0.20);
+  --text: #1a1814;
+  --text-muted: #7a7468;
+  --bull: #279995;
+  --bull-bg: #e6f5f4;
+  --bear: #c0392b;
+  --bear-bg: #fdf0ee;
+  --amber: #b38665;
+  --amber-bg: #f6efe8;
+  --blue: #185fa5;
+  --blue-bg: #e6f1fb;
+  --shadow: 0 2px 20px rgba(13,31,38,0.10);
+  --radius: 10px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --header-gradient: linear-gradient(135deg, #142d37 0%, #034649 100%);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1e20;
+    --surface: #1e2527;
+    --surface2: #232b2e;
+    --border: #2d3b3f;
+    --border2: rgba(255,255,255,0.15);
+    --text: #e8e4dc;
+    --text-muted: #8a9a9e;
+    --bull-bg: rgba(39,153,149,0.15);
+    --bear-bg: rgba(192,57,43,0.15);
+    --amber-bg: rgba(179,134,101,0.15);
+    --blue-bg: rgba(24,95,165,0.15);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ─── HEADER ─── */
+.header {
+  background: var(--header-gradient);
+  color: white;
+  padding: 20px 36px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid var(--gold);
+  position: relative;
+  overflow: hidden;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(179,134,101,0.08);
+  pointer-events: none;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 1;
+}
+.header-left .logo-img {
+  height: 60px;
+  width: auto;
+  display: block;
+}
+.header-left .brand { display: flex; flex-direction: column; }
+.header-left .brand-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: white;
+  line-height: 1;
+}
+.header-left .brand-name .gold { color: var(--gold); }
+.header-left .brand-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: var(--gold-light);
+  letter-spacing: 3px;
+  margin-top: 3px;
+  text-transform: uppercase;
+}
+.header-right { text-align: right; z-index: 1; }
+.header-right .date {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 700;
+}
+.header-right .prices {
+  display: flex; gap: 6px; margin-top: 6px;
+  justify-content: flex-end; flex-wrap: wrap;
+}
+.price-chip {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(179,134,101,0.35);
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.85);
+}
+.price-chip span { color: var(--gold-light); font-weight: 700; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy);
+  border-bottom: 1px solid rgba(179,134,101,0.25);
+  padding: 0 2rem;
+  display: flex; align-items: center; overflow-x: auto;
+  gap: 2px;
+}
+nav .brand {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  color: var(--gold); padding: 13px 0; margin-right: 20px;
+  white-space: nowrap; letter-spacing: 2px;
+  text-transform: uppercase;
+}
+nav a {
+  font-size: 11px; color: rgba(255,255,255,0.5);
+  text-decoration: none; padding: 14px 12px;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.5px;
+}
+nav a:hover { color: white; }
+nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 980px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+.section-divider { height: 1px; background: linear-gradient(to right, var(--gold), transparent); margin: 2.5rem 0 2rem; }
+.section-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 0.8rem;
+}
+.section-label .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--navy); color: var(--gold);
+  font-size: 10px; font-weight: 700;
+  border: 1px solid rgba(179,134,101,0.35);
+}
+h2 { font-size: 20px; font-weight: 600; margin-bottom: 4px; color: var(--navy); }
+@media (prefers-color-scheme: dark) { h2 { color: var(--text); } }
+.sub { font-size: 12px; color: var(--text-muted); margin-bottom: 1.3rem; }
+.sub-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted); margin: 1.3rem 0 .6rem;
+}
+
+/* ─── KPIs ─── */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+.kpi { background: var(--surface); border-radius: var(--r-md); padding: 12px 14px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+.kpi-label { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+.kpi-value { font-size: 22px; font-weight: 700; line-height: 1.1; }
+.kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.pos { color: var(--bull); } .neg { color: var(--bear); } .neu { color: var(--amber); }
+.pnl-pos { color: var(--bull); font-weight: 600; } .pnl-neg { color: var(--bear); font-weight: 600; }
+
+/* ─── CHARTS ─── */
+.chart-wrap { position: relative; width: 100%; }
+
+/* ─── ALERTS ─── */
+.alert {
+  border-radius: var(--r-md); padding: 12px 14px;
+  font-size: 12px; margin-bottom: 10px; line-height: 1.6;
+}
+.alert.success { background: var(--bull-bg); border: 0.5px solid rgba(39,153,149,0.35); }
+.alert.danger  { background: var(--bear-bg); border: 0.5px solid rgba(192,57,43,0.35); }
+.alert.warning { background: var(--amber-bg); border: 0.5px solid rgba(179,134,101,0.35); }
+.alert.info    { background: var(--blue-bg); border: 0.5px solid rgba(24,95,165,0.35); }
+.alert-title { font-weight: 600; margin-bottom: 3px; }
+.alert.success .alert-title { color: var(--bull); }
+.alert.danger  .alert-title { color: var(--bear); }
+.alert.warning .alert-title { color: var(--amber); }
+.alert.info    .alert-title { color: var(--blue); }
+
+/* ─── REGIME ALERTS ─── */
+.regime-alert {
+  background: linear-gradient(135deg, rgba(39,153,149,0.10), rgba(39,153,149,0.03));
+  border: 1px solid rgba(39,153,149,0.35); border-radius: var(--r-lg);
+  padding: 14px 18px; margin-bottom: 14px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.regime-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.regime-title { font-size: 13px; font-weight: 600; color: var(--bull); margin-bottom: 3px; }
+.regime-sub { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+.critical-banner {
+  background: linear-gradient(135deg, rgba(192,57,43,0.12), rgba(192,57,43,0.04));
+  border: 1.5px solid rgba(192,57,43,0.5); border-radius: var(--r-lg);
+  padding: 14px 18px; margin-bottom: 14px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.critical-title { font-size: 13px; font-weight: 700; color: var(--bear); margin-bottom: 3px; }
+.critical-sub { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+
+/* ─── INSIGHT CARDS ─── */
+.icard {
+  background: var(--surface); border-radius: var(--r-md); padding: 12px 14px;
+  margin-bottom: 8px; border-left: 3px solid transparent;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+}
+.icard.crit  { border-left-color: var(--bear); }
+.icard.warn  { border-left-color: var(--amber); }
+.icard.good  { border-left-color: var(--bull); }
+.icard.info  { border-left-color: var(--blue); }
+.icard-title { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+.icard-text  { font-size: 12px; color: var(--text-muted); line-height: 1.65; }
+
+/* ─── TRADE TABLE ─── */
+.tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tbl th {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--gold-light); font-weight: 700;
+  padding: 8px 10px;
+  background: var(--navy);
+  text-align: left;
+}
+.tbl td { padding: 7px 10px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr.win td  { background: rgba(39,153,149,0.04); }
+.tbl tr.loss td { background: rgba(192,57,43,0.04); }
+.tbl tr.viol-row td { background: rgba(179,134,101,0.06); }
+.badge {
+  display: inline-block; padding: 2px 7px; border-radius: 4px;
+  font-size: 10px; font-weight: 600; font-family: 'Space Mono', monospace;
+}
+.badge.long   { background: var(--bull-bg);  color: var(--bull); }
+.badge.short  { background: var(--amber-bg); color: var(--amber); }
+.badge.ok     { background: var(--bull-bg);  color: var(--bull); }
+.badge.viol   { background: var(--bear-bg);  color: var(--bear); }
+.badge.cancel { background: rgba(0,0,0,0.06); color: var(--text-muted); }
+.zone-badge {
+  display: inline-block; font-size: 10px; padding: 1px 7px;
+  border-radius: 10px; font-family: 'Space Mono', monospace;
+}
+.zone-badge.identified { background: var(--bull-bg); color: var(--bull); }
+.zone-badge.manual     { background: var(--amber-bg); color: var(--amber); }
+.sdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin: 0 1px; }
+.dot-g { background: var(--bull); } .dot-r { background: var(--bear); }
+.sig-inline { display: flex; gap: 3px; align-items: center; }
+
+/* ─── COMP BLOCKS ─── */
+.comp-block {
+  background: var(--surface); border-radius: var(--r-md);
+  padding: 12px 14px; margin-bottom: 10px; font-size: 12px;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+}
+.comp-block-title { font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.comp-block-body { color: var(--text-muted); line-height: 1.6; }
+.tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+.tag-win  { background: var(--bull-bg); color: var(--bull); }
+.tag-loss { background: var(--bear-bg); color: var(--bear); }
+
+/* ─── TWO COLUMN ─── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ─── DOFA (estilo cierre mensual) ─── */
+.dofa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.dofa-card { border-radius: var(--r-lg); padding: 16px 18px; border: 0.5px solid var(--border2); }
+.dofa-card.F { background: rgba(39,153,149,0.06); border-color: rgba(39,153,149,0.30); }
+.dofa-card.D { background: rgba(192,57,43,0.06);  border-color: rgba(192,57,43,0.30); }
+.dofa-card.O { background: rgba(24,95,165,0.06);   border-color: rgba(24,95,165,0.30); }
+.dofa-card.A { background: rgba(179,134,101,0.06); border-color: rgba(179,134,101,0.30); }
+.dofa-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.dofa-title.F { color: var(--bull); }
+.dofa-title.D { color: var(--bear); }
+.dofa-title.O { color: var(--blue); }
+.dofa-title.A { color: var(--amber); }
+.dofa-item {
+  font-size: 12px; color: var(--text-muted); padding: 4px 0 4px 12px;
+  border-bottom: 0.5px solid var(--border); line-height: 1.55;
+  position: relative;
+}
+.dofa-item::before { content: '·'; position: absolute; left: 0; color: var(--text-muted); }
+.dofa-item:last-child { border-bottom: none; }
+
+/* ─── RULES ─── */
+.rule-item { font-size: 12px; color: var(--text-muted); padding: 6px 0; border-bottom: 0.5px solid var(--border); line-height: 1.55; }
+.rule-item:last-child { border-bottom: none; }
+.rules-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 14px 16px; margin-top: 14px;
+  box-shadow: var(--shadow);
+}
+.rules-box-title { font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 10px; font-family: 'Space Mono', monospace; letter-spacing: 0.05em; }
+@media (prefers-color-scheme: dark) { .rules-box-title { color: var(--gold-light); } }
+
+/* ─── STOP CALLOUT ─── */
+.sl-callout {
+  background: var(--bear-bg); border: 1.5px solid rgba(192,57,43,0.35);
+  border-radius: var(--r-md); padding: 12px 16px; margin: 10px 0; font-size: 12px;
+}
+.sl-callout-title { font-weight: 700; color: var(--bear); margin-bottom: 6px; font-size: 13px; }
+.sl-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 0.5px solid rgba(192,57,43,0.15); font-size: 12px; gap: 8px; flex-wrap: wrap; }
+.sl-row:last-child { border-bottom: none; }
+
+/* ─── VOLATILITY CONFIG ─── */
+.volat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin: 10px 0; }
+.volat-card {
+  background: var(--surface); border-radius: var(--r-md); padding: 12px 14px;
+  border: 1px solid var(--border); font-size: 12px;
+}
+.volat-card .vc-scenario {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 6px;
+}
+.vc-baja      { color: var(--bull); }
+.vc-media     { color: #3498db; }
+.vc-alta      { color: var(--amber); }
+.vc-extrema   { color: #e67e22; }
+.vc-superextreme { color: var(--bear); }
+.vc-active    { box-shadow: 0 0 0 2px var(--gold); }
+.vc-metric    { display: flex; justify-content: space-between; padding: 2px 0; }
+.vc-metric-label { color: var(--text-muted); }
+.vc-metric-val  { font-weight: 600; }
+
+/* ─── WEEK / MONTH BADGES ─── */
+.weekly-badge { display: inline-block; background: var(--header-gradient); color: var(--gold); padding: 4px 14px; border-radius: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1px; margin-bottom: 14px; }
+.monthly-badge { display: inline-block; background: linear-gradient(135deg, #854f0b, #b38665); color: white; padding: 4px 14px; border-radius: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1px; margin-bottom: 14px; }
+
+/* ─── YOUTUBE BLOCK ─── */
+.yt-block {
+  background: var(--surface); border: 0.5px solid var(--border);
+  border-radius: var(--r-lg); padding: 18px 22px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 2rem;
+  box-shadow: var(--shadow);
+}
+.yt-icon { width: 44px; height: 44px; border-radius: 50%; background: #c0392b; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.yt-icon svg { width: 20px; height: 20px; fill: #fff; }
+.yt-text { flex: 1; min-width: 180px; }
+.yt-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+.yt-sub   { font-size: 12px; color: var(--text-muted); }
+.yt-btn {
+  display: inline-block !important; background: #c0392b !important;
+  color: #ffffff !important; font-size: 12px; font-weight: 700;
+  padding: 10px 22px; border-radius: var(--r-md);
+  text-decoration: none !important; white-space: nowrap;
+  font-family: 'Space Mono', monospace; letter-spacing: 0.5px;
+  transition: opacity .2s;
+}
+.yt-btn:hover { opacity: .85; }
+
+/* ─── NAV BACK ─── */
+.nav-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--gold); text-decoration: none; font-size: 13px;
+  margin-bottom: 16px; font-family: 'Space Mono', monospace;
+  font-weight: 700; transition: opacity .15s;
+  letter-spacing: 0.05em;
+}
+.nav-back:hover { opacity: 0.7; }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--header-gradient);
+  color: rgba(255,255,255,0.4); text-align: center;
+  padding: 18px 1rem; font-size: 11px;
+  font-family: 'Space Mono', monospace; letter-spacing: 1px;
+  margin-top: 2rem; border-top: 3px solid var(--gold);
+}
+footer strong { color: var(--gold-light); }
+footer .brand-ft { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; color: var(--gold-light); }
+footer .brand-ft .gold { color: var(--gold); }
+
+/* ─── AI INSIGHT ─── */
+.ai-insight {
+  background: linear-gradient(135deg, rgba(39,153,149,0.07), rgba(20,45,55,0.04));
+  border-left: 4px solid var(--teal); border-radius: var(--r-md);
+  padding: 14px 18px; margin-bottom: 14px; border: 1px solid rgba(39,153,149,0.2);
+}
+.ai-label {
+  font-family: 'Space Mono', monospace; font-size: 9px;
+  color: var(--teal); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
+}
+.ai-insight p { font-size: 13px; color: var(--text); line-height: 1.7; }
+
+/* ─── GAMEPLAN COMPARE ─── */
+.gameplan-compare {
+  background: var(--surface); border-radius: var(--r-md);
+  padding: 16px 20px; border-left: 4px solid var(--gold);
+  margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border);
+}
+.gameplan-compare h3 { font-size: 14px; color: var(--navy); margin-bottom: 8px; }
+@media (prefers-color-scheme: dark) { .gameplan-compare h3 { color: var(--gold-light); } }
+.gameplan-compare ul { margin-left: 18px; font-size: 13px; }
+.gameplan-compare li { margin-bottom: 4px; }
+.cumplido   { color: var(--bull); }
+.nocumplido { color: var(--bear); }
+.parcial    { color: var(--amber); }
+
+/* ─── VIX BADGE ─── */
+.vix-badge-strip {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--bull-bg); border: 0.5px solid rgba(39,153,149,0.4);
+  border-radius: var(--r-md); padding: 8px 14px; font-size: 12px;
+  color: var(--bull); font-weight: 600; margin-bottom: 14px;
+}
+
+/* ─── VOLATILITY GAUGE ─── */
+.volatility-gauge { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.gauge-item {
+  flex: 1; min-width: 130px; background: var(--surface);
+  border-radius: var(--r-md); padding: 12px;
+  border: 1px solid var(--border); text-align: center;
+}
+.gauge-item .g-label { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+.gauge-item .g-value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+.gauge-item .g-sub   { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+/* ─── PROGRESS BAR ─── */
+.prog-wrap { background: var(--border); border-radius: 3px; height: 6px; margin-top: 4px; overflow: hidden; }
+.prog { height: 6px; border-radius: 3px; }
+
+/* ─── FINDING BOX ─── */
+.finding {
+  background: var(--surface); border: 0.5px solid var(--border2);
+  border-radius: var(--r-lg); padding: 22px 26px;
+  position: relative; overflow: hidden; box-shadow: var(--shadow);
+}
+.finding::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: linear-gradient(180deg, var(--bear) 0%, var(--amber) 60%, var(--bear) 100%);
+}
+.finding-label { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bear); margin-bottom: 8px; }
+.finding h3 { font-size: 16px; font-weight: 600; margin-bottom: 10px; line-height: 1.4; }
+.finding p { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 10px; }
+.finding p:last-child { margin-bottom: 0; }
+.finding strong { color: var(--text); font-weight: 600; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 600px) {
+  .page { padding: 1rem 1rem 3rem; }
+  .two-col { grid-template-columns: 1fr; }
+  .dofa-grid { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .header { flex-direction: column; align-items: flex-start; padding: 16px; }
+  .header-right { text-align: left; width: 100%; }
+  .header-right .prices { justify-content: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<div class="header">
+  <div class="header-left">
+    <img class="logo-img" src="/assets/logo.png" alt="EduS Trader" onerror="this.style.display='none'">
+    <div class="brand">
+      <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
+      <div class="brand-sub">CIERRE SEMANAL &middot; Mesa de Dinero</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="date">Semana del 22 al 26 de Junio 2026</div>
+    <div class="prices">
+      <div class="price-chip">P&L <span style="color:#279995">+$3,279.40</span></div>
+      <div class="price-chip">198 trades &middot; 92W / 106L</div>
+      <div class="price-chip">WR <span>46.5%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav>
+  <span class="brand">📊 CIERRE SEMANAL</span>
+  <a href="#resumen" class="active">Resumen</a>
+  <a href="#gameplan">GamePlan</a>
+  <a href="#volatilidad">Volatilidad</a>
+  <a href="#trades">Trades</a>
+  <a href="#senales">Señales</a>
+  <a href="#diagnostico">Diagnóstico</a>
+  <a href="#dofa">DOFA</a>
+  <a href="#reglas">Reglas</a>
+  <a href="#video">Video</a>
+</nav>
+
+<!-- ══════════ PAGE ══════════ -->
+<div class="page">
+
+<a href="javascript:history.back()" class="nav-back">← Volver</a>
+
+<div class="weekly-badge" style="margin-bottom:16px">📅 CIERRE SEMANAL 22 JUN - 26 JUN 2026</div>
+
+
+<!-- ══════════════════════ SECCIÓN 1 — RESUMEN ══════════════════════ -->
+<div id="resumen" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">1</span>Resumen Operativo</div>
+  <h2>Dashboard 22-26 JUN 2026</h2>
+  <p class="sub">Fuente: NinjaTrader 8 &middot; CIERRE SEMANAL &middot; 198 trades &middot; WR 46.5%</p>
+
+  <span class="edus-account-badge positive">Cuenta Fondeada: +$763.65</span> <span class="edus-account-badge positive">Sim: +$2,515.75</span> 
+
+  <div class="sub-title">KPIs del período</div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">P&L Total</div><div class="kpi-value positive">+$3,279.40</div><div class="kpi-sub">Neto del período</div></div>
+    <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-value">46.5%</div><div class="kpi-sub">92W / 106L</div></div>
+    <div class="kpi"><div class="kpi-label">Avg Trade</div><div class="kpi-value positive">+$16.56</div><div class="kpi-sub">Por operación</div></div>
+    <div class="kpi"><div class="kpi-label">Mayor Win</div><div class="kpi-value pos">+$3,035.00</div><div class="kpi-sub">Mejor operación</div></div>
+    <div class="kpi"><div class="kpi-label">Mayor Loss</div><div class="kpi-value neg">-$1,610.00</div><div class="kpi-sub">Peor operación</div></div>
+    <div class="kpi"><div class="kpi-label">Total Trades</div><div class="kpi-value">198</div><div class="kpi-sub">92 ganados · 106 perdidos</div></div>
+  </div>
+
+  <div class="sub-title" style="margin-top:16px">Sim/Demo — 130T | 55W/75L | WR 42%</div>
+<div class="kpi-grid">
+  <div class="kpi"><div class="kpi-label">P&L</div><div class="kpi-value positive">+$2,515.75</div></div>
+  <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-value">42%</div><div class="kpi-sub">55W / 75L</div></div>
+  <div class="kpi"><div class="kpi-label">Avg Trade</div><div class="kpi-value pos">+$19.35</div></div>
+  <div class="kpi"><div class="kpi-label">Mayor Win</div><div class="kpi-value pos">+$3,035.00</div></div>
+  <div class="kpi"><div class="kpi-label">Mayor Loss</div><div class="kpi-value neg">-$1,610.00</div></div>
+  <div class="kpi"><div class="kpi-label">Trades</div><div class="kpi-value">130</div></div>
+</div>
+  <div class="sub-title" style="margin-top:16px">Cuenta Fondeada — 68T | 37W/31L | WR 54%</div>
+<div class="kpi-grid">
+  <div class="kpi"><div class="kpi-label">P&L</div><div class="kpi-value positive">+$763.65</div></div>
+  <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-value">54%</div><div class="kpi-sub">37W / 31L</div></div>
+  <div class="kpi"><div class="kpi-label">Avg Trade</div><div class="kpi-value pos">+$11.23</div></div>
+  <div class="kpi"><div class="kpi-label">Mayor Win</div><div class="kpi-value pos">+$313.80</div></div>
+  <div class="kpi"><div class="kpi-label">Mayor Loss</div><div class="kpi-value neg">-$150.00</div></div>
+  <div class="kpi"><div class="kpi-label">Trades</div><div class="kpi-value">68</div></div>
+</div>
+</div>
+
+<!-- ══════════ CURVA P&L POR TRADE ══════════ -->
+<div class="section-divider"></div>
+<div class="section-label"><span class="num">▶</span>P&L por Trade</div>
+
+<div class="sub-title">P&L individual — Sim/Demo</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartBarSim"></canvas></div>
+
+<div class="sub-title">Curva de capital — Sim/Demo</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartCurveSim"></canvas></div>
+
+<div class="sub-title" style="margin-top:20px">P&L individual — Cuenta Fondeada</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartBarFunded"></canvas></div>
+
+<div class="sub-title">Curva de capital — Cuenta Fondeada</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartCurveFunded"></canvas></div>
+
+<script>
+(function() {
+  var isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+  var tc = isDark ? '#8a9a9e' : '#7a7468';
+  var gc = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+  function makeBarChart(canvasId, data) {
+    if (!data || data.length === 0) { document.getElementById(canvasId).parentElement.style.display='none'; return; }
+    var labels = data.map(function(d) { return '#' + d.t; });
+    var pnls = data.map(function(d) { return d.pnl; });
+    new Chart(document.getElementById(canvasId), {
+      type: 'bar',
+      data: { labels: labels, datasets: [{ data: pnls, backgroundColor: pnls.map(function(v) { return v >= 0 ? 'rgba(39,153,149,0.78)' : 'rgba(192,57,43,0.78)'; }), borderRadius: 4, borderSkipped: false }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return (ctx.raw >= 0 ? '+' : '') + '$' + Math.abs(ctx.raw).toFixed(2); } } } }, scales: { x: { ticks: { color: tc, font: { size: 10 } }, grid: { color: gc } }, y: { ticks: { color: tc, font: { size: 10 }, callback: function(v) { return '$' + v; } }, grid: { color: gc } } } }
+    });
+  }
+
+  function makeCurveChart(canvasId, data, color) {
+    if (!data || data.length === 0) { document.getElementById(canvasId).parentElement.style.display='none'; return; }
+    var labels = data.map(function(d) { return '#' + d.t; });
+    var cums = data.map(function(d) { return d.cum; });
+    var lineColor = color || (cums[cums.length-1] >= 0 ? '#279995' : '#c0392b');
+    var fillColor = color ? color.replace(')', ',0.09)').replace('rgb(', 'rgba(') : (cums[cums.length-1] >= 0 ? 'rgba(39,153,149,0.09)' : 'rgba(192,57,43,0.09)');
+    new Chart(document.getElementById(canvasId), {
+      type: 'line',
+      data: { labels: labels, datasets: [{ data: cums, borderColor: lineColor, backgroundColor: fillColor, fill: true, tension: 0.3, pointBackgroundColor: cums.map(function(v) { return v >= 0 ? '#279995' : '#c0392b'; }), pointRadius: 4, borderWidth: 2 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return 'Acum.: $' + ctx.raw.toFixed(2); } } } }, scales: { x: { ticks: { color: tc, font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: tc, font: { size: 10 }, callback: function(v) { return '$' + v; } }, grid: { color: gc } } } }
+    });
+  }
+
+  var simData = [{"t": 1, "pnl": -75.0, "cum": -75.0}, {"t": 2, "pnl": -25.0, "cum": -100.0}, {"t": 3, "pnl": -25.5, "cum": -125.5}, {"t": 4, "pnl": -25.5, "cum": -151.0}, {"t": 5, "pnl": -25.0, "cum": -176.0}, {"t": 6, "pnl": -50.0, "cum": -226.0}, {"t": 7, "pnl": -75.0, "cum": -301.0}, {"t": 8, "pnl": -715.0, "cum": -1016.0}, {"t": 9, "pnl": -720.0, "cum": -1736.0}, {"t": 10, "pnl": 425.0, "cum": -1311.0}, {"t": 11, "pnl": 437.5, "cum": -873.5}, {"t": 12, "pnl": 437.5, "cum": -436.0}, {"t": 13, "pnl": 650.0, "cum": 214.0}, {"t": 14, "pnl": 1625.0, "cum": 1839.0}, {"t": 15, "pnl": 1225.0, "cum": 3064.0}, {"t": 16, "pnl": -400.0, "cum": 2664.0}, {"t": 17, "pnl": 680.0, "cum": 3344.0}, {"t": 18, "pnl": 415.0, "cum": 3759.0}, {"t": 19, "pnl": -650.0, "cum": 3109.0}, {"t": 20, "pnl": -655.0, "cum": 2454.0}, {"t": 21, "pnl": 87.5, "cum": 2541.5}, {"t": 22, "pnl": 50.0, "cum": 2591.5}, {"t": 23, "pnl": -375.0, "cum": 2216.5}, {"t": 24, "pnl": -670.0, "cum": 1546.5}, {"t": 25, "pnl": -675.0, "cum": 871.5}, {"t": 26, "pnl": 87.5, "cum": 959.0}, {"t": 27, "pnl": 50.0, "cum": 1009.0}, {"t": 28, "pnl": -375.0, "cum": 634.0}, {"t": 29, "pnl": -725.0, "cum": -91.0}, {"t": 30, "pnl": -730.0, "cum": -821.0}, {"t": 31, "pnl": -375.0, "cum": -1196.0}, {"t": 32, "pnl": -250.0, "cum": -1446.0}, {"t": 33, "pnl": -250.0, "cum": -1696.0}, {"t": 34, "pnl": -1610.0, "cum": -3306.0}, {"t": 35, "pnl": -790.0, "cum": -4096.0}, {"t": 36, "pnl": -795.0, "cum": -4891.0}, {"t": 37, "pnl": -425.0, "cum": -5316.0}, {"t": 38, "pnl": 312.5, "cum": -5003.5}, {"t": 39, "pnl": 225.0, "cum": -4778.5}, {"t": 40, "pnl": -400.0, "cum": -5178.5}, {"t": 41, "pnl": 412.5, "cum": -4766.0}, {"t": 42, "pnl": 250.0, "cum": -4516.0}, {"t": 43, "pnl": 362.5, "cum": -4153.5}, {"t": 44, "pnl": 287.5, "cum": -3866.0}, {"t": 45, "pnl": 270.0, "cum": -3596.0}, {"t": 46, "pnl": 450.0, "cum": -3146.0}, {"t": 47, "pnl": 362.5, "cum": -2783.5}, {"t": 48, "pnl": 312.5, "cum": -2471.0}, {"t": 49, "pnl": 325.0, "cum": -2146.0}, {"t": 50, "pnl": 475.0, "cum": -1671.0}, {"t": 51, "pnl": -250.0, "cum": -1921.0}, {"t": 52, "pnl": -75.0, "cum": -1996.0}, {"t": 53, "pnl": -25.0, "cum": -2021.0}, {"t": 54, "pnl": -25.5, "cum": -2046.5}, {"t": 55, "pnl": -25.5, "cum": -2072.0}, {"t": 56, "pnl": -25.0, "cum": -2097.0}, {"t": 57, "pnl": -50.0, "cum": -2147.0}, {"t": 58, "pnl": -75.0, "cum": -2222.0}, {"t": 59, "pnl": -715.0, "cum": -2937.0}, {"t": 60, "pnl": -720.0, "cum": -3657.0}, {"t": 61, "pnl": 425.0, "cum": -3232.0}, {"t": 62, "pnl": 437.5, "cum": -2794.5}, {"t": 63, "pnl": 437.5, "cum": -2357.0}, {"t": 64, "pnl": 650.0, "cum": -1707.0}, {"t": 65, "pnl": -450.0, "cum": -2157.0}, {"t": 66, "pnl": -825.0, "cum": -2982.0}, {"t": 67, "pnl": -830.0, "cum": -3812.0}, {"t": 68, "pnl": 2055.0, "cum": -1757.0}, {"t": 69, "pnl": 3035.0, "cum": 1278.0}, {"t": 70, "pnl": -400.0, "cum": 878.0}, {"t": 71, "pnl": -610.0, "cum": 268.0}, {"t": 72, "pnl": -615.0, "cum": -347.0}, {"t": 73, "pnl": 425.0, "cum": 78.0}, {"t": 74, "pnl": 437.5, "cum": 515.5}, {"t": 75, "pnl": -680.0, "cum": -164.5}, {"t": 76, "pnl": -685.0, "cum": -849.5}, {"t": 77, "pnl": -375.0, "cum": -1224.5}, {"t": 78, "pnl": -375.0, "cum": -1599.5}, {"t": 79, "pnl": -400.0, "cum": -1999.5}, {"t": 80, "pnl": 1700.0, "cum": -299.5}, {"t": 81, "pnl": 1265.0, "cum": 965.5}, {"t": 82, "pnl": 1505.0, "cum": 2470.5}, {"t": 83, "pnl": 1045.0, "cum": 3515.5}, {"t": 84, "pnl": -875.0, "cum": 2640.5}, {"t": 85, "pnl": -875.0, "cum": 1765.5}, {"t": 86, "pnl": 450.0, "cum": 2215.5}, {"t": 87, "pnl": 387.5, "cum": 2603.0}, {"t": 88, "pnl": -400.0, "cum": 2203.0}, {"t": 89, "pnl": 61.25, "cum": 2264.25}, {"t": 90, "pnl": 91.25, "cum": 2355.5}, {"t": 91, "pnl": -57.5, "cum": 2298.0}, {"t": 92, "pnl": 122.5, "cum": 2420.5}, {"t": 93, "pnl": -2.0, "cum": 2418.5}, {"t": 94, "pnl": 16.25, "cum": 2434.75}, {"t": 95, "pnl": 92.5, "cum": 2527.25}, {"t": 96, "pnl": 103.0, "cum": 2630.25}, {"t": 97, "pnl": -32.5, "cum": 2597.75}, {"t": 98, "pnl": -32.5, "cum": 2565.25}, {"t": 99, "pnl": 79.5, "cum": 2644.75}, {"t": 100, "pnl": -35.0, "cum": 2609.75}, {"t": 101, "pnl": -35.0, "cum": 2574.75}, {"t": 102, "pnl": -35.0, "cum": 2539.75}, {"t": 103, "pnl": -35.0, "cum": 2504.75}, {"t": 104, "pnl": 65.0, "cum": 2569.75}, {"t": 105, "pnl": 37.5, "cum": 2607.25}, {"t": 106, "pnl": 74.5, "cum": 2681.75}, {"t": 107, "pnl": 109.0, "cum": 2790.75}, {"t": 108, "pnl": -28.0, "cum": 2762.75}, {"t": 109, "pnl": -28.0, "cum": 2734.75}, {"t": 110, "pnl": -33.5, "cum": 2701.25}, {"t": 111, "pnl": -33.5, "cum": 2667.75}, {"t": 112, "pnl": -35.0, "cum": 2632.75}, {"t": 113, "pnl": -35.5, "cum": 2597.25}, {"t": 114, "pnl": 94.0, "cum": 2691.25}, {"t": 115, "pnl": 67.5, "cum": 2758.75}, {"t": 116, "pnl": -41.0, "cum": 2717.75}, {"t": 117, "pnl": -41.5, "cum": 2676.25}, {"t": 118, "pnl": -44.5, "cum": 2631.75}, {"t": 119, "pnl": -44.5, "cum": 2587.25}, {"t": 120, "pnl": -46.5, "cum": 2540.75}, {"t": 121, "pnl": -46.5, "cum": 2494.25}, {"t": 122, "pnl": -40.0, "cum": 2454.25}, {"t": 123, "pnl": -40.0, "cum": 2414.25}, {"t": 124, "pnl": 74.5, "cum": 2488.75}, {"t": 125, "pnl": 60.0, "cum": 2548.75}, {"t": 126, "pnl": 72.5, "cum": 2621.25}, {"t": 127, "pnl": 46.5, "cum": 2667.75}, {"t": 128, "pnl": -34.0, "cum": 2633.75}, {"t": 129, "pnl": -34.0, "cum": 2599.75}, {"t": 130, "pnl": -84.0, "cum": 2515.75}];
+  var fundedData = [{"t": 1, "pnl": 40.8, "cum": 40.8}, {"t": 2, "pnl": 24.3, "cum": 65.1}, {"t": 3, "pnl": 69.3, "cum": 134.4}, {"t": 4, "pnl": 181.8, "cum": 316.2}, {"t": 5, "pnl": -83.7, "cum": 232.5}, {"t": 6, "pnl": -83.7, "cum": 148.8}, {"t": 7, "pnl": 69.3, "cum": 218.1}, {"t": 8, "pnl": 83.1, "cum": 301.2}, {"t": 9, "pnl": 166.2, "cum": 467.4}, {"t": 10, "pnl": 40.8, "cum": 508.2}, {"t": 11, "pnl": 24.3, "cum": 532.5}, {"t": 12, "pnl": 69.3, "cum": 601.8}, {"t": 13, "pnl": 181.8, "cum": 783.6}, {"t": 14, "pnl": -83.7, "cum": 699.9}, {"t": 15, "pnl": -83.7, "cum": 616.2}, {"t": 16, "pnl": 69.3, "cum": 685.5}, {"t": 17, "pnl": 83.1, "cum": 768.6}, {"t": 18, "pnl": 166.2, "cum": 934.8}, {"t": 19, "pnl": 20.55, "cum": 955.35}, {"t": 20, "pnl": 43.05, "cum": 998.4}, {"t": 21, "pnl": 46.8, "cum": 1045.2}, {"t": 22, "pnl": 99.3, "cum": 1144.5}, {"t": 23, "pnl": -80.7, "cum": 1063.8}, {"t": 24, "pnl": -80.7, "cum": 983.1}, {"t": 25, "pnl": 69.3, "cum": 1052.4}, {"t": 26, "pnl": 114.3, "cum": 1166.7}, {"t": 27, "pnl": 31.8, "cum": 1198.5}, {"t": 28, "pnl": 39.3, "cum": 1237.8}, {"t": 29, "pnl": -83.7, "cum": 1154.1}, {"t": 30, "pnl": -83.7, "cum": 1070.4}, {"t": 31, "pnl": -84.45, "cum": 985.95}, {"t": 32, "pnl": -84.45, "cum": 901.5}, {"t": 33, "pnl": -92.7, "cum": 808.8}, {"t": 34, "pnl": -92.7, "cum": 716.1}, {"t": 35, "pnl": -80.7, "cum": 635.4}, {"t": 36, "pnl": -80.7, "cum": 554.7}, {"t": 37, "pnl": 58.05, "cum": 612.75}, {"t": 38, "pnl": 148.05, "cum": 760.8}, {"t": 39, "pnl": 5.55, "cum": 766.35}, {"t": 40, "pnl": 5.55, "cum": 771.9}, {"t": 41, "pnl": 120.0, "cum": 891.9}, {"t": 42, "pnl": -150.0, "cum": 741.9}, {"t": 43, "pnl": -150.0, "cum": 591.9}, {"t": 44, "pnl": -150.0, "cum": 441.9}, {"t": 45, "pnl": 311.25, "cum": 753.15}, {"t": 46, "pnl": 37.5, "cum": 790.65}, {"t": 47, "pnl": -80.7, "cum": 709.95}, {"t": 48, "pnl": -80.7, "cum": 629.25}, {"t": 49, "pnl": -83.7, "cum": 545.55}, {"t": 50, "pnl": -55.8, "cum": 489.75}, {"t": 51, "pnl": -27.9, "cum": 461.85}, {"t": 52, "pnl": -80.7, "cum": 381.15}, {"t": 53, "pnl": -80.7, "cum": 300.45}, {"t": 54, "pnl": -80.7, "cum": 219.75}, {"t": 55, "pnl": -80.7, "cum": 139.05}, {"t": 56, "pnl": 69.3, "cum": 208.35}, {"t": 57, "pnl": 313.8, "cum": 522.15}, {"t": 58, "pnl": -83.7, "cum": 438.45}, {"t": 59, "pnl": -83.7, "cum": 354.75}, {"t": 60, "pnl": -80.7, "cum": 274.05}, {"t": 61, "pnl": -80.7, "cum": 193.35}, {"t": 62, "pnl": 69.3, "cum": 262.65}, {"t": 63, "pnl": -17.7, "cum": 244.95}, {"t": 64, "pnl": 69.3, "cum": 314.25}, {"t": 65, "pnl": 121.2, "cum": 435.45}, {"t": 66, "pnl": 60.6, "cum": 496.05}, {"t": 67, "pnl": 69.3, "cum": 565.35}, {"t": 68, "pnl": 198.3, "cum": 763.65}];
+
+  makeBarChart('chartBarSim', simData);
+  makeCurveChart('chartCurveSim', simData);
+  makeBarChart('chartBarFunded', fundedData);
+  makeCurveChart('chartCurveFunded', fundedData);
+})();
+</script>
+
+<!-- ══════════════════════ SECCIÓN 2 — GAMEPLAN ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="gameplan" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">2</span>GamePlan vs Mercado Real</div>
+  <h2>Evaluación del Pre-Mercado</h2>
+  <p class="sub">Comparación entre el plan planteado y lo que realmente ocurrió en el mercado</p>
+  <div class="section-title"><span class="step">GAMEPLAN</span><h2>Game Plan — Evaluación de Cumplimiento</h2></div>
+<div class="gameplan-compare">
+  <h3>📋 Pre-Mercado: <span class="nocumplido">PARCIAL (PROMEDIO SEMANAL)</span></h3>
+  <h4 style='margin-top:10px;color:var(--bear);font-size:13px'>❌ Desviaciones</h4><ul><li>Uso recurrente de FULL en NQ Extrema/SuperExtrema pese a la regla MICRO (74 trades FULL en la semana).</li><li>Sobre-trading en la apertura y en rangos sin tendencia (micro-scalps sin señal, reentradas impulsivas).</li><li>Promediar un 2º lote FULL en pérdida (martes/miércoles), multiplicando el daño.</li><li>Inactividad/ejecución fallida del AutoTrader (jueves en blanco pese a señales A+ ganadoras).</li></ul>
+  <h4 style='margin-top:10px;color:var(--bull);font-size:13px'>✅ Aciertos</h4><ul><li>Dirección y zonas del game plan correctas casi todos los días (sesgo bajista, shorts A+/LR+).</li><li>EduS_AutoTrader_V2 dejó correr runners a T2 capturando los grandes movimientos.</li><li>Evolución hacia MICRO: viernes 100% micro, cuenta fondeada con DD solo 55% en la semana.</li><li>La cuenta fondeada terminó la semana en positivo (+$764), avanzando hacia el objetivo.</li></ul>
+  <h4 style='margin-top:10px;color:var(--text-muted);font-size:13px'>📖 Lecciones</h4><p style='font-size:13px;color:var(--text-muted)'>El plan acierta el contexto; el trabajo pendiente es la EJECUCIÓN: 1) MICRO sin excepción en cuenta fondeada y en NQ con ATR>18; 2) prohibir el 2º lote FULL en pérdida; 3) menos trades de mayor calidad (contexto OK); 4) garantizar la activación del AutoTrader para no perder días con señales válidas.</p>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 3 — VOLATILIDAD ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="volatilidad" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">3</span>Análisis de Volatilidad — VIX · ATR · Keltner</div>
+  <h2>Volatilidad Real de la Sesión</h2>
+  <p class="sub">VIX observado, ATR del día, Ancho del canal Keltner y validación contra V5_VolatilityConfig</p>
+  <div class="section-title"><span class="step">VOLATILIDAD</span><h2>Análisis de Volatilidad — VIX / Keltner / ATR</h2></div>
+<div class="card">
+  <div class="volatility-gauge">
+    <div class="gauge-item"><div class="g-label">VIX Observado</div><div class="g-value" style="font-size:16px">Rango VIX semanal: 16.0 (mín) → 20.5 (máx); cierre de semana ~20.2. Régimen de Baja (lunes) a Media (viernes).</div></div>
+    <div class="gauge-item"><div class="g-label">Definiciones Correctas</div><div class="g-value" style="font-size:16px">PARCIAL</div></div>
+  </div>
+  <div class="info-box" style="margin-bottom:0">
+    <h3>📊 Relación VIX / Keltner / ATR</h3>
+    <p>VIX al alza + Keltner/ATR de NQ en súper-extrema fue la combinación más peligrosa: amplificó tanto las grandes ganancias del AutoTrader (con runners) como las pérdidas FULL. La lógica del sistema (mayor volatilidad → MICRO) quedó validada empíricamente: los peores trades de la semana fueron todos FULL en NQ Extrema.</p>
+  </div>
+  <div class="info-box" style="margin-bottom:0;margin-top:10px">
+    <h3>📈 Keltner y ATR</h3>
+    <p>Keltner de NQ osciló de ~129 (Extrema) a 163.96 (SUPER-Extrema) en los días de pánico; ES se mantuvo en 13-25 (Media-Extrema). El ensanche del Keltner de NQ anticipaba la necesidad de MICRO que no siempre se respetó.<br><br><strong>ATR Observado:</strong> NQ ATR promedio elevado, con picos a 22.84-24.71 (súper-extrema) martes/miércoles. ES ATR 1.9-3.8 (Media-Extrema). MNQ/MES con varios fills de contexto en 0.00 (bug de captura).</p>
+  </div>
+  <div class="ai-insight" style="margin-top:14px">
+    <div class="ai-label">Nota de Volatilidad</div>
+    <p>La volatilidad estuvo bien clasificada por el sistema durante toda la semana; el incumplimiento fue de ejecución (FULL en súper-extrema). El ATR de NQ desbordó repetidamente el techo 'Extrema' (18), lo que llevó a incorporar el escenario 'SuperExtrema' a media semana. La cuenta fondeada sobrevivió porque usó proporcionalmente más MICRO; la Sim habría quemado por los FULL.</p>
+  </div>
+</div>
+  
+<div class="sub-title">Escenario V5_VolatilityConfig activo</div>
+<div class="volat-grid">
+    <div class="volat-card vc-active">
+      <div class="vc-scenario vc-extrema">NQ — EXTREMA</div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Obs.</span><span class="vc-metric-val">129.13</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Rango</span><span class="vc-metric-val">[120.0, 160.0]</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">ATR Obs.</span><span class="vc-metric-val">18.05</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Stop Mín (x0.6×ATR)</span><span class="vc-metric-val" style="color:var(--bear)">10.83 pts</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">RR Objetivo</span><span class="vc-metric-val">2.0:3.0</span></div>
+    </div>
+    <div class="volat-card vc-active">
+      <div class="vc-scenario vc-media">ES — MEDIA</div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Obs.</span><span class="vc-metric-val">13.48</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Rango</span><span class="vc-metric-val">[11.0, 16.0]</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">ATR Obs.</span><span class="vc-metric-val">1.98</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Stop Mín (x0.5×ATR)</span><span class="vc-metric-val" style="color:var(--bear)">0.99 pts</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">RR Objetivo</span><span class="vc-metric-val">2.0:3.0</span></div>
+    </div>
+    <div class="volat-card ">
+      <div class="vc-scenario vc-superextreme">MNQ — SUPEREXTREMA</div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Obs.</span><span class="vc-metric-val">0.00</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Rango</span><span class="vc-metric-val">[160.0, ∞]</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">ATR Obs.</span><span class="vc-metric-val">0.00</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Stop Mín (x0.7×ATR)</span><span class="vc-metric-val" style="color:var(--bear)">0.00 pts</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">RR Objetivo</span><span class="vc-metric-val">2.0:3.0</span></div>
+    </div>
+    <div class="volat-card ">
+      <div class="vc-scenario vc-superextreme">MES — SUPEREXTREMA</div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Obs.</span><span class="vc-metric-val">0.00</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Rango</span><span class="vc-metric-val">[33.0, ∞]</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">ATR Obs.</span><span class="vc-metric-val">0.00</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Stop Mín (x0.7×ATR)</span><span class="vc-metric-val" style="color:var(--bear)">0.00 pts</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">RR Objetivo</span><span class="vc-metric-val">2.0:3.0</span></div>
+    </div>
+</div>
+<div class="ai-insight" style="margin-top:14px"><div class="ai-label">🤖 Validación IA</div><p>Predominante: NQ 'Extrema/SuperExtrema' y ES 'Media/Alta'. La operativa fue consistente con el régimen SOLO en tamaño cuando se usó MICRO; los 74 trades FULL violaron las reglas de sizing por régimen (Extrema/SuperExtrema = solo MICRO).</p></div><div class="icard info" style="margin-top:8px"><div class="icard-title">📊 Profit Factor</div><div class="icard-text">Profit Factor semanal = 29,128.30 / 25,848.90 = 1.13 (ganancias $29,128.30 vs pérdidas $25,848.90, neto +$3,279.40).</div></div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 4 — TRADES ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="trades" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">4</span>Detalle de Operaciones</div>
+  <h2>Registro Completo de Trades</h2>
+  <p class="sub">Detalle de cada operación con zona de señal, indicadores en el momento de la entrada y resultado</p>
+
+  <div class="section-title"><span class="step">STOPS</span><h2>Análisis de los Stop Loss</h2></div>
+<div class="card">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+    
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #43</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">size-error</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>sizing</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">-$1,610.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">40.25 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.76x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">Peor trade de la semana: largo FULL ×2 en NQ súper-extrema en la apertura del martes. Stop amplio pero TAMAÑO FULL. En MICRO habría sido ~-$160.</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 MICRO obligatorio (6 micros 3@1R+3@5R) y no operar el primer minuto en súper-extrema.</div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #8</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">size-error</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>sizing</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">-$715.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">35.75 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.98x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">Short FULL en NQ Extrema con VWAP girando UP; el daño fue de tamaño, no de stop.</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 MICRO; validar VWAP estable antes de entrar.</div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #75</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">size-error</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>sizing</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">-$825.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">41.25 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.81x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">Short AutoTrader FULL con ATR 22.84 (súper-extrema). Stop correcto, tamaño no.</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 Forzar MICRO en NQ cuando ATR > 18.</div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #112</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">size-error</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>sizing</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">-$875.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">43.75 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">2.05x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">Short FULL en el primer minuto de la apertura del miércoles; barrido en 10s.</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 No operar el primer minuto en súper-extrema; MICRO.</div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid rgba(192,57,43,0.25);border-left:3px solid var(--bear);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--bear);">Stop #28</span>
+        <span style="font-size:13px;font-weight:600;">NQ</span>
+        <span style="font-size:11px;background:rgba(192,57,43,.12);color:var(--bear);border-radius:4px;padding:2px 8px;">adecuado</span>
+        <span style="font-size:11px;color:var(--text-muted);">Motivo: <strong>volatilidad</strong></span>
+        <span style="margin-left:auto;font-size:15px;font-weight:700;color:var(--bear);">-$650.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">32.5 pts</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Distancia / ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.8x</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;">Short FULL tardío barrido por rebote; promediado con #29 (-$1,305 combinado).</div>
+      <div style="font-size:12px;color:var(--teal);background:rgba(39,153,149,.07);border-radius:6px;padding:8px 12px;">💡 No promediar 2º lote FULL en pérdida; MICRO.</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:20px;margin-bottom:10px;font-size:14px;">Resumen de Stops</h3>
+  <div class="tab-wrap">
+  <table>
+    <thead><tr><th>Total Stops</th><th>Total Perdido</th><th>Stops Adecuados</th><th>Stops Ajustados</th></tr></thead>
+    <tbody>
+      <tr><td>106</td><td style="color:var(--bear)">-$25,848.90</td><td>90</td><td>16</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="info-box" style="margin-top:14px;margin-bottom:0">
+    <h3>📊 Patrón General</h3>
+    <p>Los stops NO fueron mayoritariamente ajustados (90 de 106 cumplían el mínimo V5). El patrón dominante de la semana fue de SIZING: todas las pérdidas grandes (-$650 a -$1,610) fueron contratos FULL en NQ Extrema/SuperExtrema, muchas veces promediando un 2º lote en pérdida. Un subconjunto menor (16) fueron stops ajustados barridos en segundos por sobre-trading en chop.</p>
+  </div>
+  <div class="ai-insight" style="margin-top:12px">
+    <div class="ai-label">Recomendación General</div>
+    <p>Mantener los stops según V5 (0.6×ATR NQ Extrema, 0.5×ATR ES Media) pero ELIMINAR el FULL en NQ Extrema/SuperExtrema y en la cuenta fondeada, prohibir el 2º lote FULL en pérdida y añadir cooldown tras cada cierre. El edge de la semana fue positivo; controlando el tamaño habría sido muy superior.</p>
+  </div>
+</div>
+
+  <div class="sub-title">Trades Sim/Demo (agrupados por señal)</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Estrategia</th><th>Inst</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>P&L</th><th>Zona/Señal</th><th>Salidas (T1/T2/Stop)</th><th>Cuenta</th></tr></thead>
+      <tbody>
+      <tr class="trade-loss"><td>1,2,3,4,39,40,41,42</td><td>EduS_MNQ_Micro</td><td>MNQ</td><td>Long</td><td>9:50:06</td><td>9:50:18</td><td>30,880.75</td><td>30,868.25…</td><td>12</td><td>-$302.00</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">Stop1 @ 30,868.25 (-$75.00)<br>Stop2 @ 30,868.25 (-$25.00)<br>Stop2 @ 30,868.00 (-$25.50)<br>Stop2 @ 30,868.00 (-$25.50)<br>Stop1 @ 30,868.25 (-$75.00)<br>Stop2 @ 30,868.25 (-$25.00)<br>Stop2 @ 30,868.00 (-$25.50)<br>Stop2 @ 30,868.00 (-$25.50)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>5,6,7,43,44,45</td><td>EduS_MES_Micro</td><td>MES</td><td>Long</td><td>9:52:08</td><td>9:55:45</td><td>7,589.50</td><td>7,584.50…</td><td>12</td><td>-$300.00</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">Stop1 @ 7,584.50 (-$25.00)<br>Stop1 @ 7,584.50 (-$50.00)<br>Stop2 @ 7,584.50 (-$75.00)<br>Stop1 @ 7,584.50 (-$25.00)<br>Stop1 @ 7,584.50 (-$50.00)<br>Stop2 @ 7,584.50 (-$75.00)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>8,9,16,17,46,47,53,54,1,2</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>9:56:12</td><td>9:57:19</td><td>30,870.00</td><td>30,905.75…</td><td>10</td><td>-$7,730.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_1</span></td><td style="font-size:11px">HUD_St_1 @ 30,905.75 (-$715.00)<br>HUD_St_1 @ 30,906.00 (-$720.00)<br>HUD_St_1 @ 30,417.50 (-$725.00)<br>HUD_St_1 @ 30,417.75 (-$730.00)<br>HUD_St_1 @ 30,905.75 (-$715.00)<br>HUD_St_1 @ 30,906.00 (-$720.00)<br>HUD_St_1 @ 29,769.50 (-$825.00)<br>HUD_St_1 @ 29,769.75 (-$830.00)<br>HUD_St_1 @ 29,675.00 (-$875.00)<br>HUD_St_1 @ 29,675.00 (-$875.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>10,11,19,20,48,49,5</td><td>EduS</td><td>ES</td><td>Short</td><td>10:21:42</td><td>10:24:12</td><td>7,581.00</td><td>7,572.50…</td><td>8</td><td>+$825.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_3</span></td><td style="font-size:11px">HUD_T1_3 @ 7,572.50 (+$425.00)<br>HUD_StTR_3_489293 @ 7,572.25 (+$437.50)<br>HUD_St_3 @ 7,572.25 (-$250.00)<br>HUD_St_3 @ 7,572.25 (-$250.00)<br>HUD_T1_3 @ 7,572.50 (+$425.00)<br>HUD_StTR_3_489293 @ 7,572.25 (+$437.50)<br>HUD_St_3 @ 7,481.25 (-$400.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>12,13,13,14,50,51</td><td>EduS</td><td>ES</td><td>Short</td><td>10:28:23</td><td>10:30:07</td><td>7,567.25</td><td>7,558.50…</td><td>6</td><td>+$2,312.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_4</span></td><td style="font-size:11px">HUD_T1_4 @ 7,558.50 (+$437.50)<br>HUD_T2_4 @ 7,554.25 (+$650.00)<br>HUD_T1_4 @ 7,603.25 (+$87.50)<br>HUD_StTR_4 @ 7,604.00 (+$50.00)<br>HUD_T1_4 @ 7,558.50 (+$437.50)<br>HUD_T2_4 @ 7,554.25 (+$650.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>1,2</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>10:51:20</td><td>10:59:03</td><td>30,658.00</td><td>30,576.75…</td><td>2</td><td>+$2,850.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_2</span></td><td style="font-size:11px">HUD_T1_2 @ 30,576.75 (+$1,625.00)<br>HUD_StTR_2_88879 @ 30,596.75 (+$1,225.00)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>3,15,52</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>11:01:33</td><td>11:05:58</td><td>7,612.50</td><td>7,616.50…</td><td>6</td><td>-$1,225.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_1</span></td><td style="font-size:11px">HUD_St_1 @ 7,616.50 (-$400.00)<br>HUD_St_1 @ 7,587.00 (-$375.00)<br>HUD_St_1 @ 7,428.00 (-$450.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>4,5</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>11:15:04</td><td>11:19:59</td><td>30,628.75</td><td>30,594.75…</td><td>2</td><td>+$1,095.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_3</span></td><td style="font-size:11px">HUD_T1_3 @ 30,594.75 (+$680.00)<br>HUD_StTR_3_88924 @ 30,608.00 (+$415.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>6,7,67,68</td><td>HUD_Manual</td><td>NQ</td><td>Short</td><td>12:41:06</td><td>12:47:11</td><td>30,481.00</td><td>30,513.50…</td><td>4</td><td>+$1,660.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_6</span></td><td style="font-size:11px">HUD_St_6 @ 30,513.50 (-$650.00)<br>HUD_St_6 @ 30,513.75 (-$655.00)<br>HUD_T1_6 @ 29,827.50 (+$1,700.00)<br>HUD_StTR_6_379062 @ 29,849.25 (+$1,265.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>8,9,3,4</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>12:52:57</td><td>13:08:31</td><td>7,608.75</td><td>7,607.00…</td><td>4</td><td>+$975.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_2</span></td><td style="font-size:11px">HUD_T1_2 @ 7,607.00 (+$87.50)<br>HUD_StTR_2 @ 7,607.75 (+$50.00)<br>HUD_T1_2 @ 7,480.00 (+$450.00)<br>HUD_StTR_2_490997 @ 7,481.25 (+$387.50)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>10,24</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>13:15:03</td><td>13:19:33</td><td>7,608.50</td><td>7,604.75…</td><td>4</td><td>-$800.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_3</span></td><td style="font-size:11px">HUD_St_3 @ 7,604.75 (-$375.00)<br>HUD_St_3 @ 7,555.75 (-$425.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>11,12,69,70</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>13:15:02</td><td>13:21:49</td><td>30,475.00</td><td>30,441.50…</td><td>4</td><td>+$1,205.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_7</span></td><td style="font-size:11px">HUD_St_7 @ 30,441.50 (-$670.00)<br>HUD_St_7 @ 30,441.25 (-$675.00)<br>HUD_T1_7 @ 29,814.00 (+$1,505.00)<br>HUD_StTR_7_379225 @ 29,792.75 (+$1,045.00)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>18</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>10:26:28</td><td>10:30:44</td><td>7,599.25</td><td>7,595.50</td><td>2</td><td>-$375.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_2</span></td><td style="font-size:11px">HUD_St_2</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>21,22,23</td><td>HUD_Manual</td><td>NQ</td><td>Long</td><td>9:54:09</td><td>9:54:40</td><td>30,512.00</td><td>30,471.75…</td><td>4</td><td>-$3,195.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_1</span></td><td style="font-size:11px">HUD_St_1 @ 30,471.75 (-$1,610.00)<br>SafeClose @ 30,472.50 (-$790.00)<br>SafeClose @ 30,472.25 (-$795.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>25,26</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>11:27:14</td><td>11:33:39</td><td>7,555.75</td><td>7,549.50…</td><td>2</td><td>+$537.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_5</span></td><td style="font-size:11px">HUD_T1_5 @ 7,549.50 (+$312.50)<br>HUD_StTR_5_490907 @ 7,551.25 (+$225.00)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>27</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>11:57:39</td><td>12:03:47</td><td>7,560.50</td><td>7,556.50</td><td>2</td><td>-$400.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_7</span></td><td style="font-size:11px">HUD_St_7</td><td>Sim</td></tr>
+<tr class="trade-win"><td>28,29,65</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>12:15:41</td><td>12:22:04</td><td>7,558.00</td><td>7,566.25…</td><td>4</td><td>+$287.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_8</span></td><td style="font-size:11px">HUD_T1_8 @ 7,566.25 (+$412.50)<br>HUD_StTR_8_491055 @ 7,563.00 (+$250.00)<br>HUD_St_8 @ 7,474.25 (-$375.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>30,31,66</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>12:25:49</td><td>12:39:01</td><td>7,561.25</td><td>7,568.50…</td><td>4</td><td>+$250.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_9</span></td><td style="font-size:11px">HUD_T1_9 @ 7,568.50 (+$362.50)<br>HUD_StTR_9_491090 @ 7,567.00 (+$287.50)<br>HUD_St_9 @ 7,468.25 (-$400.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>32,33</td><td>EduS_ES_2C</td><td>GC</td><td>Short</td><td>13:29:08</td><td>13:37:50</td><td>4,249.70</td><td>4,247.00…</td><td>2</td><td>+$720.00</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">Stop2 @ 4,247.00 (+$270.00)<br>Target1 @ 4,245.20 (+$450.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>34,35</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>14:08:37</td><td>15:02:56</td><td>7,565.00</td><td>7,557.75…</td><td>2</td><td>+$675.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_10</span></td><td style="font-size:11px">HUD_T1_10 @ 7,557.75 (+$362.50)<br>HUD_StTR_10_491357 @ 7,558.75 (+$312.50)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>36,37</td><td>HUD_Manual</td><td>ES</td><td>Long</td><td>15:43:29</td><td>15:50:46</td><td>7,567.25</td><td>7,573.75…</td><td>2</td><td>+$800.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_11</span></td><td style="font-size:11px">HUD_T1_11 @ 7,573.75 (+$325.00)<br>HUD_T2_11 @ 7,576.75 (+$475.00)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>38</td><td>HUD_Manual</td><td>ES</td><td>Short</td><td>16:00:28</td><td>16:01:11</td><td>7,565.50</td><td>7,568.00</td><td>2</td><td>-$250.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_12</span></td><td style="font-size:11px">HUD_St_12</td><td>Sim</td></tr>
+<tr class="trade-win"><td>55,56</td><td>EduS_AutoTrader_V2</td><td>NQ</td><td>Long</td><td>9:45:46</td><td>9:51:49</td><td>29,760.25</td><td>29,863.00…</td><td>2</td><td>+$5,090.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_2</span></td><td style="font-size:11px">HUD_T1_2 @ 29,863.00 (+$2,055.00)<br>HUD_T2_2 @ 29,912.00 (+$3,035.00)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>57</td><td>EduS</td><td>ES</td><td>Long</td><td>9:50:22</td><td>9:55:00</td><td>7,461.25</td><td>7,457.25</td><td>2</td><td>-$400.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_4</span></td><td style="font-size:11px">HUD_St_4</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>58,59</td><td>EduS_AutoTrader_V2</td><td>NQ</td><td>Long</td><td>10:04:55</td><td>10:08:00</td><td>29,977.50</td><td>29,947.00…</td><td>2</td><td>-$1,225.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_3</span></td><td style="font-size:11px">HUD_St_3 @ 29,947.00 (-$610.00)<br>HUD_St_3 @ 29,946.75 (-$615.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>60,61</td><td>EduS</td><td>ES</td><td>Long</td><td>10:03:36</td><td>10:09:58</td><td>7,473.00</td><td>7,481.50…</td><td>2</td><td>+$862.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_5</span></td><td style="font-size:11px">HUD_T1_5 @ 7,481.50 (+$425.00)<br>HUD_StTR_5_489878 @ 7,481.75 (+$437.50)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>62,63</td><td>EduS_AutoTrader_V2</td><td>NQ</td><td>Long</td><td>10:16:17</td><td>10:26:15</td><td>29,981.00</td><td>29,947.00…</td><td>2</td><td>-$1,365.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_4</span></td><td style="font-size:11px">HUD_St_4 @ 29,947.00 (-$680.00)<br>HUD_St_4 @ 29,946.75 (-$685.00)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>64</td><td>EduS</td><td>ES</td><td>Short</td><td>10:35:57</td><td>10:36:02</td><td>7,475.00</td><td>7,478.75</td><td>2</td><td>-$375.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_7</span></td><td style="font-size:11px">HUD_St_7</td><td>Sim</td></tr>
+<tr class="trade-win"><td>6,7</td><td>EduS</td><td>MES</td><td>Short</td><td>12:07:58</td><td>12:36:45</td><td>7,480.75</td><td>7,468.50…</td><td>2</td><td>+$152.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_2</span></td><td style="font-size:11px">HUD_T1_2 @ 7,468.50 (+$61.25)<br>HUD_T2_2 @ 7,462.50 (+$91.25)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>7</td><td>HUD_En_1</td><td>MES</td><td>Short</td><td>09:55:54</td><td>09:57:15</td><td>7,399.50</td><td>7,405.25</td><td>2</td><td>-$57.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_1</span></td><td style="font-size:11px">HUD_St_1</td><td>Sim</td></tr>
+<tr class="trade-win"><td>8,4,5</td><td>HUD_En_2</td><td>MES</td><td>Long</td><td>10:00:28</td><td>10:01:47</td><td>7,398.25</td><td>7,410.50…</td><td>4</td><td>+$57.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_2</span></td><td style="font-size:11px">HUD_T1_2, HUD_StTR_2_311557 @ 7,410.50 (+$122.50)<br>HUD_St_2 @ 7,374.50 (-$32.50)<br>HUD_St_2 @ 7,374.50 (-$32.50)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>9,13,14</td><td>HUD_En_1</td><td>MNQ</td><td>Short</td><td>16:04:06</td><td>16:04:07</td><td>29,644.50</td><td>29,645.50…</td><td>3</td><td>+$181.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_1</span></td><td style="font-size:11px">CloseAll @ 29,645.50 (-$2.00)<br>HUD_T1_1 @ 29,479.25 (+$74.50)<br>HUD_T2_1 @ 29,462.00 (+$109.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>1</td><td>1x (200 Profit 100 Lost)</td><td>MES</td><td>Short</td><td>8:56:54</td><td>9:00:22</td><td>7,384.00</td><td>7,380.75</td><td>1</td><td>+$16.25</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">Target1</td><td>Sim</td></tr>
+<tr class="trade-win"><td>2,3</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>9:27:40</td><td>9:29:57</td><td>29,310.00</td><td>29,356.25…</td><td>2</td><td>+$195.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_1</span></td><td style="font-size:11px">HUD_T1_1 @ 29,356.25 (+$92.50)<br>CloseAll @ 29,361.50 (+$103.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>6</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>9:30:00</td><td>9:37:43</td><td>29,361.50</td><td>29,321.75</td><td>1</td><td>+$79.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">StopCancelClose</span></td><td style="font-size:11px">Close</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>7,8</td><td>EduS</td><td>MES</td><td>Short</td><td>9:40:21</td><td>9:43:22</td><td>7,375.75</td><td>7,382.75…</td><td>2</td><td>-$70.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_4</span></td><td style="font-size:11px">HUD_St_4 @ 7,382.75 (-$35.00)<br>HUD_St_4 @ 7,382.75 (-$35.00)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>9,10</td><td>EduS</td><td>MES</td><td>Long</td><td>9:43:55</td><td>9:45:10</td><td>7,382.75</td><td>7,375.75…</td><td>2</td><td>-$70.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_5</span></td><td style="font-size:11px">HUD_St_5 @ 7,375.75 (-$35.00)<br>HUD_St_5 @ 7,375.75 (-$35.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>11,12</td><td>EduS</td><td>MES</td><td>Long</td><td>9:58:27</td><td>10:00:19</td><td>7,399.75</td><td>7,412.75…</td><td>2</td><td>+$102.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_9</span></td><td style="font-size:11px">HUD_T1_9 @ 7,412.75 (+$65.00)<br>HUD_StTR_9_312031 @ 7,407.25 (+$37.50)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>15,16,33,34</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:40:45</td><td>10:41:17</td><td>29,476.50</td><td>29,490.50…</td><td>4</td><td>+$63.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_2</span></td><td style="font-size:11px">HUD_St_2 @ 29,490.50 (-$28.00)<br>HUD_St_2 @ 29,490.50 (-$28.00)<br>HUD_T1_2 @ 29,520.00 (+$72.50)<br>HUD_StTR_2_213038 @ 29,533.00 (+$46.50)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>17,18</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:42:47</td><td>10:43:08</td><td>29,539.00</td><td>29,522.25…</td><td>2</td><td>-$67.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_3</span></td><td style="font-size:11px">HUD_St_3 @ 29,522.25 (-$33.50)<br>HUD_St_3 @ 29,522.25 (-$33.50)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>19,20,37</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:43:56</td><td>10:46:20</td><td>29,508.00</td><td>29,525.50…</td><td>4</td><td>-$154.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_4</span></td><td style="font-size:11px">HUD_St_4 @ 29,525.50 (-$35.00)<br>HUD_St_4 @ 29,525.75 (-$35.50)<br>HUD_St_4 @ 29,556.25 (-$84.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>21,22</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:47:38</td><td>10:49:21</td><td>29,517.75</td><td>29,564.75…</td><td>2</td><td>+$161.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_5</span></td><td style="font-size:11px">HUD_T1_5 @ 29,564.75 (+$94.00)<br>HUD_StTR_5_211877 @ 29,551.50 (+$67.50)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>23,24</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:53:30</td><td>10:57:02</td><td>29,511.00</td><td>29,531.50…</td><td>2</td><td>-$82.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_7</span></td><td style="font-size:11px">HUD_St_7 @ 29,531.50 (-$41.00)<br>HUD_St_7 @ 29,531.75 (-$41.50)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>25,26</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:59:27</td><td>10:59:51</td><td>29,523.75</td><td>29,501.50…</td><td>2</td><td>-$89.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_8</span></td><td style="font-size:11px">HUD_St_8 @ 29,501.50 (-$44.50)<br>HUD_St_8 @ 29,501.50 (-$44.50)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>27,28</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>11:00:31</td><td>11:05:25</td><td>29,521.75</td><td>29,498.50…</td><td>2</td><td>-$93.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_9</span></td><td style="font-size:11px">HUD_St_9 @ 29,498.50 (-$46.50)<br>HUD_St_9 @ 29,498.50 (-$46.50)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>29,30</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>11:09:03</td><td>11:09:23</td><td>29,496.25</td><td>29,516.25…</td><td>2</td><td>-$80.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_11</span></td><td style="font-size:11px">HUD_St_11 @ 29,516.25 (-$40.00)<br>HUD_St_11 @ 29,516.25 (-$40.00)</td><td>Sim</td></tr>
+<tr class="trade-win"><td>31,32</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>11:14:03</td><td>11:15:27</td><td>29,453.00</td><td>29,415.75…</td><td>2</td><td>+$134.50</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_13</span></td><td style="font-size:11px">HUD_T1_13 @ 29,415.75 (+$74.50)<br>HUD_StTR_13_212218 @ 29,423.00 (+$60.00)</td><td>Sim</td></tr>
+<tr class="trade-loss"><td>35,36</td><td>EduS_AutoTrader_V2</td><td>MNQ</td><td>Short</td><td>12:19:03</td><td>12:20:01</td><td>29,545.75</td><td>29,562.75…</td><td>2</td><td>-$68.00</td><td><span class="zone-badge" style="color:var(--text-muted);border-color:var(--border2)" title="Nombre NT8">HUD_En_3</span></td><td style="font-size:11px">HUD_St_3 @ 29,562.75 (-$34.00)<br>HUD_St_3 @ 29,562.75 (-$34.00)</td><td>Sim</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-title" style="margin-top:20px">Trades Cuenta Fondeada / Live (agrupados por señal)</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Estrategia</th><th>Inst</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>P&L</th><th>Señal Espejo</th><th>Salidas</th><th>Cuenta</th></tr></thead>
+      <tbody>
+      <tr class="trade-win"><td>14,15,71,72</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:02:58</td><td>10:04:00</td><td>30,925.25</td><td>30,933.00…</td><td>12</td><td>+$130.20</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 30,933.00 (+$40.80)<br>— @ 30,930.25 (+$24.30)<br>— @ 30,933.00 (+$40.80)<br>— @ 30,930.25 (+$24.30)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>16,17,73,74</td><td>HUD_Manual</td><td>MES</td><td>Short</td><td>10:28:33</td><td>10:29:10</td><td>7,567.25</td><td>7,562.25…</td><td>12</td><td>+$502.20</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 7,562.25 (+$69.30)<br>— @ 7,554.75 (+$181.80)<br>— @ 7,562.25 (+$69.30)<br>— @ 7,554.75 (+$181.80)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>18,19,75,76</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:50:03</td><td>10:50:15</td><td>30,640.00</td><td>30,653.00…</td><td>12</td><td>-$334.80</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 30,653.00 (-$83.70)<br>— @ 30,653.00 (-$83.70)<br>— @ 30,653.00 (-$83.70)<br>— @ 30,653.00 (-$83.70)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>20,21,22,77,78,79</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:52:27</td><td>10:52:44</td><td>30,644.75</td><td>30,632.25…</td><td>12</td><td>+$637.20</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 30,632.25 (+$69.30)<br>— @ 30,602.25 (+$83.10)<br>— @ 30,602.25 (+$166.20)<br>— @ 30,632.25 (+$69.30)<br>— @ 30,602.25 (+$83.10)<br>— @ 30,602.25 (+$166.20)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>80,81</td><td>HUD_Manual</td><td>MES</td><td>Long</td><td>9:54:52</td><td>9:57:09</td><td>7,459.00</td><td>7,460.75…</td><td>6</td><td>+$63.60</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 7,460.75 (+$20.55)<br>— @ 7,462.25 (+$43.05)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>82,83</td><td>HUD_Manual</td><td>MES</td><td>Long</td><td>10:08:08</td><td>10:09:11</td><td>7,470.75</td><td>7,474.25…</td><td>6</td><td>+$146.10</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 7,474.25 (+$46.80)<br>— @ 7,477.75 (+$99.30)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>84,85</td><td>HUD_Manual</td><td>MES</td><td>Long</td><td>10:45:30</td><td>10:47:45</td><td>7,466.25</td><td>7,461.25…</td><td>6</td><td>-$161.40</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 7,461.25 (-$80.70)<br>— @ 7,461.25 (-$80.70)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>86,87</td><td>HUD_Manual</td><td>MES</td><td>Short</td><td>11:00:44</td><td>11:02:29</td><td>7,466.25</td><td>7,461.25…</td><td>6</td><td>+$183.60</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 7,461.25 (+$69.30)<br>— @ 7,458.25 (+$114.30)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>88,89</td><td>HUD_Manual</td><td>MES</td><td>Long</td><td>11:55:30</td><td>11:57:29</td><td>7,449.25</td><td>7,451.75…</td><td>6</td><td>+$71.10</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 7,451.75 (+$31.80)<br>— @ 7,452.25 (+$39.30)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>8,9</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:06:43</td><td>10:06:51</td><td>29,678.00</td><td>29,665.00…</td><td>6</td><td>-$167.40</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 29,665.00 (-$83.70)<br>— @ 29,665.00 (-$83.70)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>10,11</td><td>HUD_Manual</td><td>MES</td><td>Short</td><td>10:20:54</td><td>10:21:36</td><td>7,441.25</td><td>7,446.50…</td><td>6</td><td>-$168.90</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 7,446.50 (-$84.45)<br>— @ 7,446.50 (-$84.45)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>12,13</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:27:48</td><td>10:28:16</td><td>29,714.25</td><td>29,728.75…</td><td>6</td><td>-$185.40</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 29,728.75 (-$92.70)<br>— @ 29,728.75 (-$92.70)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>14,15</td><td>HUD_Manual</td><td>MES</td><td>Long</td><td>11:04:41</td><td>11:08:39</td><td>7,488.75</td><td>7,483.75…</td><td>6</td><td>-$161.40</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 7,483.75 (-$80.70)<br>— @ 7,483.75 (-$80.70)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>16,17</td><td>HUD_Manual</td><td>MES</td><td>Long</td><td>11:46:35</td><td>11:49:35</td><td>7,476.25</td><td>7,480.50…</td><td>6</td><td>+$206.10</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 7,480.50 (+$58.05)<br>— @ 7,486.50 (+$148.05)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>18,19</td><td>HUD_Manual</td><td>MES</td><td>Long</td><td>12:18:21</td><td>12:19:15</td><td>7,478.50</td><td>7,479.25…</td><td>6</td><td>+$11.10</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 7,479.25 (+$5.55)<br>— @ 7,479.25 (+$5.55)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>1</td><td>Entry</td><td>MES</td><td>Short</td><td>09:57:17</td><td>10:00:05</td><td>7,403.00</td><td>7,399.00</td><td>6</td><td>+$120.00</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">Target1, Stop2</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>2,3,4,5,6</td><td>Entry</td><td>MES</td><td>Long</td><td>10:12:23</td><td>10:13:22</td><td>7,446.00</td><td>7,441.00…</td><td>30</td><td>-$101.25</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">Stop2, Stop1 @ 7,441.00 (-$150.00)<br>Stop2, Stop1 @ 7,430.75 (-$150.00)<br>Stop2, Stop1 @ 7,446.75 (-$150.00)<br>Target1, Target2, Target2 @ 7,461.62 (+$311.25)<br>Target1, Stop2 @ 7,457.50 (+$37.50)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>38,39</td><td>HUD_Manual</td><td>MES</td><td>Long</td><td>9:45:06</td><td>9:45:48</td><td>7,377.75</td><td>7,372.75…</td><td>6</td><td>-$161.40</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 7,372.75 (-$80.70)<br>— @ 7,372.75 (-$80.70)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>40,41</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:22:24</td><td>10:22:28</td><td>29,618.25</td><td>29,605.25…</td><td>5</td><td>-$139.50</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 29,605.25 (-$83.70)<br>— @ 29,605.25 (-$55.80)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>42</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:22:25</td><td>10:22:28</td><td>29,618.25</td><td>29,605.25</td><td>1</td><td>-$27.90</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>43,44</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:33:47</td><td>10:33:53</td><td>29,567.75</td><td>29,580.25…</td><td>6</td><td>-$161.40</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 29,580.25 (-$80.70)<br>— @ 29,580.25 (-$80.70)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>45,46</td><td>HUD_Manual</td><td>MES</td><td>Long</td><td>10:35:22</td><td>10:36:26</td><td>7,425.00</td><td>7,420.00…</td><td>6</td><td>-$161.40</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 7,420.00 (-$80.70)<br>— @ 7,420.00 (-$80.70)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>47,48</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:38:18</td><td>10:38:35</td><td>29,523.25</td><td>29,510.75…</td><td>6</td><td>+$383.10</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 29,510.75 (+$69.30)<br>— @ 29,470.00 (+$313.80)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>49,50</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:41:05</td><td>10:41:07</td><td>29,474.25</td><td>29,487.25…</td><td>6</td><td>-$167.40</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 29,487.25 (-$83.70)<br>— @ 29,487.25 (-$83.70)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-loss"><td>51,52</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:43:23</td><td>10:43:23</td><td>29,519.25</td><td>29,506.75…</td><td>6</td><td>-$161.40</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 29,506.75 (-$80.70)<br>— @ 29,506.75 (-$80.70)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>53,54</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:46:17</td><td>10:46:52</td><td>29,524.25</td><td>29,511.75…</td><td>6</td><td>+$51.60</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 29,511.75 (+$69.30)<br>— @ 29,526.25 (-$17.70)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>55,56,57</td><td>HUD_Manual</td><td>MNQ</td><td>Long</td><td>10:48:15</td><td>10:48:28</td><td>29,511.50</td><td>29,524.00…</td><td>6</td><td>+$251.10</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 29,524.00 (+$69.30)<br>— @ 29,542.75 (+$121.20)<br>— @ 29,542.75 (+$60.60)</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>58,59</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>12:20:43</td><td>12:20:45</td><td>29,567.50</td><td>29,555.00…</td><td>6</td><td>+$267.60</td><td><span class="zone-badge manual">Manual</span></td><td style="font-size:11px">— @ 29,555.00 (+$69.30)<br>— @ 29,533.50 (+$198.30)</td><td>Cuenta Fondeada</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title"><span class="step">CONTEXTO</span><h2>Contexto de Indicadores por Entry</h2></div>
+<div class="card">
+  
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">NQ SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>30,870.00</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 30,865.48</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.4875</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.7656</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">129.13</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">18.05</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-5.04</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">17.60</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">30,854.75</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">30,861.03</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">ES SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,581.00</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 7,580.40</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.025</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.1531</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">13.48</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">1.98</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.69</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-7.84</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,583.25</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,584.45</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">ES SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,567.25</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 7,571.94</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.3375</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.3094</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">13.45</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">1.98</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-2.00</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-9.62</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,572.75</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,573.04</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">ES SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>7,423.50</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 7,423.02</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.1875</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.05</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">16.99</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">2.34</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.94</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-1.84</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,425.75</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">7,424.15</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">NQ SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>29,728.25</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 29,719.83</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-2.0625</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.6219</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">153.64</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">22.84</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">13.59</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">16.86</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,708.25</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,720.80</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">NQ SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>29,728.25</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 29,719.83</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-2.0625</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.6219</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">153.64</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">22.84</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">13.59</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">16.86</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,708.25</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,720.80</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">NQ SEP26</span>
+        <span style="font-size:12px;color:#27ae60;font-weight:600;">🟢 Long</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>29,760.25</strong> &nbsp;|&nbsp; VWAP 🟢 UP @ 29,767.12</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.3375</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.2344</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">163.96</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">24.71</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-7.80</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">10.78</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,765.75</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,758.88</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">NQ SEP26</span>
+        <span style="font-size:12px;color:#27ae60;font-weight:600;">🟢 Long</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>29,760.25</strong> &nbsp;|&nbsp; VWAP 🟢 UP @ 29,767.12</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.3375</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.2344</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">163.96</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">24.71</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-7.80</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">10.78</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,765.75</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,758.88</div>
+        </div>
+      </div>
+    </div>
+  <p style="margin-top:12px;font-size:11px;color:var(--text-muted);text-align:center">Mostrando 8 de 106 entradas registradas</p>
+</div>
+  
+</div>
+
+<!-- ══════════════════════ SECCIÓN 5 — SEÑALES ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="senales" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">5</span>Señales del Indicador vs Ejecución</div>
+  <h2>Análisis Comparativo — Señales HUD vs Trades</h2>
+  <p class="sub">Verificación de zonas (A, M1, etc.), señales ejecutadas, ignoradas y trades fuera de señal</p>
+  <div class="section-title"><span class="step">SEÑALES</span><h2>Señales HUD V5 — Correlación con Ejecuciones</h2></div>
+<div class="card">
+  
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #279995;">
+        <div style="font-size:24px;font-weight:700;color:#279995;">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Señales emitidas</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #27ae60;">
+        <div style="font-size:24px;font-weight:700;color:#27ae60;">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ejecutadas <span style="color:#27ae60;font-weight:600;">(0%)</span></div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #e67e22;">
+        <div style="font-size:24px;font-weight:700;color:#e67e22;">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ignoradas</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #c0392b;">
+        <div style="font-size:24px;font-weight:700;color:#c0392b;">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Fuera de señal</div>
+      </div>
+    </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+    <div>
+      <h3 style="font-size:13px;color:var(--text-muted);margin:0 0 10px">⚠️ Señales ignoradas que ganaron</h3>
+      <p style='color:var(--text-muted);font-size:12px;margin:0'>No hubo señales ganadoras ignoradas — buena ejecución.</p>
+    </div>
+    <div>
+      <h3 style="font-size:13px;color:var(--text-muted);margin:0 0 10px">🚫 Trades ejecutados sin señal activa</h3>
+      <p style='color:var(--text-muted);font-size:12px;margin:0'>Todos los trades ejecutados correspondían a señales activas.</p>
+    </div>
+  </div>
+  <div class="ai-insight" style="margin-top:12px;">
+    <div class="ai-label">📊 Análisis de Disciplina</div>
+    <p style="margin:6px 0;">Disciplina de SEÑAL baja toda la semana: decenas de miles de señales HUD con ejecución casi nula; la operativa fue mayormente discrecional/manual. La disciplina de TAMAÑO mejoró de forma notable hacia el final (de FULL en súper-extrema el miércoles a 100% MICRO el viernes).</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Patrón:</strong> Patrón semanal: los grandes ganadores vinieron de seguir el sesgo con contexto OK + runners (AutoTrader), y las grandes pérdidas de operar FULL discrecional en la apertura súper-extrema. Hay sobre-trading en chop y en aperturas, y abandono de ventanas de tarde con señales válidas.</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Impacto:</strong> El edge real fue +0.73R/trade (muy por encima del +0.33R esperado), así que el sistema funciona. Si se hubiera forzado MICRO toda la semana (las 5-6 pérdidas FULL de -$700 a -$1,610 reducidas ~90%) y capturado parte de las señales de tarde/jueves ignoradas, la semana habría sido ampliamente superior a +$3,279, con una fracción del DD.</p>
+  </div>
+</div>
+  
+</div>
+
+<!-- ══════════════════════ SECCIÓN 6 — DIAGNÓSTICO ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="diagnostico" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">6</span>Diagnóstico de la Sesión</div>
+  <h2>Análisis General y Conclusiones</h2>
+  <p class="sub">Evaluación cualitativa de la sesión, patrones identificados y aprendizajes</p>
+  <div class="section-title"><span class="step">ANALISIS</span><h2>Análisis General de la Sesión</h2></div>
+<div class="ai-insight">
+  <div class="ai-label">🤖 Análisis de IA</div>
+  <p>Semana del 22 al 26 de junio cerrada en VERDE: 198 trades, 92W/106L (WR 46%), PnL +$3,279 (PF 1.13) con un edge fuerte (+0.73R/trade vs +0.33R de benchmark). Mercado dominado por un risk-off tecnológico de alta volatilidad (de-escalada Irán → caída del crudo → éxodo de talento en Google → crash de chips → blowout de Micron → peor día de Apple + PCE 4.1%). El motor fue EduS_AutoTrader_V2 (+$6,327 en 17 trades), mientras HUD_Manual restó (-$4,126) por stops FULL grandes. Separado por cuenta: Sim +$2,516 (130 trades) pero con DD intradía de $9,152 que habría QUEMADO una fondeada; Cuenta Fondeada +$764 (68 trades) con DD máx $1,099 (55% del límite $2,000) — SOBREVIVIÓ y avanzó hacia el objetivo de $3,000.</p>
+</div><div class="card" style="background:var(--header-gradient);color:white;border:none;">
+  <p style="font-size:14px;line-height:1.7;text-align:center;font-style:italic;">"Semana ganadora (+$3,279, PF 1.13) y, sobre todo, semana de aprendizaje: el sistema tiene edge real (+0.73R/trade) y la cuenta fondeada cerró en positivo (+$764) sobreviviendo con DD 55%. La lección está clara y es barata de aplicar: el tamaño manda. Los pocos trades FULL en NQ súper-extrema casi tuercen una gran semana; el viernes ya operamos 100% MICRO. La próxima semana: MICRO sin excepciones, menos trades de mayor calidad, y empezar a ejecutar las señales A+ de V6. Vamos firmes hacia el objetivo de $3,000."</p>
+</div><div class="section-title"><span class="step">SEMANAL</span><h2>Análisis Semanal</h2></div>
+<div class="card">
+  <div class="ai-insight">
+    <div class="ai-label">Resumen Semanal</div>
+    <p>Semana de máxima volatilidad y narrativa cambiante en torno a la IA. Lunes: de-escalada EE.UU.-Irán hunde el crudo (-7.4%) y el oro. Martes: GOOGL -7% por la fuga de investigadores de IA, tech selloff; fue el mejor día (+$4,072) gracias al AutoTrader (+$6,360 con un +$3,035 en NQ). Miércoles: crash de semiconductores (MU -10.25%, QCOM, ARM) y oro en capitulación; peor día (-$1,626) por 2 NQ FULL en súper-extrema (-$1,750). Jueves: Micron aplasta expectativas (ciclo de IA acelerándose) pero la sesión quedó en blanco ($0, sin operativa). Viernes: peor día de Apple + PCE caliente (4.1%, máximo desde 2023), NQ -4%; día plano (+$70) pero por primera vez 100% MICRO.</p>
+  </div>
+  <div class="info-box"><h3>📊 Comparativa Diaria</h3><p>Lun 22: +$681 · VIX 17.1 (Baja) · de-escalada Irán/CL -7.4%. | Mar 23: +$4,072 (MEJOR) · VIX ~20 (Media) · GOOGL -7%/AutoTrader +$6,360. | Mié 24: -$1,626 (PEOR) · VIX 18.8 · crash chips/NQ ATR 22.84 súper-extrema, 2 NQ FULL -$1,750. | Jue 25: $0 · VIX 17.9→~20.6 · Micron blowout, sin operativa (AutoTrader inactivo). | Vie 26: +$70 · VIX 20.2 (Media) · Apple peor día/PCE 4.1%, 100% MICRO.</p></div>
+  <div class="info-box" style="margin-top:10px"><h3>🎯 Conclusión Semanal</h3><p>La semana demostró que el SISTEMA tiene edge real (+0.73R/trade, PF 1.13, +$3,279) pero que el resultado lo determina la GESTIÓN DE TAMAÑO. Los 74 trades FULL casi arruinan una semana ganadora (Sim DD $9,152). La curva de aprendizaje fue visible: de promediar FULL en súper-extrema (miércoles) a operar 100% MICRO el viernes, protegiendo la cuenta fondeada (DD 55%, +$764). El siguiente nivel es disciplina de SELECCIÓN: menos trades, contexto OK y ejecutar las señales A+ ahora que V6 ya entrega precios correctos.</p></div>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 7 — ESTRATEGIAS ══════════════════════ -->
+<div id="estrategias-section" style="display:block">
+  <div class="sub-title">Resultados por Estrategia</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>Estrategia</th><th>Trades</th><th>W</th><th>L</th><th>Flat</th><th>WR</th><th>P&L</th></tr></thead>
+      <tbody><tr><td>EduS_AutoTrader_V2</td><td>17</td><td>8</td><td>9</td><td>0</td><td>47.1%</td><td class="positive">+$6,327.00</td></tr>
+<tr><td>EduS</td><td>21</td><td>10</td><td>11</td><td>0</td><td>47.6%</td><td class="positive">+$862.50</td></tr>
+<tr><td>EduS_ES_2C</td><td>2</td><td>2</td><td>0</td><td>0</td><td>100.0%</td><td class="positive">+$720.00</td></tr>
+<tr><td>HUD_En_2</td><td>1</td><td>1</td><td>0</td><td>0</td><td>100.0%</td><td class="positive">+$122.50</td></tr>
+<tr><td>Entry</td><td>6</td><td>3</td><td>3</td><td>0</td><td>50.0%</td><td class="positive">+$18.75</td></tr>
+<tr><td>1x (200 Profit 100 Lost)</td><td>1</td><td>1</td><td>0</td><td>0</td><td>100.0%</td><td class="positive">+$16.25</td></tr>
+<tr><td>HUD_En_1</td><td>2</td><td>0</td><td>2</td><td>0</td><td>0.0%</td><td class="negative">-$59.50</td></tr>
+<tr><td>EduS_MES_Micro</td><td>6</td><td>0</td><td>6</td><td>0</td><td>0.0%</td><td class="negative">-$300.00</td></tr>
+<tr><td>EduS_MNQ_Micro</td><td>8</td><td>0</td><td>8</td><td>0</td><td>0.0%</td><td class="negative">-$302.00</td></tr>
+<tr><td>HUD_Manual</td><td>134</td><td>67</td><td>67</td><td>0</td><td>50.0%</td><td class="negative">-$4,126.10</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 8 — FONDEO ══════════════════════ -->
+<div id="fondeo-section" style="display:0">
+<div class="section-divider"></div>
+  <div class="section-label"><span class="num">8</span>Cuenta Fondeada</div>
+  <h2>Evaluación de la Cuenta Fondeada</h2>
+  <div class="kpi-grid" style="margin-bottom:14px">
+    <div class="kpi"><div class="kpi-label">Balance</div><div class="kpi-value" style="color:var(--teal)">—</div></div>
+    <div class="kpi"><div class="kpi-label">Drawdown</div><div class="kpi-value neg">— (—)</div></div>
+    <div class="kpi"><div class="kpi-label">Días Restantes</div><div class="kpi-value">—</div></div>
+    <div class="kpi"><div class="kpi-label">Objetivo</div><div class="kpi-value" style="color:var(--gold)">—</div></div>
+  </div>
+  <div class="ai-insight"><div class="ai-label">Evaluación</div><p>No disponible.</p></div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 9 — DOFA ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="dofa" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">9</span>Matriz DOFA</div>
+  <h2>Análisis DOFA — 22-26 JUN 2026</h2>
+  <p class="sub">Fortalezas · Debilidades · Oportunidades · Amenazas del período analizado</p>
+  <div class="sub-title" style="margin-top:16px">DOFA — Sim/Demo</div>
+<div class="dofa-grid">
+  <div class="dofa-card F"><div class="dofa-title F">✅ Fortalezas</div><div class="dofa-item">Edge fuerte: +0.73R/trade, PF 1.13, +$2,516 en la semana.</div><div class="dofa-item">AutoTrader V2 captura grandes movimientos con runners a T2 (+$3,035, +$2,055).</div><div class="dofa-item">Dirección/zonas correctas siguiendo el sesgo bajista.</div></div>
+  <div class="dofa-card D"><div class="dofa-title D">⚠️ Debilidades</div><div class="dofa-item">74 trades FULL: DD intradía de $9,152 (habría quemado una fondeada).</div><div class="dofa-item">Sobre-trading en chop y aperturas; promediar 2º lote en pérdida.</div><div class="dofa-item">0 señales HUD ejecutadas formalmente (todo discrecional).</div></div>
+  <div class="dofa-card O"><div class="dofa-title O">🔵 Oportunidades</div><div class="dofa-item">Convertir todo a MICRO replicaría el upside del AutoTrader sin riesgo de ruina.</div><div class="dofa-item">Ejecutar señales A+ ahora que V6 entrega precios correctos.</div><div class="dofa-item">Capturar las ventanas de tarde ignoradas.</div></div>
+  <div class="dofa-card A"><div class="dofa-title A">🔴 Amenazas</div><div class="dofa-item">La microvolatilidad súper-extrema de NQ es letal en FULL.</div><div class="dofa-item">El sobre-trading erosiona el edge en días de chop.</div></div>
+</div><div class="sub-title" style="margin-top:16px">DOFA — Cuenta Fondeada</div>
+<div class="dofa-grid">
+  <div class="dofa-card F"><div class="dofa-title F">✅ Fortalezas</div><div class="dofa-item">Semana POSITIVA: +$764 con DD máx $1,099 (55%), sobrevivió.</div><div class="dofa-item">Evolución a 100% MICRO el viernes; protección del capital.</div><div class="dofa-item">Mejores trades fondeados en MICRO alineados al sesgo (+$383, +$313, +$267, +$251).</div></div>
+  <div class="dofa-card D"><div class="dofa-title D">⚠️ Debilidades</div><div class="dofa-item">Rachas de stops sin señal en chop (miércoles/viernes).</div><div class="dofa-item">Reentradas impulsivas tras ganadores.</div><div class="dofa-item">0 trades con señal HUD activa (todo manual).</div></div>
+  <div class="dofa-card O"><div class="dofa-title O">🔵 Oportunidades</div><div class="dofa-item">Avanzar al objetivo de $3,000 (resta ~$2,236) con MICRO + contexto OK.</div><div class="dofa-item">Cooldown tras cada cierre para evitar reentradas.</div><div class="dofa-item">Disciplina de presencia en las ventanas de edge.</div></div>
+  <div class="dofa-card A"><div class="dofa-title A">🔴 Amenazas</div><div class="dofa-item">Un solo bloque FULL en NQ súper-extrema puede borrar el progreso semanal.</div><div class="dofa-item">El bug de captura de contexto (ATR=0) en micros dificulta validar entradas.</div></div>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 10 — REGLAS ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="reglas" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">10</span>Reglas Post-Mercado</div>
+  <h2>Recomendaciones y Reglas a Seguir</h2>
+  <p class="sub">Reglas críticas, ajustes de calidad y mejoras para las próximas sesiones</p>
+  <div class="section-title"><span class="step">RECOMENDACIONES</span><h2>Recomendaciones Finales</h2></div>
+<div class="sub-title" style="margin-top:16px">Recomendaciones — Sim/Demo</div><div class="rec-card"><h3>🔴 Regla Crítica Sim — MICRO en NQ Extrema/SuperExtrema y nada de 2º lote en pérdida</h3><ul><li>Cero FULL en NQ cuando ATR > 18; usar set 6 micros (3@1R + 3@5R).</li><li>Prohibido abrir un 2º lote FULL si el primero está en pérdida (costó -$1,305 a -$3,195 en bloques).</li><li>No operar el primer minuto de la apertura en súper-extrema; esperar rango.</li></ul></div><div class="rec-card"><h3>🟡 Regla de Calidad Sim — Seguir señales A+ y contexto OK</h3><ul><li>Empezar a EJECUTAR señales A+/LR+/20+ (V6 ya entrega precios correctos).</li><li>Operar solo con VWAP+SMA alineados; los trades de contexto OK fueron los rentables.</li></ul></div><div class="sub-title" style="margin-top:16px">Recomendaciones — Cuenta Fondeada</div><div class="rec-card"><h3>🔴 Regla Crítica Fondeada — 100% MICRO y cooldown tras cada cierre</h3><ul><li>Mantener el set MICRO (6 contratos 3@1R + 3@5R); fue clave para sobrevivir (DD 55%).</li><li>Cooldown obligatorio tras ganador/perdedor; no reentrar en segundos.</li><li>Cortar el día tras 3 stops encadenados para proteger el avance hacia $3,000.</li></ul></div><div class="rec-card"><h3>🟡 Regla de Calidad Fondeada — Presencia y selección</h3><ul><li>Estar operativo en las ventanas de edge (UsaAm 10:00-11:30, UsaPm 13:30-16:00).</li><li>Entrar solo con sesgo + contexto OK; los mejores fondeados lo tenían.</li></ul></div><div class="sub-title" style="margin-top:16px">Recomendaciones — Generales</div><div class="rec-card"><h3>🟢 Mejora general para la próxima semana</h3><ul><li>Hábito #1: tamaño primero — MICRO por defecto, FULL solo en régimen Baja/Media fuera de la cuenta fondeada.</li><li>Hábito #2: menos trades, mayor calidad — filtrar por contexto OK y zonas A+/LR+/20+.</li><li>Hábito #3: ejecutar el sistema — checklist de AutoTrader activo y empezar a tomar señales A+ de V6.</li></ul></div>
+
+<div class="section-title"><span class="step">INCIDENCIAS</span><h2>Bugs y Diagnóstico</h2></div>
+<div class="card">
+  
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ Captura de contexto en 0.00 (ATR/SMA) en micros (MNQ/MES) <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">Múltiples fills de micros registran ATR=0.00 y SMA=None, marcando contexto MIXTO por defecto e impidiendo validar la entrada.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Corregir el indicador de captura para micros en NinjaTrader; debe heredar el contexto del full equivalente.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#279995;background:#fef3e2">
+      <h4 style="color:#279995;font-size:13px;margin-bottom:6px;">⚠️ Escala de precios en señales — CORREGIDA en HUD V6 <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[BAJA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">El desfase de escala que afectó a V5 (ES ~5,800 vs ~7,500 real) quedó resuelto en V6: los precios de señal ya coinciden con el mercado (jueves/viernes).</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Incidencia cerrada; mantener V6 y confirmar estabilidad.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#f39c12;background:#fef3e2">
+      <h4 style="color:#f39c12;font-size:13px;margin-bottom:6px;">⚠️ Inactividad del AutoTrader / ejecución fallida (jueves en blanco) <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[MEDIA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">El jueves no se ejecutó ninguna señal y los trades quedaron flat ($0) pese a señales A+ ganadoras; sizing atípico (qty 42) en un registro.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Checklist pre-apertura del AutoTrader (activo, instrumentos, limit fills) y bloqueo de cantidades fuera del set estándar.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#f39c12;background:#fef3e2">
+      <h4 style="color:#f39c12;font-size:13px;margin-bottom:6px;">⚠️ Falta de escenario para ATR de NQ > 18 <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[MEDIA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">El ATR de NQ desbordó el techo 'Extrema' (18) varias veces (22.84, 24.71). Se incorporó 'SuperExtrema' a media semana.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Mantener 'SuperExtrema' (ATR>18) con MICRO forzado y validar sus parámetros de stop/RR.</p>
+    </div>
+</div>
+  <div class="info-box" style="text-align:center;color:var(--text-muted)">No hay plan de mejoras registrado para esta sesión.</div><div class="discrepancy-box" style="margin-top:12px"><p style="font-size:12px">💡 Para generar un plan de mejoras, incluye la sección <code>"plan_mejoras"</code> en el análisis JSON de la IA.</p></div>
+</div>
+
+<!-- ══════════════════════ PLAN DE MEJORAS ══════════════════════ -->
+<div id="multi-account-section" style="display:1">
+<div class="section-divider"></div>
+  <div class="section-label"><span class="num">*</span>Comparativa por Cuenta</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>Cuenta</th><th>Trades</th><th>W</th><th>L</th><th>WR</th><th>P&L</th><th>Puntos por Mercado</th></tr></thead>
+      <tbody><tr><td>Cuenta Fondeada</td><td>68</td><td>37</td><td>31</td><td>54%</td><td class='positive'>+$763.65</td><td>+187.8 ptos MNQ · +77.6 ptos MES</td></tr><tr><td>Sim</td><td>130</td><td>55</td><td>75</td><td>42%</td><td class='positive'>+$2,515.75</td><td>-80.8 ptos NQ · +74.0 ptos ES · -60.2 ptos MNQ · -33.8 ptos MES · +7.2 ptos GC</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════ YOUTUBE ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="video" style="scroll-margin-top:52px">
+  <div class="yt-block">
+    <div class="yt-icon">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </div>
+    <div class="yt-text">
+      <div class="yt-title">Operativa en vivo — Canal EduS Trader</div>
+      <div class="yt-sub">YouTube · Sesiones diarias · Análisis y ejecución en tiempo real &middot; 22-26 JUN 2026</div>
+    </div>
+    <a class="yt-btn" href="https://www.youtube.com/@EduSTrader" target="_blank" rel="noopener noreferrer">Ver en YouTube →</a>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<footer>
+  <a href="javascript:history.back()" class="nav-back">← Volver</a> &middot;
+  <span class="brand-ft">Edu<span class="gold">S</span> Trader</span> &middot;
+  CIERRE SEMANAL &middot; 22-26 JUN 2026 &middot; Fuente: NinjaTrader 8
+</footer>
+
+</body>
+</html>
