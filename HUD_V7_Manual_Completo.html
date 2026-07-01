@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — Manual Completo HUD V7</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #142d37; --navy-dark: #0d1f26; --teal: #279995; --gold: #b38665; --gold-light: #d4a982;
+    --bg: #f2f0eb; --surface: #ffffff; --surface2: #f8f6f0; --border: #e0dbd0;
+    --text: #1a1814; --text-muted: #7a7468;
+    --bull: #279995; --bull-bg: #e6f5f4; --bear: #c0392b; --bear-bg: #fdf0ee;
+    --warn-bg: #fff8e1; --warn-border: #f0c040;
+    --purple: #8e44ad; --purple-bg: #f6effb;
+    --shadow: 0 2px 20px rgba(13,31,38,0.10); --radius: 10px;
+    --header-gradient: linear-gradient(135deg, #0d1f26 0%, #034649 100%);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.7; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--header-gradient); color: white; padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .header-left .logo-img { height: 52px; width: auto; display: block; }
+  .header-left .brand-name { font-family: 'DM Sans', sans-serif; font-size: 26px; font-weight: 700; color: white; line-height: 1; }
+  .header-left .brand-name .gold { color: var(--gold); }
+  .header-left .brand-sub { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--gold-light); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+  .header-right { text-align: right; display: flex; align-items: center; gap: 10px; }
+  .header-right .version { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); font-weight: 700; }
+
+  /* ── LAYOUT ── */
+  .layout { display: flex; max-width: 1400px; margin: 0 auto; width: 100%; flex: 1; }
+  .sidebar {
+    width: 280px; min-width: 280px; background: var(--surface); border-right: 1px solid var(--border);
+    height: calc(100vh - 80px); position: sticky; top: 80px; overflow-y: auto; padding: 16px 0;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .sidebar .toc-h2 { display: block; padding: 7px 20px 7px 16px; font-weight: 700; color: var(--navy); font-size: 12px; border-left: 3px solid var(--gold); text-decoration: none; margin-top: 10px; }
+  .sidebar .toc-h2:first-child { margin-top: 0; }
+  .sidebar .toc-h3 { display: block; padding: 5px 20px 5px 32px; font-size: 11px; color: var(--text-muted); text-decoration: none; border-left: 2px solid transparent; transition: all 0.15s; }
+  .sidebar .toc-h3:hover { color: var(--teal); border-left-color: var(--teal); background: var(--bull-bg); }
+  .sidebar .sidebar-close { display: none; }
+  .container { flex: 1; min-width: 0; padding: 32px 40px 60px; }
+
+  /* ── HERO ── */
+  .hero { background: var(--header-gradient); color: white; border-radius: var(--radius); padding: 32px 36px; margin-bottom: 36px; border-bottom: 3px solid var(--gold); position: relative; overflow: hidden; }
+  .hero::after { content: 'V7'; position: absolute; right: 32px; bottom: -12px; font-family: 'Bebas Neue', sans-serif; font-size: 120px; color: rgba(255,255,255,0.04); line-height: 1; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: 42px; letter-spacing: 3px; color: white; line-height: 1.1; }
+  .hero h1 span { color: var(--gold); }
+  .hero .subtitle { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--gold-light); letter-spacing: 2px; margin-top: 6px; text-transform: uppercase; }
+  .hero-meta { display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
+  .hero-chip { background: rgba(255,255,255,0.08); border: 1px solid rgba(179,134,101,0.35); border-radius: 6px; padding: 5px 12px; font-family: 'Space Mono', monospace; font-size: 10px; color: var(--gold-light); letter-spacing: 1px; }
+  .hero-chip strong { color: white; }
+
+  /* ── SECTIONS ── */
+  .section { margin-bottom: 44px; }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--gold); }
+  .section-header .num { background: var(--navy); color: white; font-family: 'Space Mono', monospace; font-size: 11px; padding: 2px 10px; border-radius: 20px; letter-spacing: 1px; }
+  .section-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; color: var(--navy); }
+  .section h3 { font-size: 17px; font-weight: 700; color: var(--navy); margin: 24px 0 10px; }
+  .section h4 { font-size: 14px; font-weight: 700; color: var(--text); margin: 14px 0 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  [id] { scroll-margin-top: 92px; }
+  .section p { margin-bottom: 10px; }
+  .section ul, .section ol { margin: 8px 0 12px 22px; }
+  .section li { margin-bottom: 5px; }
+
+  /* ── CARDS ── */
+  .card { background: var(--surface); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+  .card.highlight { border-left: 4px solid var(--gold); }
+  .card.info { border-left: 4px solid var(--teal); background: var(--bull-bg); }
+  .card.warn { border-left: 4px solid var(--warn-border); background: var(--warn-bg); }
+  .card.danger { border-left: 4px solid var(--bear); background: var(--bear-bg); }
+  .card.new { border-left: 4px solid var(--purple); background: var(--purple-bg); }
+  .card.dark { background: var(--navy-dark); color: #e0e0e0; border-color: #2a3540; }
+  .card-title { font-weight: 700; font-size: 14px; margin-bottom: 8px; color: var(--navy); }
+  .card.info .card-title { color: var(--teal); }
+  .card.warn .card-title { color: #b8860b; }
+  .card.danger .card-title { color: var(--bear); }
+  .card.new .card-title { color: var(--purple); }
+
+  /* ── PILLS ── */
+  .pill { display:inline-block; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:1px; text-transform:uppercase; padding:2px 8px; border-radius:20px; vertical-align:middle; margin-left:6px; }
+  .pill.v7 { background: var(--teal); color:#fff; }
+  .pill.bt { background: var(--purple); color:#fff; }
+  .pill.new { background: var(--bull); color:#fff; }
+  .pill.fix { background:var(--bear); color:#fff; }
+  .pill.gold { background: var(--gold); color:#fff; }
+
+  /* ── GRIDS ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 14px 0; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 14px 0; }
+  .zone-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+
+  .zone-card { background: var(--surface); border-radius: var(--radius); padding: 16px 18px; border: 1px solid var(--border); box-shadow: var(--shadow); border-top: 3px solid var(--teal); }
+  .zone-card.z-gold { border-top-color: var(--gold); }
+  .zone-card.z-bear { border-top-color: var(--bear); }
+  .zone-card.z-purple { border-top-color: var(--purple); }
+  .zone-card.z-blue { border-top-color: #2980b9; }
+  .zone-card .z-name { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; color: var(--navy); }
+  .zone-card .z-full { font-size: 11px; color: var(--text-muted); font-family: 'Space Mono', monospace; margin-bottom: 8px; }
+  .zone-card .z-row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; border-bottom: 1px solid var(--border); }
+  .zone-card .z-row:last-child { border-bottom: none; }
+  .zone-card .z-key { color: var(--text-muted); }
+  .zone-card .z-val { font-family: 'Space Mono', monospace; font-weight: 700; font-size: 11px; }
+  .z-bull { color: var(--bull); } .z-bear { color: var(--bear); } .z-gold { color: var(--gold); }
+
+  /* ── TABLES ── */
+  .table-wrap { overflow-x: auto; margin: 14px 0; border-radius: var(--radius); box-shadow: var(--shadow); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: var(--gold-light); text-transform: uppercase; text-align: left; padding: 10px 12px; background: var(--navy); white-space: nowrap; }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+  td.v { color: var(--bull); font-weight: 700; } td.r { color: var(--bear); font-weight: 700; } td.g { color: var(--text-muted); }
+  td.mono { font-family: 'Space Mono', monospace; font-size: 12px; }
+  td code { background: var(--surface2); padding: 2px 5px; border-radius: 3px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--bear); }
+
+  /* ── HUD MOCK ── */
+  .hudmock { background: #0f1519; border: 1px solid #2a3540; border-radius: 8px; padding: 16px; font-family: 'Space Mono', monospace; font-size: 11px; color: #b0bec5; margin: 16px 0; max-width: 340px; line-height: 1.8; }
+  .hudmock .h-section { border-bottom: 1px solid #2a3540; padding-bottom: 8px; margin-bottom: 8px; }
+  .hudmock .h-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .hudmock .h-title { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #546e7a; margin-bottom: 4px; }
+  .hudmock .h-row { display: flex; justify-content: space-between; align-items: center; padding: 1px 0; }
+  .hudmock .h-label { color: #546e7a; font-size: 10px; }
+  .hudmock .h-green { color: #00c850; } .hudmock .h-red { color: #e57373; }
+  .hudmock .h-gold { color: #d4a982; } .hudmock .h-cyan { color: #4dd0e1; }
+  .hudmock .h-orange { color: #ff8c42; } .hudmock .h-dim { color: #37474f; }
+  .hudmock .h-dots { display: flex; gap: 5px; align-items: center; margin-bottom: 4px; }
+  .hudmock .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .d-r { background: #e57373; } .d-y { background: #ffd54f; } .d-gc { background: #66bb6a; } .d-go { background: #2e7d32; }
+
+  /* ── SEMÁFORO VISUAL ── */
+  .sem-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 14px 0; }
+  .sem-item { background: var(--surface); border-radius: 8px; padding: 12px; text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow); }
+  .sem-dot { width: 32px; height: 32px; border-radius: 50%; margin: 0 auto 8px; }
+  .sd-rojo { background: #e74c3c; box-shadow: 0 0 12px rgba(231,76,60,0.5); }
+  .sd-amarillo { background: #f39c12; box-shadow: 0 0 12px rgba(243,156,18,0.5); }
+  .sd-verde { background: #27ae60; box-shadow: 0 0 12px rgba(39,174,96,0.5); }
+  .sd-oscuro { background: #145a32; box-shadow: 0 0 12px rgba(20,90,50,0.6); }
+  .sem-name { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 1px; }
+  .sem-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ── FILTER CHAIN ── */
+  .filter-chain { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 14px 0; }
+  .filter-box { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 8px 14px; font-size: 12px; font-weight: 600; text-align: center; box-shadow: var(--shadow); }
+  .filter-box.active { background: var(--bull-bg); border-color: var(--bull); color: var(--bull); }
+  .filter-box.optional { background: var(--warn-bg); border-color: var(--warn-border); color: #b8860b; }
+  .filter-box.zone { background: var(--purple-bg); border-color: var(--purple); color: var(--purple); }
+  .filter-arrow { color: var(--text-muted); font-size: 16px; }
+
+  /* ── BT DATA TABLE ── */
+  .bt-table th { background: var(--navy-dark); }
+  .bt-pos { color: var(--bull); font-weight: 700; } .bt-neg { color: var(--bear); font-weight: 700; }
+  .bt-neu { color: var(--text-muted); }
+  .coherente { background: rgba(39,153,149,0.12); }
+  .opuesto { background: rgba(192,57,43,0.08); }
+
+  /* ── CODE ── */
+  code { background: var(--surface2); padding: 2px 6px; border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--bear); }
+  pre { background: var(--navy-dark); color: #e0e0e0; padding: 18px; border-radius: 8px; overflow-x: auto; font-family: 'Space Mono', monospace; font-size: 12px; line-height: 1.6; margin: 12px 0; }
+  pre .cmt { color: #6f8a7a; } pre .kw { color: #d4a982; } pre .str { color: #a5d6a7; } pre .num { color: #4dd0e1; }
+
+  /* ── STEP LIST ── */
+  .step-list { counter-reset: step; }
+  .step-item { counter-increment: step; margin-bottom: 18px; padding-left: 44px; position: relative; }
+  .step-item::before { content: counter(step); position: absolute; left: 0; top: 0; width: 30px; height: 30px; background: var(--navy); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+  .step-item h4 { margin: 0 0 4px; }
+  .step-item p { font-size: 13px; color: var(--text-muted); }
+
+  /* ── PROP TABLE ── */
+  .prop-group { margin-bottom: 24px; }
+  .prop-group-title { background: var(--navy); color: var(--gold-light); font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; padding: 6px 14px; border-radius: 6px 6px 0 0; text-transform: uppercase; }
+
+  /* ── FOOTER ── */
+  .footer { background: var(--navy-dark); color: rgba(255,255,255,0.4); text-align: center; padding: 24px 20px; font-size: 11px; font-family: 'Space Mono', monospace; }
+  .footer .gold { color: var(--gold); }
+
+  /* ── MOBILE ── */
+  .mobile-nav-toggle { display: none; background: none; border: none; cursor: pointer; width: 36px; height: 36px; flex-direction: column; justify-content: center; align-items: center; gap: 5px; padding: 4px; flex-shrink: 0; }
+  .mobile-nav-toggle span { display: block; width: 22px; height: 2px; background: white; border-radius: 2px; transition: transform .3s, opacity .3s; }
+  .mobile-nav-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+  .mobile-nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .mobile-nav-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 90; opacity: 0; transition: opacity .3s; }
+  .sidebar-overlay.open { display: block; opacity: 1; }
+  @media (max-width: 960px) {
+    .mobile-nav-toggle { display: flex; }
+    .container { padding: 20px; }
+    .two-col, .three-col, .zone-grid, .sem-grid { grid-template-columns: 1fr; }
+    .sidebar { position: fixed; top: 0; left: -320px; width: 290px; max-width: 85vw; height: 100vh; z-index: 100; background: var(--surface); transition: left .3s ease; box-shadow: 2px 0 20px rgba(0,0,0,0.2); display: block !important; padding-top: 56px; }
+    .sidebar.open { left: 0; }
+    .sidebar .sidebar-close { display: block; position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer; padding: 4px 8px; line-height: 1; }
+  }
+  @media (max-width: 600px) {
+    .header { padding: 10px 14px; gap: 6px; }
+    .header-left { gap: 10px; }
+    .header-left .logo-img { height: 40px; }
+    .header-left .brand-name { font-size: 20px; }
+    .header-left .brand-sub { font-size: 7px; }
+    .hero h1 { font-size: 30px; }
+    .hero::after { display: none; }
+    .filter-chain { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/favicon.png">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+<!-- ─── HEADER ─────────────────────────────────────────────────────────────── -->
+<div class="header">
+  <div class="header-left">
+    <a href="javascript:history.back()" style="color:var(--gold);text-decoration:none;font-size:26px;line-height:1;cursor:pointer;transition:transform .2s" onmouseover="this.style.transform='translateX(-3px)'" onmouseout="this.style.transform='translateX(0)'" title="Volver">&#8592;</a>
+    <img src="/assets/logo.png" alt="EduS Trader" class="logo-img">
+    <div>
+      <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
+      <div class="brand-sub">Manual Indicador &middot; Mesa de Dinero</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="version">HUD V7 &middot; EduSMasterPanelHUDV7</div>
+    <button class="mobile-nav-toggle" aria-label="Menu" onclick="toggleMobileNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileNav()"></div>
+
+<!-- ─── LAYOUT ─────────────────────────────────────────────────────────────── -->
+<div class="layout">
+
+  <!-- SIDEBAR TOC -->
+  <nav class="sidebar" id="sidebar">
+    <button class="sidebar-close" onclick="toggleMobileNav()">&#10005;</button>
+    <a href="#overview" class="toc-h2">1. Visión General</a>
+    <a href="#arquitectura" class="toc-h3">Arquitectura del sistema</a>
+    <a href="#novedades-v7" class="toc-h3">Novedades V7</a>
+    <a href="#instalacion" class="toc-h2">2. Instalación</a>
+    <a href="#panel-hud" class="toc-h2">3. Panel HUD</a>
+    <a href="#semaforo" class="toc-h3">Semáforo de tendencia</a>
+    <a href="#zona-senales" class="toc-h3">Sección Señales</a>
+    <a href="#entrada-activa" class="toc-h3">Entrada Activa</a>
+    <a href="#market-keltner" class="toc-h3">Market &amp; Keltner</a>
+    <a href="#posicion" class="toc-h3">Posición en vivo</a>
+    <a href="#zonas" class="toc-h2">4. Zonas de Señal</a>
+    <a href="#zona-a" class="toc-h3">Zona A (AVWAP)</a>
+    <a href="#zona-lr" class="toc-h3">Zona LR (LinReg)</a>
+    <a href="#zona-20" class="toc-h3">Zona 20 (SMA20)</a>
+    <a href="#zona-80" class="toc-h3">Zona 80 (SMA80)</a>
+    <a href="#zona-m1m2m3" class="toc-h3">Zonas M1, M2, M3</a>
+    <a href="#filtros" class="toc-h2">5. Sistema de Filtros</a>
+    <a href="#semaforo-filtro" class="toc-h3">Gate semáforo (Perfil por zona)</a>
+    <a href="#capas" class="toc-h3">Capas 3, 4 y 5 (RSI)</a>
+    <a href="#filtro-poc" class="toc-h3">Filtro POC por zona</a>
+    <a href="#filtro-madurez" class="toc-h3">Filtro Madurez del cruce</a>
+    <a href="#filtro-htf" class="toc-h3">Filtro HTF y Nodos</a>
+    <a href="#bt-research" class="toc-h2">6. Investigación BT-V7-25</a>
+    <a href="#bt-resultados" class="toc-h3">Resultados por zona</a>
+    <a href="#bt-coherencia" class="toc-h3">Coherencia Gap_ATR / Barras</a>
+    <a href="#bt-poc" class="toc-h3">Impacto del POC</a>
+    <a href="#bt-decisiones" class="toc-h3">Decisiones de implementación</a>
+    <a href="#csv" class="toc-h2">7. CSV &amp; Backtesting</a>
+    <a href="#csv-columnas" class="toc-h3">Columnas del CSV (56 campos)</a>
+    <a href="#csv-bt" class="toc-h3">Modo BT vs. señales live</a>
+    <a href="#propiedades" class="toc-h2">8. Referencia Propiedades</a>
+    <a href="#prop-general" class="toc-h3">0. General &amp; Captura CSV</a>
+    <a href="#prop-bt" class="toc-h3">0.1 Backtesting</a>
+    <a href="#prop-indicadores" class="toc-h3">2. Indicadores</a>
+    <a href="#prop-zonas" class="toc-h3">3. Zonas y Ranking</a>
+    <a href="#prop-filtros" class="toc-h3">5. Filtros de Entrada</a>
+    <a href="#prop-poc-madurez" class="toc-h3">5.1 Filtros POC &amp; Madurez</a>
+    <a href="#changelog" class="toc-h2">9. Historial Versiones</a>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="container">
+
+    <!-- ─── HERO ─────────────────────────────────────────────── -->
+    <div class="hero">
+      <h1>EduS Master Panel <span>HUD V7</span></h1>
+      <div class="subtitle">NinjaTrader 8 &mdash; Indicador de Señales Institucionales con Backtesting Integrado</div>
+      <div class="hero-meta">
+        <div class="hero-chip"><strong>Instrumento:</strong> MES · ES · MNQ · NQ</div>
+        <div class="hero-chip"><strong>BT base:</strong> BT-V7-25 · 257,816 trades</div>
+        <div class="hero-chip"><strong>Zonas:</strong> A · LR · 20 · 80 · M1 · M2 · M3</div>
+        <div class="hero-chip"><strong>Archivo:</strong> EduSMasterPanelHUDV7.cs</div>
+        <div class="hero-chip"><strong>Actualizado:</strong> 2026-07-01</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 1. VISIÓN GENERAL -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="section" id="overview">
+      <div class="section-header">
+        <span class="num">01</span>
+        <h2>Visión General</h2>
+      </div>
+
+      <p>El <strong>EduSMasterPanelHUDV7</strong> es un indicador de NinjaTrader 8 que combina detección automática de zonas de pullback institucional, semáforo de tendencia multidimensional, logging CSV para backtesting y un panel HUD flotante en tiempo real.</p>
+
+      <div id="arquitectura"></div>
+      <h3>Arquitectura del Sistema</h3>
+
+      <p>El indicador opera con una cadena de evaluación por capas. En cada barra, calcula:</p>
+      <ol>
+        <li><strong>Tendencia base</strong> — 4 indicadores (LR89, AVWAP, SMA20, SMA80) dan el color del semáforo (Rojo → Amarillo → VerdeClaro → VerdeOscuro)</li>
+        <li><strong>Zona activa</strong> — detecta qué zona de pullback está activa en el precio actual (A, LR, 20, 80, M1, M2, M3)</li>
+        <li><strong>Filtros de entrada</strong> — Capas 3/4, HTF, Nodos, POC, Perfil por zona, Madurez del cruce</li>
+        <li><strong>Señal generada</strong> — si pasa todos los filtros, emite señal LONG/SHORT con Entrada, Stop, T1, T2</li>
+        <li><strong>Logging CSV</strong> — registra la señal con 56 campos para análisis posterior</li>
+      </ol>
+
+      <div class="filter-chain">
+        <div class="filter-box active">Semáforo<br><small>≠ Amarillo</small></div>
+        <div class="filter-arrow">→</div>
+        <div class="filter-box active">Zona Activa<br><small>A/LR/20/80/M1-3</small></div>
+        <div class="filter-arrow">→</div>
+        <div class="filter-box optional">Capa 3/4<br><small>VWAP/LR BM</small></div>
+        <div class="filter-arrow">→</div>
+        <div class="filter-box optional">HTF / Nodos<br><small>opcional</small></div>
+        <div class="filter-arrow">→</div>
+        <div class="filter-box zone">Perfil Zona<br><small>POC + Madurez</small></div>
+        <div class="filter-arrow">→</div>
+        <div class="filter-box active">✓ SEÑAL<br><small>LONG / SHORT</small></div>
+      </div>
+
+      <div id="novedades-v7"></div>
+      <h3>Novedades de V7 <span class="pill v7">V7</span></h3>
+
+      <div class="two-col">
+        <div class="card new">
+          <div class="card-title">Filtros por Zona (BT-V7-25) <span class="pill bt">BT-25</span></div>
+          <ul>
+            <li><strong>Zona A MNQ:</strong> POC obligatorio (+0.237 diff vs sin POC)</li>
+            <li><strong>Zona M2 MES:</strong> POC obligatorio (+0.280 diff)</li>
+            <li><strong>M2 MES Bajista:</strong> cruce maduro obligatorio (Gap>1.3 ó Barras>58)</li>
+            <li><strong>M3 MNQ Bajista:</strong> cruce reciente obligatorio (Barras≤27)</li>
+          </ul>
+        </div>
+        <div class="card new">
+          <div class="card-title">Display HUD mejorado</div>
+          <ul>
+            <li><strong>Hora HH:mm:ss</strong> en Market & Keltner — verifica delay de datos</li>
+            <li><strong>↑ LONG / ↓ SHORT</strong> visible en sección Entrada Activa</li>
+            <li><strong>Gap_ATR</strong> junto a barras del cruce — p.ej. "Cruce Alcista (125b | G:2.4)"</li>
+          </ul>
+        </div>
+        <div class="card highlight">
+          <div class="card-title">Madurez del cruce SMA20/80</div>
+          <ul>
+            <li><strong>Gap_ATR</strong> = |SMA20−SMA80|/ATR — magnitud de separación</li>
+            <li><strong>Barras_Cruce</strong> — contador exacto desde el último cambio de dirección</li>
+            <li>Ambos proxies en CSV (cols 55-56) para análisis offline</li>
+          </ul>
+        </div>
+        <div class="card highlight">
+          <div class="card-title">Reorganización de Propiedades</div>
+          <ul>
+            <li><code>"5. Filtros de Entrada"</code> — Capas, HTF, Nodos, RSI</li>
+            <li><code>"5.1 Filtros POC & Madurez"</code> — POC, Perfil, Madurez</li>
+            <li><code>BT_LogAll</code> movido a <code>"0.1 Backtesting"</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 2. INSTALACIÓN -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="section" id="instalacion">
+      <div class="section-header">
+        <span class="num">02</span>
+        <h2>Instalación</h2>
+      </div>
+      <div class="step-list">
+        <div class="step-item">
+          <h4>Copiar el archivo</h4>
+          <p>Coloca <code>EduSMasterPanelHUDV7.cs</code> en:<br>
+          <code>Documents\NinjaTrader 8\bin\Custom\Indicators\</code></p>
+        </div>
+        <div class="step-item">
+          <h4>Compilar en NinjaTrader 8</h4>
+          <p>Abre NT8 → menú <strong>Tools → Edit NinjaScript → Compile All</strong> (o <kbd>Ctrl+Shift+B</kbd>). Verificar 0 errores en el Output Window.</p>
+        </div>
+        <div class="step-item">
+          <h4>Añadir al chart</h4>
+          <p>Click derecho en el chart → <strong>Indicators</strong> → busca <em>EduSMasterPanelHUDV7</em> → doble click para añadir. Configura Market Type (MES/ES/MNQ/NQ).</p>
+        </div>
+        <div class="step-item">
+          <h4>Configurar carpeta de logs</h4>
+          <p>En la propiedad <strong>Ruta Log</strong> define la carpeta donde se guardarán los CSV, p.ej. <code>C:\Signals\</code>. Activa <strong>Registrar Señales = true</strong>.</p>
+        </div>
+        <div class="step-item">
+          <h4>Verificar el HUD</h4>
+          <p>El panel flotante aparece en la esquina superior derecha. Verifica que <strong>Hora:</strong> en la sección Market & Keltner cambia en tiempo real — eso confirma que los datos no tienen delay.</p>
+        </div>
+      </div>
+      <div class="card warn">
+        <div class="card-title">Prerequisito: archivo de Perfil de Volumen</div>
+        <p>El indicador requiere un archivo de perfil de volumen externo (POC, LVN, Anti-POC) cuya ruta se configura en las propiedades de <em>6. Perfil Volumen</em>. Sin este archivo, las zonas de Perfil están desactivadas y el filtro POC se ignora automáticamente.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 3. PANEL HUD -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="section" id="panel-hud">
+      <div class="section-header">
+        <span class="num">03</span>
+        <h2>Panel HUD</h2>
+      </div>
+      <p>El panel HUD es una ventana WPF flotante con 5 secciones verticales, cada una activable/desactivable en las propiedades de <em>1. Secciones</em>.</p>
+
+      <div class="two-col">
+        <div>
+          <div class="hudmock">
+            <div class="h-section">
+              <div class="h-title">─ Semáforo de Tendencia ─</div>
+              <div class="h-dots">
+                <div class="dot d-go" title="VerdeOscuro"></div>
+                <div class="dot d-go"></div>
+                <div class="dot d-go"></div>
+                <div class="dot d-go"></div>
+                <span class="h-gold" style="margin-left:6px">OPTIMO [4/4]</span>
+              </div>
+              <div class="h-green">Cruce Alcista (87b | G:1.8)</div>
+              <div class="h-row"><span class="h-label">SMA20:</span><span class="h-green">4890.25 ↑</span></div>
+              <div class="h-row"><span class="h-label">SMA80:</span><span class="h-green">4885.50 ↑</span></div>
+              <div class="h-row"><span class="h-label">LR89:</span><span class="h-green">4891.00 ↑</span></div>
+              <div class="h-row"><span class="h-label">AVWAP:</span><span class="h-red">4888.75 ↓</span></div>
+              <div class="h-row"><span class="h-label">HTF:OFF</span><span class="h-label">C3:OFF</span><span class="h-label">C4:OFF</span></div>
+              <div class="h-row"><span class="h-label">RSI(14):</span><span class="h-cyan">54.3</span></div>
+              <div class="h-row"><span class="h-label">POC:</span><span class="h-green">4887.00 ✓</span></div>
+            </div>
+            <div class="h-section">
+              <div class="h-title">─ Señales ─</div>
+              <div class="h-row"><span class="h-label">A</span><span class="h-green">0.82σ ✓</span></div>
+              <div class="h-row"><span class="h-label">LR</span><span class="h-dim">inactiva</span></div>
+              <div class="h-row"><span class="h-label">M2</span><span class="h-orange">1.45σ</span></div>
+            </div>
+            <div class="h-section">
+              <div class="h-title">─ Entrada Activa ─</div>
+              <div class="h-row"><span style="font-size:13px">[ A ]</span><span class="h-green">↑ LONG  |  01/07 09:32  [ACTIVA]</span></div>
+              <div class="h-row"><span class="h-label">Entrada:</span><span class="h-cyan">4889.50</span></div>
+              <div class="h-row"><span class="h-label">Stop:</span><span class="h-red">4882.75 (6.75 pts)</span></div>
+              <div class="h-row"><span class="h-label">T1:</span><span class="h-green">4896.00 R:R 1.0</span></div>
+              <div class="h-row"><span class="h-label">T2:</span><span class="h-orange">4905.25 R:R 2.3</span></div>
+            </div>
+            <div class="h-section">
+              <div class="h-title">─ Market &amp; Keltner ─</div>
+              <div class="h-row"><span class="h-label">Hora:</span><span class="h-cyan">09:32:47</span></div>
+              <div class="h-row"><span class="h-label">ATR:</span><span class="h-cyan">6.25 pts</span></div>
+              <div class="h-row"><span class="h-label">Vol. Barra:</span><span>12,450</span></div>
+              <div class="h-row"><span class="h-label">Vol. Sesión:</span><span class="h-cyan">284,120</span></div>
+            </div>
+            <div class="h-section">
+              <div class="h-title">─ Posición ─</div>
+              <div class="h-green">LONG 1 @ 4889.50</div>
+              <div class="h-green">+$62.50 (+0.12 pts)</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div id="semaforo"></div>
+          <h3>Semáforo de Tendencia</h3>
+          <p>4 indicadores votan la tendencia. Cada uno aporta 1 punto cuando el precio está por encima de él (alcista):</p>
+          <div class="sem-grid">
+            <div class="sem-item">
+              <div class="sem-dot sd-rojo"></div>
+              <div class="sem-name" style="color:#e74c3c">ROJO</div>
+              <div class="sem-desc">0-1 / 4<br>Mercado en contra</div>
+            </div>
+            <div class="sem-item">
+              <div class="sem-dot sd-amarillo"></div>
+              <div class="sem-name" style="color:#f39c12">AMARILLO</div>
+              <div class="sem-desc">2 / 4<br><strong>Bloqueado</strong> por defecto</div>
+            </div>
+            <div class="sem-item">
+              <div class="sem-dot sd-verde"></div>
+              <div class="sem-name" style="color:#27ae60">VERDE CLARO</div>
+              <div class="sem-desc">3 / 4<br>OK entradas</div>
+            </div>
+            <div class="sem-item">
+              <div class="sem-dot sd-oscuro"></div>
+              <div class="sem-name" style="color:#145a32">VERDE OSCURO</div>
+              <div class="sem-desc">4 / 4<br>Óptimo</div>
+            </div>
+          </div>
+          <div class="card info">
+            <div class="card-title">Perfil Por Zona (V7 Fase 3)</div>
+            <p>Con <code>UsarPerfilPorZona=true</code> (default), el semáforo solo <strong>bloquea Amarillo</strong>. Rojo y Verde compiten en algunas zonas — la evidencia BT muestra que en horario pre-market MES, Rojo puede tener R superior a VerdeClaro. El gate global fue reemplazado por filtros por zona.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="zona-senales"></div>
+      <h3>Sección Señales</h3>
+      <p>Muestra las 7 zonas base (A, LR, 20, 80, M1, M2, M3) con su estado actual:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Indicador</th><th>Significado</th><th>Color</th></tr></thead>
+          <tbody>
+            <tr><td>OFF</td><td>Zona desactivada por el usuario (Ranking=0)</td><td class="g">Gris</td></tr>
+            <tr><td>0.82σ ✓</td><td>Zona activa — precio a 0.82σ del nivel — señal válida</td><td class="v">Verde</td></tr>
+            <tr><td>1.45σ</td><td>Zona activa pero señal bloqueada por algún filtro</td><td class="r">Naranja/Rojo</td></tr>
+            <tr><td>inactiva</td><td>Zona no alcanzada aún</td><td class="g">Dim</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="entrada-activa"></div>
+      <h3>Entrada Activa <span class="pill v7">NUEVO V7</span></h3>
+      <p>Muestra la última señal generada con su estado (ACTIVA vs HISTÓRICA):</p>
+      <ul>
+        <li><strong>↑ LONG</strong> (verde) o <strong>↓ SHORT</strong> (naranja) — dirección de la señal</li>
+        <li><strong>Zona + Fecha/hora</strong> — p.ej. <code>[A] ↑ LONG  |  01/07 09:32  [ACTIVA]</code></li>
+        <li><strong>Entrada, Stop, T1, T2</strong> con puntos y ratio R:R</li>
+      </ul>
+
+      <div id="market-keltner"></div>
+      <h3>Market &amp; Keltner <span class="pill v7">NUEVO V7</span></h3>
+      <p>Métricas de mercado en tiempo real:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Campo</th><th>Descripción</th><th>Uso</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Hora:</strong></td><td>Hora del Time[0] actual en HH:mm:ss</td><td>Verifica que no hay delay entre datos y reloj real</td></tr>
+            <tr><td><strong>ATR:</strong></td><td>ATR del período configurado en puntos</td><td>Referencia para calcular stops y tamaño de zonas</td></tr>
+            <tr><td><strong>Vol. Barra:</strong></td><td>Volumen de la barra actual</td><td>Detecta barras de alta/baja actividad</td></tr>
+            <tr><td><strong>Vol. Sesión:</strong></td><td>Volumen acumulado de la sesión</td><td>Contexto de liquidez del día</td></tr>
+            <tr><td><strong>Vol. Width:</strong></td><td>Ancho del canal Keltner de volatilidad en puntos</td><td>Mide el rango de volatilidad actual</td></tr>
+            <tr><td><strong>Sig. Width:</strong></td><td>Ancho del canal Keltner de señal en puntos</td><td>Referencia para T1/T2</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card warn">
+        <div class="card-title">Cómo detectar delay de datos</div>
+        <p>Si la hora mostrada en el panel difiere en más de 1-2 minutos del reloj real de tu sistema, hay un problema de conexión o el chart está en modo replay. Nunca operar con datos con delay no verificado.</p>
+      </div>
+
+      <div id="posicion"></div>
+      <h3>Sección Posición</h3>
+      <p>Muestra la posición actual de la cuenta en tiempo real. Requiere configurar <strong>Account Name</strong> en las propiedades. Se actualiza cada <code>Pos_UpdateSeg</code> segundos (default 5s).</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 4. ZONAS DE SEÑAL -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="section" id="zonas">
+      <div class="section-header">
+        <span class="num">04</span>
+        <h2>Zonas de Señal</h2>
+      </div>
+      <p>El indicador detecta 7 zonas de pullback institucional. Cada zona tiene una variante <strong>Plus (+)</strong> que requiere alineación adicional de indicadores secundarios. El precio entra en zona cuando está dentro de ±<code>ZonaToleranciaPct × ATR</code> del nivel.</p>
+
+      <div class="zone-grid">
+        <div class="zone-card" id="zona-a">
+          <div class="z-name">ZONA A</div>
+          <div class="z-full">AVWAP — Anchored VWAP adaptativo</div>
+          <div class="z-row"><span class="z-key">Nivel</span><span class="z-val">AVWAP del último swing</span></div>
+          <div class="z-row"><span class="z-key">Lógica</span><span class="z-val">Pullback al AVWAP en tendencia</span></div>
+          <div class="z-row"><span class="z-key">Filtro POC MNQ</span><span class="z-val z-bull">+0.237 con POC</span></div>
+          <div class="z-row"><span class="z-key">Filtro POC MES</span><span class="z-val z-gold">Neutro (−0.017)</span></div>
+          <div class="z-row"><span class="z-key">N BT-V7-25</span><span class="z-val">16,435 MES · 46,239 MNQ</span></div>
+          <div class="z-row"><span class="z-key">R base</span><span class="z-val z-bull">+0.255 MES · +0.269 MNQ</span></div>
+        </div>
+
+        <div class="zone-card z-blue" id="zona-lr">
+          <div class="z-name">ZONA LR</div>
+          <div class="z-full">LinReg89 / AVWAP secundario</div>
+          <div class="z-row"><span class="z-key">Nivel</span><span class="z-val">Canal LinReg 89 barras</span></div>
+          <div class="z-row"><span class="z-key">Lógica</span><span class="z-val">Retroceso a regresión lineal</span></div>
+          <div class="z-row"><span class="z-key">MES Alc maduro</span><span class="z-val z-bull">+0.142 gap / +0.121 barras</span></div>
+          <div class="z-row"><span class="z-key">MNQ Baj</span><span class="z-val z-gold">Preferir reciente (−0.095)</span></div>
+          <div class="z-row"><span class="z-key">N BT-V7-25</span><span class="z-val">13,288 MES · 40,048 MNQ</span></div>
+          <div class="z-row"><span class="z-key">R base</span><span class="z-val z-bull">+0.225 MES · +0.203 MNQ</span></div>
+        </div>
+
+        <div class="zone-card z-gold" id="zona-20">
+          <div class="z-name">ZONA 20</div>
+          <div class="z-full">SMA de 20 períodos</div>
+          <div class="z-row"><span class="z-key">Nivel</span><span class="z-val">SMA20 (period configurable)</span></div>
+          <div class="z-row"><span class="z-key">Lógica</span><span class="z-val">Pullback a la media rápida</span></div>
+          <div class="z-row"><span class="z-key">MES Alc gap</span><span class="z-val z-bull">Maduro mejor (+0.110)</span></div>
+          <div class="z-row"><span class="z-key">MNQ POC</span><span class="z-val z-gold">+0.149 con POC</span></div>
+          <div class="z-row"><span class="z-key">N BT-V7-25</span><span class="z-val">26,245 MES · 70,224 MNQ</span></div>
+          <div class="z-row"><span class="z-key">R base</span><span class="z-val z-bull">+0.252 MES · +0.265 MNQ</span></div>
+        </div>
+
+        <div class="zone-card" id="zona-80">
+          <div class="z-name">ZONA 80</div>
+          <div class="z-full">SMA de 80 períodos</div>
+          <div class="z-row"><span class="z-key">Nivel</span><span class="z-val">SMA80 (period configurable)</span></div>
+          <div class="z-row"><span class="z-key">Requisito FIJO</span><span class="z-val z-gold">SMA20 + SMA80 alineadas</span></div>
+          <div class="z-row"><span class="z-key">Filtro POC</span><span class="z-val z-gold">Obligatorio (MNQ: R−0.064→+0.173)</span></div>
+          <div class="z-row"><span class="z-key">MES Alc gap</span><span class="z-val z-bull">Maduro mejor (+0.130)</span></div>
+          <div class="z-row"><span class="z-key">N BT-V7-25</span><span class="z-val">6,024 MES · 22,323 MNQ</span></div>
+          <div class="z-row"><span class="z-key">R base</span><span class="z-val z-bull">+0.258 MES · +0.325 MNQ</span></div>
+        </div>
+
+        <div class="zone-card z-purple" id="zona-m1m2m3">
+          <div class="z-name">ZONA M1</div>
+          <div class="z-full">Primer retroceso a BM (1 rebote)</div>
+          <div class="z-row"><span class="z-key">Nivel</span><span class="z-val">BM = Banda Media Keltner</span></div>
+          <div class="z-row"><span class="z-key">Detección</span><span class="z-val">1 toque a BM post-cruce</span></div>
+          <div class="z-row"><span class="z-key">Tolerancia</span><span class="z-val">ToleranciaBM_ATR × ATR</span></div>
+          <div class="z-row"><span class="z-key">Nota</span><span class="z-val">Zona de entrada temprana</span></div>
+        </div>
+
+        <div class="zone-card z-purple">
+          <div class="z-name">ZONA M2</div>
+          <div class="z-full">Segundo retroceso a BM</div>
+          <div class="z-row"><span class="z-key">Filtro POC MES</span><span class="z-val z-bull">Obligatorio (+0.280)</span></div>
+          <div class="z-row"><span class="z-key">M2 MES Baj maduro</span><span class="z-val z-bull">+0.426 gap / +0.572 barras</span></div>
+          <div class="z-row"><span class="z-key">M2 MES Alc</span><span class="z-val z-bear">OPUESTO — no filtrar</span></div>
+          <div class="z-row"><span class="z-key">N BT-V7-25</span><span class="z-val">834 MES · 14,179 MNQ</span></div>
+          <div class="z-row"><span class="z-key">R base</span><span class="z-val z-bull">+0.292 MES · +0.235 MNQ</span></div>
+        </div>
+
+        <div class="zone-card z-bear">
+          <div class="z-name">ZONA M3</div>
+          <div class="z-full">Tercer retroceso a BM</div>
+          <div class="z-row"><span class="z-key">M3 MES</span><span class="z-val z-bear">POC perjudica (−0.257)</span></div>
+          <div class="z-row"><span class="z-key">M3 MNQ Baj reciente</span><span class="z-val z-bull">−0.682 barras (reciente mejor)</span></div>
+          <div class="z-row"><span class="z-key">M3 MNQ Alc</span><span class="z-val z-bear">OPUESTO — no filtrar</span></div>
+          <div class="z-row"><span class="z-key">N BT-V7-25</span><span class="z-val">1,231 MES · 710 MNQ</span></div>
+          <div class="z-row"><span class="z-key">R base</span><span class="z-val z-bull">+0.292 MES · +0.151 MNQ</span></div>
+        </div>
+      </div>
+
+      <div class="card info">
+        <div class="card-title">Zonas Plus (+)</div>
+        <p>Cada zona tiene una variante <strong>Plus</strong> (A+, LR+, M2+, etc.) que requiere alineación adicional de indicadores secundarios. Las zonas Plus tienen menor frecuencia pero mayor calidad de señal. Se pueden filtrar con <code>ZonaFiltro = SoloZonasPlus</code>.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 5. SISTEMA DE FILTROS -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="section" id="filtros">
+      <div class="section-header">
+        <span class="num">05</span>
+        <h2>Sistema de Filtros</h2>
+      </div>
+
+      <div id="semaforo-filtro"></div>
+      <h3>Gate Semáforo — Perfil por Zona <span class="pill v7">V7 FASE 3</span></h3>
+      <p>El gate global del semáforo fue reemplazado en V7 Fase 3. Antes, solo se permitían señales con semáforo Verde (VerdeClaro o VerdeOscuro). La evidencia BT demostró que en varios bloques horarios y mercados, el semáforo Rojo supera al VerdeClaro.</p>
+      <div class="card highlight">
+        <div class="card-title">Regla actual (UsarPerfilPorZona=true, default)</div>
+        <p>Solo se <strong>bloquea el semáforo Amarillo</strong> (2/4 indicadores). Rojo, VerdeClaro y VerdeOscuro son todos válidos. Esta regla es universal — perdió dinero en todos los combos bloque×mercado sin excepción.</p>
+      </div>
+      <div class="card danger">
+        <div class="card-title">Mantener UsarPerfilPorZona=true</div>
+        <p>Si se desactiva esta opción, el indicador vuelve al gate global V6/original que requiere Verde estricto. Esto destruye valor en mercados donde Rojo domina.</p>
+      </div>
+
+      <div id="capas"></div>
+      <h3>Capa 3 — VWAP sobre BM</h3>
+      <p>Cuando <code>UsarCapa3=true</code>, exige que el AVWAP esté por encima de la Banda Media del Keltner. Filtra entradas en zonas de soporte/resistencia en tendencias débiles.</p>
+
+      <h3>Capa 4 — LinReg sobre BM</h3>
+      <p>Cuando <code>UsarCapa4=true</code>, exige que el LinReg89 esté por encima de la Banda Media. Ambas capas están <strong>desactivadas por defecto</strong> en V7 (no mejoran en pullbacks según BT).</p>
+
+      <h3>Capa 5 — RSI Adaptativo <span class="pill v7">V7</span></h3>
+      <p>RSI direction-aware: en pullbacks alcistas, el RSI debe estar en zona oversold para confirmar la entrada. Desactivado por defecto (<code>UsarCapa5_RSI=false</code>) ya que el análisis BT no mostró mejora consistente en operación de pullbacks.</p>
+
+      <div id="filtro-poc"></div>
+      <h3>Filtro POC por Zona <span class="pill bt">BT-V7-25</span></h3>
+      <p>El POC (Point of Control del Perfil de Volumen) confirma la dirección. La implementación V7 tiene <strong>reglas específicas por zona y mercado</strong>:</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Zona</th><th>Mercado</th><th>ΔPOC</th><th>Acción</th></tr></thead>
+          <tbody>
+            <tr class="coherente"><td><strong>A</strong></td><td>MNQ</td><td class="v">+0.237</td><td>✓ POC obligatorio (activado por defecto)</td></tr>
+            <tr><td>A</td><td>MES</td><td class="g">−0.017</td><td>No aplicar — neutro</td></tr>
+            <tr class="coherente"><td><strong>M2</strong></td><td>MES</td><td class="v">+0.280</td><td>✓ POC obligatorio (activado por defecto)</td></tr>
+            <tr><td>M2</td><td>MNQ</td><td class="v">+0.141</td><td>Bonus moderado</td></tr>
+            <tr><td><strong>M3</strong></td><td>MES</td><td class="r">−0.257</td><td>⚠ POC perjudica — NO aplicar a M3</td></tr>
+            <tr><td>M3</td><td>MNQ</td><td class="g">−0.023</td><td>Neutro, no aplicar</td></tr>
+            <tr><td>LR</td><td>MNQ</td><td class="v">+0.124</td><td>Bonus moderado</td></tr>
+            <tr><td>20</td><td>MNQ</td><td class="v">+0.149</td><td>Bonus moderado</td></tr>
+            <tr class="coherente"><td><strong>80</strong></td><td>Todos</td><td class="v">Obligatorio</td><td>✓ Ya implementado desde V7 Fase 3 original</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="filtro-madurez"></div>
+      <h3>Filtro Madurez del Cruce SMA20/80 <span class="pill new">NUEVO</span></h3>
+      <p>Se utilizan dos proxies independientes para medir la "edad" del cruce SMA20/SMA80. Son proxies de dimensiones distintas y pueden contradecirse:</p>
+
+      <div class="two-col">
+        <div class="card highlight">
+          <div class="card-title">Gap_ATR — Madurez por magnitud</div>
+          <p><code>Gap_ATR = |SMA20 − SMA80| / ATR</code></p>
+          <ul>
+            <li><strong>Gap pequeño</strong> → cruce reciente (separación mínima)</li>
+            <li><strong>Gap grande</strong> → cruce maduro (separación pronunciada)</li>
+            <li>Se muestra en el HUD como "G:2.4" junto a barras</li>
+          </ul>
+        </div>
+        <div class="card highlight">
+          <div class="card-title">Barras_Cruce — Madurez por tiempo</div>
+          <p><code>_cruceSMA20_80_Barras</code> — contador interno</p>
+          <ul>
+            <li><strong>Pocas barras</strong> → cruce reciente (cambio de dirección reciente)</li>
+            <li><strong>Muchas barras</strong> → cruce maduro (dirección estable)</li>
+            <li>Se resetea a 0 cada vez que cambia la dirección del cruce</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4>Reglas implementadas (UsarFiltroMadurez=true)</h4>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Zona</th><th>Mercado</th><th>Dirección</th><th>Regla</th><th>Justificación (BT-V7-25)</th></tr></thead>
+          <tbody>
+            <tr class="coherente"><td><strong>M2</strong></td><td>MES</td><td>Bajista</td><td>Gap &gt; 1.3 <strong>ó</strong> Barras &gt; 58</td><td>COHERENTES: +0.426 gap / +0.572 barras. Reciente → R −0.119</td></tr>
+            <tr class="coherente"><td><strong>M3</strong></td><td>MNQ</td><td>Bajista</td><td>Barras ≤ 27</td><td>COHERENTES: −0.682 barras. Maduro destruye (R −0.239)</td></tr>
+            <tr class="opuesto"><td>M2</td><td>MES</td><td>Alcista</td><td>Sin filtro</td><td>OPUESTOS: Gap=−0.960 vs Barras=+1.015 (contradictorios)</td></tr>
+            <tr class="opuesto"><td>M3</td><td>MNQ</td><td>Alcista</td><td>Sin filtro</td><td>OPUESTOS: Gap=−0.475 vs Barras=+0.267 (muestra pequeña)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card info">
+        <div class="card-title">Por qué los OPUESTOS no se filtran</div>
+        <p>En M2 MES Alcista, el Gap_ATR dice que el cruce reciente es mejor (separación baja = no sobreextendido), pero Barras dice que el maduro es mejor (tiempo confirma tendencia). Son riesgos independientes: magnitud y tiempo miden dimensiones distintas del mercado. No existe un umbral único que optimice ambos. La solución correcta sería un filtro 2D combinado, que se deja para versiones futuras.</p>
+      </div>
+
+      <div id="filtro-htf"></div>
+      <h3>Filtro HTF y Nodos Institucionales</h3>
+      <p>Opcionales y desactivados por defecto en V7:</p>
+      <ul>
+        <li><strong>UsarFiltroHTF:</strong> exige alineación en timeframe mayor (configurable en ticks o minutos)</li>
+        <li><strong>UsarNodos:</strong> filtra entradas que están demasiado cerca de un nodo de alto volumen institucional</li>
+        <li><strong>UsarPocs:</strong> filtro de POCs institucionales adicional (diferente al POC del Perfil de Volumen)</li>
+      </ul>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 6. INVESTIGACIÓN BT-V7-25 -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="section" id="bt-research">
+      <div class="section-header">
+        <span class="num">06</span>
+        <h2>Investigación BT-V7-25 <span class="pill bt">257K TRADES</span></h2>
+      </div>
+
+      <p>El BT-V7-25 es el backtesting más completo realizado sobre el indicador. Se ejecutó con <code>BT_LogAll=true</code> sobre el archivo <code>20260630-V7-25-senales-v7.csv</code> con 56 columnas incluyendo las dos nuevas métricas de madurez del cruce.</p>
+
+      <div class="three-col">
+        <div class="card">
+          <div class="card-title">Cobertura total</div>
+          <p style="font-size:28px;font-weight:700;color:var(--navy);font-family:'Space Mono',monospace">257,816</p>
+          <p style="color:var(--text-muted);font-size:12px">trades Filtro_Pasado=SI</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Archivos analizados</div>
+          <p style="font-size:13px">Columnas 55-56 nuevas:<br><code>Gap_ATR</code> · <code>Barras_Cruce</code></p>
+        </div>
+        <div class="card">
+          <div class="card-title">Metodología</div>
+          <p style="font-size:13px">Terciles (1/3 reciente → 1/3 maduro) con umbral significación ±0.07 R por tercil</p>
+        </div>
+      </div>
+
+      <div id="bt-resultados"></div>
+      <h3>Resultados por Zona</h3>
+
+      <div class="table-wrap">
+        <table class="bt-table">
+          <thead><tr><th>Zona</th><th>Mkt</th><th>N</th><th>R Base</th><th>Alc</th><th>Baj</th><th>ΔCruce</th><th>POC SI</th><th>POC NO</th><th>ΔPOC</th><th>Gap tend.</th><th>Bar tend.</th></tr></thead>
+          <tbody>
+            <tr><td>A</td><td>MES</td><td>16,435</td><td class="bt-pos">+0.255</td><td class="bt-pos">+0.337</td><td class="bt-pos">+0.185</td><td class="bt-pos">+0.153</td><td class="bt-pos">+0.251</td><td class="bt-pos">+0.268</td><td class="bt-neu">−0.017</td><td class="bt-neu">neutro</td><td class="bt-neu">neutro</td></tr>
+            <tr class="coherente"><td>A</td><td>MNQ</td><td>46,239</td><td class="bt-pos">+0.269</td><td class="bt-pos">+0.264</td><td class="bt-pos">+0.273</td><td class="bt-neu">−0.009</td><td class="bt-pos">+0.320</td><td class="bt-pos">+0.082</td><td class="bt-pos">+0.237</td><td class="bt-neu">neutro</td><td class="bt-neg">↘ rec</td></tr>
+            <tr><td>LR</td><td>MES</td><td>13,288</td><td class="bt-pos">+0.225</td><td class="bt-pos">+0.258</td><td class="bt-pos">+0.189</td><td class="bt-pos">+0.069</td><td class="bt-pos">+0.227</td><td class="bt-pos">+0.207</td><td class="bt-neu">+0.020</td><td class="bt-pos">↗ mad</td><td class="bt-neu">neutro</td></tr>
+            <tr><td>LR</td><td>MNQ</td><td>40,048</td><td class="bt-pos">+0.203</td><td class="bt-pos">+0.187</td><td class="bt-pos">+0.218</td><td class="bt-neg">−0.030</td><td class="bt-pos">+0.235</td><td class="bt-pos">+0.111</td><td class="bt-pos">+0.124</td><td class="bt-neg">↘ rec</td><td class="bt-neg">↘ rec</td></tr>
+            <tr><td>20</td><td>MES</td><td>26,245</td><td class="bt-pos">+0.252</td><td class="bt-pos">+0.314</td><td class="bt-pos">+0.188</td><td class="bt-pos">+0.127</td><td class="bt-pos">+0.255</td><td class="bt-pos">+0.261</td><td class="bt-neu">−0.005</td><td class="bt-neu">neutro</td><td class="bt-neu">neutro</td></tr>
+            <tr><td>20</td><td>MNQ</td><td>70,224</td><td class="bt-pos">+0.265</td><td class="bt-pos">+0.249</td><td class="bt-pos">+0.282</td><td class="bt-neg">−0.033</td><td class="bt-pos">+0.303</td><td class="bt-pos">+0.154</td><td class="bt-pos">+0.149</td><td class="bt-neu">neutro</td><td class="bt-neu">neutro</td></tr>
+            <tr class="coherente"><td>80</td><td>MES</td><td>6,024</td><td class="bt-pos">+0.258</td><td class="bt-pos">+0.355</td><td class="bt-pos">+0.157</td><td class="bt-pos">+0.198</td><td colspan="3">POC ya obligatorio</td><td class="bt-pos">↗ mad</td><td class="bt-neu">neutro</td></tr>
+            <tr><td>80</td><td>MNQ</td><td>22,323</td><td class="bt-pos">+0.325</td><td class="bt-pos">+0.330</td><td class="bt-pos">+0.321</td><td class="bt-neu">+0.009</td><td colspan="3">POC ya obligatorio</td><td class="bt-neu">neutro</td><td class="bt-neu">neutro</td></tr>
+            <tr class="opuesto"><td>M2</td><td>MES</td><td>834</td><td class="bt-pos">+0.292</td><td class="bt-pos">+0.257</td><td class="bt-pos">+0.323</td><td class="bt-neg">−0.066</td><td class="bt-pos">+0.382</td><td class="bt-pos">+0.102</td><td class="bt-pos">+0.280</td><td class="bt-neg">↘ rec</td><td class="bt-pos">↗ mad</td></tr>
+            <tr><td>M2</td><td>MNQ</td><td>14,179</td><td class="bt-pos">+0.235</td><td class="bt-pos">+0.168</td><td class="bt-pos">+0.304</td><td class="bt-neg">−0.136</td><td class="bt-pos">+0.277</td><td class="bt-pos">+0.136</td><td class="bt-pos">+0.141</td><td class="bt-neg">↘ rec</td><td class="bt-neu">neutro</td></tr>
+            <tr><td>M3</td><td>MES</td><td>1,231</td><td class="bt-pos">+0.292</td><td class="bt-pos">+0.529</td><td class="bt-pos">+0.046</td><td class="bt-pos">+0.483</td><td class="bt-pos">+0.194</td><td class="bt-pos">+0.451</td><td class="bt-neg">−0.257</td><td class="bt-pos">↗ mad</td><td class="bt-neu">neutro</td></tr>
+            <tr class="coherente"><td>M3</td><td>MNQ</td><td>710</td><td class="bt-pos">+0.151</td><td class="bt-pos">+0.125</td><td class="bt-pos">+0.182</td><td class="bt-neg">−0.057</td><td class="bt-pos">+0.144</td><td class="bt-pos">+0.166</td><td class="bt-neg">−0.023</td><td class="bt-neg">↘ rec</td><td class="bt-neg">↘ rec</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:11px;color:var(--text-muted);margin-top:4px">Filas <span style="background:rgba(39,153,149,0.12);padding:1px 6px;border-radius:3px">verdes</span> = casos con evidencia fuerte. Filas <span style="background:rgba(192,57,43,0.08);padding:1px 6px;border-radius:3px">rojas</span> = proxies contradictorios (OPUESTOS).</p>
+
+      <div id="bt-coherencia"></div>
+      <h3>Coherencia Gap_ATR vs Barras_Cruce</h3>
+      <p>Para cada combinación Zona × Mercado × Dirección del cruce, se analizó si los dos proxies apuntan en la misma dirección. La coherencia define si se puede implementar un filtro duro:</p>
+
+      <div class="table-wrap">
+        <table class="bt-table">
+          <thead><tr><th>Zona</th><th>Mkt</th><th>Cruce</th><th>N</th><th>Gap diff</th><th>Gap tend.</th><th>Bar diff</th><th>Bar tend.</th><th>Coherencia</th></tr></thead>
+          <tbody>
+            <tr class="coherente"><td><strong>LR</strong></td><td>MES</td><td>Alc</td><td>6,886</td><td class="bt-pos">+0.142</td><td>↗ mad</td><td class="bt-pos">+0.121</td><td>↗ mad</td><td><strong class="bt-pos">COHERENTES ✓✓</strong></td></tr>
+            <tr class="coherente"><td><strong>M2</strong></td><td>MES</td><td>Baj</td><td>446</td><td class="bt-pos">+0.426</td><td>↗ mad</td><td class="bt-pos">+0.572</td><td>↗ mad</td><td><strong class="bt-pos">COHERENTES ✓✓ → FILTRO</strong></td></tr>
+            <tr class="coherente"><td><strong>M3</strong></td><td>MES</td><td>Baj</td><td>604</td><td class="bt-pos">+0.123</td><td>↗ mad</td><td class="bt-pos">+0.268</td><td>↗ mad</td><td><strong class="bt-pos">COHERENTES ✓✓</strong></td></tr>
+            <tr class="coherente"><td><strong>M3</strong></td><td>MNQ</td><td>Baj</td><td>325</td><td class="bt-neg">−0.266</td><td>↘ rec</td><td class="bt-neg">−0.682</td><td>↘ rec</td><td><strong class="bt-pos">COHERENTES ✓✓ → FILTRO</strong></td></tr>
+            <tr class="opuesto"><td>M2</td><td>MES</td><td>Alc</td><td>388</td><td class="bt-neg">−0.960 !!</td><td>↘ rec</td><td class="bt-pos">+1.015 !!</td><td>↗ mad</td><td><strong class="bt-neg">OPUESTOS ✗✗</strong></td></tr>
+            <tr class="opuesto"><td>M3</td><td>MNQ</td><td>Alc</td><td>385</td><td class="bt-neg">−0.475 !!</td><td>↘ rec</td><td class="bt-pos">+0.267</td><td>↗ mad</td><td><strong class="bt-neg">OPUESTOS ✗✗</strong></td></tr>
+            <tr><td>A</td><td>MNQ</td><td>Alc</td><td>21,266</td><td class="bt-neu">−0.066</td><td>neutro</td><td class="bt-neg">−0.161</td><td>↘ rec</td><td>Solo Barras</td></tr>
+            <tr><td>A</td><td>MNQ</td><td>Baj</td><td>24,973</td><td class="bt-neu">−0.061</td><td>neutro</td><td class="bt-neg">−0.083</td><td>↘ rec</td><td>Solo Barras</td></tr>
+            <tr><td>LR</td><td>MES</td><td>Baj</td><td>6,402</td><td class="bt-neu">+0.022</td><td>neutro</td><td class="bt-neg">−0.225</td><td>↘ rec</td><td>Solo Barras</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="bt-poc"></div>
+      <h3>Patrón Global: MES vs MNQ</h3>
+
+      <div class="two-col">
+        <div class="card info">
+          <div class="card-title">MES — Prefiere cruce MADURO</div>
+          <p>En mercados MES/ES, las señales mejoran cuando el cruce SMA20/SMA80 tiene más tiempo/magnitud:</p>
+          <ul>
+            <li>LR Alc: +0.142 gap / +0.121 barras</li>
+            <li>Zona 80 Alc: +0.130 gap</li>
+            <li>Zona 20 Alc: +0.110 gap</li>
+            <li>M2 Baj: +0.426 gap / +0.572 barras</li>
+            <li>M3 Baj: +0.123 gap / +0.268 barras</li>
+          </ul>
+        </div>
+        <div class="card danger">
+          <div class="card-title">MNQ — Prefiere cruce RECIENTE</div>
+          <p>En mercados MNQ/NQ, las señales mejoran cuando el cruce es reciente:</p>
+          <ul>
+            <li>A Alc: −0.161 barras</li>
+            <li>A Baj: −0.083 barras</li>
+            <li>LR Alc: −0.086 gap</li>
+            <li>M2 Alc/Baj: −0.158/−0.222 gap</li>
+            <li>M3 Baj: −0.266 gap / −0.682 barras (!)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="bt-decisiones"></div>
+      <h3>Decisiones de Implementación</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Caso</th><th>Evidencia</th><th>Acción implementada</th></tr></thead>
+          <tbody>
+            <tr><td><strong>A MNQ: POC</strong></td><td class="v">+0.237 diferencia</td><td>✓ POC obligatorio en <code>PasaPerfilZona(A, MNQ)</code></td></tr>
+            <tr><td><strong>M2 MES: POC</strong></td><td class="v">+0.280 diferencia</td><td>✓ POC obligatorio en <code>PasaPerfilZona(M2, MES)</code></td></tr>
+            <tr><td><strong>M2 MES Baj: maduro</strong></td><td class="v">COHERENTES +0.426/+0.572</td><td>✓ Filtro madurez: Gap>1.3 ó Barras>58</td></tr>
+            <tr><td><strong>M3 MNQ Baj: reciente</strong></td><td class="v">COHERENTES −0.682 barras</td><td>✓ Filtro reciente: Barras≤27</td></tr>
+            <tr><td>M3 MES: POC</td><td class="r">−0.257 (perjudica)</td><td>✗ POC explícitamente NO aplicado a M3</td></tr>
+            <tr><td>M2 MES Alc: madurez</td><td class="r">OPUESTOS −0.960 vs +1.015</td><td>✗ Sin filtro — proxies contradictorios</td></tr>
+            <tr><td>M3 MNQ Alc: madurez</td><td class="r">OPUESTOS −0.475 vs +0.267</td><td>✗ Sin filtro — muestra pequeña, inestable</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 7. CSV & BACKTESTING -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="section" id="csv">
+      <div class="section-header">
+        <span class="num">07</span>
+        <h2>CSV &amp; Backtesting</h2>
+      </div>
+
+      <div id="csv-columnas"></div>
+      <h3>Columnas del CSV (56 campos)</h3>
+      <p>Cada señal genera una fila de apertura (APERTURA) y una de cierre (CIERRE) con 56 columnas:</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">1</td><td><code>Tipo</code></td><td>APERTURA o CIERRE</td></tr>
+            <tr><td class="mono">2</td><td><code>FechaHora</code></td><td>Timestamp de la barra en formato yyyy-MM-dd HH:mm:ss</td></tr>
+            <tr><td class="mono">3</td><td><code>Mercado</code></td><td>Instrumento (MES, ES, MNQ, NQ)</td></tr>
+            <tr><td class="mono">4</td><td><code>Zona</code></td><td>Zona que generó la señal (A, LR, 20, 80, M1, M2, M3 o variante+)</td></tr>
+            <tr><td class="mono">5</td><td><code>Direccion</code></td><td>LONG o SHORT</td></tr>
+            <tr><td class="mono">6</td><td><code>Entrada</code></td><td>Precio de entrada calculado</td></tr>
+            <tr><td class="mono">7</td><td><code>Stop</code></td><td>Precio de stop calculado</td></tr>
+            <tr><td class="mono">8</td><td><code>T1</code></td><td>Target 1</td></tr>
+            <tr><td class="mono">9</td><td><code>T2</code></td><td>Target 2</td></tr>
+            <tr><td class="mono">10</td><td><code>PrecioSalida</code></td><td>Precio real de cierre (CIERRE)</td></tr>
+            <tr><td class="mono">11</td><td><code>Resultado</code></td><td>T1, T2, BE, STOP o CANCELADA</td></tr>
+            <tr><td class="mono">12</td><td><code>Filtro_Pasado</code></td><td>SI si pasó todos los filtros (útil con BT_LogAll=true)</td></tr>
+            <tr><td class="mono">13</td><td><code>SemaforoColor</code></td><td>VerdeOscuro, VerdeClaro, Rojo, Amarillo</td></tr>
+            <tr><td class="mono">14-17</td><td><code>SMA20, SMA80, LR89, AVWAP</code></td><td>Valores de indicadores en la barra</td></tr>
+            <tr><td class="mono">18-21</td><td><code>SMA20_Alin, SMA80_Alin, LR_Alin, LR_Plana</code></td><td>Flags de alineación SI/NO</td></tr>
+            <tr><td class="mono">22</td><td><code>ATR</code></td><td>Valor del ATR</td></tr>
+            <tr><td class="mono">23-26</td><td><code>POC, AntiPOC_Up, AntiPOC_Down, LVN</code></td><td>Niveles del Perfil de Volumen</td></tr>
+            <tr><td class="mono">27</td><td><code>POC_Confirma</code></td><td>SI / NO / N/A</td></tr>
+            <tr><td class="mono">28-35</td><td>Datos Keltner Vol/Señal</td><td>Anchos e índices BM de ambos canales</td></tr>
+            <tr><td class="mono">36-40</td><td>Datos RSI</td><td>Valor RSI, filtro activo, pasa, divergencias</td></tr>
+            <tr><td class="mono">41-48</td><td>Datos de la señal</td><td>RR1, RR2, T1/T2 tocados, barras duración, PnL simulado</td></tr>
+            <tr><td class="mono">49-52</td><td>Contexto temporal</td><td>Sesión (pre/regular/post), bloque horario, día semana, hora</td></tr>
+            <tr><td class="mono">53-54</td><td><code>CruceSMA_Dir, CruceSMA_Barras</code></td><td>Dirección del cruce y barras desde el último cambio</td></tr>
+            <tr class="coherente"><td class="mono"><strong>55</strong></td><td><code>Gap_ATR</code></td><td><strong>[NUEVO V7]</strong> |SMA20−SMA80|/ATR — proxy magnitud madurez</td></tr>
+            <tr class="coherente"><td class="mono"><strong>56</strong></td><td><code>Barras_Cruce</code></td><td><strong>[NUEVO V7]</strong> Barras desde último cambio de dirección del cruce</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="csv-bt"></div>
+      <h3>Modo BT vs. Señales Live</h3>
+
+      <div class="two-col">
+        <div class="card warn">
+          <div class="card-title">BT_LogAll = true (Backtesting)</div>
+          <p>Loguea <strong>TODAS</strong> las zonas detectadas independientemente del semáforo. La columna <code>Filtro_Pasado</code> indica SI/NO si habría pasado los filtros. Permite análisis offline completo con Python/Excel sin necesidad de re-ejecutar el indicador.</p>
+          <ul style="margin-top:8px">
+            <li>Configurar en grupo <code>"0.1 Backtesting"</code></li>
+            <li>Usar <code>Filtro_Pasado=SI</code> en el análisis para reproducir señales reales</li>
+          </ul>
+        </div>
+        <div class="card info">
+          <div class="card-title">BT_LogAll = false (Live)</div>
+          <p>Solo loguea señales que pasaron todos los filtros. El CSV refleja exactamente las señales que el indicador mostraría en operativa real. Ideal para llevar un diario de trading automático.</p>
+          <ul style="margin-top:8px">
+            <li>Activar <code>RegistrarSenales=true</code></li>
+            <li>El archivo CSV crece un registro por señal completa</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Script de análisis Python</h3>
+      <p>Para analizar los resultados del CSV con Python, el script de referencia se encuentra en:</p>
+      <pre><span class="cmt"># Script de análisis completo BT-V7-25</span>
+<span class="cmt"># Carga, filtra, y genera tabla de decisión por zona × mercado</span>
+<span class="kw">PATH</span> = <span class="str">r"C:\...\EduSTrader - Local Free\20260630-V7-25-senales-v7.csv"</span>
+<span class="cmt"># Columnas clave: Tipo, Zona, Mercado, Filtro_Pasado, Resultado</span>
+<span class="cmt"># Columnas madurez: Gap_ATR (col 55), Barras_Cruce (col 56)</span>
+<span class="cmt"># Ver: EduSTrader - Local Free\scratchpad\analisis_v25.py</span></pre>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 8. REFERENCIA DE PROPIEDADES -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="section" id="propiedades">
+      <div class="section-header">
+        <span class="num">08</span>
+        <h2>Referencia de Propiedades</h2>
+      </div>
+      <p>Las propiedades están organizadas en grupos numerados en el diálogo de configuración de NinjaTrader. Los cambios entran en vigor en el siguiente reinicio del indicador.</p>
+
+      <div id="prop-general"></div>
+      <div class="prop-group">
+        <div class="prop-group-title">0. General</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr></thead>
+            <tbody>
+              <tr><td><code>Market_Type</code></td><td>MES</td><td>Instrumento que opera: MES, ES, MNQ, NQ. Afecta cálculo de PnL y umbral ATR</td></tr>
+              <tr><td><code>BarType_Tick</code></td><td>true</td><td>true = chart de ticks, false = chart de minutos. Afecta el modelo de BT interno</td></tr>
+              <tr><td><code>DireccionOperacion</code></td><td>Ambas</td><td>Solo LONG, Solo SHORT, o Ambas direcciones</td></tr>
+              <tr><td><code>ZonaFiltro</code></td><td>TodasLasZonas</td><td>TodasLasZonas / SoloZonasPlus / SoloZonasNormales</td></tr>
+              <tr><td><code>ModoDeteccionVol</code></td><td>—</td><td>Modo de detección de volatilidad para los canales Keltner</td></tr>
+              <tr><td><code>RutaLog</code></td><td>—</td><td>Ruta completa de la carpeta donde se guardan los CSV de señales</td></tr>
+              <tr><td><code>NombreArchivoLog</code></td><td>—</td><td>Nombre base del archivo CSV (se añade fecha automáticamente)</td></tr>
+              <tr><td><code>RegistrarSenales</code></td><td>false</td><td>Activar logging de señales al CSV</td></tr>
+              <tr><td><code>LoggearHistorico</code></td><td>false</td><td>Loguear también señales históricas al cargar el indicador</td></tr>
+              <tr><td><code>ConfigCSV</code></td><td>—</td><td>Configuración adicional del formato CSV</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="prop-bt"></div>
+      <div class="prop-group">
+        <div class="prop-group-title">0.1 Backtesting</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr></thead>
+            <tbody>
+              <tr><td><code>BT_LogAll</code></td><td>false</td><td><strong>[MOVIDO V7]</strong> Loguea todas las zonas (para BT offline). Con true, Filtro_Pasado indica SI/NO sin bloquear</td></tr>
+              <tr><td><code>BT_LimitSlippageATRs</code></td><td>0.2</td><td>ATRs de margen para el fill de órdenes Limit en BT simulado</td></tr>
+              <tr><td><code>BT_BEPlusTicks</code></td><td>4</td><td>Ticks de ganancia sobre entrada para activar el Stop BE en BT</td></tr>
+              <tr><td><code>BT_LimitTimeoutBarras</code></td><td>5</td><td>Máximo de barras esperando fill de la Limit. Pasado → CANCELADA</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="prop-indicadores"></div>
+      <div class="prop-group">
+        <div class="prop-group-title">2. Indicadores</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr></thead>
+            <tbody>
+              <tr><td><code>SMA20_Period</code></td><td>20</td><td>Período de la SMA rápida (zona 20 y cruce)</td></tr>
+              <tr><td><code>SMA80_Period</code></td><td>80</td><td>Período de la SMA lenta (zona 80 y cruce)</td></tr>
+              <tr><td><code>LinReg_Period</code></td><td>89</td><td>Período de la Regresión Lineal</td></tr>
+              <tr><td><code>LinReg_SlopeThreshold</code></td><td>—</td><td>Pendiente mínima para considerar el LinReg "en tendencia"</td></tr>
+              <tr><td><code>ATR_Period</code></td><td>14</td><td>Período del ATR para cálculo de stops y zonas</td></tr>
+              <tr><td><code>AVWAP_SwingPeriod</code></td><td>—</td><td>Período del detector de swings para el AVWAP ancla</td></tr>
+              <tr><td><code>AVWAP_AdptAPT</code></td><td>true</td><td>AVWAP con APT adaptativo (volatilidad ajustada)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="prop-zonas"></div>
+      <div class="prop-group">
+        <div class="prop-group-title">3. Zonas y Ranking</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr></thead>
+            <tbody>
+              <tr><td><code>Ranking_A ... Ranking_M3</code></td><td>1-7</td><td>Prioridad de cada zona (0=OFF, 1=mayor prioridad). Controla el orden de visualización y el título del panel</td></tr>
+              <tr><td><code>ZonaToleranciaPct</code></td><td>—</td><td>Multiplicador × ATR para el radio de cada zona. Menor = más estricto, mayor = más señales</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="prop-filtros"></div>
+      <div class="prop-group">
+        <div class="prop-group-title">5. Filtros de Entrada <span class="pill v7">RENOMBRADO V7</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr></thead>
+            <tbody>
+              <tr><td><code>UsarCapa3</code></td><td>false</td><td>Exige AVWAP por encima de la Banda Media Keltner</td></tr>
+              <tr><td><code>UsarCapa4</code></td><td>false</td><td>Exige LinReg89 por encima de la Banda Media Keltner</td></tr>
+              <tr><td><code>UsarCapa5_RSI</code></td><td>false</td><td>RSI Adaptativo direction-aware. Sin mejora en BT de pullbacks</td></tr>
+              <tr><td><code>UsarRSI_Divergencia</code></td><td>false</td><td>Upgradea zonas Normal → Plus cuando hay divergencia oculta RSI</td></tr>
+              <tr><td><code>RSI_DivLookback</code></td><td>20</td><td>Barras de lookback para detección de swing RSI</td></tr>
+              <tr><td><code>ToleranciaBM_ATR</code></td><td>1.5</td><td>Radio en ATRs alrededor de la Banda Media para zonas M1/M2/M3</td></tr>
+              <tr><td><code>UsarFiltroHTF</code></td><td>false</td><td>Filtro de alineación en timeframe superior</td></tr>
+              <tr><td><code>HTF_Ticks / HTF_Minutos</code></td><td>987/15</td><td>Resolución del HTF (en ticks o minutos según BarType)</td></tr>
+              <tr><td><code>UsarNodos</code></td><td>false</td><td>Filtro de nodos institucionales de alto volumen</td></tr>
+              <tr><td><code>UsarPocs</code></td><td>false</td><td>Filtro de POCs institucionales (motor separado del Perfil VP)</td></tr>
+              <tr><td><code>CooldownBars</code></td><td>—</td><td>Barras de cooldown post-señal para evitar señales consecutivas en la misma zona</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="prop-poc-madurez"></div>
+      <div class="prop-group">
+        <div class="prop-group-title">5.1 Filtros POC &amp; Madurez <span class="pill new">NUEVO V7</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr></thead>
+            <tbody>
+              <tr><td><code>UsarFiltroPOC</code></td><td>true</td><td>Activa los filtros POC por zona. Zona 80 siempre obligatorio. A MNQ y M2 MES también obligatorio cuando este flag está activo</td></tr>
+              <tr><td><code>UsarPerfilPorZona</code></td><td>true</td><td>Solo bloquea semáforo Amarillo (V7 Fase 3). false = gate global (solo Verde) como versiones anteriores</td></tr>
+              <tr class="coherente"><td><code>UsarFiltroMadurez</code></td><td>true</td><td><strong>[NUEVO]</strong> Activa filtros de madurez del cruce: M2 MES Bajista (Gap>1.3 ó Barras>58) y M3 MNQ Bajista (Barras≤27). Basado en BT-V7-25 257K trades</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card warn" style="margin-top:12px">
+          <div class="card-title">Para BT comparativo A/B</div>
+          <p>Para comparar el impacto de los nuevos filtros, ejecuta dos BTs:</p>
+          <ol style="margin:8px 0 0 18px;font-size:13px">
+            <li><strong>Baseline:</strong> <code>UsarFiltroMadurez=false</code> + <code>UsarFiltroPOC=false</code></li>
+            <li><strong>V7 nuevo:</strong> <code>UsarFiltroMadurez=true</code> + <code>UsarFiltroPOC=true</code></li>
+          </ol>
+          <p style="margin-top:8px;font-size:13px">Compara la columna <code>Filtro_Pasado</code> entre ambos CSVs para cuantificar el impacto exacto.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 9. HISTORIAL DE VERSIONES -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="section" id="changelog">
+      <div class="section-header">
+        <span class="num">09</span>
+        <h2>Historial de Versiones</h2>
+      </div>
+
+      <div class="card highlight">
+        <div class="card-title">V7 — 2026-07-01 (BT-V7-25 Research) <span class="pill new">ACTUAL</span></div>
+        <ul>
+          <li>Nuevos filtros por zona basados en BT-V7-25 (257K trades): POC obligatorio en A MNQ y M2 MES</li>
+          <li>Filtro madurez cruce SMA20/80: M2 MES Bajista (maduro), M3 MNQ Bajista (reciente)</li>
+          <li>HUD: Hora HH:mm:ss en Market & Keltner para verificar delay de datos</li>
+          <li>HUD: ↑ LONG / ↓ SHORT visible en sección Entrada Activa</li>
+          <li>HUD: Gap_ATR mostrado junto a barras del cruce ("125b | G:2.4")</li>
+          <li>Nuevas columnas CSV 55-56: Gap_ATR y Barras_Cruce</li>
+          <li>Reorganización de propiedades: "5. Filtros de Entrada" + "5.1 Filtros POC & Madurez"</li>
+          <li>BT_LogAll movido al grupo "0.1 Backtesting"</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title">V7 Fase 3 — 2026-06 (Gate semáforo)</div>
+        <ul>
+          <li>Reemplazado gate global de semáforo verde por Perfil Por Zona (solo bloquea Amarillo)</li>
+          <li>Fix bug Filtro_Pasado: ahora se calcula correctamente en logging CSV</li>
+          <li>POC de Perfil de Volumen integrado como filtro (Zona 80 obligatorio)</li>
+          <li>RSI adaptativo direction-aware (Capa 5) — desactivado por defecto</li>
+          <li>Panel HUD: sección POC con confirmación visual</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title">V7 Fase 1-2 — 2026-05</div>
+        <ul>
+          <li>Zonas M1, M2, M3 — retrocesos consecutivos a la Banda Media</li>
+          <li>Bidireccionalidad completa LONG/SHORT en todas las zonas</li>
+          <li>Fix tolerancias Close[0] y jerarquía M2>M3</li>
+          <li>Cooldown post-señal para evitar duplicados</li>
+          <li>Fix-001: detección de retrocesos reales a BM (ciclo entrada/salida)</li>
+          <li>Fix-002: cooldown configurable (CooldownBars)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title">V6 — 2026-04</div>
+        <ul>
+          <li>7 zonas base con variante Plus para cada una</li>
+          <li>Múltiples zonas simultáneas con logging independiente por zona</li>
+          <li>Panel de señales visual con 7 indicadores de zona</li>
+          <li>Integración AutoTrader V2</li>
+        </ul>
+      </div>
+    </div>
+
+  </main><!-- /container -->
+</div><!-- /layout -->
+
+<!-- ─── FOOTER ─────────────────────────────────────────────────────────────── -->
+<div class="footer">
+  <p><span class="gold">EduS Trader</span> &mdash; Manual EduSMasterPanelHUDV7 &mdash; Actualizado 2026-07-01</p>
+  <p style="margin-top:6px">Basado en BT-V7-25 &middot; 257,816 trades &middot; NinjaTrader 8</p>
+</div>
+
+<script>
+function toggleMobileNav() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const toggle  = document.querySelector('.mobile-nav-toggle');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+  if (toggle) toggle.classList.toggle('open');
+}
+// Close sidebar when a TOC link is clicked on mobile
+document.querySelectorAll('.sidebar a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (window.innerWidth <= 960) toggleMobileNav();
+  });
+});
+// Active TOC highlight on scroll
+const sections = document.querySelectorAll('[id]');
+const tocLinks  = document.querySelectorAll('.sidebar a');
+const observer  = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocLinks.forEach(l => l.style.color = '');
+      const active = document.querySelector('.sidebar a[href="#' + e.target.id + '"]');
+      if (active) active.style.color = 'var(--teal)';
+    }
+  });
+}, { rootMargin: '-80px 0px -60% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
