@@ -132,6 +132,7 @@
   .hudmock .h-green { color: #00c850; } .hudmock .h-red { color: #e57373; }
   .hudmock .h-gold { color: #d4a982; } .hudmock .h-cyan { color: #4dd0e1; }
   .hudmock .h-orange { color: #ff8c42; } .hudmock .h-dim { color: #37474f; }
+  .hudmock .h-violet { color: #b39ddb; }
   .hudmock .h-dots { display: flex; gap: 5px; align-items: center; margin-bottom: 4px; }
   .hudmock .dot { width: 10px; height: 10px; border-radius: 50%; }
   .d-r { background: #e57373; } .d-y { background: #ffd54f; } .d-gc { background: #66bb6a; } .d-go { background: #2e7d32; }
@@ -273,11 +274,15 @@
     <a href="#csv-bt" class="toc-h3">Modo BT vs. señales live</a>
     <a href="#propiedades" class="toc-h2">8. Referencia Propiedades</a>
     <a href="#prop-general" class="toc-h3">0. General &amp; Captura CSV</a>
+    <a href="#prop-ui" class="toc-h3">0. UI</a>
+    <a href="#prop-secciones" class="toc-h3">1. Secciones</a>
     <a href="#prop-bt" class="toc-h3">0.1 Backtesting</a>
     <a href="#prop-indicadores" class="toc-h3">2. Indicadores</a>
     <a href="#prop-zonas" class="toc-h3">3. Zonas y Ranking</a>
     <a href="#prop-filtros" class="toc-h3">5. Filtros de Entrada</a>
     <a href="#prop-poc-madurez" class="toc-h3">5.1 Filtros POC &amp; Madurez</a>
+    <a href="#prop-audio" class="toc-h3">7. Audio</a>
+    <a href="#prop-visual" class="toc-h3">8. Visual Señales</a>
     <a href="#changelog" class="toc-h2">9. Historial Versiones</a>
   </nav>
 
@@ -402,7 +407,11 @@
         </div>
         <div class="step-item">
           <h4>Verificar el HUD</h4>
-          <p>El panel flotante aparece en la esquina superior derecha. Verifica que <strong>Hora:</strong> en la sección Market & Keltner cambia en tiempo real — eso confirma que los datos no tienen delay.</p>
+          <p>El panel flotante aparece en la esquina superior derecha. Verifica que <strong>Hora:</strong> en la sección Market & Keltner cambia en tiempo real — eso confirma que los datos no tienen delay. Confirma también el tag <strong>✓ ZONA APROBADA</strong> bajo el semáforo cuando haya una zona activa.</p>
+        </div>
+        <div class="step-item">
+          <h4>Añadir EduSAutoTraderV2 (opcional)</h4>
+          <p>Si vas a operar en automático, añade la estrategia <em>EduSAutoTraderV2</em> al mismo chart. Desde 2026-07-01 detecta indistintamente HUD V6 o V7 en el chart (prioriza V7 si ambos están presentes) — no necesitas configurar nada adicional, solo asegurarte de que el HUD (V6 o V7) esté en el mismo chart y en estado Active/Realtime.</p>
         </div>
       </div>
       <div class="card warn">
@@ -419,11 +428,24 @@
         <span class="num">03</span>
         <h2>Panel HUD</h2>
       </div>
-      <p>El panel HUD es una ventana WPF flotante con 5 secciones verticales, cada una activable/desactivable en las propiedades de <em>1. Secciones</em>.</p>
+      <p>El panel HUD es una ventana WPF flotante con 5 secciones verticales, cada una activable/desactivable en las propiedades de <em>1. Secciones</em>. Orden fijo (2026-07-01): <strong>Semáforo → Señales → Market &amp; Keltner → Entrada Activa → Posición</strong>.</p>
+
+      <div class="card new">
+        <div class="card-title">✓ ZONA APROBADA / ✗ ZONA RECHAZADA <span class="pill new">NUEVO V7</span></div>
+        <p>Tag debajo del semáforo que muestra el <strong>veredicto real</strong> de la zona activa: Gate General (Semáforo≠Amarillo, Capas, HTF, Nodos, POCs, Cooldown) + Perfil de Zona (<code>PasaPerfilZona()</code> — POC obligatorio, madurez de cruce, etc.). Es distinto del color del semáforo, que solo mide fuerza de tendencia (0-4 confirmaciones) — con <code>UsarPerfilPorZona=true</code>, Rojo y VerdeOscuro pasan igual el gate, solo Amarillo bloquea. Antes de esta versión no había ninguna señal visual de "esto se va a operar" — solo se sabía mirando el CSV.</p>
+      </div>
+
+      <div class="card info">
+        <div class="card-title">RSI y POC — fila propia con color dinámico <span class="pill v7">CAMBIADO V7</span></div>
+        <p>Antes vivían apretados en una sola fila junto a HTF/C3/C4, siempre en gris. Ahora tienen el mismo trato que SMA20/SMA80/LR89/AVWAP: su propia fila y color que cambia según el estado — RSI en verde/rojo si hay divergencia oculta alcista/bajista (cyan si no), POC en verde si confirma, rojo si no confirma y es obligatorio (bloquea la zona), naranja si no confirma pero es solo informativo.</p>
+      </div>
 
       <div class="two-col">
         <div>
           <div class="hudmock">
+            <div class="h-section">
+              <div class="h-row"><span style="font-weight:700;color:#e8eaed;font-size:13px">EduS . MES</span><span><span class="h-violet">[V7 Fase 3]</span> <span class="h-cyan">Media</span></span></div>
+            </div>
             <div class="h-section">
               <div class="h-title">─ Semáforo de Tendencia ─</div>
               <div class="h-dots">
@@ -433,40 +455,47 @@
                 <div class="dot d-go"></div>
                 <span class="h-gold" style="margin-left:6px">OPTIMO [4/4]</span>
               </div>
-              <div class="h-green">Cruce Alcista (87b | G:1.8)</div>
+              <div class="h-green" style="text-align:center;font-weight:700">✓ ZONA APROBADA</div>
+              <div class="h-green" style="font-weight:700">Cruce 20/80: Alcista (87b · Gap 1.8)</div>
               <div class="h-row"><span class="h-label">SMA20:</span><span class="h-green">4890.25 ↑</span></div>
               <div class="h-row"><span class="h-label">SMA80:</span><span class="h-green">4885.50 ↑</span></div>
               <div class="h-row"><span class="h-label">LR89:</span><span class="h-green">4891.00 ↑</span></div>
               <div class="h-row"><span class="h-label">AVWAP:</span><span class="h-red">4888.75 ↓</span></div>
-              <div class="h-row"><span class="h-label">HTF:OFF</span><span class="h-label">C3:OFF</span><span class="h-label">C4:OFF</span></div>
-              <div class="h-row"><span class="h-label">RSI(14):</span><span class="h-cyan">54.3</span></div>
-              <div class="h-row"><span class="h-label">POC:</span><span class="h-green">4887.00 ✓</span></div>
+              <div class="h-row"><span class="h-label">RSI(14): 54.3</span><span class="h-cyan">POC: 4887.00 ✓oblig</span></div>
+              <div class="h-row"><span class="h-label" style="font-size:9px">HTF:OFF&nbsp;&nbsp;C3:OFF&nbsp;&nbsp;C4:OFF</span></div>
             </div>
             <div class="h-section">
-              <div class="h-title">─ Señales ─</div>
-              <div class="h-row"><span class="h-label">A</span><span class="h-green">0.82σ ✓</span></div>
-              <div class="h-row"><span class="h-label">LR</span><span class="h-dim">inactiva</span></div>
-              <div class="h-row"><span class="h-label">M2</span><span class="h-orange">1.45σ</span></div>
-            </div>
-            <div class="h-section">
-              <div class="h-title">─ Entrada Activa ─</div>
-              <div class="h-row"><span style="font-size:13px">[ A ]</span><span class="h-green">↑ LONG  |  01/07 09:32  [ACTIVA]</span></div>
-              <div class="h-row"><span class="h-label">Entrada:</span><span class="h-cyan">4889.50</span></div>
-              <div class="h-row"><span class="h-label">Stop:</span><span class="h-red">4882.75 (6.75 pts)</span></div>
-              <div class="h-row"><span class="h-label">T1:</span><span class="h-green">4896.00 R:R 1.0</span></div>
-              <div class="h-row"><span class="h-label">T2:</span><span class="h-orange">4905.25 R:R 2.3</span></div>
+              <div class="h-title">─ Senales 7 Zonas ─</div>
+              <div class="h-row"><span class="h-green">■&nbsp;Zona A/A+</span><span class="h-cyan">0.82σ #1</span></div>
+              <div class="h-row"><span class="h-dim">■&nbsp;Zona LR/LR+</span><span class="h-dim">#2</span></div>
+              <div class="h-row"><span class="h-dim">■&nbsp;Zona 20/20+</span><span class="h-dim">#3</span></div>
+              <div class="h-row"><span class="h-dim">■&nbsp;Zona 80/80+</span><span class="h-dim">#4</span></div>
+              <div class="h-row"><span class="h-dim">■&nbsp;M1/M1+</span><span class="h-dim">OFF</span></div>
+              <div class="h-row"><span class="h-orange">■&nbsp;M2/M2+</span><span class="h-cyan">1.45σ #5</span></div>
+              <div class="h-row"><span class="h-dim">■&nbsp;M3/M3+</span><span class="h-dim">#6</span></div>
             </div>
             <div class="h-section">
               <div class="h-title">─ Market &amp; Keltner ─</div>
-              <div class="h-row"><span class="h-label">Hora:</span><span class="h-cyan">09:32:47</span></div>
-              <div class="h-row"><span class="h-label">ATR:</span><span class="h-cyan">6.25 pts</span></div>
+              <div class="h-row"><span class="h-label">Hora:</span><span class="h-gold" style="font-weight:700">09:32:47</span></div>
+              <div class="h-row"><span class="h-label">ATR:</span><span class="h-cyan">6.25</span></div>
               <div class="h-row"><span class="h-label">Vol. Barra:</span><span>12,450</span></div>
               <div class="h-row"><span class="h-label">Vol. Sesión:</span><span class="h-cyan">284,120</span></div>
+              <div class="h-row"><span class="h-label">Vol. Width:</span><span class="h-cyan">18.4</span></div>
+              <div class="h-row"><span class="h-label">Vol. BM:</span><span>210,300</span></div>
             </div>
             <div class="h-section">
-              <div class="h-title">─ Posición ─</div>
-              <div class="h-green">LONG 1 @ 4889.50</div>
-              <div class="h-green">+$62.50 (+0.12 pts)</div>
+              <div class="h-title">─ Entrada Activa ─</div>
+              <div class="h-row"><span class="h-green" style="font-weight:700">[A]</span><span class="h-green" style="font-weight:700">↑ LONG&nbsp;&nbsp;|&nbsp;&nbsp;01/07 09:32&nbsp;&nbsp;[ACTIVA]</span></div>
+              <div class="h-row"><span class="h-label">Entrada:</span><span class="h-cyan">4889.50</span></div>
+              <div class="h-row"><span class="h-label">Stop:</span><span class="h-red">4882.75 (6.75 pts)</span></div>
+              <div class="h-row"><span class="h-label">T1:</span><span class="h-green">4896.00 (6.50 pts) R:R 1.0</span></div>
+              <div class="h-row"><span class="h-label">T2:</span><span class="h-orange">4905.25 (15.75 pts) R:R 2.3</span></div>
+            </div>
+            <div class="h-section">
+              <div class="h-title">─ Posicion ─</div>
+              <div class="h-green" style="text-align:center;font-weight:700">LONG 1 @ 4889.50</div>
+              <div class="h-green" style="text-align:center;font-weight:700">+$62 (+0.12 pts)</div>
+              <div class="h-dim" style="text-align:center;font-size:9px">Risk $150 | T $350 | R:R 2.3:1</div>
             </div>
           </div>
         </div>
@@ -539,13 +568,17 @@
             <tr><td><strong>Vol. Barra:</strong></td><td>Volumen de la barra actual</td><td>Detecta barras de alta/baja actividad</td></tr>
             <tr><td><strong>Vol. Sesión:</strong></td><td>Volumen acumulado de la sesión</td><td>Contexto de liquidez del día</td></tr>
             <tr><td><strong>Vol. Width:</strong></td><td>Ancho del canal Keltner de volatilidad en puntos</td><td>Mide el rango de volatilidad actual</td></tr>
-            <tr><td><strong>Sig. Width:</strong></td><td>Ancho del canal Keltner de señal en puntos</td><td>Referencia para T1/T2</td></tr>
+            <tr><td><strong>Vol. BM:</strong></td><td>Banda Media del canal Keltner de volatilidad</td><td>Referencia usada por Capas 3/4 (VWAP/LR sobre BM) y por el cálculo del Stop</td></tr>
           </tbody>
         </table>
       </div>
       <div class="card warn">
         <div class="card-title">Cómo detectar delay de datos</div>
         <p>Si la hora mostrada en el panel difiere en más de 1-2 minutos del reloj real de tu sistema, hay un problema de conexión o el chart está en modo replay. Nunca operar con datos con delay no verificado.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Sig. Width / Sig. BM — eliminados <span class="pill v7">CAMBIADO V7</span></div>
+        <p>Se quitaron del panel. Rastreamos su uso en el código: se calculaban (canal Keltner de "Señal", periodo 20×2.0) pero <strong>no alimentaban ningún filtro real</strong> — Capa 3/4 y el cálculo del Stop usan <code>_keltnerVolBM</code>/<code>_keltnerVolWidth</code> (el canal de Volatilidad, 52×3.5), no el de Señal. Mostrar un dato que no influye en ninguna decisión solo generaba ruido visual.</p>
       </div>
 
       <div id="posicion"></div>
@@ -673,7 +706,7 @@
       <p>Cuando <code>UsarCapa4=true</code>, exige que el LinReg89 esté por encima de la Banda Media. Ambas capas están <strong>desactivadas por defecto</strong> en V7 (no mejoran en pullbacks según BT).</p>
 
       <h3>Capa 5 — RSI Adaptativo <span class="pill v7">V7</span></h3>
-      <p>RSI direction-aware: en pullbacks alcistas, el RSI debe estar en zona oversold para confirmar la entrada. Desactivado por defecto (<code>UsarCapa5_RSI=false</code>) ya que el análisis BT no mostró mejora consistente en operación de pullbacks.</p>
+      <p>RSI direction-aware: en pullbacks alcistas, el RSI debe estar en zona oversold para confirmar la entrada. Activado por defecto (<code>UsarCapa5_RSI=true</code> <span class="pill v7">CAMBIADO</span>).</p>
 
       <div id="filtro-poc"></div>
       <h3>Filtro POC por Zona <span class="pill bt">BT-V7-25</span></h3>
@@ -967,12 +1000,48 @@
               <tr><td><code>BarType_Tick</code></td><td>true</td><td>true = chart de ticks, false = chart de minutos. Afecta el modelo de BT interno</td></tr>
               <tr><td><code>DireccionOperacion</code></td><td>Ambas</td><td>Solo LONG, Solo SHORT, o Ambas direcciones</td></tr>
               <tr><td><code>ZonaFiltro</code></td><td>TodasLasZonas</td><td>TodasLasZonas / SoloZonasPlus / SoloZonasNormales</td></tr>
-              <tr><td><code>ModoDeteccionVol</code></td><td>—</td><td>Modo de detección de volatilidad para los canales Keltner</td></tr>
+              <tr><td><code>ModoDeteccionVol</code></td><td>AtrRange <span class="pill v7">CAMBIADO</span></td><td>Modo de detección de volatilidad para los canales Keltner: AtrRange (usa ATR) o KeltnerWidth</td></tr>
               <tr><td><code>RutaLog</code></td><td>—</td><td>Ruta completa de la carpeta donde se guardan los CSV de señales</td></tr>
               <tr><td><code>NombreArchivoLog</code></td><td>—</td><td>Nombre base del archivo CSV (se añade fecha automáticamente)</td></tr>
               <tr><td><code>RegistrarSenales</code></td><td>false</td><td>Activar logging de señales al CSV</td></tr>
               <tr><td><code>LoggearHistorico</code></td><td>false</td><td>Loguear también señales históricas al cargar el indicador</td></tr>
               <tr><td><code>ConfigCSV</code></td><td>—</td><td>Configuración adicional del formato CSV</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="prop-ui"></div>
+      <div class="prop-group">
+        <div class="prop-group-title">0. UI</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr></thead>
+            <tbody>
+              <tr><td><code>Ventana_Flotante</code></td><td>true</td><td>Panel HUD como ventana WPF flotante sobre el chart</td></tr>
+              <tr><td><code>Mostrar_En_Chart</code></td><td>false <span class="pill v7">CAMBIADO</span></td><td>Dibuja el overlay SharpDX (líneas y etiquetas de Zona, Stop, T1, T2, POC/NPOC) directamente sobre el chart. No afecta el panel HUD flotante</td></tr>
+              <tr><td><code>Mostrar_Nombre_Chart</code></td><td>false <span class="pill new">NUEVO V7</span></td><td>Oculta la lista de parámetros del texto "EduS_MasterPanel_HUD_V7 (params...)" en la esquina superior izquierda del chart, dejando solo el nombre — mismo patrón que EduS_Trader_VIX_Monitor_v2</td></tr>
+              <tr><td><code>Hud_X / Hud_Y</code></td><td>20 / 20</td><td>Posición del panel flotante en píxeles</td></tr>
+              <tr><td><code>Hud_Ancho</code></td><td>240 <span class="pill v7">CAMBIADO</span></td><td>Ancho del panel flotante en píxeles</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="prop-secciones"></div>
+      <div class="prop-group">
+        <div class="prop-group-title">1. Secciones</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr></thead>
+            <tbody>
+              <tr><td><code>Mostrar_Semaforo</code></td><td>true</td><td>Sección Semáforo de Tendencia (1ª en el panel)</td></tr>
+              <tr><td><code>Mostrar_Senales</code></td><td>true</td><td>Sección Señales 7 Zonas (2ª)</td></tr>
+              <tr><td><code>Mostrar_Keltner</code></td><td>true</td><td>Sección Market &amp; Keltner (3ª)</td></tr>
+              <tr><td><code>Mostrar_Entrada</code></td><td>true</td><td>Sección Entrada Activa (4ª) — solo visible si hay una última señal válida</td></tr>
+              <tr><td><code>Mostrar_Posicion</code></td><td>true</td><td>Sección Posición (5ª y última)</td></tr>
+              <tr><td><code>AccountName</code></td><td>Sim101</td><td>Cuenta a monitorear en la sección Posición</td></tr>
+              <tr><td><code>Pos_UpdateSeg</code></td><td>3</td><td>Segundos entre refrescos de la sección Posición</td></tr>
             </tbody>
           </table>
         </div>
@@ -1004,7 +1073,7 @@
               <tr><td><code>SMA20_Period</code></td><td>20</td><td>Período de la SMA rápida (zona 20 y cruce)</td></tr>
               <tr><td><code>SMA80_Period</code></td><td>80</td><td>Período de la SMA lenta (zona 80 y cruce)</td></tr>
               <tr><td><code>LinReg_Period</code></td><td>89</td><td>Período de la Regresión Lineal</td></tr>
-              <tr><td><code>LinReg_SlopeThreshold</code></td><td>—</td><td>Pendiente mínima para considerar el LinReg "en tendencia"</td></tr>
+              <tr><td><code>LinReg_SlopeThreshold</code></td><td>0.18 <span class="pill v7">CAMBIADO</span></td><td>Pendiente mínima (× ATR) para considerar el LinReg "en tendencia". 0 = auto (ATR×0.04); &gt;0 = multiplicador directo de ATR</td></tr>
               <tr><td><code>ATR_Period</code></td><td>14</td><td>Período del ATR para cálculo de stops y zonas</td></tr>
               <tr><td><code>AVWAP_SwingPeriod</code></td><td>—</td><td>Período del detector de swings para el AVWAP ancla</td></tr>
               <tr><td><code>AVWAP_AdptAPT</code></td><td>true</td><td>AVWAP con APT adaptativo (volatilidad ajustada)</td></tr>
@@ -1036,14 +1105,14 @@
             <tbody>
               <tr><td><code>UsarCapa3</code></td><td>false</td><td>Exige AVWAP por encima de la Banda Media Keltner</td></tr>
               <tr><td><code>UsarCapa4</code></td><td>false</td><td>Exige LinReg89 por encima de la Banda Media Keltner</td></tr>
-              <tr><td><code>UsarCapa5_RSI</code></td><td>false</td><td>RSI Adaptativo direction-aware. Sin mejora en BT de pullbacks</td></tr>
+              <tr><td><code>UsarCapa5_RSI</code></td><td>true <span class="pill v7">CAMBIADO</span></td><td>RSI Adaptativo direction-aware</td></tr>
               <tr><td><code>UsarRSI_Divergencia</code></td><td>false</td><td>Upgradea zonas Normal → Plus cuando hay divergencia oculta RSI</td></tr>
               <tr><td><code>RSI_DivLookback</code></td><td>20</td><td>Barras de lookback para detección de swing RSI</td></tr>
               <tr><td><code>ToleranciaBM_ATR</code></td><td>1.5</td><td>Radio en ATRs alrededor de la Banda Media para zonas M1/M2/M3</td></tr>
-              <tr><td><code>UsarFiltroHTF</code></td><td>false</td><td>Filtro de alineación en timeframe superior</td></tr>
+              <tr><td><code>UsarFiltroHTF</code></td><td>true <span class="pill v7">CAMBIADO</span></td><td>Filtro de alineación en timeframe superior</td></tr>
               <tr><td><code>HTF_Ticks / HTF_Minutos</code></td><td>987/15</td><td>Resolución del HTF (en ticks o minutos según BarType)</td></tr>
-              <tr><td><code>UsarNodos</code></td><td>false</td><td>Filtro de nodos institucionales de alto volumen</td></tr>
-              <tr><td><code>UsarPocs</code></td><td>false</td><td>Filtro de POCs institucionales (motor separado del Perfil VP)</td></tr>
+              <tr><td><code>UsarNodos</code></td><td>true <span class="pill v7">CAMBIADO</span></td><td>Filtro de nodos institucionales de alto volumen</td></tr>
+              <tr><td><code>UsarPocs</code></td><td>true <span class="pill v7">CAMBIADO</span></td><td>Filtro de POCs institucionales (motor separado del Perfil VP)</td></tr>
               <tr><td><code>CooldownBars</code></td><td>—</td><td>Barras de cooldown post-señal para evitar señales consecutivas en la misma zona</td></tr>
             </tbody>
           </table>
@@ -1073,6 +1142,37 @@
           <p style="margin-top:8px;font-size:13px">Compara la columna <code>Filtro_Pasado</code> entre ambos CSVs para cuantificar el impacto exacto.</p>
         </div>
       </div>
+
+      <div id="prop-audio"></div>
+      <div class="prop-group">
+        <div class="prop-group-title">7. Audio</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr></thead>
+            <tbody>
+              <tr><td><code>SonidoGreenZone / SonidoInZone</code></td><td>rutas .wav en <code>sounds/</code></td><td>Archivos de sonido de cada alerta</td></tr>
+              <tr><td><code>UsarSonidoGreenZone</code></td><td>true <span class="pill new">NUEVO V7</span></td><td>Switch on/off — suena cuando el semáforo llega a 4/4 (VerdeOscuro/VerdeClaro)</td></tr>
+              <tr><td><code>UsarSonidoInZone</code></td><td>true <span class="pill new">NUEVO V7</span></td><td>Switch on/off — suena cuando hay <strong>Zona Aprobada</strong> (mismo veredicto del tag en el Semáforo). Antes sonaba con <code>_entradaValida</code>, que además exigía <code>RR_MinFiltro</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="prop-visual"></div>
+      <div class="prop-group">
+        <div class="prop-group-title">8. Visual Señales</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr></thead>
+            <tbody>
+              <tr><td><code>Senales_OffsetIzq</code></td><td>100</td><td>Offset izquierdo en píxeles para las líneas del overlay sobre el chart</td></tr>
+              <tr><td><code>Senales_FondoColor</code></td><td>Transparent</td><td>Color de fondo de las etiquetas del overlay</td></tr>
+              <tr><td><code>Senales_LineStyle</code></td><td>Solid</td><td>Estilo de línea del overlay (Solid/Dash/Dot/DashDot)</td></tr>
+              <tr><td><code>Mostrar_Etiquetas</code></td><td>true <span class="pill new">NUEVO V7</span></td><td>Apaga solo el <strong>texto</strong> de las etiquetas (Zona, Stop, T1, T2, POC, NPOC) sobre el chart, sin afectar las líneas ni <code>Mostrar_En_Chart</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════ -->
@@ -1085,7 +1185,24 @@
       </div>
 
       <div class="card highlight">
-        <div class="card-title">V7 — 2026-07-01 (BT-V7-25 Research) <span class="pill new">ACTUAL</span></div>
+        <div class="card-title">V7 — 2026-07-01 (Panel HUD + AutoTrader) <span class="pill new">ACTUAL</span></div>
+        <ul>
+          <li>Fix: badge de versión mostraba <code>[V6.0]</code> hardcodeado (remanente del fork de V6) — ahora <code>[V7 Fase 3]</code></li>
+          <li>Nuevo tag <strong>✓ ZONA APROBADA / ✗ ZONA RECHAZADA</strong> en el Semáforo — veredicto real (Gate General + Perfil de Zona), distinto del color que solo mide fuerza de tendencia</li>
+          <li>RSI y POC: fila propia con color dinámico (antes en gris fijo, apretados junto a HTF/C3/C4)</li>
+          <li>Orden de secciones reordenado: Semáforo → Señales → Market &amp; Keltner → Entrada Activa → Posición</li>
+          <li>Eliminados Sig. Width / Sig. BM del panel — confirmado que no alimentan ningún filtro real (Capa 3/4 y Stop usan el canal de Volatilidad, no el de Señal)</li>
+          <li>Nuevo <code>Mostrar_Nombre_Chart</code> — oculta los parámetros del nombre del indicador en la esquina del chart</li>
+          <li>Nuevo <code>Mostrar_Etiquetas</code> — apaga solo el texto de las etiquetas del overlay, sin tocar las líneas</li>
+          <li>Nuevos <code>UsarSonidoGreenZone</code> / <code>UsarSonidoInZone</code> — switches independientes por sonido</li>
+          <li>Audio InZone ahora suena con Zona Aprobada, no con <code>_entradaValida</code> (que exigía además RR_MinFiltro)</li>
+          <li>Defaults actualizados: <code>ModoDeteccionVol=AtrRange</code>, <code>Mostrar_En_Chart=false</code>, <code>Hud_Ancho=240</code>, <code>LinReg_SlopeThreshold=0.18</code>, <code>UsarCapa5_RSI/UsarFiltroHTF/UsarNodos/UsarPocs=true</code></li>
+          <li><strong>Fix crítico AutoTrader:</strong> <code>EduSAutoTraderV2.cs</code> buscaba únicamente <code>EduS_MasterPanel_HUD_V6</code> en el chart — nunca leía las señales de V7 aunque el indicador las emitiera. Cambiado a <code>dynamic</code>: prioriza V7 si está presente, cae a V6 si no</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title">V7 — 2026-06-30 (BT-V7-25 Research)</div>
         <ul>
           <li>Nuevos filtros por zona basados en BT-V7-25 (257K trades): POC obligatorio en A MNQ y M2 MES</li>
           <li>Filtro madurez cruce SMA20/80: M2 MES Bajista (maduro), M3 MNQ Bajista (reciente)</li>
