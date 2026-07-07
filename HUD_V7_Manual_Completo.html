@@ -263,6 +263,8 @@
     <a href="#capas" class="toc-h3">Capas 3, 4 y 5 (RSI)</a>
     <a href="#filtro-poc" class="toc-h3">Filtro POC por zona</a>
     <a href="#filtro-madurez" class="toc-h3">Filtro Madurez del cruce</a>
+    <a href="#filtro-conflvn" class="toc-h3">Filtro Conf_LVN (Fase 4)</a>
+    <a href="#filtro-direccion-zona" class="toc-h3">Dirección por Zona (Fase 4)</a>
     <a href="#filtro-htf" class="toc-h3">Filtro HTF y Nodos</a>
     <a href="#bt-research" class="toc-h2">6. Investigación BT-V7-25</a>
     <a href="#bt-resultados" class="toc-h3">Resultados por zona</a>
@@ -281,6 +283,7 @@
     <a href="#prop-zonas" class="toc-h3">3. Zonas y Ranking</a>
     <a href="#prop-filtros" class="toc-h3">5. Filtros de Entrada</a>
     <a href="#prop-poc-madurez" class="toc-h3">5.1 Filtros POC &amp; Madurez</a>
+    <a href="#prop-direccion-conflvn" class="toc-h3">5.2 Dirección Zona &amp; Conf_LVN</a>
     <a href="#prop-audio" class="toc-h3">7. Audio</a>
     <a href="#prop-visual" class="toc-h3">8. Visual Señales</a>
     <a href="#changelog" class="toc-h2">9. Historial Versiones</a>
@@ -295,10 +298,10 @@
       <div class="subtitle">NinjaTrader 8 &mdash; Indicador de Señales Institucionales con Backtesting Integrado</div>
       <div class="hero-meta">
         <div class="hero-chip"><strong>Instrumento:</strong> MES · ES · MNQ · NQ</div>
-        <div class="hero-chip"><strong>BT base:</strong> BT-V7-25 · 257,816 trades</div>
+        <div class="hero-chip"><strong>BT base:</strong> BT-V7-31 · 270,223 señales (Fase 4)</div>
         <div class="hero-chip"><strong>Zonas:</strong> A · LR · 20 · 80 · M1 · M2 · M3</div>
         <div class="hero-chip"><strong>Archivo:</strong> EduSMasterPanelHUDV7.cs</div>
-        <div class="hero-chip"><strong>Actualizado:</strong> 2026-07-01</div>
+        <div class="hero-chip"><strong>Actualizado:</strong> 2026-07-07 (Fase 4)</div>
       </div>
     </div>
 
@@ -341,6 +344,16 @@
 
       <div id="novedades-v7"></div>
       <h3>Novedades de V7 <span class="pill v7">V7</span></h3>
+
+      <div class="card highlight" style="border-left:4px solid #22c55e;margin-bottom:16px">
+        <div class="card-title">🆕 V7 Fase 4 (2026-07-07) — Confluencia LVN + Dirección por Zona <span class="pill bt">BT-V7-31 · 270K</span></div>
+        <ul>
+          <li><strong>Columna <code>Conf_LVN</code></strong> (nº 57 del CSV) — clasifica cada señal por su confluencia con el Low Volume Node: <code>ALTA</code> / <code>NORMAL</code> / <code>EVITAR</code> / <code>N/A</code></li>
+          <li><strong>Filtro <code>FiltroConfLVN</code></strong> (Off / BloquearEvitar / SoloAlta) — bloqueo opcional de la única celda muerta del BT (long con LVN encima a &lt;0.5 ATR, R+0.084)</li>
+          <li><strong>Dirección por Zona</strong> — 7 propiedades <code>DirZonaA/LR/20/80/M1/M2/M3</code> (Ambos/SoloLong/SoloShort): expresa el gameplan del día por zona (ej. "A+ solo long, 80+ solo short"), reemplazando el filtro de dirección global único</li>
+          <li><strong>Display:</strong> flechas ↑/↓/↑↓ por zona en Señales · tag <code>[LVN:off/BLOQ/ALTA]</code> en la cabecera · Entrada Activa reorganizada a 2 líneas</li>
+        </ul>
+      </div>
 
       <div class="two-col">
         <div class="card new">
@@ -547,14 +560,43 @@
         </table>
       </div>
 
+      <div class="card new" style="margin-top:12px">
+        <div class="card-title">Flechas de dirección por zona <span class="pill new">V7 FASE 4</span></div>
+        <p>Cada una de las 7 filas lleva al inicio de su etiqueta una flecha que refleja su configuración de dirección (propiedades <code>DirZonaA/LR/20/80/M1/M2/M3</code>), <strong>siempre visible</strong> aunque la zona esté inactiva u OFF:</p>
+        <ul>
+          <li><strong>↑</strong> — Solo LONG (la zona solo emite señales alcistas)</li>
+          <li><strong>↓</strong> — Solo SHORT (la zona solo emite señales bajistas)</li>
+          <li><strong>↑↓</strong> — Ambos (default, sin restricción de dirección)</li>
+        </ul>
+        <p style="font-size:13px;margin-top:6px">Ejemplo: <code>↓ Zona 80/80+&nbsp;&nbsp;&nbsp;+0.50σ #1</code> = zona 80 restringida a shorts, activa, prioridad #1.</p>
+      </div>
+
+      <div class="card info" style="margin-top:10px">
+        <div class="card-title">Tag del filtro Conf_LVN en la cabecera <span class="pill new">V7 FASE 4</span></div>
+        <p>La cabecera de la sección Señales muestra el modo del filtro <code>FiltroConfLVN</code> (siempre visible, para distinguir también el OFF):</p>
+        <ul>
+          <li><code>[LVN:off]</code> — filtro desactivado, solo se registra la columna (color de cabecera normal)</li>
+          <li><code>[LVN:BLOQ]</code> — bloquea señales EVITAR (cabecera en <span class="r">naranja</span>)</li>
+          <li><code>[LVN:ALTA]</code> — exige confluencia ALTA (cabecera en <span style="color:#22d3ee">cian</span>)</li>
+        </ul>
+        <p style="font-size:13px;margin-top:6px">Ejemplo: <code>-- Activas: A+(#1), 20+(#2) [Z+] [LVN:BLOQ] --</code></p>
+      </div>
+
       <div id="entrada-activa"></div>
       <h3>Entrada Activa <span class="pill v7">NUEVO V7</span></h3>
-      <p>Muestra la última señal generada con su estado (ACTIVA vs HISTÓRICA):</p>
+      <p>Muestra la última señal generada con su estado (ACTIVA vs HISTÓRICA). <span class="pill new">FASE 4</span> Reorganizada en <strong>dos líneas</strong> (la línea única se desbordaba del cuadro al añadir la dirección de zona):</p>
       <ul>
-        <li><strong>↑ LONG</strong> (verde) o <strong>↓ SHORT</strong> (naranja) — dirección de la señal</li>
-        <li><strong>Zona + Fecha/hora</strong> — p.ej. <code>[A] ↑ LONG  |  01/07 09:32  [ACTIVA]</code></li>
+        <li><strong>Línea 1</strong> — estado + hora, con color de estado: <code>[ACTIVA]&nbsp;&nbsp;&nbsp;07/07 10:41</code> (verde=activa, naranja=histórica)</li>
+        <li><strong>Línea 2</strong> — zona + Conf_LVN + dirección + config de zona, con color de dirección: <code>[80+] ★LVN&nbsp;&nbsp;↓ SHORT&nbsp;·&nbsp;Solo SHORT</code></li>
+        <li><strong>★LVN / ⚠LVN</strong> — marcador de confluencia LVN de la señal (★=ALTA, ⚠=EVITAR; ausente si NORMAL/N/A)</li>
+        <li><strong>↑ LONG / ↓ SHORT</strong> — dirección real de la señal</li>
+        <li><strong>Solo LONG / Solo SHORT / Ambos</strong> — dirección <em>configurada</em> de esa zona (confirma que tu setup Fase 4 coincide con el gameplan)</li>
         <li><strong>Entrada, Stop, T1, T2</strong> con puntos y ratio R:R</li>
       </ul>
+      <div class="card info">
+        <div class="card-title">Diferencia entre las dos direcciones</div>
+        <p><strong>↑ LONG / ↓ SHORT</strong> es la dirección real de la señal prendida. <strong>Solo LONG / Solo SHORT / Ambos</strong> es la <em>configuración permitida</em> de la zona. Como una señal emitida siempre respeta el filtro de dirección de su zona, ver ambas alineadas confirma que la config está activa; si esperabas restricción y ves "Ambos", olvidaste configurar esa zona.</p>
+      </div>
 
       <div id="market-keltner"></div>
       <h3>Market &amp; Keltner <span class="pill v7">NUEVO V7</span></h3>
@@ -773,6 +815,71 @@
         <p>En M2 MES Alcista, el Gap_ATR dice que el cruce reciente es mejor (separación baja = no sobreextendido), pero Barras dice que el maduro es mejor (tiempo confirma tendencia). Son riesgos independientes: magnitud y tiempo miden dimensiones distintas del mercado. No existe un umbral único que optimice ambos. La solución correcta sería un filtro 2D combinado, que se deja para versiones futuras.</p>
       </div>
 
+      <div id="filtro-conflvn"></div>
+      <h3>Filtro Conf_LVN <span class="pill new">V7 FASE 4</span> <span class="pill bt">BT-V7-31</span></h3>
+      <p>El <strong>LVN</strong> (Low Volume Node) es una zona de baja liquidez del Perfil de Volumen. El análisis del BT-V7-31 (270,223 señales <code>Filtro_Pasado=SI</code>) reveló que lo determinante es el <strong>lado</strong> del LVN respecto a la entrada, no la mera cercanía. La confluencia se clasifica desde la entrada real (limit con margen ATR):</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Clase</th><th>Condición (rel = (entrada−LVN)/ATR)</th><th>R aprox.</th><th>Lectura</th></tr></thead>
+          <tbody>
+            <tr class="coherente"><td><strong>ALTA</strong></td><td>SHORT: LVN debajo 0.5–1.5 ATR · LONG: LVN debajo ≤1.5 ATR</td><td class="v">+0.52 a +0.60</td><td>Pista libre (short) / soporte (long)</td></tr>
+            <tr><td>NORMAL</td><td>Resto de casos con dato de LVN</td><td class="g">+0.30 aprox.</td><td>Edge base, sin bonus</td></tr>
+            <tr class="opuesto"><td><strong>EVITAR</strong></td><td>LONG: LVN encima a &lt;0.5 ATR</td><td class="r">+0.084</td><td>Techo de baja liquidez por perforar — celda muerta</td></tr>
+            <tr><td>N/A</td><td>Sin dato de LVN en la barra</td><td class="g">—</td><td>Pasa en BloquearEvitar, no en SoloAlta</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="two-col">
+        <div class="card highlight">
+          <div class="card-title">Modos de <code>FiltroConfLVN</code></div>
+          <ul>
+            <li><strong>Off</strong> (default) — solo mide (columna <code>Conf_LVN</code>), no bloquea</li>
+            <li><strong>BloquearEvitar</strong> — corta la única celda muerta (long LVN encima &lt;0.5 ATR). ~6.5% de los longs</li>
+            <li><strong>SoloAlta</strong> — exige confluencia ALTA (agresivo: descarta ~85% de señales con edge positivo — solo experimentos)</li>
+          </ul>
+        </div>
+        <div class="card info">
+          <div class="card-title">LVN × POC son independientes</div>
+          <p>El cruce 2D confirmó que la confluencia LVN y la distancia al POC son efectos <strong>aditivos</strong>, no el mismo disfrazado. La mejor celda del BT: <code>ALTA</code> + POC cerca (&lt;0.5 ATR) + <code>POC_Confirma=SI</code> → R +0.696 (short) / +0.589 (long). Entrar <em>en</em> el LVN es la peor variante; entrar <em>en</em> el POC es la mejor.</p>
+        </div>
+      </div>
+
+      <div class="card warn">
+        <div class="card-title">Recomendación de uso</div>
+        <p>Dejar en <strong>Off</strong> unos días para acumular la columna <code>Conf_LVN</code> en vivo; luego activar <strong>BloquearEvitar</strong>. No usar <code>SoloAlta</code> en operativa real: el patrón LVN no es estable por bloque horario y las señales "lejos" conservan edge positivo — por eso el filtro es de priorización, no bloqueante salvo la celda muerta.</p>
+      </div>
+
+      <div id="filtro-direccion-zona"></div>
+      <h3>Dirección por Zona <span class="pill new">V7 FASE 4</span></h3>
+      <p>Antes, el filtro de dirección (<code>DireccionOperacion</code>) era <strong>global</strong>: aplicaba SoloLong/SoloShort a todas las zonas por igual. Fase 4 añade dirección <strong>por zona</strong>, para expresar días donde el gameplan pide direcciones distintas según la zona (ej. "A+ solo largo, 80+ solo corto").</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Propiedad</th><th>Zona(s)</th><th>Valores</th></tr></thead>
+          <tbody>
+            <tr><td><code>DirZonaA</code></td><td>A / A+</td><td rowspan="7">Ambos (default) · SoloLong · SoloShort</td></tr>
+            <tr><td><code>DirZonaLR</code></td><td>LR / LR+</td></tr>
+            <tr><td><code>DirZona20</code></td><td>20 / 20+</td></tr>
+            <tr><td><code>DirZona80</code></td><td>80 / 80+</td></tr>
+            <tr><td><code>DirZonaM1</code></td><td>M1 / M1+</td></tr>
+            <tr><td><code>DirZonaM2</code></td><td>M2 / M2+</td></tr>
+            <tr><td><code>DirZonaM3</code></td><td>M3 / M3+</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card info">
+        <div class="card-title">Interacción con la dirección global</div>
+        <p><code>DireccionOperacion</code> global se mantiene como <strong>interruptor maestro</strong>: ambos gates deben permitir la señal. Ej. si el global está en <code>Ambos</code> y <code>DirZona80=SoloShort</code>, la zona 80 solo dará shorts; si el global está en <code>SoloLong</code>, no hay shorts en ninguna zona (el maestro manda). Se ve reflejado en el panel (flechas por zona + línea 2 de Entrada Activa).</p>
+      </div>
+
+      <div class="card warn">
+        <div class="card-title">Disciplina — evitar sobreajuste</div>
+        <p>Configurar la dirección por zona <strong>desde el gameplan / régimen de la mañana</strong> (VIX, segmentos del BT), NO por "ayer el A+ long pagó". Perseguir la zona de ayer es la receta clásica de sobreajuste. Flujo sano: gameplan dicta → config del HUD → postmarket verifica.</p>
+      </div>
+
       <div id="filtro-htf"></div>
       <h3>Filtro HTF y Nodos Institucionales</h3>
       <p>Opcionales y desactivados por defecto en V7:</p>
@@ -911,8 +1018,8 @@
       </div>
 
       <div id="csv-columnas"></div>
-      <h3>Columnas del CSV (56 campos)</h3>
-      <p>Cada señal genera una fila de apertura (APERTURA) y una de cierre (CIERRE) con 56 columnas:</p>
+      <h3>Columnas del CSV (57 campos) <span class="pill new">FASE 4</span></h3>
+      <p>Cada señal genera filas <code>PENDIENTE</code> (al emitirse), <code>ABRE</code> (al llenarse el limit) y <code>CIERRE</code> (al resolverse), todas con <strong>57 columnas</strong> (Fase 4 añadió <code>Conf_LVN</code>). Nota de mantenimiento: se corrigió que las filas <code>ABRE</code> traían 1 columna menos que la cabecera (los campos desde <code>RSI_Value</code> quedaban corridos una posición); ahora los tres tipos de fila están alineados.</p>
 
       <div class="table-wrap">
         <table>
@@ -943,6 +1050,7 @@
             <tr><td class="mono">53-54</td><td><code>CruceSMA_Dir, CruceSMA_Barras</code></td><td>Dirección del cruce y barras desde el último cambio</td></tr>
             <tr class="coherente"><td class="mono"><strong>55</strong></td><td><code>Gap_ATR</code></td><td><strong>[NUEVO V7]</strong> |SMA20−SMA80|/ATR — proxy magnitud madurez</td></tr>
             <tr class="coherente"><td class="mono"><strong>56</strong></td><td><code>Barras_Cruce</code></td><td><strong>[NUEVO V7]</strong> Barras desde último cambio de dirección del cruce</td></tr>
+            <tr class="coherente"><td class="mono"><strong>57</strong></td><td><code>Conf_LVN</code></td><td><strong>[NUEVO FASE 4]</strong> Confluencia con el LVN: ALTA / NORMAL / EVITAR / N/A (calculada desde la entrada real). Ver §5 Filtro Conf_LVN</td></tr>
           </tbody>
         </table>
       </div>
@@ -1143,6 +1251,30 @@
         </div>
       </div>
 
+      <div id="prop-direccion-conflvn"></div>
+      <div class="prop-group">
+        <div class="prop-group-title">5.2 Dirección por Zona &amp; Conf_LVN <span class="pill new">NUEVO FASE 4</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Propiedad</th><th>Default</th><th>Descripción</th></tr></thead>
+            <tbody>
+              <tr><td><code>FiltroConfLVN</code></td><td>Off</td><td>Off = solo mide (columna Conf_LVN) · BloquearEvitar = bloquea longs con LVN encima &lt;0.5 ATR (celda muerta R+0.084) · SoloAlta = exige confluencia ALTA (experimental)</td></tr>
+              <tr><td><code>DirZonaA</code></td><td>Ambos</td><td>Dirección permitida para zona A/A+ (AVWAP)</td></tr>
+              <tr><td><code>DirZonaLR</code></td><td>Ambos</td><td>Dirección permitida para zona LR/LR+</td></tr>
+              <tr><td><code>DirZona20</code></td><td>Ambos</td><td>Dirección permitida para zona 20/20+</td></tr>
+              <tr><td><code>DirZona80</code></td><td>Ambos</td><td>Dirección permitida para zona 80/80+ (ej. gameplan "80 solo bajista" → SoloShort)</td></tr>
+              <tr><td><code>DirZonaM1</code></td><td>Ambos</td><td>Dirección permitida para zona M1/M1+</td></tr>
+              <tr><td><code>DirZonaM2</code></td><td>Ambos</td><td>Dirección permitida para zona M2/M2+</td></tr>
+              <tr><td><code>DirZonaM3</code></td><td>Ambos</td><td>Dirección permitida para zona M3/M3+</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card info" style="margin-top:12px">
+          <div class="card-title">Backtesteable</div>
+          <p>Ambos filtros (Conf_LVN y dirección por zona) entran en la cadena <code>Filtro_Pasado</code> por zona, así que con <code>BT_LogAll=true</code> se pueden validar en A/B igual que POC y Madurez. El default de todas las propiedades reproduce el comportamiento previo a Fase 4 (cero cambio si no se tocan).</p>
+        </div>
+      </div>
+
       <div id="prop-audio"></div>
       <div class="prop-group">
         <div class="prop-group-title">7. Audio</div>
@@ -1184,8 +1316,30 @@
         <h2>Historial de Versiones</h2>
       </div>
 
+      <div class="card highlight" style="border-left:4px solid #22c55e">
+        <div class="card-title">V7 Fase 4 — 2026-07-07 (Conf_LVN + Dirección por Zona) <span class="pill new">ACTUAL</span></div>
+        <ul>
+          <li><strong>Filtro Conf_LVN</strong> (<code>FiltroConfLVN</code>: Off/BloquearEvitar/SoloAlta) — basado en BT-V7-31 (270K señales). Bloquea opcionalmente la celda muerta (long con LVN encima &lt;0.5 ATR, R+0.084)</li>
+          <li><strong>Dirección por Zona</strong> — 7 propiedades <code>DirZonaA/LR/20/80/M1/M2/M3</code> (Ambos/SoloLong/SoloShort). Reemplaza el filtro de dirección global único; el global queda como interruptor maestro</li>
+          <li><strong>Columna CSV nº 57 <code>Conf_LVN</code></strong> (ALTA/NORMAL/EVITAR/N/A) en PENDIENTE/ABRE/CIERRE. Corregido bug preexistente: filas ABRE traían 1 columna menos (campos corridos desde RSI_Value)</li>
+          <li><strong>Display:</strong> flechas ↑/↓/↑↓ por zona en Señales · tag <code>[LVN:off/BLOQ/ALTA]</code> en cabecera (con tinte de color) · Entrada Activa reorganizada a 2 líneas (evita desbordar el cuadro) mostrando Conf_LVN y dirección de zona</li>
+          <li>Ambos filtros integrados en <code>Filtro_Pasado</code> → backtesteables con BT_LogAll. Defaults reproducen el comportamiento pre-Fase 4</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title">AutoTrader V3 — 2026-07-07 (relacionado) <span class="pill bt">NUEVO ARCHIVO</span></div>
+        <p style="font-size:13px;margin-bottom:6px">Estrategia aparte (<code>EduSAutoTraderV3.cs</code>, la V2 se conserva). Nace del incidente de latencia del 07/07 donde el chart MNQ se atrasó hasta 5 min y el AutoTrader ejecutó señales vencidas → stop rechazado → doble cierre que invirtió la posición.</p>
+        <ul>
+          <li><strong>Fix #10 Watchdog de latencia:</strong> mide (reloj − hora del tick); si el atraso supera el umbral, PAUSA la operativa (cancela limit pendiente, no toma señales) hasta normalizar. Banner rojo en chart + sonido + Log de alerta</li>
+          <li><strong>Fix #11 Anti-marketable:</strong> no envía la limit si el precio ya rebasó el nivel o el stop de la señal</li>
+          <li><strong>Fix #12 Validación del fill:</strong> si el fill quedó del lado inválido del stop → cierre controlado, sin bracket</li>
+          <li><strong>Fix #13 Anti doble-flatten:</strong> ante rechazo de stop, deja que NinjaTrader cierre (no duplica el CloseAll que invertía la posición)</li>
+        </ul>
+      </div>
+
       <div class="card highlight">
-        <div class="card-title">V7 — 2026-07-01 (Panel HUD + AutoTrader) <span class="pill new">ACTUAL</span></div>
+        <div class="card-title">V7 — 2026-07-01 (Panel HUD + AutoTrader)</div>
         <ul>
           <li>Fix: badge de versión mostraba <code>[V6.0]</code> hardcodeado (remanente del fork de V6) — ahora <code>[V7 Fase 3]</code></li>
           <li>Nuevo tag <strong>✓ ZONA APROBADA / ✗ ZONA RECHAZADA</strong> en el Semáforo — veredicto real (Gate General + Perfil de Zona), distinto del color que solo mide fuerza de tendencia</li>
