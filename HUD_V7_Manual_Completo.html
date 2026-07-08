@@ -274,6 +274,7 @@
     <a href="#csv" class="toc-h2">7. CSV &amp; Backtesting</a>
     <a href="#csv-columnas" class="toc-h3">Columnas del CSV (56 campos)</a>
     <a href="#csv-bt" class="toc-h3">Modo BT vs. señales live</a>
+    <a href="#volatilidad" class="toc-h3">Config de Volatilidad (VIX)</a>
     <a href="#propiedades" class="toc-h2">8. Referencia Propiedades</a>
     <a href="#prop-general" class="toc-h3">0. General &amp; Captura CSV</a>
     <a href="#prop-ui" class="toc-h3">0. UI</a>
@@ -1085,6 +1086,50 @@
 <span class="cmt"># Columnas clave: Tipo, Zona, Mercado, Filtro_Pasado, Resultado</span>
 <span class="cmt"># Columnas madurez: Gap_ATR (col 55), Barras_Cruce (col 56)</span>
 <span class="cmt"># Ver: EduSTrader - Local Free\scratchpad\analisis_v25.py</span></pre>
+
+      <div id="volatilidad"></div>
+      <h3>Config de Volatilidad — <code>V7_VolatilityConfig.csv</code> <span class="pill bt">RECALIBRADO BT-V7-31</span></h3>
+      <p>Archivo externo que define, por <strong>mercado × escenario de volatilidad</strong>, los rangos de ATR y Keltner que clasifican el régimen, más los parámetros de stop/target/RSI. El HUD elige el escenario en runtime según el ATR observado (<code>ModoDeteccionVol=AtrRange</code>). La columna <code>Timeframe</code> = tamaño de barra de <strong>ticks</strong> (NQ=377, ES=610).</p>
+
+      <div class="card info">
+        <div class="card-title">Metodología — régimen VIX</div>
+        <p>Los 5 escenarios (Baja/Media/Alta/Extrema/SuperExtrema) mapean 1:1 a regímenes de VIX: <strong>&lt;18 / 18-22 / 22-27 / 27-32 / &gt;32</strong>. Cada señal del backtesting se cruza con el cierre del VIX (H1) más cercano; dentro de cada régimen se mide la distribución de ATR14 y Keltner. Los límites <code>Atr_Min/Max</code> se fijan en los puntos de transición entre regímenes. Estudio completo: <a href="/dashboard_vix_keltner_atr_v7-31.html" style="color:var(--teal);font-weight:600">dashboard VIX/Keltner/ATR (BT V7-31)</a> — 427,849 señales, 2024-05 → 2026-05.</p>
+      </div>
+
+      <h4>Valores vigentes ES / NQ <span class="pill new">2026-07-07</span></h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Mercado</th><th>Escenario (VIX)</th><th>Atr_Min</th><th>Atr_Max</th><th>KeltW_Min</th><th>KeltW_Max</th></tr></thead>
+          <tbody>
+            <tr><td rowspan="5"><strong>ES / MES</strong><br><span style="font-size:11px;color:#8b949e">610 tick</span></td><td>Baja (&lt;18)</td><td>0</td><td>2.5</td><td>0</td><td>17</td></tr>
+            <tr><td>Media (18-22)</td><td>2.5</td><td>2.8</td><td>17</td><td>19</td></tr>
+            <tr><td>Alta (22-27)</td><td>2.8</td><td>3.0</td><td>19</td><td>21</td></tr>
+            <tr><td>Extrema (27-32)</td><td>3.0</td><td>3.8</td><td>21</td><td>26</td></tr>
+            <tr><td>SuperExtrema (&gt;32)</td><td>3.8</td><td>∞</td><td>26</td><td>∞</td></tr>
+            <tr><td rowspan="5"><strong>NQ / MNQ</strong><br><span style="font-size:11px;color:#8b949e">377 tick</span></td><td>Baja (&lt;18)</td><td>0</td><td>6.3</td><td>0</td><td>43</td></tr>
+            <tr><td>Media (18-22)</td><td>6.3</td><td>7.5</td><td>43</td><td>52</td></tr>
+            <tr><td>Alta (22-27)</td><td>7.5</td><td>8.5</td><td>52</td><td>59</td></tr>
+            <tr><td>Extrema (27-32)</td><td>8.5</td><td>9.3</td><td>59</td><td>64</td></tr>
+            <tr><td>SuperExtrema (&gt;32)</td><td>9.3</td><td>∞</td><td>64</td><td>∞</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="two-col">
+        <div class="card highlight">
+          <div class="card-title">Ratio K/ATR ≈ 6.9 (constante)</div>
+          <p>En los 5 regímenes y ambos mercados, el Keltner mide ~6.9× el ATR (propiedad de la fórmula: Kelt_Period=52, Mult=3.5). <strong>Keltner de cualquier escenario = ATR × 6.9</strong> — transferible a cualquier mercado.</p>
+        </div>
+        <div class="card warn">
+          <div class="card-title">Fix crítico de NQ</div>
+          <p>El config previo tenía NQ Baja 0–9 / Media 9–12, pero el ATR real de NQ en régimen bajo es ~5.7. NQ caía en "Baja" casi siempre. Corregido con los quintiles reales. Backup en <code>V7_VolatilityConfig_backup_20260707.csv</code>.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">GC y CL — pendientes de calibración propia</div>
+        <p>El VIX mide el S&amp;P 500, no oro ni crudo — este método <strong>no aplica</strong> a GC/CL (necesitarían OVX/GVZ). Las filas CL/GC actuales del CSV (Timeframe=5=minutos, Keltner 18-32) son placeholders sin lógica medida. Camino: (1) fijar el tick-bar por auto-calibración midiendo ATR-en-ticks ≈ banda NQ (~28); (2) límites ATR por percentiles reales de cada mercado; (3) Keltner = ATR × 6.9; (4) copiar las columnas agnósticas (StopATRx, RR, RSI, Zone_ATR). Las columnas no dependientes de volatilidad son iguales para todos los mercados.</p>
+      </div>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════ -->
