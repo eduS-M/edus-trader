@@ -1126,9 +1126,32 @@
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">GC y CL — pendientes de calibración propia</div>
-        <p>El VIX mide el S&amp;P 500, no oro ni crudo — este método <strong>no aplica</strong> a GC/CL (necesitarían OVX/GVZ). Las filas CL/GC actuales del CSV (Timeframe=5=minutos, Keltner 18-32) son placeholders sin lógica medida. Camino: (1) fijar el tick-bar por auto-calibración midiendo ATR-en-ticks ≈ banda NQ (~28); (2) límites ATR por percentiles reales de cada mercado; (3) Keltner = ATR × 6.9; (4) copiar las columnas agnósticas (StopATRx, RR, RSI, Zone_ATR). Las columnas no dependientes de volatilidad son iguales para todos los mercados.</p>
+      <h4>Valores vigentes CL / GC <span class="pill new">2026-07-07 · medido</span></h4>
+      <p>El VIX no aplica a commodities (mide el S&amp;P 500), así que CL/GC se calibran por <strong>percentiles de su propio ATR</strong>. Con señales reales recolectadas (HUD V7 recompilado, sesión Asia) se midió el ATR-en-ticks de varios tamaños de barra y se eligió el que cae en la banda de referencia (ES ~11 / NQ ~28 ticks):</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Mercado</th><th>Tick-bar elegido</th><th>ATR/barra medido</th><th>Escenario</th><th>Atr_Min</th><th>Atr_Max</th><th>KeltW_Min</th><th>KeltW_Max</th></tr></thead>
+          <tbody>
+            <tr><td rowspan="5"><strong>CL</strong><br><span style="font-size:11px;color:#7a7468">tick 0.01</span></td><td rowspan="5"><strong>144 tick</strong><br><span style="font-size:11px;color:#7a7468">14.7 ticks ✓<br>(entre ES y NQ)</span></td><td rowspan="5"></td><td>Baja</td><td>0</td><td>0.11</td><td>0</td><td>0.8</td></tr>
+            <tr><td>Media</td><td>0.11</td><td>0.14</td><td>0.8</td><td>1.0</td></tr>
+            <tr><td>Alta</td><td>0.14</td><td>0.16</td><td>1.0</td><td>1.1</td></tr>
+            <tr><td>Extrema</td><td>0.16</td><td>0.19</td><td>1.1</td><td>1.3</td></tr>
+            <tr><td>SuperExtrema</td><td>0.19</td><td>∞</td><td>1.3</td><td>∞</td></tr>
+            <tr><td rowspan="5"><strong>GC</strong><br><span style="font-size:11px;color:#7a7468">tick 0.10</span></td><td rowspan="5"><strong>89 tick</strong><br><span style="font-size:11px;color:#7a7468">27.5 ticks ✓<br>(≈ NQ)</span></td><td rowspan="5"></td><td>Baja</td><td>0</td><td>2.3</td><td>0</td><td>16</td></tr>
+            <tr><td>Media</td><td>2.3</td><td>2.6</td><td>16</td><td>18</td></tr>
+            <tr><td>Alta</td><td>2.6</td><td>2.9</td><td>18</td><td>20</td></tr>
+            <tr><td>Extrema</td><td>2.9</td><td>3.3</td><td>20</td><td>23</td></tr>
+            <tr><td>SuperExtrema</td><td>3.3</td><td>∞</td><td>23</td><td>∞</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card info">
+        <div class="card-title">Por qué 144 (CL) y 89 (GC)</div>
+        <p>Con el mismo 144-tick, CL da ATR ~14.7 ticks/barra (ideal) pero GC da ~35.6 (grueso) porque el oro es menos activo. A 89 tick, GC baja a ~27.5 ≈ la referencia NQ. Se validó con datos reales que el ratio <strong>K/ATR ≈ 6.9</strong> también se cumple en CL (6.85) y GC (7.0), así que el Keltner sale de ATR × 6.9. El StopATRx, RR, RSI y Zone_ATR se copian (son agnósticos).</p>
+      </div>
+      <div class="card warn">
+        <div class="card-title">Provisional — refinar con más datos</div>
+        <p>Estos límites salen de ~3 meses de señales, mayormente de <strong>sesión nocturna/Asia</strong> (la más fina), y CL tiene muestra chica (283 señales). Son un arranque sólido pero conviene recalibrarlos cuando se acumulen datos de sesión regular. El método VIX de ES/NQ no aplica aquí; si en el futuro se consiguen las series <strong>OVX (crudo)</strong> y <strong>GVZ (oro)</strong> se podría replicar el enfoque por régimen.</p>
       </div>
     </div>
 
