@@ -275,6 +275,7 @@
     <a href="#csv-columnas" class="toc-h3">Columnas del CSV (56 campos)</a>
     <a href="#csv-bt" class="toc-h3">Modo BT vs. señales live</a>
     <a href="#volatilidad" class="toc-h3">Config de Volatilidad (VIX)</a>
+    <a href="#horarios-sesion" class="toc-h3">Señales por horario y mercado</a>
     <a href="#propiedades" class="toc-h2">8. Referencia Propiedades</a>
     <a href="#prop-general" class="toc-h3">0. General &amp; Captura CSV</a>
     <a href="#prop-ui" class="toc-h3">0. UI</a>
@@ -1152,6 +1153,41 @@
       <div class="card warn">
         <div class="card-title">Provisional — refinar con más datos</div>
         <p>Estos límites salen de ~3 meses de señales, mayormente de <strong>sesión nocturna/Asia</strong> (la más fina), y CL tiene muestra chica (283 señales). Son un arranque sólido pero conviene recalibrarlos cuando se acumulen datos de sesión regular. El método VIX de ES/NQ no aplica aquí; si en el futuro se consiguen las series <strong>OVX (crudo)</strong> y <strong>GVZ (oro)</strong> se podría replicar el enfoque por régimen.</p>
+      </div>
+
+      <div id="horarios-sesion"></div>
+      <h3>Mejores señales por horario y mercado <span class="pill bt">BT 2026-07-08 · 12M+ trades</span></h3>
+      <p>Estudio por franja horaria (ET) sobre 6 backtests (CL, GC, MES, MNQ). R aprox. modelo 2 contratos (T1 parcial + runner). Horarios: <strong>USA AM 9:30–11:30 · USA PM 14:00–16:30 · ASIA 19:00–02:00</strong>. Estas señales alimentan el <strong>Gameplan por sesión</strong> (que se corre hasta 3×/día y recomienda qué prender/apagar).</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Mercado</th><th>🌅 USA AM</th><th>🌇 USA PM</th><th>🌏 ASIA</th></tr></thead>
+          <tbody>
+            <tr><td><strong>CL</strong></td><td>80 LONG +0.67 · 80 SHORT +0.52</td><td class="v"><strong>A LONG +0.70</strong> · 20 LONG +0.45</td><td class="r">⚠ EVITAR (+0.08)</td></tr>
+            <tr><td><strong>GC</strong></td><td>80 LONG +0.60 · M3 LONG +0.54</td><td class="v"><strong>LR SHORT +0.64 · 20 SHORT +0.61</strong></td><td>80 SHORT +0.58 · LR/20 LONG +0.49–0.53</td></tr>
+            <tr><td><strong>MES</strong></td><td>80 SHORT +0.57 · A SHORT +0.48</td><td>M3 LONG +0.60 · A LONG +0.54</td><td>20 SHORT +0.64 · 80 LONG +0.57</td></tr>
+            <tr><td><strong>MNQ</strong></td><td>80 SHORT +0.51 · A SHORT +0.42</td><td>A SHORT +0.39 (flojo)</td><td class="v"><strong>M2 SHORT +0.77</strong> · 80/20/A SHORT +0.53–0.60</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="two-col">
+        <div class="card highlight">
+          <div class="card-title">Patrones universales</div>
+          <ul>
+            <li><strong>Zona 80 (reversión SMA80)</strong> es TOP en la mañana en TODOS los mercados.</li>
+            <li><strong>NQ/MNQ sesga SHORT</strong> con fuerza, sobre todo en ASIA (M2 SHORT es la mejor celda).</li>
+            <li><strong>USA PM</strong>: flojo para índices, el MEJOR para commodities (CL/GC).</li>
+            <li><strong>CL en Asia</strong>: expectativa casi nula → no operar.</li>
+          </ul>
+        </div>
+        <div class="card info">
+          <div class="card-title">Temporalidad y config (del mismo BT)</div>
+          <ul>
+            <li><strong>MNQ se queda en 377</strong> (610 más lento rinde peor en todos los horarios).</li>
+            <li><strong>MES 377</strong> en validación (≈ mejor que 610 en crudo y da 1.6× más señales) — bloque 377 ya en el V7_VolatilityConfig.</li>
+            <li><strong>POC ON</strong> universal (POC=SI &gt;&gt; NO en los 4 mercados).</li>
+            <li><strong>PerfilPorZona ON</strong>: desbloquea el semáforo Rojo, el mejor bucket (reversión).</li>
+          </ul>
+        </div>
       </div>
     </div>
 

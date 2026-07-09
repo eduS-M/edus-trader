@@ -112,6 +112,7 @@ tr:hover td{background:rgba(0,0,0,0.02)}
     <a href="#instalacion">Instalacion</a>
     <a href="#configuracion">Configuracion</a>
     <a href="#backtesting">Backtesting</a>
+    <a href="#sesiones">Game Plan por Sesión</a>
     <a href="#modos">Modos de Uso</a>
     <a href="#flujo-completo">Flujo Completo</a>
     <a href="#resultados">Resultados Esperados</a>
@@ -404,6 +405,65 @@ eduSTrader - Local Free/
 <div class="card card-green">
   <div class="card-title">4. Resultado</div>
   <p>Quedan generados <code>backtesting_summary.json</code> (&lt;1MB) y <code>vix_regimen_map.json</code>. A partir de aquí, cada Game Plan usa ambos para el PASO 06: rankea por calidad en R, sugiere el tamaño (full/micro) según tu capital, y elige el régimen correcto por mercado.</p>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ GAME PLAN POR SESIÓN ═══════════════════ -->
+<div class="section-label"><span class="num">✦</span>Game Plan por Sesión</div>
+<h2 id="sesiones">Game Plan por Sesión (AM / PM / ASIA) <span style="font-size:13px;color:var(--text3)">· 2026-07</span></h2>
+<p class="sub">El Game Plan se corre hasta <strong>3 veces al día</strong> y genera el premercado de la sesión que corresponde al momento (reloj ET), con los precios y niveles capturados al correrlo.</p>
+
+<div class="card card-blue">
+  <div class="card-title">Detección automática de sesión (o forzada con <code>--session</code>)</div>
+  <table>
+    <thead><tr><th>Corres entre (ET)</th><th>Genera premercado para</th><th>Ventana operativa</th></tr></thead>
+    <tbody>
+      <tr><td>02:00 – 11:30</td><td><strong>USA AM</strong></td><td>9:00 – 11:30</td></tr>
+      <tr><td>11:30 – 16:30</td><td><strong>USA PM</strong></td><td>14:00 – 16:30</td></tr>
+      <tr><td>16:30 – 02:00</td><td><strong>ASIA</strong></td><td>19:00 – 02:00</td></tr>
+    </tbody>
+  </table>
+  <p>Forzar la sesión: <code>python generar_gameplan.py --auto --session AM|PM|ASIA</code>. Cada corrida escribe archivos propios (<code>gameplan_DDMONYYYY_AM.html</code> / <code>_PM</code> / <code>_ASIA</code>) y el menú web + Telegram se etiquetan con la sesión, para que las 3 corridas del día no se pisen.</p>
+</div>
+
+<div class="card card-purple">
+  <div class="card-title">Panel de Sesión (nuevo)</div>
+  <p>El premercado incluye un panel destacado con la recomendación de ESA sesión:</p>
+  <ul>
+    <li><strong>Por franja horaria</strong>: volatilidad esperada, mercados foco y mejores señales (zona + dirección) por franja.</li>
+    <li><strong>Dos escenarios de volatilidad</strong> (BASE y ALTERNO), porque una sesión puede cambiar de régimen: cada uno con VIX proyectado, régimen y config por mercado.</li>
+    <li><strong>Config exacta del HUD V7 por mercado</strong>: zonas a prender/apagar, dirección por zona (<code>DirZonaX</code>), filtros (POC / PerfilPorZona / Madurez / Conf_LVN), tick-bar y escenario de volatilidad.</li>
+  </ul>
+</div>
+
+<h3 id="flujo-decision">Flujo de decisión: cómo la IA usa el backtesting para prender/apagar filtros</h3>
+<div class="card card-amber">
+  <div class="card-title">Aclaración importante — dos capas</div>
+  <p>La IA <strong>no</strong> re-analiza los backtests crudos (millones de trades) cada día ni decide todos los filtros desde cero. Hay dos capas:</p>
+  <p><strong>Capa 1 — Config FIJA (del backtesting, no cambia a diario):</strong> decidida en el análisis offline y grabada en los <em>defaults del HUD V7</em> + el <code>V7_VolatilityConfig.csv</code>: <code>UsarFiltroPOC=ON</code>, <code>UsarPerfilPorZona=ON</code> (permite el semáforo Rojo/reversión), <code>UsarFiltroMadurez=ON</code>, <code>Conf_LVN=Off</code>; tick-bars por mercado; y los rangos ATR/Keltner por régimen. La IA los respeta, no los reinventa.</p>
+  <p><strong>Capa 2 — Ajuste DIARIO / por sesión (lo que la IA SÍ decide):</strong> qué <strong>zonas prender/apagar</strong>, la <strong>dirección por zona</strong>, el <strong>sizing</strong> y el <strong>escenario de volatilidad proyectado</strong> — guiada por datos <em>digeridos</em> (no crudos): el <code>backtesting_summary.json</code> + el VIX del momento + el bloque de mejores señales de la sesión.</p>
+</div>
+
+<div class="card card-green">
+  <div class="card-title">Pipeline paso a paso</div>
+  <pre>OFFLINE (ocasional, al haber BT nuevo)
+  BT crudo (millones de trades)
+     -&gt; preprocess_backtesting.py  -&gt; backtesting_summary.json
+     -&gt; analisis por horario x mercado -&gt; hallazgos (memoria + manual)
+
+DIARIO (cada corrida del Game Plan, por sesion)
+  1 detectar_sesion()      -&gt; AM / PM / ASIA (reloj ET) o --session
+  2 fetch_market_data()    -&gt; precios ES/NQ/CL/GC + VIX del momento
+  3 construir_resumen_ia() -&gt; recomendaciones desde el summary + VIX
+                             + bloque BT de la sesion + config fija (Capa 1)
+  4 build_prompt()         -&gt; prompt con datos DIGERIDOS + instrucciones
+                             (proyectar a la ventana, 2 volatilidades, config por mercado)
+  5 la IA razona SOBRE ESO -&gt; recomendacion_sesion:
+                             por_franja + escenarios_volatilidad (BASE/ALTERNO)
+                             + config_por_mercado (zonas ON/OFF, direccion, filtros, tick-bar, sizing)
+  6 generate_html + publish -&gt; Panel de sesion + web + Telegram (etiquetados)</pre>
+  <p style="margin-top:8px">En resumen: los filtros duros (POC / PerfilPorZona / Madurez) están <strong>siempre ON</strong> por decisión del backtesting; lo que cambia por sesión es <strong>qué zonas activar, en qué dirección, con qué tamaño y en qué escenario de volatilidad</strong>. Si un mercado tiene expectativa negativa en la sesión (ej. CL en Asia ≈ +0.08), la instrucción obliga a recomendar NO operarlo.</p>
 </div>
 
 <div class="section-divider"></div>
