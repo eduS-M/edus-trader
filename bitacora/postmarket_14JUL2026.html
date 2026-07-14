@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — Post-Market Analysis | 14 JUL 2026</title>
+<meta name="description" content="EduS Trader Post-Market Analysis 14 JUL 2026 — Post-Market Analysis">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --navy: #142d37;
+  --navy-dark: #0d1f26;
+  --teal: #279995;
+  --gold: #b38665;
+  --gold-light: #d4a982;
+  --bg: #f2f0eb;
+  --surface: #ffffff;
+  --surface2: #f8f6f0;
+  --border: #e0dbd0;
+  --border2: rgba(0,0,0,0.20);
+  --text: #1a1814;
+  --text-muted: #7a7468;
+  --bull: #279995;
+  --bull-bg: #e6f5f4;
+  --bear: #c0392b;
+  --bear-bg: #fdf0ee;
+  --amber: #b38665;
+  --amber-bg: #f6efe8;
+  --blue: #185fa5;
+  --blue-bg: #e6f1fb;
+  --shadow: 0 2px 20px rgba(13,31,38,0.10);
+  --radius: 10px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --header-gradient: linear-gradient(135deg, #142d37 0%, #034649 100%);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1e20;
+    --surface: #1e2527;
+    --surface2: #232b2e;
+    --border: #2d3b3f;
+    --border2: rgba(255,255,255,0.15);
+    --text: #e8e4dc;
+    --text-muted: #8a9a9e;
+    --bull-bg: rgba(39,153,149,0.15);
+    --bear-bg: rgba(192,57,43,0.15);
+    --amber-bg: rgba(179,134,101,0.15);
+    --blue-bg: rgba(24,95,165,0.15);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ─── HEADER ─── */
+.header {
+  background: var(--header-gradient);
+  color: white;
+  padding: 20px 36px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid var(--gold);
+  position: relative;
+  overflow: hidden;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(179,134,101,0.08);
+  pointer-events: none;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 1;
+}
+.header-left .logo-img {
+  height: 60px;
+  width: auto;
+  display: block;
+}
+.header-left .brand { display: flex; flex-direction: column; }
+.header-left .brand-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: white;
+  line-height: 1;
+}
+.header-left .brand-name .gold { color: var(--gold); }
+.header-left .brand-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: var(--gold-light);
+  letter-spacing: 3px;
+  margin-top: 3px;
+  text-transform: uppercase;
+}
+.header-right { text-align: right; z-index: 1; }
+.header-right .date {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 700;
+}
+.header-right .prices {
+  display: flex; gap: 6px; margin-top: 6px;
+  justify-content: flex-end; flex-wrap: wrap;
+}
+.price-chip {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(179,134,101,0.35);
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.85);
+}
+.price-chip span { color: var(--gold-light); font-weight: 700; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy);
+  border-bottom: 1px solid rgba(179,134,101,0.25);
+  padding: 0 2rem;
+  display: flex; align-items: center; overflow-x: auto;
+  gap: 2px;
+}
+nav .brand {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  color: var(--gold); padding: 13px 0; margin-right: 20px;
+  white-space: nowrap; letter-spacing: 2px;
+  text-transform: uppercase;
+}
+nav a {
+  font-size: 11px; color: rgba(255,255,255,0.5);
+  text-decoration: none; padding: 14px 12px;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.5px;
+}
+nav a:hover { color: white; }
+nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 980px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+.section-divider { height: 1px; background: linear-gradient(to right, var(--gold), transparent); margin: 2.5rem 0 2rem; }
+.section-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 0.8rem;
+}
+.section-label .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--navy); color: var(--gold);
+  font-size: 10px; font-weight: 700;
+  border: 1px solid rgba(179,134,101,0.35);
+}
+h2 { font-size: 20px; font-weight: 600; margin-bottom: 4px; color: var(--navy); }
+@media (prefers-color-scheme: dark) { h2 { color: var(--text); } }
+.sub { font-size: 12px; color: var(--text-muted); margin-bottom: 1.3rem; }
+.sub-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted); margin: 1.3rem 0 .6rem;
+}
+
+/* ─── KPIs ─── */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+.kpi { background: var(--surface); border-radius: var(--r-md); padding: 12px 14px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+.kpi-label { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+.kpi-value { font-size: 22px; font-weight: 700; line-height: 1.1; }
+.kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.pos { color: var(--bull); } .neg { color: var(--bear); } .neu { color: var(--amber); }
+.pnl-pos { color: var(--bull); font-weight: 600; } .pnl-neg { color: var(--bear); font-weight: 600; }
+
+/* ─── CHARTS ─── */
+.chart-wrap { position: relative; width: 100%; }
+
+/* ─── ALERTS ─── */
+.alert {
+  border-radius: var(--r-md); padding: 12px 14px;
+  font-size: 12px; margin-bottom: 10px; line-height: 1.6;
+}
+.alert.success { background: var(--bull-bg); border: 0.5px solid rgba(39,153,149,0.35); }
+.alert.danger  { background: var(--bear-bg); border: 0.5px solid rgba(192,57,43,0.35); }
+.alert.warning { background: var(--amber-bg); border: 0.5px solid rgba(179,134,101,0.35); }
+.alert.info    { background: var(--blue-bg); border: 0.5px solid rgba(24,95,165,0.35); }
+.alert-title { font-weight: 600; margin-bottom: 3px; }
+.alert.success .alert-title { color: var(--bull); }
+.alert.danger  .alert-title { color: var(--bear); }
+.alert.warning .alert-title { color: var(--amber); }
+.alert.info    .alert-title { color: var(--blue); }
+
+/* ─── REGIME ALERTS ─── */
+.regime-alert {
+  background: linear-gradient(135deg, rgba(39,153,149,0.10), rgba(39,153,149,0.03));
+  border: 1px solid rgba(39,153,149,0.35); border-radius: var(--r-lg);
+  padding: 14px 18px; margin-bottom: 14px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.regime-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.regime-title { font-size: 13px; font-weight: 600; color: var(--bull); margin-bottom: 3px; }
+.regime-sub { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+.critical-banner {
+  background: linear-gradient(135deg, rgba(192,57,43,0.12), rgba(192,57,43,0.04));
+  border: 1.5px solid rgba(192,57,43,0.5); border-radius: var(--r-lg);
+  padding: 14px 18px; margin-bottom: 14px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.critical-title { font-size: 13px; font-weight: 700; color: var(--bear); margin-bottom: 3px; }
+.critical-sub { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+
+/* ─── INSIGHT CARDS ─── */
+.icard {
+  background: var(--surface); border-radius: var(--r-md); padding: 12px 14px;
+  margin-bottom: 8px; border-left: 3px solid transparent;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+}
+.icard.crit  { border-left-color: var(--bear); }
+.icard.warn  { border-left-color: var(--amber); }
+.icard.good  { border-left-color: var(--bull); }
+.icard.info  { border-left-color: var(--blue); }
+.icard-title { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+.icard-text  { font-size: 12px; color: var(--text-muted); line-height: 1.65; }
+
+/* ─── TRADE TABLE ─── */
+.tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tbl th {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--gold-light); font-weight: 700;
+  padding: 8px 10px;
+  background: var(--navy);
+  text-align: left;
+}
+.tbl td { padding: 7px 10px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr.win td  { background: rgba(39,153,149,0.04); }
+.tbl tr.loss td { background: rgba(192,57,43,0.04); }
+.tbl tr.viol-row td { background: rgba(179,134,101,0.06); }
+.badge {
+  display: inline-block; padding: 2px 7px; border-radius: 4px;
+  font-size: 10px; font-weight: 600; font-family: 'Space Mono', monospace;
+}
+.badge.long   { background: var(--bull-bg);  color: var(--bull); }
+.badge.short  { background: var(--amber-bg); color: var(--amber); }
+.badge.ok     { background: var(--bull-bg);  color: var(--bull); }
+.badge.viol   { background: var(--bear-bg);  color: var(--bear); }
+.badge.cancel { background: rgba(0,0,0,0.06); color: var(--text-muted); }
+.zone-badge {
+  display: inline-block; font-size: 10px; padding: 1px 7px;
+  border-radius: 10px; font-family: 'Space Mono', monospace;
+}
+.zone-badge.identified { background: var(--bull-bg); color: var(--bull); }
+.zone-badge.manual     { background: var(--amber-bg); color: var(--amber); }
+.sdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin: 0 1px; }
+.dot-g { background: var(--bull); } .dot-r { background: var(--bear); }
+.sig-inline { display: flex; gap: 3px; align-items: center; }
+
+/* ─── COMP BLOCKS ─── */
+.comp-block {
+  background: var(--surface); border-radius: var(--r-md);
+  padding: 12px 14px; margin-bottom: 10px; font-size: 12px;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+}
+.comp-block-title { font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.comp-block-body { color: var(--text-muted); line-height: 1.6; }
+.tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+.tag-win  { background: var(--bull-bg); color: var(--bull); }
+.tag-loss { background: var(--bear-bg); color: var(--bear); }
+
+/* ─── TWO COLUMN ─── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ─── DOFA (estilo cierre mensual) ─── */
+.dofa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.dofa-card { border-radius: var(--r-lg); padding: 16px 18px; border: 0.5px solid var(--border2); }
+.dofa-card.F { background: rgba(39,153,149,0.06); border-color: rgba(39,153,149,0.30); }
+.dofa-card.D { background: rgba(192,57,43,0.06);  border-color: rgba(192,57,43,0.30); }
+.dofa-card.O { background: rgba(24,95,165,0.06);   border-color: rgba(24,95,165,0.30); }
+.dofa-card.A { background: rgba(179,134,101,0.06); border-color: rgba(179,134,101,0.30); }
+.dofa-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.dofa-title.F { color: var(--bull); }
+.dofa-title.D { color: var(--bear); }
+.dofa-title.O { color: var(--blue); }
+.dofa-title.A { color: var(--amber); }
+.dofa-item {
+  font-size: 12px; color: var(--text-muted); padding: 4px 0 4px 12px;
+  border-bottom: 0.5px solid var(--border); line-height: 1.55;
+  position: relative;
+}
+.dofa-item::before { content: '·'; position: absolute; left: 0; color: var(--text-muted); }
+.dofa-item:last-child { border-bottom: none; }
+
+/* ─── RULES ─── */
+.rule-item { font-size: 12px; color: var(--text-muted); padding: 6px 0; border-bottom: 0.5px solid var(--border); line-height: 1.55; }
+.rule-item:last-child { border-bottom: none; }
+.rules-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 14px 16px; margin-top: 14px;
+  box-shadow: var(--shadow);
+}
+.rules-box-title { font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 10px; font-family: 'Space Mono', monospace; letter-spacing: 0.05em; }
+@media (prefers-color-scheme: dark) { .rules-box-title { color: var(--gold-light); } }
+
+/* ─── STOP CALLOUT ─── */
+.sl-callout {
+  background: var(--bear-bg); border: 1.5px solid rgba(192,57,43,0.35);
+  border-radius: var(--r-md); padding: 12px 16px; margin: 10px 0; font-size: 12px;
+}
+.sl-callout-title { font-weight: 700; color: var(--bear); margin-bottom: 6px; font-size: 13px; }
+.sl-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 0.5px solid rgba(192,57,43,0.15); font-size: 12px; gap: 8px; flex-wrap: wrap; }
+.sl-row:last-child { border-bottom: none; }
+
+/* ─── VOLATILITY CONFIG ─── */
+.volat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin: 10px 0; }
+.volat-card {
+  background: var(--surface); border-radius: var(--r-md); padding: 12px 14px;
+  border: 1px solid var(--border); font-size: 12px;
+}
+.volat-card .vc-scenario {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 6px;
+}
+.vc-baja      { color: var(--bull); }
+.vc-media     { color: #3498db; }
+.vc-alta      { color: var(--amber); }
+.vc-extrema   { color: #e67e22; }
+.vc-superextreme { color: var(--bear); }
+.vc-active    { box-shadow: 0 0 0 2px var(--gold); }
+.vc-metric    { display: flex; justify-content: space-between; padding: 2px 0; }
+.vc-metric-label { color: var(--text-muted); }
+.vc-metric-val  { font-weight: 600; }
+
+/* ─── WEEK / MONTH BADGES ─── */
+.weekly-badge { display: inline-block; background: var(--header-gradient); color: var(--gold); padding: 4px 14px; border-radius: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1px; margin-bottom: 14px; }
+.monthly-badge { display: inline-block; background: linear-gradient(135deg, #854f0b, #b38665); color: white; padding: 4px 14px; border-radius: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1px; margin-bottom: 14px; }
+
+/* ─── YOUTUBE BLOCK ─── */
+.yt-block {
+  background: var(--surface); border: 0.5px solid var(--border);
+  border-radius: var(--r-lg); padding: 18px 22px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 2rem;
+  box-shadow: var(--shadow);
+}
+.yt-icon { width: 44px; height: 44px; border-radius: 50%; background: #c0392b; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.yt-icon svg { width: 20px; height: 20px; fill: #fff; }
+.yt-text { flex: 1; min-width: 180px; }
+.yt-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+.yt-sub   { font-size: 12px; color: var(--text-muted); }
+.yt-btn {
+  display: inline-block !important; background: #c0392b !important;
+  color: #ffffff !important; font-size: 12px; font-weight: 700;
+  padding: 10px 22px; border-radius: var(--r-md);
+  text-decoration: none !important; white-space: nowrap;
+  font-family: 'Space Mono', monospace; letter-spacing: 0.5px;
+  transition: opacity .2s;
+}
+.yt-btn:hover { opacity: .85; }
+
+/* ─── NAV BACK ─── */
+.nav-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--gold); text-decoration: none; font-size: 13px;
+  margin-bottom: 16px; font-family: 'Space Mono', monospace;
+  font-weight: 700; transition: opacity .15s;
+  letter-spacing: 0.05em;
+}
+.nav-back:hover { opacity: 0.7; }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--header-gradient);
+  color: rgba(255,255,255,0.4); text-align: center;
+  padding: 18px 1rem; font-size: 11px;
+  font-family: 'Space Mono', monospace; letter-spacing: 1px;
+  margin-top: 2rem; border-top: 3px solid var(--gold);
+}
+footer strong { color: var(--gold-light); }
+footer .brand-ft { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; color: var(--gold-light); }
+footer .brand-ft .gold { color: var(--gold); }
+
+/* ─── AI INSIGHT ─── */
+.ai-insight {
+  background: linear-gradient(135deg, rgba(39,153,149,0.07), rgba(20,45,55,0.04));
+  border-left: 4px solid var(--teal); border-radius: var(--r-md);
+  padding: 14px 18px; margin-bottom: 14px; border: 1px solid rgba(39,153,149,0.2);
+}
+.ai-label {
+  font-family: 'Space Mono', monospace; font-size: 9px;
+  color: var(--teal); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
+}
+.ai-insight p { font-size: 13px; color: var(--text); line-height: 1.7; }
+
+/* ─── GAMEPLAN COMPARE ─── */
+.gameplan-compare {
+  background: var(--surface); border-radius: var(--r-md);
+  padding: 16px 20px; border-left: 4px solid var(--gold);
+  margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border);
+}
+.gameplan-compare h3 { font-size: 14px; color: var(--navy); margin-bottom: 8px; }
+@media (prefers-color-scheme: dark) { .gameplan-compare h3 { color: var(--gold-light); } }
+.gameplan-compare ul { margin-left: 18px; font-size: 13px; }
+.gameplan-compare li { margin-bottom: 4px; }
+.cumplido   { color: var(--bull); }
+.nocumplido { color: var(--bear); }
+.parcial    { color: var(--amber); }
+
+/* ─── VIX BADGE ─── */
+.vix-badge-strip {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--bull-bg); border: 0.5px solid rgba(39,153,149,0.4);
+  border-radius: var(--r-md); padding: 8px 14px; font-size: 12px;
+  color: var(--bull); font-weight: 600; margin-bottom: 14px;
+}
+
+/* ─── VOLATILITY GAUGE ─── */
+.volatility-gauge { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.gauge-item {
+  flex: 1; min-width: 130px; background: var(--surface);
+  border-radius: var(--r-md); padding: 12px;
+  border: 1px solid var(--border); text-align: center;
+}
+.gauge-item .g-label { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+.gauge-item .g-value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+.gauge-item .g-sub   { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+/* ─── PROGRESS BAR ─── */
+.prog-wrap { background: var(--border); border-radius: 3px; height: 6px; margin-top: 4px; overflow: hidden; }
+.prog { height: 6px; border-radius: 3px; }
+
+/* ─── FINDING BOX ─── */
+.finding {
+  background: var(--surface); border: 0.5px solid var(--border2);
+  border-radius: var(--r-lg); padding: 22px 26px;
+  position: relative; overflow: hidden; box-shadow: var(--shadow);
+}
+.finding::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: linear-gradient(180deg, var(--bear) 0%, var(--amber) 60%, var(--bear) 100%);
+}
+.finding-label { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bear); margin-bottom: 8px; }
+.finding h3 { font-size: 16px; font-weight: 600; margin-bottom: 10px; line-height: 1.4; }
+.finding p { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 10px; }
+.finding p:last-child { margin-bottom: 0; }
+.finding strong { color: var(--text); font-weight: 600; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 600px) {
+  .page { padding: 1rem 1rem 3rem; }
+  .two-col { grid-template-columns: 1fr; }
+  .dofa-grid { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .header { flex-direction: column; align-items: flex-start; padding: 16px; }
+  .header-right { text-align: left; width: 100%; }
+  .header-right .prices { justify-content: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<div class="header">
+  <div class="header-left">
+    <img class="logo-img" src="/assets/logo.png" alt="EduS Trader" onerror="this.style.display='none'">
+    <div class="brand">
+      <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
+      <div class="brand-sub">Post-Market Analysis &middot; Mesa de Dinero</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="date">Martes 14 de Julio 2026</div>
+    <div class="prices">
+      <div class="price-chip">P&L <span style="color:#279995">+$879.24</span></div>
+      <div class="price-chip">5 trades &middot; 5W / 0L</div>
+      <div class="price-chip">WR <span>100.0%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav>
+  <span class="brand">📊 Post-Market Analysis</span>
+  <a href="#resumen" class="active">Resumen</a>
+  <a href="#gameplan">GamePlan</a>
+  <a href="#veredicto">Veredicto</a>
+  <a href="#volatilidad">Volatilidad</a>
+  <a href="#trades">Trades</a>
+  <a href="#senales">Señales</a>
+  <a href="#diagnostico">Diagnóstico</a>
+  <a href="#mejoras">Mejoras</a>
+  <a href="#cuentas">Cuentas</a>
+  <a href="#dofa">DOFA</a>
+  <a href="#reglas">Reglas</a>
+  <a href="#video">Video</a>
+</nav>
+
+<!-- ══════════ PAGE ══════════ -->
+<div class="page">
+
+<a href="javascript:history.back()" class="nav-back">← Volver</a>
+
+
+
+
+<!-- ══════════════════════ SECCIÓN 1 — RESUMEN ══════════════════════ -->
+<div id="resumen" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">1</span>Resumen Operativo</div>
+  <h2>Dashboard 14 JUL 2026</h2>
+  <p class="sub">Fuente: NinjaTrader 8 &middot; Post-Market Analysis &middot; 5 trades &middot; WR 100.0%</p>
+
+  <span class="edus-account-badge positive">Cuenta Fondeada: +$879.24</span> 
+
+  <div class="sub-title">KPIs del período</div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">P&L Total</div><div class="kpi-value positive">+$879.24</div><div class="kpi-sub">Neto del período</div></div>
+    <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-value">100.0%</div><div class="kpi-sub">5W / 0L</div></div>
+    <div class="kpi"><div class="kpi-label">Avg Trade</div><div class="kpi-value positive">+$175.85</div><div class="kpi-sub">Por operación</div></div>
+    <div class="kpi"><div class="kpi-label">Mayor Win</div><div class="kpi-value pos">+$287.60</div><div class="kpi-sub">Mejor operación</div></div>
+    <div class="kpi"><div class="kpi-label">Mayor Loss</div><div class="kpi-value neg">+$6.60</div><div class="kpi-sub">Peor operación</div></div>
+    <div class="kpi"><div class="kpi-label">Total Trades</div><div class="kpi-value">5</div><div class="kpi-sub">5 ganados · 0 perdidos</div></div>
+  </div>
+
+  
+  <div class="sub-title" style="margin-top:16px">Cuenta Fondeada — 5T | 5W/0L | WR 100%</div>
+<div class="kpi-grid">
+  <div class="kpi"><div class="kpi-label">P&L</div><div class="kpi-value positive">+$879.24</div></div>
+  <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-value">100%</div><div class="kpi-sub">5W / 0L</div></div>
+  <div class="kpi"><div class="kpi-label">Avg Trade</div><div class="kpi-value pos">+$175.85</div></div>
+  <div class="kpi"><div class="kpi-label">Mayor Win</div><div class="kpi-value pos">+$287.60</div></div>
+  <div class="kpi"><div class="kpi-label">Mayor Loss</div><div class="kpi-value neg">+$6.60</div></div>
+  <div class="kpi"><div class="kpi-label">Trades</div><div class="kpi-value">5</div></div>
+</div>
+</div>
+
+<!-- ══════════ CURVA P&L POR TRADE ══════════ -->
+<div class="section-divider"></div>
+<div class="section-label"><span class="num">▶</span>P&L por Trade</div>
+
+<div class="sub-title">P&L individual — Sim/Demo</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartBarSim"></canvas></div>
+
+<div class="sub-title">Curva de capital — Sim/Demo</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartCurveSim"></canvas></div>
+
+<div class="sub-title" style="margin-top:20px">P&L individual — Cuenta Fondeada</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartBarFunded"></canvas></div>
+
+<div class="sub-title">Curva de capital — Cuenta Fondeada</div>
+<div class="chart-wrap" style="height:130px"><canvas id="chartCurveFunded"></canvas></div>
+
+<script>
+(function() {
+  var isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+  var tc = isDark ? '#8a9a9e' : '#7a7468';
+  var gc = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+  function makeBarChart(canvasId, data) {
+    if (!data || data.length === 0) { document.getElementById(canvasId).parentElement.style.display='none'; return; }
+    var labels = data.map(function(d) { return '#' + d.t; });
+    var pnls = data.map(function(d) { return d.pnl; });
+    new Chart(document.getElementById(canvasId), {
+      type: 'bar',
+      data: { labels: labels, datasets: [{ data: pnls, backgroundColor: pnls.map(function(v) { return v >= 0 ? 'rgba(39,153,149,0.78)' : 'rgba(192,57,43,0.78)'; }), borderRadius: 4, borderSkipped: false }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return (ctx.raw >= 0 ? '+' : '') + '$' + Math.abs(ctx.raw).toFixed(2); } } } }, scales: { x: { ticks: { color: tc, font: { size: 10 } }, grid: { color: gc } }, y: { ticks: { color: tc, font: { size: 10 }, callback: function(v) { return '$' + v; } }, grid: { color: gc } } } }
+    });
+  }
+
+  function makeCurveChart(canvasId, data, color) {
+    if (!data || data.length === 0) { document.getElementById(canvasId).parentElement.style.display='none'; return; }
+    var labels = data.map(function(d) { return '#' + d.t; });
+    var cums = data.map(function(d) { return d.cum; });
+    var lineColor = color || (cums[cums.length-1] >= 0 ? '#279995' : '#c0392b');
+    var fillColor = color ? color.replace(')', ',0.09)').replace('rgb(', 'rgba(') : (cums[cums.length-1] >= 0 ? 'rgba(39,153,149,0.09)' : 'rgba(192,57,43,0.09)');
+    new Chart(document.getElementById(canvasId), {
+      type: 'line',
+      data: { labels: labels, datasets: [{ data: cums, borderColor: lineColor, backgroundColor: fillColor, fill: true, tension: 0.3, pointBackgroundColor: cums.map(function(v) { return v >= 0 ? '#279995' : '#c0392b'; }), pointRadius: 4, borderWidth: 2 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return 'Acum.: $' + ctx.raw.toFixed(2); } } } }, scales: { x: { ticks: { color: tc, font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: tc, font: { size: 10 }, callback: function(v) { return '$' + v; } }, grid: { color: gc } } } }
+    });
+  }
+
+  var simData = [];
+  var fundedData = [{"t": 1, "pnl": 6.6, "cum": 6.6}, {"t": 2, "pnl": 287.6, "cum": 294.2}, {"t": 3, "pnl": 153.6, "cum": 447.8}, {"t": 4, "pnl": 220.84, "cum": 668.64}, {"t": 5, "pnl": 210.6, "cum": 879.24}];
+
+  makeBarChart('chartBarSim', simData);
+  makeCurveChart('chartCurveSim', simData);
+  makeBarChart('chartBarFunded', fundedData);
+  makeCurveChart('chartCurveFunded', fundedData);
+})();
+</script>
+
+<!-- ══════════════════════ SECCIÓN 2 — GAMEPLAN ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="gameplan" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">2</span>GamePlan vs Mercado Real</div>
+  <h2>Evaluación del Pre-Mercado</h2>
+  <p class="sub">Comparación entre el plan planteado y lo que realmente ocurrió en el mercado</p>
+  <div class="section-title"><span class="step">GAMEPLAN</span><h2>Game Plan — Evaluación de Cumplimiento</h2></div>
+<div class="gameplan-compare">
+  <h3>📋 Pre-Mercado: <span class="parcial">PARCIAL</span></h3>
+  <h4 style='margin-top:10px;color:var(--bear);font-size:13px'>❌ Desviaciones</h4><ul><li>ES: gameplan predijo SHORT, mercado fue LONG (+0.42%) — falló completamente la dirección</li><li>GC: gameplan predijo SHORT, mercado fue LONG (+1.28%) — falló la dirección en metales</li><li>NQ gameplan sugería enfocar LONG en PM, pero la operativa real fue SHORT en AM con 100% acierto — el trader fue contratendencia al gameplan y acertó</li><li>La ventana USA PM (14:00-16:30) no fue evaluable directamente pero las condiciones del día cambiaron respecto al análisis inicial</li></ul>
+  <h4 style='margin-top:10px;color:var(--bull);font-size:13px'>✅ Aciertos</h4><ul><li>NQ: predicción LONG correcta (+1.19%) — mercado respetó la dirección esperada</li><li>VIX: proyectado 17.0, real 16.5 — estimación precisa del entorno de volatilidad</li><li>Régimen: Baja esperado y observado — correcta identificación del contexto de volatilidad</li><li>CL: NO_OPERAR fue decisión correcta dado el rally extremo (+2.45% en datos) y la alta volatilidad intradía</li></ul>
+  <h4 style='margin-top:10px;color:var(--text-muted);font-size:13px'>📖 Lecciones</h4><p style='font-size:13px;color:var(--text-muted)'>El gameplan acertó en NQ y VIX pero falló en ES y GC. La lección principal es que la dirección predicha para índices puede divergir entre ES y NQ; el gameplan debe considerar esta divergencia explícitamente. Además, la operativa manual SHORT en MNQ durante la mañana fue más rentable que la tesis LONG para PM — sugiere que el gameplan debe priorizar la operativa de la mañana cuando el contexto direccional es más claro.</p>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN — VEREDICTO DE LA TESIS ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="veredicto" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">✓</span>Veredicto de la Tesis</div>
+  <h2>¿Se cumplió lo que esperábamos?</h2>
+  <p class="sub">Scorecard objetivo: predicciones verificables del gameplan vs. movimiento real del mercado (verdad base)</p>
+  <div style='border:1px solid var(--border,#e0dbd0);border-radius:10px;padding:14px'><div style='overflow-x:auto'><table class='tbl'><thead><tr><th>Mercado</th><th>Predicho</th><th>Real</th><th>¿Acertó?</th></tr></thead><tbody><tr><td><strong>ES</strong></td><td style='color:#279995;font-weight:700'>LONG</td><td>LONG (0.41%)</td><td style='color:#279995;font-weight:700'>✓</td></tr><tr><td><strong>NQ</strong></td><td style='color:#c0392b;font-weight:700'>SHORT</td><td>LONG (1.18%)</td><td style='color:#c0392b;font-weight:700'>✗</td></tr><tr><td><strong>CL</strong></td><td style='color:#7a7468;font-weight:700'>NO_OPERAR</td><td>LONG (2.33%)</td><td style='color:#7a7468;font-weight:700'>–</td></tr><tr><td><strong>GC</strong></td><td style='color:#7a7468;font-weight:700'>NEUTRAL</td><td>LONG (1.32%)</td><td style='color:#c0392b;font-weight:700'>✗</td></tr></tbody></table></div><div style='margin-top:10px;font-size:13px'>VIX: proy <strong>17.5</strong> vs real <strong>16.5</strong> <span style='color:#279995;font-weight:700'>✓</span> · Régimen: <strong>Media</strong> vs <strong>Baja</strong> <span style='color:#c0392b;font-weight:700'>✗</span></div><div style='margin-top:8px;font-size:15px;font-weight:800;color:var(--navy)'>Score de la tesis: 40%</div><div style='margin-top:4px;font-style:italic;color:#7a7468'>&ldquo;ES se mantendrá sobre 7,555 y NQ bajo 30,000 durante la ventana USA AM (9:30-11:30), con VIX entre 17-19 al cierre de la ventana.&rdquo;</div><div style='font-size:11px;color:#7a7468;margin-top:4px'>Verdad base = movimiento real de mercado, no opinión de la IA.</div></div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 3 — VOLATILIDAD ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="volatilidad" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">3</span>Análisis de Volatilidad — VIX · ATR · Keltner</div>
+  <h2>Volatilidad Real de la Sesión</h2>
+  <p class="sub">VIX observado, ATR del día, Ancho del canal Keltner y validación contra V5_VolatilityConfig</p>
+  <div class="section-title"><span class="step">VOLATILIDAD</span><h2>Análisis de Volatilidad — VIX / Keltner / ATR</h2></div>
+<div class="card">
+  <div class="volatility-gauge">
+    <div class="gauge-item"><div class="g-label">VIX Observado</div><div class="g-value" style="font-size:16px">VIX 16.5 — régimen de volatilidad Baja, dentro del rango esperado por el gameplan (proyectado 17.0). Coherente con un día de tendencia controlada en NQ.</div></div>
+    <div class="gauge-item"><div class="g-label">Definiciones Correctas</div><div class="g-value" style="font-size:16px">PARCIAL</div></div>
+  </div>
+  <div class="info-box" style="margin-bottom:0">
+    <h3>📊 Relación VIX / Keltner / ATR</h3>
+    <p>VIX bajo (16.5) + Keltner dentro/por debajo del rango medio + ATR decreciente = entorno de volatilidad contractiva. Ideal para la estrategia short en MNQ que capitalizó el movimiento direccional sin sobresaltos de volatilidad.</p>
+  </div>
+  <div class="info-box" style="margin-bottom:0;margin-top:10px">
+    <h3>📈 Keltner y ATR</h3>
+    <p>KeltnerWidth inició en 75.33 (Trade 1) y se comprimió hasta 48.12 (Trade 5), dentro del rango V5 'Media' [63.0, 90.0] al inicio pero saliendo del rango hacia el final de la sesión. La compresión del Keltner refleja menor volatilidad intradía a media que avanzó la mañana.<br><br><strong>ATR Observado:</strong> ATR descendió de 11.14 a 6.98 durante la sesión. Rango V5 'Media' [9.0, 12.0] — los primeros trades operaron dentro del rango esperado; los últimos trades (ATR 6.98) estuvieron por debajo, indicando transición a volatilidad Baja.</p>
+  </div>
+  <div class="ai-insight" style="margin-top:14px">
+    <div class="ai-label">Nota de Volatilidad</div>
+    <p>La volatilidad favoreció la operativa short en MNQ. El descenso de ATR de 11.14 a 6.98 sugiere que el mercado perdió momentum direccional hacia media mañana. Los trades 1-2 (ATR 11.14) capturaron la mayor expansión; los trades 4-5 (ATR 7.84-6.98) operaron en compresión. El escenario V5 'Media' fue correcto para la apertura pero debería haberse recalibrado a 'Baja' para los trades posteriores a las 10:00.</p>
+  </div>
+</div>
+  
+<div class="sub-title">Escenario V5_VolatilityConfig activo</div>
+<div class="volat-grid">
+    <div class="volat-card vc-active">
+      <div class="vc-scenario vc-media">MNQ — MEDIA</div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Obs.</span><span class="vc-metric-val">75.33</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Keltner Rango</span><span class="vc-metric-val">[63.0, 90.0]</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">ATR Obs.</span><span class="vc-metric-val">11.14</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">Stop Mín (x0.5×ATR)</span><span class="vc-metric-val" style="color:var(--bear)">5.57 pts</span></div>
+      <div class="vc-metric"><span class="vc-metric-label">RR Objetivo</span><span class="vc-metric-val">2.0:3.0</span></div>
+    </div>
+</div>
+<div class="ai-insight" style="margin-top:14px"><div class="ai-label">🤖 Validación IA</div><p>Escenario 'Media' — StopATRx=0.5, RR 2.0:3.0. Stop mínimo recomendado: 0.5×ATR=5.57 puntos. Todos los trades fueron ganadores con stops implícitamente más amplios que el mínimo, operando dentro del escenario. Trade 4 (contexto MIXTO) fue el único fuera de alineación perfecta de VWAP, pero aún así resultó ganador.</p></div><div class="icard info" style="margin-top:8px"><div class="icard-title">📊 Profit Factor</div><div class="icard-text">N/A — 100% win rate (0 pérdidas). PnL acumulado +$879 sobre 5 trades.</div></div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 4 — TRADES ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="trades" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">4</span>Detalle de Operaciones</div>
+  <h2>Registro Completo de Trades</h2>
+  <p class="sub">Detalle de cada operación con zona de señal, indicadores en el momento de la entrada y resultado</p>
+
+  
+
+  <div class="sub-title">Trades Sim/Demo (agrupados por señal)</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Estrategia</th><th>Inst</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>P&L</th><th>Zona/Señal</th><th>Salidas (T1/T2/Stop)</th><th>Cuenta</th></tr></thead>
+      <tbody>
+      
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-title" style="margin-top:20px">Trades Cuenta Fondeada / Live (agrupados por señal)</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Estrategia</th><th>Inst</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Entry Px</th><th>Exit Px</th><th>Qty</th><th>P&L</th><th>Señal Espejo</th><th>Salidas</th><th>Cuenta</th></tr></thead>
+      <tbody>
+      <tr class="trade-win"><td>1</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>9:32:28</td><td>9:32:29</td><td>29,752.25</td><td>29,750.75</td><td>6</td><td>+$6.60</td><td><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>2</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>9:32:36</td><td>9:33:56</td><td>29,750.50</td><td>29,725.75</td><td>6</td><td>+$287.60</td><td><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>4</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>9:40:45</td><td>9:40:55</td><td>29,776.25</td><td>29,763.75</td><td>6</td><td>+$153.60</td><td><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>6</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>9:52:10</td><td>9:52:40</td><td>29,765.25</td><td>29,754.75</td><td>6</td><td>+$220.84</td><td><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+<tr class="trade-win"><td>9</td><td>HUD_Manual</td><td>MNQ</td><td>Short</td><td>10:41:13</td><td>10:42:28</td><td>29,774.50</td><td>29,759.25</td><td>6</td><td>+$210.60</td><td><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td><td style="font-size:11px">—</td><td>Cuenta Fondeada</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title"><span class="step">CONTEXTO</span><h2>Contexto de Indicadores por Entry</h2></div>
+<div class="card">
+  
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MNQ SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>29,752.25</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 29,749.93</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.3625</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.7062</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">75.33</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">11.14</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">1.26</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-12.19</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,763.00</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,756.27</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MNQ SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>29,750.50</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 29,749.93</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">0.425</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.6594</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">73.88</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">10.54</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-1.08</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-12.10</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,750.25</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,755.56</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MNQ SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>29,776.25</strong> &nbsp;|&nbsp; VWAP 🟢 UP @ 29,756.08</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.0625</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.025</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">55.33</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">9.14</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">15.31</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">3.85</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,774.50</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,767.89</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MNQ SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>29,765.25</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 29,764.66</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.1375</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.0031</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">54.96</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">7.84</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-4.66</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-2.00</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,764.50</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,767.48</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MNQ SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>29,765.25</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 29,764.66</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.1375</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.0031</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">54.96</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">7.84</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-4.66</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-2.00</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,764.50</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,767.48</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border2);border-left:3px solid var(--teal);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:700;color:var(--teal);">#Setup_Manual</span>
+        <span style="font-size:13px;font-weight:600;">MNQ SEP26</span>
+        <span style="font-size:12px;color:#c0392b;font-weight:600;">🔴 Short</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Entry @ <strong>29,774.50</strong> &nbsp;|&nbsp; VWAP 🔴 DOWN @ 29,774.15</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA20 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-1.1875</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">SMA80 Pend</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-0.25</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Keltner Width</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">48.12</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">ATR</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;color:var(--amber);">6.98</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA20</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-13.41</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dist SMA80</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">-4.32</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Window POC</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,786.75</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">MB Keltner</div>
+          <div style="font-size:14px;font-weight:600;margin-top:3px;">29,783.22</div>
+        </div>
+      </div>
+    </div>
+  <p style="margin-top:12px;font-size:11px;color:var(--text-muted);text-align:center">Mostrando 6 de 6 entradas registradas</p>
+</div>
+  <div class="sub-title" style="margin-top:20px">Trades Cuenta Fondeada — Análisis Espejo vs Señales</div>
+
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#1 &middot; MNQ Short</span>
+        <span class="tag tag-win">$+6.60</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD activa)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Ninguna señal HUD activa en el AutoTrader. La señal más cercana fue b463cd48 (09:32:34, entry 29752.0) — 6 segundos después y 0.25 puntos por debajo del entry real.<br><strong>Coincidió con señal:</strong> <span class="badge cancel">PARCIAL</span><br><strong>Análisis espejo:</strong> Trade manual que precedió por 6 segundos la señal b463cd48 (entry 29752.0 vs 29752.25 real, diferencia marginal de 0.25 pts). El contexto era favorable: VWAP DOWN, SMA alineada, ATR 11.14. La señal habría entrado prácticamente al mismo precio. El trade fue esencialmente una ejecución anticipada de la señal que el AutoTrader no tomó por estar en estado ENCENDIDO pero con override manual. Ganó por timing preciso — entrada y salida en 1 minuto, scalp de 1.5 pts. Alineado con condiciones de señal aunque sin ejecución formal del bot.<br><strong style="color:var(--bear)">Desviación:</strong> Entró 6 segundos antes de la señal b463cd48. Precio de entrada 0.25 pts por encima del entry de la señal. Salida inmediata (1 minuto) vs T2 que habría sido más largo. Tamaño: 6 contratos (no se especifica tamaño de señal).<br>
+        
+        
+        Trade manual de alta precisión. Operó prácticamente en espejo de la señal HUD b463cd48 con diferencia marginal. El contexto técnico (VWAP DOWN + SMA OK) respaldaba la dirección. Es un ejemplo de buena ejecución discrecional: el trader identificó las mismas condiciones que el sistema y actuó antes de la confirmación formal. Riesgo: entrar antes de la señal implica asumir riesgo de que la señal no se active.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#2 &middot; MNQ Short</span>
+        <span class="tag tag-win">$+287.60</span>
+        <span class="badge cancel">PARCIAL</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD activa)</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Señales b463cd48 (09:32:34, entry 29752.0) y ba27b2b2 (09:32:56, entry 29751.75) activas cercanas. Ninguna ejecutada por AutoTrader.<br><strong>Coincidió con señal:</strong> <span class="badge cancel">PARCIAL</span><br><strong>Análisis espejo:</strong> Entró 2 segundos después de la señal b463cd48 a 29750.5 (1.5 pts por debajo del entry de señal 29752.0 — mejor entrada para short). Extremadamente alineado: misma dirección, mismo instrumento, precio marginalmente mejor, 24.75 pts de ganancia en 1m20s. Esta señal apuntaba a T2 en 29707.67 (ganancia potencial de 44.33 pts desde entry de señal), el trader salió en 29725.75 capturando aproximadamente el 56% del movimiento total al T2. Fue una ejecución espejo casi perfecta con salida anticipada.<br><strong style="color:var(--bear)">Desviación:</strong> Entró a mejor precio que la señal (-1.5 pts). Salió antes del T2 (capturó ~56% del movimiento). No usó trailing o target del sistema. Tamaño: 6 contratos igual que la señal. Timing ligeramente posterior a la generación de la señal.<br>
+        
+        
+        Mejor trade del día (+$287.60). El trader ejecutó manualmente lo que el sistema señaló 2 segundos antes. La entrada mejorada (-1.5 pts vs señal) y la salida anticipada (antes del T2) son características de operativa manual que pueden superar al sistema en eficiencia de ejecución, pero también implican riesgo de salir antes de tiempo. Contexto OK (VWAP DOWN, SMA alineada).
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#3 &middot; MNQ Short</span>
+        <span class="tag tag-win">$+153.60</span>
+        <span class="badge viol">NO</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD activa) — contexto MIXTO</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Señales fab14ba0 (09:40:59, entry 29765.75) y ecbb1cc2 (09:41:06, entry 29764.5) próximas pero no activas al momento de entrada. AutoTrader en PAUSA por latencia (5.0s de atraso).<br><strong>Coincidió con señal:</strong> <span class="badge viol">NO</span><br><strong>Análisis espejo:</strong> Este trade NO coincide con las condiciones de señal. VWAP estaba UP (no DOWN como exige el contexto para short), clasificado como contexto MIXTO en la validación. Entró a 29776.25 mientras que las señales cercanas tenían entry en 29765.75-29764.5 (12 pts por debajo). El trader entró en un rebote intradía hacia la zona de valor, no siguiendo una señal HUD. Ganó por momentum a corto plazo (10 segundos, 12.5 pts). Fue un trade oportunista más que disciplinado.<br><strong style="color:var(--bear)">Desviación:</strong> VWAP no alineado (UP vs dirección SHORT). Entrada 12 pts por encima del entry de señal más cercana. Decisión completamente discrecional sin respaldo de señal. Salida en 10 segundos — scalping puro.<br>
+        
+        
+        Trade de alto riesgo que resultó ganador pero con contexto desfavorable (VWAP UP). Es el tipo de trade que puede funcionar varias veces pero estadísticamente tiene menor esperanza matemática. El trader sobrecompensó la falta de contexto técnico con timing preciso, pero la regla de contexto debería haberlo filtrado.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#4 &middot; MNQ Short</span>
+        <span class="tag tag-win">$+220.84</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD activa) — alineado con señal próxima</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Señal 90b43275 (09:52:07, entry 29766.25). Entró 3 segundos después de la señal. AutoTrader ENCENDIDO pero no tomó la señal.<br><strong>Coincidió con señal:</strong> <span class="badge ok">SÍ</span><br><strong>Análisis espejo:</strong> Prácticamente un espejo exacto de la señal 90b43275. Entró 3 segundos después de la generación de la señal a 29765.25, solo 1 punto por debajo del entry de la señal (29766.25). Contexto OK (VWAP DOWN, SMA alineada, ATR 7.84). Ganó 10.5 puntos en 30 segundos — la señal apuntaba a T2 en 29733.27, el trader capturó aproximadamente el 32% del movimiento total. Este es el mejor ejemplo del día de un trade manual que replica fielmente una señal HUD con ejecución mejorada (mejor precio de entrada).<br><strong style="color:var(--bear)">Desviación:</strong> Entró a 1 pt mejor que la señal. Salió antes del T1 de la señal (29733.27). No usó stop/target automático. Tamaño: 6 contratos.<br>
+        
+        
+        Ejecución espejo casi perfecta de la señal 90b43275. El trader identificó la misma oportunidad que el sistema y la ejecutó manualmente con mejor precio de entrada. Este trade demuestra que el trader puede ver y actuar sobre las señales del sistema incluso cuando el AutoTrader no las ejecuta. La salida anticipada respecto al T1 redujo ganancia potencial pero aseguró el profit en 30 segundos.
+      </div>
+    </div>
+    <div class="comp-block">
+      <div class="comp-block-title">
+        <span>#5 &middot; MNQ Short</span>
+        <span class="tag tag-win">$+210.60</span>
+        <span class="badge ok">SÍ</span>
+        <span class="zone-badge identified" style="background:rgba(100,100,200,.1);color:var(--blue);border-color:var(--blue)" title="Zona/Señal de entrada">Manual (sin señal HUD activa) — alineado con señal próxima</span>
+      </div>
+      <div class="comp-block-body">
+        <strong>Señal activa en el momento:</strong> Señal 1ac5e700 (10:41:21, entry 29775.75). Entró 8 segundos antes de la señal. AutoTrader ENCENDIDO pero no tomó la señal.<br><strong>Coincidió con señal:</strong> <span class="badge ok">SÍ</span><br><strong>Análisis espejo:</strong> Entró 8 segundos ANTES de que la señal 1ac5e700 se generara, a 29774.5 — una diferencia de solo 1.25 pts respecto al entry de la señal (29775.75). Contexto OK (VWAP DOWN, SMA alineada, ATR 6.98). Ganó 15.25 puntos en 1m15s. La señal apuntaba a T2 en 29746.36; el trader capturó ~55% del movimiento. Notable porque entró en anticipación a la señal latencia-pausa del AutoTrader se había resuelto 5 minutos antes (10:36). Es el trade más tardío del día y muestra consistencia en el patrón de entrada.<br><strong style="color:var(--bear)">Desviación:</strong> Entró antes de la señal (anticipación). Precio 1.25 pts mejor que el entry de señal. Salió antes del T2. Tamaño: 6 contratos.<br>
+        
+        
+        Trade de alta calidad que demuestra capacidad del trader para anticipar señales del sistema. Entró antes de la generación formal de la señal 1ac5e700 pero en la misma dirección y precio casi idéntico. Este patrón de 'anticipación de señal' fue consistente durante toda la sesión (trades 1, 4 y 5 entraron justo antes de la señal correspondiente). Sugiere que el trader está usando los mismos inputs del HUD para tomar decisiones más rápido que el algoritmo.
+      </div>
+    </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 5 — SEÑALES ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="senales" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">5</span>Señales del Indicador vs Ejecución</div>
+  <h2>Análisis Comparativo — Señales HUD vs Trades</h2>
+  <p class="sub">Verificación de zonas (A, M1, etc.), señales ejecutadas, ignoradas y trades fuera de señal</p>
+  <div class="section-title"><span class="step">SEÑALES</span><h2>Señales HUD V7 — Correlación con Ejecuciones</h2></div>
+<div class="card">
+  
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #279995;">
+        <div style="font-size:24px;font-weight:700;color:#279995;">33</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Señales emitidas</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #27ae60;">
+        <div style="font-size:24px;font-weight:700;color:#27ae60;">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ejecutadas <span style="color:#27ae60;font-weight:600;">(0%)</span></div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #e67e22;">
+        <div style="font-size:24px;font-weight:700;color:#e67e22;">33</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ignoradas</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #c0392b;">
+        <div style="font-size:24px;font-weight:700;color:#c0392b;">5</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Fuera de señal</div>
+      </div>
+    </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+    <div>
+      <h3 style="font-size:13px;color:var(--text-muted);margin:0 0 10px">⚠️ Señales ignoradas que ganaron</h3>
+      <table style='width:100%;font-size:12px;border-collapse:collapse;'><thead><tr style='color:var(--text-muted);border-bottom:1px solid var(--border);'><th style='padding:6px;text-align:left'>SignalID</th><th>Mercado</th><th>Dir</th><th>Hora</th><th>Zona</th><th>Resultado</th><th>Entrada</th><th>T1</th></tr></thead><tbody><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>6ed15336</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>SHORT</span></td><td style='padding:5px;'>09:30:17</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,774.25</td><td style='padding:5px;'>29,732.33</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>66155892</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>SHORT</span></td><td style='padding:5px;'>09:32:19</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,754.00</td><td style='padding:5px;'>29,708.37</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>b463cd48</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>SHORT</span></td><td style='padding:5px;'>09:32:34</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,752.00</td><td style='padding:5px;'>29,707.67</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>ba27b2b2</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>SHORT</span></td><td style='padding:5px;'>09:32:56</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,751.75</td><td style='padding:5px;'>29,707.53</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>fab14ba0</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>SHORT</span></td><td style='padding:5px;'>09:40:59</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,765.75</td><td style='padding:5px;'>29,731.57</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>ecbb1cc2</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>SHORT</span></td><td style='padding:5px;'>09:41:06</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,764.50</td><td style='padding:5px;'>29,730.78</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>90b43275</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>SHORT</span></td><td style='padding:5px;'>09:52:07</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,766.25</td><td style='padding:5px;'>29,733.27</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>3289d6bc</td><td style='padding:5px;'>MES SEP26</td><td style='padding:5px;'><span style='color:#27ae60;font-weight:600'>LONG</span></td><td style='padding:5px;'>10:26:56</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>7,578.50</td><td style='padding:5px;'>7,592.51</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;font-family:monospace;font-size:11px;color:#e67e22;'>1ac5e700</td><td style='padding:5px;'>MNQ SEP26</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>SHORT</span></td><td style='padding:5px;'>10:41:21</td><td style='padding:5px;'>A+</td><td style='padding:5px;color:#27ae60;font-weight:600'>T2</td><td style='padding:5px;'>29,775.75</td><td style='padding:5px;'>29,746.36</td></tr></tbody></table>
+    </div>
+    <div>
+      <h3 style="font-size:13px;color:var(--text-muted);margin:0 0 10px">🚫 Trades ejecutados sin señal activa</h3>
+      <table style='width:100%;font-size:12px;border-collapse:collapse;'><thead><tr style='color:var(--text-muted);border-bottom:1px solid var(--border);'><th style='padding:6px;text-align:left'>#</th><th>Instrumento</th><th>Dir</th><th>Hora entrada</th><th>Precio</th><th>P&L</th><th>Estrategia</th></tr></thead><tbody><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>1</td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>9:32:28</td><td style='padding:5px;'>29,752.25</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$6.60</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>2</td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>9:32:36</td><td style='padding:5px;'>29,750.50</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$287.60</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>4</td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>9:40:45</td><td style='padding:5px;'>29,776.25</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$153.60</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>6</td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>9:52:10</td><td style='padding:5px;'>29,765.25</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$220.84</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr><tr style='border-bottom:1px solid var(--border);'><td style='padding:5px;'>9</td><td style='padding:5px;'>MNQ</td><td style='padding:5px;'><span style='color:#c0392b;font-weight:600'>Short</span></td><td style='padding:5px;'>10:41:13</td><td style='padding:5px;'>29,774.50</td><td style='padding:5px;color:#27ae60;font-weight:600'>+$210.60</td><td style='padding:5px;font-size:11px;color:var(--text-muted);'>HUD_Manual</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="ai-insight" style="margin-top:12px;">
+    <div class="ai-label">📊 Análisis de Disciplina</div>
+    <p style="margin:6px 0;">El AutoTrader no ejecutó ninguna de las 33 señales del día. Todos los trades fueron manuales (HUD_Manual). De las 33 señales, 9 eran ganadoras (T2), 12 habrían terminado en stop, y 8 fueron canceladas/pendientes. El trader ejecutó 5 trades manuales ganadores, 4 de ellos estrechamente alineados con señales próximas. El patrón muestra que el trader suplió la inacción del AutoTrader con ejecución manual, logrando 100% win rate. Sin embargo, 9 oportunidades de señal se perdieron completamente por combinación de AutoTrader apagado, en pausa por latencia, o encendido sin tomar la señal. La disciplina de seguir las señales fue nula desde el ejecutor automático pero muy alta desde la ejecución manual selectiva.</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Patrón:</strong> El trader operó exclusivamente MNQ short durante la mañana (09:32-10:42), con un patrón claro de entrada anticipada a las señales HUD. En 4 de 5 trades (1, 2, 4, 5), la entrada manual coincidió casi exactamente con señales próximas (diferencia <10 segundos y <1.5 pts). En 1 trade (3), operó sin respaldo de señal pero con ganancia. El patrón sugiere que el trader lee el mismo HUD y ejecuta más rápido que el AutoTrader, posiblemente porque el bot estaba limitado por latencia, posición abierta, o cooldown. La selectividad fue excelente (100% WR), pero hubo 9 señales ganadoras completamente perdidas porque el trader no las tomó ni el bot las ejecutó.</p>
+    <p style='margin:6px 0;color:var(--text-muted);font-size:12px;'><strong>Impacto:</strong> Si el AutoTrader hubiera ejecutado las 9 señales ganadoras ignoradas (T2 en zona A+), el PnL potencial del día habría sido aproximadamente $1,530 adicionales, sumados a los $879 reales = $2,409 potencial. Incluso considerando que algunas señales se solapaban y no eran todas ejecutables (cooldown, posición activa), el PnL dejado en la mesa se estima en $600-$900.</p>
+  </div>
+</div><div class="section-title"><span class="step">AUTOTRADER</span><h2>Diagnóstico de Ejecución — ¿Por qué el AutoTrader no tomó las señales ganadoras?</h2></div>
+<div class="card">
+  <p style="font-size:13px;color:var(--text-muted);margin:0 0 6px">
+    Cruce objetivo entre las señales ganadoras del HUD V7 (T1/T2 que pasaron filtro) y el estado real del AutoTrader según el log del Control Center.
+    <strong>9</strong> señal(es) ganadora(s) auditada(s).</p>
+  <div style='display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0'><div style='background:var(--surface);border-radius:10px;padding:12px;text-align:center;border-top:3px solid #c0392b'><div style='font-size:24px;font-weight:800;color:#c0392b'>1</div><div style='font-size:11px;color:var(--text-muted);margin-top:4px'>APAGADO</div></div><div style='background:var(--surface);border-radius:10px;padding:12px;text-align:center;border-top:3px solid #e67e22'><div style='font-size:24px;font-weight:800;color:#e67e22'>2</div><div style='font-size:11px;color:var(--text-muted);margin-top:4px'>PAUSA LATENCIA</div></div><div style='background:var(--surface);border-radius:10px;padding:12px;text-align:center;border-top:3px solid #8e44ad'><div style='font-size:24px;font-weight:800;color:#8e44ad'>6</div><div style='font-size:11px;color:var(--text-muted);margin-top:4px'>ENCENDIDO ⚠</div></div></div>
+  <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px">
+    <thead><tr style="color:var(--text-muted);border-bottom:2px solid var(--border);text-align:left">
+      <th style="padding:6px">Hora ET</th><th style="padding:6px">Mkt</th><th style="padding:6px">Dir</th>
+      <th style="padding:6px">Zona</th><th style="padding:6px">Result.</th><th style="padding:6px">Estado AutoTrader</th><th style="padding:6px">Causa probable</th>
+    </tr></thead><tbody><tr style='border-bottom:1px solid var(--border)'><td style='padding:6px'>09:30</td><td style='padding:6px'>MNQ</td><td style='padding:6px'><span style='color:#c0392b;font-weight:700'>SHORT</span></td><td style='padding:6px'>A+</td><td style='padding:6px;color:#27ae60;font-weight:700'>T2</td><td style='padding:6px'><span style='color:#c0392b;font-weight:700'>APAGADO</span></td><td style='padding:6px;font-size:12px;color:var(--text-muted)'>AutoTrader APAGADO en ese momento</td></tr><tr style='border-bottom:1px solid var(--border)'><td style='padding:6px'>09:32</td><td style='padding:6px'>MNQ</td><td style='padding:6px'><span style='color:#c0392b;font-weight:700'>SHORT</span></td><td style='padding:6px'>A+</td><td style='padding:6px;color:#27ae60;font-weight:700'>T2</td><td style='padding:6px'><span style='color:#8e44ad;font-weight:700'>ENCENDIDO ⚠</span></td><td style='padding:6px;font-size:12px;color:var(--text-muted)'>AutoTrader ENCENDIDO — no la tomó (revisar: ¿en posición / tope de riesgo MFF / override manual?)</td></tr><tr style='border-bottom:1px solid var(--border)'><td style='padding:6px'>09:32</td><td style='padding:6px'>MNQ</td><td style='padding:6px'><span style='color:#c0392b;font-weight:700'>SHORT</span></td><td style='padding:6px'>A+</td><td style='padding:6px;color:#27ae60;font-weight:700'>T2</td><td style='padding:6px'><span style='color:#8e44ad;font-weight:700'>ENCENDIDO ⚠</span></td><td style='padding:6px;font-size:12px;color:var(--text-muted)'>AutoTrader ENCENDIDO — no la tomó (revisar: ¿en posición / tope de riesgo MFF / override manual?)</td></tr><tr style='border-bottom:1px solid var(--border)'><td style='padding:6px'>09:32</td><td style='padding:6px'>MNQ</td><td style='padding:6px'><span style='color:#c0392b;font-weight:700'>SHORT</span></td><td style='padding:6px'>A+</td><td style='padding:6px;color:#27ae60;font-weight:700'>T2</td><td style='padding:6px'><span style='color:#8e44ad;font-weight:700'>ENCENDIDO ⚠</span></td><td style='padding:6px;font-size:12px;color:var(--text-muted)'>AutoTrader ENCENDIDO — no la tomó (revisar: ¿en posición / tope de riesgo MFF / override manual?)</td></tr><tr style='border-bottom:1px solid var(--border)'><td style='padding:6px'>09:40</td><td style='padding:6px'>MNQ</td><td style='padding:6px'><span style='color:#c0392b;font-weight:700'>SHORT</span></td><td style='padding:6px'>A+</td><td style='padding:6px;color:#27ae60;font-weight:700'>T2</td><td style='padding:6px'><span style='color:#e67e22;font-weight:700'>PAUSA LATENCIA</span></td><td style='padding:6px;font-size:12px;color:var(--text-muted)'>AutoTrader en PAUSA por latencia (5,0s de atraso)</td></tr><tr style='border-bottom:1px solid var(--border)'><td style='padding:6px'>09:41</td><td style='padding:6px'>MNQ</td><td style='padding:6px'><span style='color:#c0392b;font-weight:700'>SHORT</span></td><td style='padding:6px'>A+</td><td style='padding:6px;color:#27ae60;font-weight:700'>T2</td><td style='padding:6px'><span style='color:#e67e22;font-weight:700'>PAUSA LATENCIA</span></td><td style='padding:6px;font-size:12px;color:var(--text-muted)'>AutoTrader en PAUSA por latencia (5,0s de atraso)</td></tr><tr style='border-bottom:1px solid var(--border)'><td style='padding:6px'>09:52</td><td style='padding:6px'>MNQ</td><td style='padding:6px'><span style='color:#c0392b;font-weight:700'>SHORT</span></td><td style='padding:6px'>A+</td><td style='padding:6px;color:#27ae60;font-weight:700'>T2</td><td style='padding:6px'><span style='color:#8e44ad;font-weight:700'>ENCENDIDO ⚠</span></td><td style='padding:6px;font-size:12px;color:var(--text-muted)'>AutoTrader ENCENDIDO — no la tomó (revisar: ¿en posición / tope de riesgo MFF / override manual?)</td></tr><tr style='border-bottom:1px solid var(--border)'><td style='padding:6px'>10:26</td><td style='padding:6px'>MES</td><td style='padding:6px'><span style='color:#27ae60;font-weight:700'>LONG</span></td><td style='padding:6px'>A+</td><td style='padding:6px;color:#27ae60;font-weight:700'>T2</td><td style='padding:6px'><span style='color:#8e44ad;font-weight:700'>ENCENDIDO ⚠</span></td><td style='padding:6px;font-size:12px;color:var(--text-muted)'>AutoTrader ENCENDIDO — no la tomó (revisar: ¿en posición / tope de riesgo MFF / override manual?)</td></tr><tr style='border-bottom:1px solid var(--border)'><td style='padding:6px'>10:41</td><td style='padding:6px'>MNQ</td><td style='padding:6px'><span style='color:#c0392b;font-weight:700'>SHORT</span></td><td style='padding:6px'>A+</td><td style='padding:6px;color:#27ae60;font-weight:700'>T2</td><td style='padding:6px'><span style='color:#8e44ad;font-weight:700'>ENCENDIDO ⚠</span></td><td style='padding:6px;font-size:12px;color:var(--text-muted)'>AutoTrader ENCENDIDO — no la tomó (revisar: ¿en posición / tope de riesgo MFF / override manual?)</td></tr></tbody></table></div>
+  <div class='discrepancy-box' style='margin-top:10px'><p style='margin:0;font-size:13px'>⚠️ <strong>6</strong> señal(es) ganadora(s) ocurrieron con el AutoTrader ENCENDIDO y aun así no se tomaron. En el Output de ese día: el bot <strong>envió 5 entradas</strong> (limit pasivas, fill-rate 80%); 2 señal ignorada por estar <strong>ya en posición</strong>; 1 <strong>cierre(s) externo(s)</strong> (operativa manual) que disparan cooldown. Causa más probable (comportamiento correcto del bot): su <strong>LIMIT pasiva no llegó a llenarse</strong> porque el precio se fue directo a T2. Otras: en posición, cooldown tras cierre manual, o tope de riesgo de la fondeadora.</p></div>
+  <div class='rules-box' style='margin-top:12px'><div class='rules-box-title'>🤖 Actividad real del AutoTrader (de su Output + Órdenes) (Output hasta ~13:18)</div><div style='display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;font-size:13px'><div><strong style='color:#27ae60;font-size:18px'>80%</strong><br><span style='color:var(--text-muted);font-size:11px'>fill-rate (4/5)</span></div><div><strong>5</strong><br><span style='color:var(--text-muted);font-size:11px'>entradas enviadas</span></div><div><strong>1</strong><br><span style='color:var(--text-muted);font-size:11px'>limits caducadas (timeout)</span></div><div><strong>0</strong><br><span style='color:var(--text-muted);font-size:11px'>descartadas Fix#11</span></div><div><strong>2</strong><br><span style='color:var(--text-muted);font-size:11px'>ignoradas (en operación)</span></div><div><strong>14/57</strong><br><span style='color:var(--text-muted);font-size:11px'>órdenes llenadas / totales</span></div></div><p style='font-size:12px;color:var(--text-muted);margin:8px 0 0'>Clave: las entradas del bot son <strong>LIMIT pasivas</strong> — en un movimiento que llega a T2, el precio no suele volver al límite, así que <strong>no llenan</strong> aunque la señal &laquo;gane&raquo; en el papel. Por eso &laquo;señal ganadora&raquo; (asume fill a mercado) ≠ &laquo;el bot habría ganado&raquo;. El match señal-a-señal por precio no es fiable (el HUD loguea stop/T2 crudos y el bot los recomputa a tick), por eso este bloque es agregado.</p></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px">
+    <div class="rules-box"><div class="rules-box-title">⏱️ Latencia por mercado</div>
+      <p style="font-size:13px;margin:6px 0">Pausas por latencia: <strong>MNQ: 16 pausas</strong> — máx atraso <strong>12.5s</strong>, pausa total <strong>1842s</strong> (peor <strong>415s</strong>). Total 16.</p>
+      <p style="font-size:12px;color:var(--text-muted);margin:0">Si se concentra en un solo mercado (típ. NQ, el gráfico más rápido), suele ser carga del chart, no la conexión.</p></div>
+    <div class="rules-box"><div class="rules-box-title">🔌 Desactivaciones</div>
+      <p style="font-size:13px;margin:6px 0">4 manual(es) (ninguna por error → ningún crash/rechazo forzó el apagado).</p>
+      <p style="font-size:12px;color:var(--text-muted);margin:0">Línea de tiempo:<br><span style='display:inline-block;margin:2px;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700;color:#fff;background:#27ae60'>09:31 ON</span><span style='display:inline-block;margin:2px;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700;color:#fff;background:#27ae60'>09:31 ON</span><span style='display:inline-block;margin:2px;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700;color:#fff;background:#c0392b'>10:33 OFF</span><span style='display:inline-block;margin:2px;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700;color:#fff;background:#c0392b'>10:33 OFF</span><span style='display:inline-block;margin:2px;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700;color:#fff;background:#27ae60'>10:34 ON</span><span style='display:inline-block;margin:2px;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700;color:#fff;background:#27ae60'>10:34 ON</span><span style='display:inline-block;margin:2px;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700;color:#fff;background:#c0392b'>10:43 OFF</span><span style='display:inline-block;margin:2px;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700;color:#fff;background:#c0392b'>10:43 OFF</span></p></div>
+  </div>
+</div>
+  <div class="section-title"><span class="step">CONTEXTO</span><h2>Validación de Contexto por Trade</h2></div>
+<div class="card">
+  
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #8e44ad;">
+        <div style="font-size:22px;font-weight:700;color:#8e44ad;">5</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Trades validados</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #27ae60;">
+        <div style="font-size:22px;font-weight:700;color:#27ae60;">4 <span style="font-size:13px;">(80%)</span></div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Contexto OK</div>
+        <div style="font-size:11px;font-weight:600;color:#27ae60;margin-top:3px;">+$725.64</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;border-top:3px solid #e67e22;">
+        <div style="font-size:22px;font-weight:700;color:#e67e22;">1</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Contexto Mixto/No OK</div>
+        <div style="font-size:11px;font-weight:600;color:#27ae60;margin-top:3px;">+$153.60</div>
+      </div>
+    </div>
+  <div style="overflow-x:auto;">
+    <table style="width:100%;font-size:12px;border-collapse:collapse;">
+      <thead><tr style="color:var(--text-muted);border-bottom:1px solid var(--border);background:var(--surface);">
+        <th style="padding:6px 8px;text-align:left">Trade#</th>
+        <th style="padding:6px 8px;text-align:left">Inst</th>
+        <th style="padding:6px 8px;text-align:left">Dir</th>
+        <th style="padding:6px 8px;text-align:center">Qty</th>
+        <th style="padding:6px 8px;text-align:center">Zona/Espejo</th>
+        <th style="padding:6px 8px;text-align:center">VWAP</th>
+        <th style="padding:6px 8px;text-align:center">SMA</th>
+        <th style="padding:6px 8px;text-align:left">ATR</th>
+        <th style="padding:6px 8px;text-align:center">Ctx</th>
+        <th style="padding:6px 8px;text-align:right">P&L</th>
+        <th style="padding:6px 8px;text-align:left">Cuenta</th>
+        <th style="padding:6px 8px;text-align:left">Nota IA</th>
+      </tr></thead>
+      <tbody><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">1</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">SHORT</td>
+          <td style="padding:6px;text-align:center;">6</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge" title="Señal espejo A+" style="background:rgba(255,215,0,.08);color:#c8a800;border-color:#c8a800;border-style:dashed">🪞 A+</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 11.14</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$6.60</td>
+          <td style="padding:6px;font-size:10px;">Cuenta Fondeada</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">2,3</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">SHORT</td>
+          <td style="padding:6px;text-align:center;">6</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge manual">Manual</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 11.14</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$287.60</td>
+          <td style="padding:6px;font-size:10px;">Cuenta Fondeada</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">4,5</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">SHORT</td>
+          <td style="padding:6px;text-align:center;">6</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge manual">Manual</span></td>
+          <td style="padding:6px;text-align:center;">❌</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 9.14</td>
+          <td style="padding:6px;text-align:center;">🟠</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$153.60</td>
+          <td style="padding:6px;font-size:10px;">Cuenta Fondeada</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">6,7,8</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">SHORT</td>
+          <td style="padding:6px;text-align:center;">6</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge manual">Manual</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 7.84</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$220.84</td>
+          <td style="padding:6px;font-size:10px;">Cuenta Fondeada</td>
+          <td style='padding:6px;'></td>
+        </tr><tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:6px;font-weight:600;">9,10</td>
+          <td style="padding:6px;">MNQ</td>
+          <td style="padding:6px;color:#c0392b;font-weight:600;">SHORT</td>
+          <td style="padding:6px;text-align:center;">6</td>
+          <td style="padding:6px;text-align:center;font-size:10px;"><span class="zone-badge manual">Manual</span></td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;text-align:center;">✅</td>
+          <td style="padding:6px;font-size:11px;color:var(--text-muted);">ATR 6.98</td>
+          <td style="padding:6px;text-align:center;">🟢</td>
+          <td style="padding:6px;color:#27ae60;font-weight:600;">+$210.60</td>
+          <td style="padding:6px;font-size:10px;">Cuenta Fondeada</td>
+          <td style='padding:6px;'></td>
+        </tr></tbody>
+    </table></div>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 6 — DIAGNÓSTICO ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="diagnostico" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">6</span>Diagnóstico de la Sesión</div>
+  <h2>Análisis General y Conclusiones</h2>
+  <p class="sub">Evaluación cualitativa de la sesión, patrones identificados y aprendizajes</p>
+  <div class="section-title"><span class="step">ANALISIS</span><h2>Análisis General de la Sesión</h2></div>
+<div class="ai-insight">
+  <div class="ai-label">🤖 Análisis de IA</div>
+  <p>Sim: 0 trades, $0 | Cuenta Fondeada: 5 trades, $879 — 100% win rate. Día perfecto para la cuenta fondeada con 5/5 ganadores en MNQ short, todos manuales (HUD_Manual). El AutoTrader no ejecutó ninguna de las 33 señales del día; 9 señales ganadoras (T2) quedaron sin capturar. La operativa manual fue precisa y bien alineada con el contexto de VWAP/SMA (4/5 contexto OK). Volatilidad en régimen Baja (VIX 16.5) con escenario V5 'Media' válido durante toda la sesión. Sin trades Sim para contraste.</p>
+</div><div class="card" style="background:var(--header-gradient);color:white;border:none;">
+  <p style="font-size:14px;line-height:1.7;text-align:center;font-style:italic;">"Sesión de alta calidad operativa con resultado perfecto en la cuenta fondeada (5/5, +$879, DD $0). El trader demostró excelente lectura del mercado y capacidad de anticipar señales del sistema. Sin embargo, la dependencia total de la ejecución manual y la inoperancia del AutoTrader (0/33 señales) son señales de alerta que deben resolverse antes de la próxima sesión. El día deja una lección clara: el edge del sistema HUD V7 es real (las señales A+ funcionaron), pero el vehículo de ejecución (AutoTrader) necesita reparación urgente. 9 oportunidades ganadoras quedaron en la mesa por latencia, apagados y no-ejecuciones. El potencial del día, con el bot funcionando, se estima en $1,500-$2,400. El objetivo para mañana es recuperar esa eficiencia perdida."</p>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN — MEJORAS AL SISTEMA ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="mejoras" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">🔧</span>Mejoras al Sistema</div>
+  <h2>Mejoras propuestas — HUD V7 y AutoTrader</h2>
+  <p class="sub">Ajustes concretos detectados hoy, separados por componente y con evidencia (vacío si no hubo)</p>
+  <div style='display:grid;gap:14px;margin-top:12px'><div class='rules-box'><div class='rules-box-title'>📊 Mejoras HUD V7</div><ul style='margin:6px 0 0 18px'><li style='margin-bottom:8px'><strong>Contexto MIXTO en trade 3 (VWAP UP vs dirección SHORT) — el sistema no filtró la señal a pesar de que el contexto VWAP era desfavorable.</strong><br><span style='font-size:12px;color:#7a7468'>Evidencia: Trade 3: VWAP OK=✗, contexto MIXTO. PnL +$154, pero con riesgo asumido que las reglas del HUD deberían haber filtrado. Las señales fab14ba0 y ecbb1cc2 en esa misma ventana tenían entries en 29765-29764, muy por debajo del entry real del trade (29776).</span><br><span style='font-size:13px'>→ Añadir filtro de VWAP obligatorio: si direccion=SHORT y VWAP=UP, no emitir señal A+ (o marcar como contexto NO OPERABLE). Esto evitaría que el trader o el bot tomen señales con viento en contra.</span></li><li style='margin-bottom:8px'><strong>Señales A+ con T2 funcionaron en MNQ con WR 53% y R_dia +1.78 en régimen SuperExtrema — alineado con backtesting.</strong><br><span style='font-size:12px;color:#7a7468'>Evidencia: NQ Zona A: WR día 53% vs BT 44% (SuperExtrema), R_dia +1.78 vs BT +0.49. El sistema está funcionando dentro de lo esperado para este régimen.</span><br><span style='font-size:13px'>→ No modificar la lógica de señales A+ en MNQ. El rendimiento observado está en línea o supera el backtesting.</span></li><li style='margin-bottom:8px'><strong>Señales Zona 20 en MNQ tuvieron WR 0% (0/6 ganadoras, 5 stops, 1 BE) muy por debajo del BT 39% en régimen Baja.</strong><br><span style='font-size:12px;color:#7a7468'>Evidencia: NQ Zona 20: WR día 0% vs BT 39%, R_dia -1.33 vs BT +0.27. Las 5 stops de zona 20 ocurrieron entre 11:34 y 11:56, todas perdedoras.</span><br><span style='font-size:13px'>→ Revisar filtro de zona 20 para régimen Baja: considerar aumentar el gap_ATR mínimo o deshabilitar zona 20 cuando VIX < 17. Las señales de zona 20 en volatilidad baja tienen alta tasa de stop.</span></li></ul></div><div class='rules-box'><div class='rules-box-title'>🤖 Mejoras AutoTrader</div><ul style='margin:6px 0 0 18px'><li style='margin-bottom:8px'><strong>El AutoTrader no ejecutó 6 señales estando ENCENDIDO — sin registro claro del motivo.</strong><br><span style='font-size:12px;color:#7a7468'>Evidencia: Diagnóstico: señales 09:32 (3 señales), 09:52, 10:26, 10:41 — todas con AutoTrader ENCENDIDO pero sin tomar. En esos momentos el trader estaba ejecutando trades manuales, posiblemente ocupando la 'posición única' del sistema.</span><br><span style='font-size:13px'>→ Implementar cola de señales: si el AutoTrader no puede ejecutar una señal porque ya hay una posición abierta, encolarla y ejecutarla al cerrar la posición actual (respetando cooldown). Alternativamente, permitir hasta 2 posiciones simultáneas separando por instrumento (MNQ + MES).</span></li><li style='margin-bottom:8px'><strong>Latencia en MNQ causa pausas prolongadas (hasta 7 minutos) que pierden ventanas de señales.</strong><br><span style='font-size:12px;color:#7a7468'>Evidencia: 2 señales ganadoras (09:40, 09:41) perdidas durante pausa por latencia de 5.0s. Total 16 pausas de latencia en la sesión para MNQ, 1,842 segundos acumulados.</span><br><span style='font-size:13px'>→ (a) Aumentar umbral de pausa por latencia de 5s a 10s para MNQ, (b) implementar reconexión automática más agresiva (reintentar cada 30s en lugar de 60s), (c) agregar alerta sonora/visual cuando el bot entre en pausa para que el trader pueda tomar el control manual.</span></li><li style='margin-bottom:8px'><strong>Entradas del AutoTrader son LIMIT pasivas — el precio puede no alcanzar el nivel en 5 barras, perdiendo la señal.</strong><br><span style='font-size:12px;color:#7a7468'>Evidencia: 8 señales fueron canceladas/pendientes (limit no llenada o timeout). La operativa manual del trader demostró que se puede entrar a mejor precio entrando antes (anticipación), lo que las órdenes LIMIT no permiten.</span><br><span style='font-size:13px'>→ Evaluar cambiar a entradas MARKET o STOP-limit para señales de alta convicción (zona A+ con gap_ATR >1.0). Las entradas LIMIT pueden dejarse para señales de menor convicción. Esto requeriría testeo en Sim primero.</span></li></ul></div></div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN — CUENTAS (FONDEO & BROKERS) ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="cuentas" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">🏦</span>Cuentas — Fondeo &amp; Brokers</div>
+  <h2>Novedades de cuentas — correos de fondeadoras y brokers</h2>
+  <p class="sub">Info de tus cuentas que llegó al correo: DD/pérdidas, payouts, cambios de reglas, avisos de plataforma (MFF, Uprofit, Earn2Trade, FundedNext, Take Profit · IBKR, NinjaTrader, Binance)</p>
+  <div class='rules-box' style='margin-bottom:12px'><div class='rules-box-title'>🏦 Fondeadoras (MFF · Uprofit · Earn2Trade · FundedNext · Take Profit)</div><div style='overflow-x:auto'><table class='tbl'><thead><tr><th>Fecha</th><th>Remitente</th><th>Asunto</th></tr></thead><tbody><tr><td style='white-space:nowrap;color:#7a7468;font-size:12px'>Mon, 13 Jul 2026</td><td><strong>Take Profit Trader</strong></td><td>Oversized Losses?</td></tr></tbody></table></div></div><p class='muted' style='font-size:12px'>Correos de tu inbox (solo lectura). Revisa los de cuenta importantes: DD/pérdidas, payouts, cambios de reglas, avisos de la plataforma.</p>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 7 — ESTRATEGIAS ══════════════════════ -->
+<div id="estrategias-section" style="display:block">
+  <div class="sub-title">Resultados por Estrategia</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>Estrategia</th><th>Trades</th><th>W</th><th>L</th><th>Flat</th><th>WR</th><th>P&L</th></tr></thead>
+      <tbody><tr><td>HUD_Manual</td><td>5</td><td>5</td><td>0</td><td>0</td><td>100.0%</td><td class="positive">+$879.24</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 8 — FONDEO ══════════════════════ -->
+<div id="fondeo-section" style="display:1">
+<div class="section-divider"></div>
+  <div class="section-label"><span class="num">8</span>Cuenta Fondeada</div>
+  <h2>Evaluación de la Cuenta Fondeada</h2>
+  <div class="kpi-grid" style="margin-bottom:14px">
+    <div class="kpi"><div class="kpi-label">Balance</div><div class="kpi-value" style="color:var(--teal)">$879 (PnL del día — 5 trades, 100% WR)</div></div>
+    <div class="kpi"><div class="kpi-label">Drawdown</div><div class="kpi-value neg">$0 (0% del límite — sin drawdown intradía. En what-if 50K DD $1,000: 0% usado (SOBREVIVIÓ). En what-if 100K DD $3,000: 0% usado (SOBREVIVIÓ).)</div></div>
+    <div class="kpi"><div class="kpi-label">Días Restantes</div><div class="kpi-value">—</div></div>
+    <div class="kpi"><div class="kpi-label">Objetivo</div><div class="kpi-value" style="color:var(--gold)">—</div></div>
+  </div>
+  <div class="ai-insight"><div class="ai-label">Evaluación</div><p>Día excepcional para la cuenta fondeada: 5/5 ganadores, $879 PnL, 0 drawdown. Sin embargo, la ausencia total de ejecución del AutoTrader (0/33 señales) es preocupante: el éxito del día dependió ENTERAMENTE de la ejecución manual del trader. El PnL Sim fue $0 porque no hubo trades automáticos. La diferencia entre cuentas refleja que la operativa manual suplió al bot, no que hubiera una estrategia diferenciada. El tamaño de 6 contratos MNQ fue apropiado para el escenario 'Media' y generó retornos consistentes. Para la próxima sesión, la prioridad #1 es restaurar la operativa del AutoTrader; si no es posible, considerar operar solo la cuenta fondeada con supervisión manual estricta y reducir tamaño a 4 contratos para gestionar riesgo ante la falta de respaldo automático.</p></div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 9 — DOFA ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="dofa" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">9</span>Matriz DOFA</div>
+  <h2>Análisis DOFA — 14 JUL 2026</h2>
+  <p class="sub">Fortalezas · Debilidades · Oportunidades · Amenazas del período analizado</p>
+  <div class="sub-title" style="margin-top:16px">DOFA — Sim/Demo</div>
+<div class="dofa-grid">
+  <div class="dofa-card F"><div class="dofa-title F">✅ Fortalezas</div><div class="dofa-item" style="color:var(--text-muted);font-style:italic">Sin elementos</div></div>
+  <div class="dofa-card D"><div class="dofa-title D">⚠️ Debilidades</div><div class="dofa-item">Sin trades Sim ejecutados — no hay datos para evaluar el rendimiento del bot en condiciones de mercado real</div></div>
+  <div class="dofa-card O"><div class="dofa-title O">🔵 Oportunidades</div><div class="dofa-item">Disponibilidad de cuenta Sim para validar configuraciones de AutoTrader sin arriesgar capital real</div></div>
+  <div class="dofa-card A"><div class="dofa-title A">🔴 Amenazas</div><div class="dofa-item">La falta de operativa Sim reduce la capacidad de identificar problemas del bot antes de que afecten la cuenta fondeada</div></div>
+</div><div class="sub-title" style="margin-top:16px">DOFA — Cuenta Fondeada</div>
+<div class="dofa-grid">
+  <div class="dofa-card F"><div class="dofa-title F">✅ Fortalezas</div><div class="dofa-item">100% win rate sobre 5 trades — excelente selectividad y timing manual</div><div class="dofa-item">4 de 5 trades alineados con contexto OK (VWAP + SMA favorables) — buena lectura del entorno técnico</div><div class="dofa-item">Capacidad de anticipar señales HUD y ejecutar a mejor precio que el entry de la señal</div><div class="dofa-item">Gestión de riesgo conservadora: todas las salidas en ganancia, sin stops alcanzados</div></div>
+  <div class="dofa-card D"><div class="dofa-title D">⚠️ Debilidades</div><div class="dofa-item">1 trade (trade 3) ejecutado con contexto MIXTO (VWAP UP en short) — desviación de la regla de contexto</div><div class="dofa-item">Dependencia total de ejecución manual — el AutoTrader no ejecutó ninguna señal del día</div><div class="dofa-item">Salidas anticipadas sistemáticas — potencial de dejar ganancias significativas en la mesa (trades salieron antes del T1/T2 de las señales)</div><div class="dofa-item">Solo se operó MNQ — se ignoraron oportunidades en MES (1 señal A+ LONG desaprovechada)</div></div>
+  <div class="dofa-card O"><div class="dofa-title O">🔵 Oportunidades</div><div class="dofa-item">Integrar la operativa manual con las señales del AutoTrader para maximizar captura de oportunidades</div><div class="dofa-item">Usar los trades manuales como benchmark para calibrar la velocidad de ejecución del bot</div><div class="dofa-item">Las 9 señales ganadoras perdidas representan ~$1,500 en oportunidad de mejora del sistema</div></div>
+  <div class="dofa-card A"><div class="dofa-title A">🔴 Amenazas</div><div class="dofa-item">Si el AutoTrader sigue sin ejecutar señales, el trader cargará con toda la carga operativa manual — riesgo de fatiga y error humano</div><div class="dofa-item">El patrón de anticipación de señales (entrar antes de la señal formal) puede fallar si el mercado cambia dirección rápidamente</div><div class="dofa-item">Latencia recurrente en MNQ (16 pausas, 1,842 segundos total) — riesgo de perder ventanas operativas críticas</div></div>
+</div>
+</div>
+
+<!-- ══════════════════════ SECCIÓN 10 — REGLAS ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="reglas" style="scroll-margin-top:52px">
+  <div class="section-label"><span class="num">10</span>Reglas Post-Mercado</div>
+  <h2>Recomendaciones y Reglas a Seguir</h2>
+  <p class="sub">Reglas críticas, ajustes de calidad y mejoras para las próximas sesiones</p>
+  <div class="section-title"><span class="step">RECOMENDACIONES</span><h2>Recomendaciones Finales</h2></div>
+<div class="sub-title" style="margin-top:16px">Recomendaciones — Cuenta Fondeada</div><div class="rec-card"><h3>🔴 Regla Crítica Fondeada — No operar contra contexto</h3><ul><li>Trade 3 operó con VWAP UP en dirección SHORT (contexto MIXTO). Aunque ganó, violó la regla de contexto. Establecer como regla obligatoria: no abrir posiciones si VWAP no está alineado con la dirección.</li><li>Implementar check pre-trade manual: verificar VWAP + SMA20 + SMA80 antes de cada entrada. Si alguno contradice la dirección, saltar el trade.</li></ul></div><div class="rec-card"><h3>🟡 Calidad Fondeada — Salidas anticipadas vs targets del sistema</h3><ul><li>Todos los trades salieron antes del T1/T2 de las señales correspondientes. En trades 2 y 5, se capturó ~55% del movimiento al T2. Analizar si usar trailing stop basado en ATR (ej. 1×ATR desde máximo a favor) permitiría capturar más movimiento sin dar太多的 vuelta.</li><li>Probar en Sim: mantener posición hasta T1 al menos cuando el contexto es OK, con stop dinámico a 1×ATR.</li></ul></div><div class="rec-card"><h3>🔴 Regla Crítica Fondeada — Diversificar instrumentos</h3><ul><li>Hoy se perdió una señal A+ T2 en MES (10:26, LONG) porque el trader solo operaba MNQ. Evaluar si vale la pena tener un segundo monitor/chart para MES y capturar señales de alta convicción en ambos instrumentos.</li><li>Si el capital lo permite, operar MES con 1-2 contratos en señales A+ añadiría diversificación y reduciría dependencia de MNQ.</li></ul></div><div class="sub-title" style="margin-top:16px">Recomendaciones — Generales</div><div class="rec-card"><h3>🟢 Mejora General — Resolver inoperancia del AutoTrader</h3><ul><li>El AutoTrader ejecutó 0 de 33 señales. El diagnóstico muestra 1 apagado, 2 por latencia, 6 encendido-sin-tomar. Priorizar la revisión del módulo de ejecución automática antes de la próxima sesión.</li><li>Verificar por qué las señales ENCENDIDO-pero-no-tomada no se ejecutaron: ¿límite de posición, cooldown mal configurado, override manual por MFF/riesgo?</li><li>Documentar el estado del AutoTrader en cada momento para correlacionar con las señales no ejecutadas.</li></ul></div><div class="rec-card"><h3>🟢 Mejora General — Monitoreo de latencia</h3><ul><li>16 pausas por latencia en MNQ (atraso máximo 12.5s, 1,842 segundos total en pausa). Esto es crítico porque se perdieron 2 señales ganadoras durante pausas de latencia (09:40-09:41).</li><li>Evaluar: (a) reducir carga del chart MNQ, (b) aumentar umbral de pausa de latencia, (c) considerar conexión por cable vs WiFi, (d) verificar recursos del PC durante operativa.</li></ul></div><div class="rec-card"><h3>🟢 Mejora General — Registro de decisiones manuales</h3><ul><li>Los trades manuales HUD_Manual no dejan registro de por qué se tomó cada decisión. Implementar un log simple (puede ser en Excel o un snippet de código) donde el trader anote: motivo de entrada, señales visibles, desviaciones del plan.</li><li>Esto permitirá en análisis post-mortem distinguir entre 'intuición fundamentada' y 'ruido emocional'.</li></ul></div>
+
+<div class="section-title"><span class="step">INCIDENCIAS</span><h2>Bugs y Diagnóstico</h2></div>
+<div class="card">
+  
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ Latencia recurrente en MNQ — 16 pausas en la sesión <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">El AutoTrader reportó 16 eventos de latencia en MNQ, con atraso máximo de 12.5 segundos y 1,842 segundos total en pausa (aproximadamente 31 minutos). La peor pausa duró 415 segundos (~7 minutos). Esto ocurrió entre 10:27 y 10:36, afectando la captura de señales en esa ventana.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Investigar causa raíz: (a) verificar recursos del PC (CPU/RAM/disco durante operativa), (b) reducir número de charts/indicadores en MNQ, (c) probar conexión por cable Ethernet, (d) considerar VPS si el problema persiste.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#c0392b;background:#fef5f5">
+      <h4 style="color:#c0392b;font-size:13px;margin-bottom:6px;">🛠️ AutoTrader ENCENDIDO no ejecuta señales — 6 casos sin causa clara <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[ALTA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">En 6 ocasiones, el AutoTrader estaba ENCENDIDO pero no tomó señales que resultaron ganadoras (T2). Las causas posibles incluyen: posición abierta simultánea (trades manuales), límite de riesgo MFF, override manual no documentado, o cooldown post-cierre. No hay suficiente logging para determinar la causa exacta.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Aumentar logging del AutoTrader: registrar razón exacta de no-ejecución (posición activa, cooldown, límite de pérdida, override manual, order rejected, etc.) para cada señal no ejecutada.</p>
+    </div>
+    <div class="discrepancy-box" style="border-left-color:#279995;background:#fef3e2">
+      <h4 style="color:#279995;font-size:13px;margin-bottom:6px;">⚠️ Estrategias desactivadas manualmente 4 veces en la sesión <span style="font-size:9px;font-family:Space Mono;opacity:0.7">[BAJA]</span></h4>
+      <p style="font-size:12px;margin-bottom:6px">Se registraron 4 desactivaciones manuales de las estrategias AutoTrader (IDs 301804774 y 301804792) entre 10:33 y 10:43, coincidiendo con el final de la operativa activa del día. No hay registro de desactivaciones automáticas por error.</p>
+      <p style="font-size:12px;color:var(--teal);font-weight:600">✅ Es normal si corresponde al cierre de la sesión operativa. Si las desactivaciones fueron durante la operativa, documentar el motivo. Confirmar que no se deban a stops de seguridad o pérdida de conexión.</p>
+    </div>
+</div>
+  <div class="plan-card"><h3>Disciplina</h3><p>Establecer regla escrita de NO operar si VWAP contradice la dirección. El trade 3 fue ganador pero con contexto MIXTO; para mantener la disciplina a largo plazo, debe evitarse incluso si resulta rentable ocasionalmente. Implementar check pre-trade: verificar VWAP, SMA20 y SMA80 antes de cada entrada manual.</p></div><div class="plan-card"><h3>Sizing</h3><p>Para el escenario V5 'Media' (ATR 9-12, Keltner 63-90), mantener 6 contratos MNQ en señales con contexto OK. En contexto MIXTO o cuando ATR caiga por debajo de 7 (transición a 'Baja'), reducir a 4 contratos. Para señales en MES, comenzar con 2 contratos como prueba.</p></div><div class="plan-card"><h3>Senales</h3><p>Priorizar señales A+ con gap_ATR >1.0 y semáforo VerdeOscuro — estas mostraron la mayor tasa de acierto en el backtesting (44% WR en SuperExtrema). En régimen Baja actual, enfocar las señales A+ tempranas (antes de 11:00) y ser cauto con zona 20 que tuvo 0% WR hoy.</p></div><div class="plan-card"><h3>Horario</h3><p>Ventana operativa más efectiva hoy: 09:30-10:42 (todos los trades ganadores en este rango). Después de 11:00, las señales zona 20 fueron todas stops. Limitar operativa activa a 09:30-11:30, con ventana PM (14:00-16:30) solo para seguimiento sin nuevas posiciones hasta que el AutoTrader esté funcionando correctamente.</p></div><div class="plan-card"><h3>Sistema</h3><p>Antes de la próxima sesión: (1) diagnosticar por qué 6 señales no se ejecutaron con AutoTrader ENCENDIDO — revisar logs de estado/posición/riesgo, (2) implementar logging detallado de no-ejecución, (3) probar en Sim la cola de señales o el aumento de límite de posición, (4) reducir latencia en MNQ (limpiar charts, verificar conexión). NO operar la cuenta fondeada hasta que el AutoTrader ejecute correctamente al menos 1 señal en Sim.</p></div>
+</div>
+
+<!-- ══════════════════════ PLAN DE MEJORAS ══════════════════════ -->
+<div id="multi-account-section" style="display:0">
+<div class="section-divider"></div>
+  <div class="section-label"><span class="num">*</span>Comparativa por Cuenta</div>
+  <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>Cuenta</th><th>Trades</th><th>W</th><th>L</th><th>WR</th><th>P&L</th><th>Puntos por Mercado</th></tr></thead>
+      <tbody><tr><td>Cuenta Fondeada</td><td>5</td><td>5</td><td>0</td><td>100%</td><td class='positive'>+$879.24</td><td>+439.6 ptos MNQ</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════ YOUTUBE ══════════════════════ -->
+<div class="section-divider"></div>
+<div id="video" style="scroll-margin-top:52px">
+  <div class="yt-block">
+    <div class="yt-icon">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </div>
+    <div class="yt-text">
+      <div class="yt-title">Operativa en vivo — Canal EduS Trader</div>
+      <div class="yt-sub">YouTube · Sesiones diarias · Análisis y ejecución en tiempo real &middot; 14 JUL 2026</div>
+    </div>
+    <a class="yt-btn" href="https://www.youtube.com/@EduSTrader" target="_blank" rel="noopener noreferrer">Ver en YouTube →</a>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<footer>
+  <a href="javascript:history.back()" class="nav-back">← Volver</a> &middot;
+  <span class="brand-ft">Edu<span class="gold">S</span> Trader</span> &middot;
+  Post-Market Analysis &middot; 14 JUL 2026 &middot; Fuente: NinjaTrader 8
+</footer>
+
+</body>
+</html>
