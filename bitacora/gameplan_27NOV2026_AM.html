@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduS Trader — Daily Strategic Game Plan | 27 NOV 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #142d37;
+    --navy-dark: #0d1f26;
+    --teal: #279995;
+    --gold: #b38665;
+    --gold-light: #d4a982;
+    --bg: #f2f0eb;
+    --surface: #ffffff;
+    --surface2: #f8f6f0;
+    --border: #e0dbd0;
+    --text: #1a1814;
+    --text-muted: #7a7468;
+    --bull: #279995;
+    --bull-bg: #e6f5f4;
+    --bear: #c0392b;
+    --bear-bg: #fdf0ee;
+    --chop: #b38665;
+    --chop-bg: #f6efe8;
+    --shadow: 0 2px 20px rgba(13,31,38,0.10);
+    --radius: 10px;
+    --header-gradient: linear-gradient(135deg, #142d37 0%, #034649 100%);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .header {
+    background: var(--header-gradient);
+    color: white;
+    padding: 24px 40px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 1;
+  }
+  .header-left .logo-img {
+    height: 68px;
+    width: auto;
+    display: block;
+  }
+  .header-left .brand {
+    display: flex;
+    flex-direction: column;
+  }
+  .header-left .brand-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: white;
+    line-height: 1;
+  }
+  .header-left .brand-name .gold {
+    color: var(--gold);
+  }
+  .header-left .brand-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--gold-light);
+    letter-spacing: 3px;
+    margin-top: 2px;
+    text-transform: uppercase;
+  }
+  .header-right {
+    text-align: right;
+    z-index: 1;
+  }
+  .header-right .date {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .header-right .time {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 2px;
+  }
+  .header-right .prices {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  .price-chip {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(179,134,101,0.35);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: white;
+  }
+  .price-chip span { color: var(--gold-light); font-weight: 700; }
+  .price-chip .chg-pos { color: var(--teal); }
+  .price-chip .chg-neg { color: #e87373; }
+  .vix-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 4px;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+  }
+  .vix-bajo { background: rgba(39,153,149,0.25); color: #6bcfcb; }
+  .vix-media { background: rgba(179,134,101,0.25); color: var(--gold-light); }
+  .vix-alta { background: rgba(224,130,50,0.25); color: #f5a623; }
+  .vix-extrema { background: rgba(224,82,82,0.25); color: #f07070; }
+  .vix-super { background: rgba(180,40,40,0.35); color: #ff5050; }
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    margin-top: 36px;
+    position: relative;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    margin-left: 4px;
+  }
+  .section-title .step {
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 1.5px;
+    border: 1px solid rgba(179,134,101,0.3);
+  }
+  .section-title h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--navy);
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead tr { background: var(--navy); color: white; }
+  thead th {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    color: var(--gold-light);
+  }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody td { padding: 10px 14px; font-size: 13px; vertical-align: top; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Space Mono', monospace;
+  }
+  .badge-high { background: var(--bear-bg); color: var(--bear); }
+  .badge-med  { background: var(--chop-bg); color: var(--chop); }
+  .badge-low  { background: var(--bull-bg); color: var(--bull); }
+  .sentiment-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .sentiment-bar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 5px;
+  }
+  .sentiment-bar.s-risk-on::before { background: var(--bull); }
+  .sentiment-bar.s-risk-off::before { background: var(--bear); }
+  .sentiment-bar.s-mixed::before { background: var(--gold); }
+  .sentiment-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .sentiment-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+  }
+  .sentiment-value.s-risk-on { color: var(--bull); }
+  .sentiment-value.s-risk-off { color: var(--bear); }
+  .sentiment-value.s-mixed { color: var(--gold); }
+  .sentiment-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    flex: 1;
+    border-left: 1px solid var(--border);
+    padding-left: 20px;
+  }
+  .sentiment-desc strong { color: var(--text); }
+  .zones-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .zone-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .zone-header {
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 2px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .zone-header .ticker { color: white; font-family: 'DM Sans', sans-serif; font-size: 13px; letter-spacing: 0; }
+  .zone-header .price-ref {
+    margin-left: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+  }
+  .zone-body { padding: 12px 16px; }
+  .zone-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .zone-row:last-child { border-bottom: none; }
+  .zone-row .label { color: var(--text-muted); font-size: 12px; }
+  .zone-row .value {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .value-res { color: var(--bear); }
+  .value-sup { color: var(--bull); }
+  .value-poc { color: var(--navy); }
+  .value-neutral { color: var(--text); }
+  .zone-type {
+    font-size: 9px;
+    font-family: 'Space Mono', monospace;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 4px;
+  }
+  .type-hvn { background: var(--bull-bg); color: var(--bull); }
+  .type-lvn { background: var(--bear-bg); color: var(--bear); }
+  .type-poc { background: #e8edf7; color: var(--navy); }
+  .zone-note {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-left: 3px solid var(--gold);
+    padding: 8px 12px;
+    line-height: 1.5;
+  }
+  .zone-note strong { color: var(--navy); }
+  .prob-bar-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .prob-bar-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--bull), var(--gold), var(--bear));
+  }
+  .prob-bar-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .prob-bar {
+    height: 16px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+  }
+  .prob-segment-bull { background: var(--bull); }
+  .prob-segment-bear { background: var(--bear); }
+  .prob-segment-chop { background: var(--gold); }
+  .prob-labels {
+    display: flex;
+    margin-top: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+  }
+  .prob-lbl { display: flex; align-items: center; gap: 5px; margin-right: 18px; }
+  .prob-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .scenarios-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .scenario-card {
+    border-radius: var(--radius);
+    border: 1.5px solid;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .scenario-card.bull { border-color: var(--bull); }
+  .scenario-card.bear { border-color: var(--bear); }
+  .scenario-card.chop { border-color: var(--gold); }
+  .scenario-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .scenario-card.bull .scenario-header { background: var(--bull-bg); }
+  .scenario-card.bear .scenario-header { background: var(--bear-bg); }
+  .scenario-card.chop .scenario-header { background: var(--chop-bg); }
+  .scenario-icon { font-size: 20px; }
+  .scenario-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 1.5px;
+  }
+  .scenario-card.bull .scenario-label { color: var(--bull); }
+  .scenario-card.bear .scenario-label { color: var(--bear); }
+  .scenario-card.chop .scenario-label { color: var(--gold); }
+  .scenario-prob {
+    margin-left: auto;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+  }
+  .scenario-card.bull .scenario-prob { color: var(--bull); }
+  .scenario-card.bear .scenario-prob { color: var(--bear); }
+  .scenario-card.chop .scenario-prob { color: var(--gold); }
+  .scenario-body {
+    background: var(--surface);
+    padding: 14px 16px;
+  }
+  .scenario-body-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .scenario-row { margin-bottom: 8px; }
+  .scenario-row .s-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+  .scenario-row .s-value {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .targets-grid {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .target-group-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+  }
+  .target-list { display: flex; gap: 4px; flex-wrap: wrap; }
+  .target-chip {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .bull .target-chip { background: var(--bull-bg); color: var(--bull); }
+  .bear .target-chip { background: var(--bear-bg); color: var(--bear); }
+  .chop .target-chip { background: var(--chop-bg); color: var(--gold); }
+  .scenario-note {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 8px 10px;
+    border-radius: 6px;
+    line-height: 1.5;
+    border-left: 3px solid var(--gold);
+  }
+  .scenario-note strong { color: var(--text); }
+  .mag7-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .mag7-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 8px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .mag7-chip .ticker {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .mag7-chip .price { font-size: 13px; font-weight: 600; margin-top: 4px; }
+  .mag7-chip .change {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    margin-top: 2px;
+    font-weight: 700;
+  }
+  .mag7-chip .bias-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    margin: 6px auto 0;
+  }
+  .pos { color: var(--bull); }
+  .neg { color: var(--bear); }
+  .neu { color: var(--gold); }
+  .dot-pos { background: var(--bull); }
+  .dot-neg { background: var(--bear); }
+  .dot-neu { background: var(--gold); }
+  .directional-summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--teal);
+  }
+  .directional-summary .icon { font-size: 20px; flex-shrink: 0; }
+  .directional-summary strong { color: var(--navy); }
+  .setup-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .setup-header {
+    background: var(--gold);
+    color: var(--navy-dark);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    padding: 10px 18px;
+  }
+  .setup-body { padding: 16px 18px; }
+  .setup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .setup-item .s-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .setup-item .s-value {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .highlight-level {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .alert-strip {
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .alert-strip .icon { font-size: 20px; flex-shrink: 0; }
+  .alert-strip.alert-info { background: #eef3fb; border: 1px solid #7da8d8; }
+  .alert-strip.alert-success { background: var(--bull-bg); border: 1px solid var(--teal); }
+  .alert-strip.alert-danger { background: var(--bear-bg); border: 1px solid var(--bear); }
+  .alert-strip.alert-warning { background: var(--chop-bg); border: 1px solid var(--gold); }
+  .mover-row-pos td:nth-child(2) { color: var(--bull); font-weight: 700; }
+  .mover-row-neg td:nth-child(2) { color: var(--bear); font-weight: 700; }
+  .banner-divider {
+    width: 100%;
+    height: 80px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: -8px 0 24px;
+    position: relative;
+    box-shadow: var(--shadow);
+  }
+  .banner-divider img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .banner-divider .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(20,45,55,0.85) 0%, rgba(3,70,73,0.6) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .banner-divider .overlay span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 8px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .footer {
+    background: var(--header-gradient);
+    color: rgba(255,255,255,0.4);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-align: center;
+    padding: 18px;
+    letter-spacing: 1px;
+    margin-top: 40px;
+    border-top: 3px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .footer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  .footer strong { color: var(--gold-light); }
+  .footer .brand-ft {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--gold-light);
+  }
+  .footer .brand-ft .gold { color: var(--gold); }
+  @media (max-width: 768px) {
+    .zones-grid { grid-template-columns: 1fr; }
+    .scenarios-grid { grid-template-columns: 1fr; }
+    .mag7-grid { grid-template-columns: repeat(4, 1fr); }
+    .header { flex-direction: column; gap: 14px; align-items: flex-start; }
+    .header-right { text-align: left; width: 100%; }
+    .header-right .prices { justify-content: flex-start; }
+    .setup-grid { grid-template-columns: 1fr; }
+    .scenario-body-inner { grid-template-columns: 1fr; }
+    .targets-grid { grid-template-columns: 1fr 1fr; }
+  }
+  /* Estado del mercado — badge dinámico */
+  .estado-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+  .estado-premarket  { background: rgba(179,134,101,.3); color: var(--gold-light); }
+  .estado-abierto    { background: rgba(39,153,149,.3);  color: #6bcfcb; }
+  .estado-postmarket { background: rgba(88,160,200,.3);  color: #88c8f0; }
+  .estado-overnight  { background: rgba(120,120,160,.2); color: #aaaacc; }
+
+  /* ─── PASO 06: Recomendador Señales HUD V7 ─── */
+  .rec-panel {
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+  .rec-panel-quant { border-top: 3px solid var(--teal); }
+  .rec-panel-ia    { border-top: 3px solid var(--gold); }
+  .rec-panel-header {
+    background: var(--navy);
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .rec-panel-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: var(--teal);
+    color: var(--navy-dark);
+  }
+  .rec-tag-ia { background: var(--gold); }
+  .rec-panel-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+  }
+  .rec-panel-meta {
+    margin-left: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,.45);
+  }
+  .rec-panel-body { background: var(--surface); padding: 16px 18px; }
+  .rec-filtros {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    letter-spacing: .5px;
+  }
+  .rec-table-wrap { overflow-x: auto; }
+  .rec-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .rec-table thead tr { background: var(--navy-dark); }
+  .rec-table .rec-mkt-head {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--gold-light);
+    padding: 8px 12px;
+    border-right: 1px solid rgba(255,255,255,.1);
+    text-align: center;
+  }
+  .rec-table .rec-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,.5);
+    padding: 5px 10px;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,.05);
+  }
+  .rec-seg-row { border-bottom: 2px solid var(--border); }
+  .rec-seg-col { width: 110px; min-width: 90px; }
+  .rec-seg-label {
+    background: var(--surface2);
+    padding: 10px 12px;
+    border-right: 1px solid var(--border);
+    vertical-align: middle;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .rec-seg-ico { font-size: 16px; display: block; margin-bottom: 2px; }
+  .rec-senal-cell {
+    padding: 10px 12px;
+    border-right: 1px solid var(--border);
+    vertical-align: middle;
+    text-align: center;
+    font-size: 12px;
+  }
+  .rec-stats-cell {
+    padding: 8px 10px;
+    border-right: 1px solid var(--border);
+    vertical-align: middle;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .rec-exp-cell {
+    padding: 8px 10px;
+    border-right: 1px solid var(--border);
+    vertical-align: middle;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .rec-cell-empty {
+    padding: 10px 12px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 11px;
+    border-right: 1px solid var(--border);
+  }
+  .rec-detail-row { background: var(--surface2); }
+  .rec-detail-seg { border-right: 1px solid var(--border); }
+  .rec-detail-cell {
+    padding: 6px 10px;
+    font-size: 11px;
+    color: var(--text-muted);
+    border-right: 1px solid var(--border);
+    line-height: 1.6;
+  }
+  .rec-nota-ia { background: rgba(179,134,101,.04); }
+  .det-rank { color: var(--text-muted); margin-right: 2px; }
+  .det-dir  { color: var(--teal); font-size: 10px; font-family: 'Space Mono', monospace; }
+  .dir-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 3px;
+    vertical-align: middle;
+  }
+  .dir-long  { background: var(--bull-bg);  color: var(--bull); }
+  .dir-short { background: var(--bear-bg);  color: var(--bear); }
+  .dir-ambos { background: var(--chop-bg);  color: var(--chop); }
+  .exp-pos { color: var(--bull); }
+  .exp-neg { color: var(--bear); }
+  .wr-ok   { color: var(--bull); font-weight: 700; }
+  .mc-riesgo { color: var(--bear); }
+  .rec-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+  }
+  .rec-legend-note { flex: 1; text-align: right; font-size: 10px; }
+  /* Panel B */
+  .rec-subtab-ia .rec-subtab-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .rec-narrativa {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+    border-left: 3px solid var(--gold);
+    padding: 10px 14px;
+    background: rgba(179,134,101,.04);
+    border-radius: 0 6px 6px 0;
+  }
+  .rec-b2-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 16px;
+    margin-top: 14px;
+  }
+  .rec-hud-card {
+    background: var(--navy-dark);
+    border: 1px solid rgba(179,134,101,.35);
+    border-radius: 8px;
+    padding: 14px 16px;
+    height: fit-content;
+  }
+  .rec-hud-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(179,134,101,.25);
+    padding-bottom: 6px;
+  }
+  .rec-hud-grid { display: flex; flex-direction: column; gap: 6px; }
+  .rec-hud-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  .rec-hud-key { color: rgba(255,255,255,.5); font-family: 'Space Mono', monospace; font-size: 10px; }
+  .rec-hud-val { color: white; font-weight: 600; }
+  .hud-on  { color: #6bcfcb; }
+  .hud-off { color: #e87373; }
+  .rec-hud-razon {
+    margin-top: 8px;
+    font-size: 11px;
+    color: rgba(255,255,255,.4);
+    line-height: 1.5;
+    font-style: italic;
+  }
+  @media (max-width: 768px) {
+    .rec-b2-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <img class="logo-img" src="/assets/logo.png" alt="EduS Trader" onerror="this.style.display='none'">
+    <div class="brand">
+      <div class="brand-name">Edu<span class="gold">S</span> Trader</div>
+      <div class="brand-sub">Daily Strategic Game Plan &middot; Mesa de Dinero</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="date">VIERNES 27 DE NOVIEMBRE 2026</div>
+    <div class="time">
+      9:23 AM ET
+      <span class="estado-badge estado-premarket">🌅 PRE-MARKET</span>
+      &middot; PREMERCADO USA AM
+    </div>
+    <div class="prices">
+      <div class="price-chip">ES <span>7,299.75</span> <span class="chg-pos">+1.83%</span></div>
+      <div class="price-chip">NQ <span>26,644.75</span> <span class="chg-pos">+2.63%</span></div>
+      <div class="price-chip">CL <span>84.39</span> <span class="chg-pos">+4.53%</span></div>
+      <div class="price-chip">GC <span>3,662.80</span> <span class="chg-pos">+3.21%</span></div>
+      <div class="price-chip">VIX <span>25.59</span> <span class="vix-badge vix-alta">Alta</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="banner-divider">
+  <img src="/banner.png" alt="" onerror="this.style.display='none'">
+  <div class="overlay"><span>27 NOV 2026 &middot; Game Plan</span></div>
+</div>
+
+<style>
+  .report-nav{position:sticky;top:0;z-index:50;display:flex;gap:8px;flex-wrap:wrap;
+    background:var(--navy);padding:10px 14px;border-radius:10px;margin:0 0 18px;box-shadow:var(--shadow)}
+  .report-nav a{color:var(--gold-light);text-decoration:none;font-weight:700;font-size:13px;
+    padding:6px 12px;border-radius:8px;letter-spacing:.3px;transition:background .15s}
+  .report-nav a:hover{background:rgba(255,255,255,.10);color:#fff}
+  .report-area{scroll-margin-top:72px;margin-bottom:8px}
+  .area-title{font-size:21px;font-weight:800;color:var(--navy);border-bottom:3px solid var(--gold);
+    padding-bottom:8px;margin:28px 0 16px}
+  .area-title span{font-weight:500;font-size:14px;color:var(--text-muted)}
+  html{scroll-behavior:smooth}
+</style>
+
+<div class="report-nav">
+  <a href="#marco">📊 Estructura del Mercado</a>
+  <a href="#plan">🎯 Plan y Recomendaciones</a>
+  <a href="#privado">🔒 Mesa (interno)</a>
+</div>
+
+<!-- ═══════════ ÁREA 1 · ESTRUCTURA DEL MERCADO ═══════════ -->
+<div id="marco" class="report-area">
+<div class="area-title">📊 Estructura del Mercado <span>— niveles y análisis técnico multi-temporal</span></div>
+
+<div class="section-title">
+  <span class="step">CONTEXTO</span>
+  <h2>Sentimiento Global &amp; Fundamentales</h2>
+</div>
+
+<div class="sentiment-bar s-risk-on">
+  <div>
+    <div class="sentiment-label">Global Sentiment</div>
+    <div class="sentiment-value s-risk-on">RISK-ON / VIGILANTE</div>
+  </div>
+  <div class="sentiment-desc">
+    Reporte generado a las 9:20 AM ET del viernes 27-11-2026 en PRE-MARKET: los futuros llegan con gap alcista fuerte (ES +1.83%, NQ +2.63%, GC +3.21%, CL +4.53%) tras el rebote del trade de IA y la mejor semana del Dow desde abril 2025. El VIX sigue en 25.59 (régimen ALTA) y la liquidez de Black Friday es fina con cierre anticipado a las 13:00 ET. El contexto de niveles VAH/VAL/ORB/LVN está CONGELADO (último 2026-11-25, hace 57.3h), por lo que el plan se construye solo con niveles objetivos de last_session/prior_session.
+  </div>
+</div>
+
+<div class="alert-strip alert-warning">
+    <div class="icon">🚨</div>
+    <div>
+      <strong>Gap alcista con VIX en 25.6 y liquidez de Black Friday</strong>
+      ES abre con gap de +104 pts sobre el cierre previo (7,195.75 → 7,299.75) y NQ +544 pts, pero el VIX sigue en régimen ALTA (25.59, rango 24.52-25.74). En Black Friday el volumen es irregular y el cierre es a las 13:00 ET: los gaps se rellenan con facilidad en la primera hora. Sizing MICRO obligatorio y no perseguir la apertura.
+    </div>
+  </div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>HORA ET</th>
+        <th>DATO / EVENTO</th>
+        <th>IMPACTO</th>
+        <th>CONSENSO</th>
+        <th>RESULTADO</th>
+        <th>REACCIÓN DEL MERCADO</th>
+        <th>NOTA DE LIQUIDEZ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+          <td><strong>18:30 ET (26-11)</strong></td>
+          <td style="color:var(--text)">Tokyo Core CPI y/y</td>
+          <td><span class="badge badge-med">MEDIO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">3.0%</td>
+          <td style="color:#94a3b8;font-weight:700;font-size:12px">NEUTRAL</td>
+          <td style="color:var(--text-muted);font-size:12px">ACTUAL 2.9% vs fcast 3.0%: ligeramente por debajo. Sin dato verificado de reacción en ES/NQ/GC/CL en el contexto.</td>
+          <td style="color:var(--text-muted);font-size:12px">Publicado hace 14.8h; tono JPY sin impacto directo en la sesión USA AM.</td>
+        </tr>
+<tr>
+          <td><strong>02:45 ET</strong></td>
+          <td style="color:var(--text)">French Consumer Spending m/m</td>
+          <td><span class="badge badge-low">BAJO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">0.1%</td>
+          <td style="color:#94a3b8;font-weight:700;font-size:12px">NEUTRAL</td>
+          <td style="color:var(--text-muted);font-size:12px">ACTUAL 0.0% vs fcast 0.1%: prácticamente en línea. Sin dato verificado de reacción en los futuros del contexto.</td>
+          <td style="color:var(--text-muted);font-size:12px">Publicado hace 6.6h; dato de bajo impacto y ya digerido antes del pre-market USA.</td>
+        </tr>
+<tr>
+          <td><strong>03:00 ET</strong></td>
+          <td style="color:var(--text)">Spanish Flash CPI y/y</td>
+          <td><span class="badge badge-low">BAJO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">4.7%</td>
+          <td style="color:#16a34a;font-weight:700;font-size:12px">POSITIVO</td>
+          <td style="color:var(--text-muted);font-size:12px">ACTUAL 4.1% vs fcast 4.7%: desinflación más rápida de lo esperado. Sin dato verificado de reacción en ES/NQ/GC/CL en el contexto.</td>
+          <td style="color:var(--text-muted);font-size:12px">Publicado hace 6.3h; sesgo dovish para el BCE, tono de apoyo al risk-on europeo.</td>
+        </tr>
+<tr>
+          <td><strong>03:55 ET</strong></td>
+          <td style="color:var(--text)">German Unemployment Change</td>
+          <td><span class="badge badge-low">BAJO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">5K</td>
+          <td style="color:#dc2626;font-weight:700;font-size:12px">NEGATIVO</td>
+          <td style="color:var(--text-muted);font-size:12px">ACTUAL 9K vs fcast 5K: peor de lo esperado. Sin dato verificado de reacción en los futuros del contexto.</td>
+          <td style="color:var(--text-muted);font-size:12px">Publicado hace 5.4h; debilidad laboral alemana, contrapeso macro suave.</td>
+        </tr>
+<tr>
+          <td><strong>05:05 ET</strong></td>
+          <td style="color:var(--text)">Italian 10-y Bond Auction</td>
+          <td><span class="badge badge-low">BAJO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">sin consenso en el contexto</td>
+          <td style="color:#16a34a;font-weight:700;font-size:12px">POSITIVO</td>
+          <td style="color:var(--text-muted);font-size:12px">ACTUAL 4.33|1.5 vs prev 4.49|1.6: yield y bid-to-cover mejores. Sin dato verificado de reacción en ES/NQ/GC/CL en el contexto.</td>
+          <td style="color:var(--text-muted);font-size:12px">Publicado hace 4.3h; demanda sólida de deuda periférica, sin efecto directo en la ventana USA AM.</td>
+        </tr>
+<tr>
+          <td><strong>07:40 ET</strong></td>
+          <td style="color:var(--text)">German Buba President Nagel Speaks</td>
+          <td><span class="badge badge-low">BAJO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">sin consenso en el contexto</td>
+          <td style="color:#94a3b8;font-weight:700;font-size:12px">NEUTRAL</td>
+          <td style="color:var(--text-muted);font-size:12px">sin dato verificado (ACTUAL sin dato publicado). Sin reacción cuantificada en ES/NQ/GC/CL en el contexto.</td>
+          <td style="color:var(--text-muted);font-size:12px">Publicado hace 1.7h; riesgo de titulares hawkish sueltos, vigilar solo si mueve al EUR/USD.</td>
+        </tr>
+<tr>
+          <td><strong>08:30 ET</strong></td>
+          <td style="color:var(--text)">Current Account (CAD)</td>
+          <td><span class="badge badge-low">BAJO</span></td>
+          <td style="color:var(--text-muted);font-size:12px">9.5B</td>
+          <td style="color:#dc2626;font-weight:700;font-size:12px">NEGATIVO</td>
+          <td style="color:var(--text-muted);font-size:12px">ACTUAL 4.5B vs fcast 9.5B: muy por debajo. Sin dato verificado de reacción en ES/NQ/GC/CL en el contexto.</td>
+          <td style="color:var(--text-muted);font-size:12px">Publicado hace 0.8h, justo antes de este reporte; impacto nulo en índices y oro, algo de presión en CAD.</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style="margin:16px 0"><div style="font-weight:700;margin-bottom:8px">📰 Análisis fundamental de noticias</div><div style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Lectura de las últimas noticias de empresas/mercado que pueden mover el día. Si un tema no tiene titular en el contexto, se indica expresamente.</div>
+        <div style="border:1px solid var(--border,#334155);border-radius:10px;padding:12px 14px;margin-bottom:10px;background:var(--surface2)">
+          <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+            <strong style="font-size:14px">Rebote del trade de IA y rally de futuros en Black Friday</strong>
+            <span style="font-size:11px;color:#dc2626;font-weight:700">IMPACTO ALTO</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin:4px 0 8px">
+            SECTOR · Dow futures rally 600 points as benchmark heads for best week since April 2025 (09:00 ET) / US Stocks Rally After Holiday as AI Trade Rebounds: Markets Wrap (09:00 ET) · confianza ALTA
+          </div>
+          <p style="margin:0 0 6px;font-size:13px"><strong>Hecho:</strong> Los futuros de Dow suben ~600 puntos y el S&amp;P/Nasdaq apuntan a rally tras el festivo, con rebote del trade de IA. Los datos de mercado confirman gap alcista: ES +1.83% y NQ +2.63% desde el cierre del 25-11.</p>
+          <p style="margin:0 0 6px;font-size:13px"><strong>Lectura fundamental:</strong> El rebote es de sentimiento y posicionamiento (semana fuerte tras corrección), no de mejora de fundamentales: el S&amp;P 500 sigue en corrección y el 20d es negativo en ES (-4.03%) y NQ (-6.47%).</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0">
+            <div style="background:rgba(22,163,74,.10);border-left:3px solid #16a34a;padding:7px 9px;border-radius:6px;font-size:12px">
+              <strong style="color:#16a34a">Escenario positivo</strong><br>Continuidad del rebote si el gap se defiende sobre 7,224 en ES y 26,350 en NQ; extensión hacia 7,343 y 26,868.
+            </div>
+            <div style="background:rgba(220,38,38,.10);border-left:3px solid #dc2626;padding:7px 9px;border-radius:6px;font-size:12px">
+              <strong style="color:#dc2626">Escenario negativo</strong><br>Fallo del gap en la primera hora (típico en Black Friday) y relleno hacia el open de hoy (7,190.5 ES / 26,068.5 NQ).
+            </div>
+          </div>
+          <p style="margin:0 0 4px;font-size:12px"><strong>Señal para hoy:</strong> Sesgo LONG solo en retroceso, nunca persiguiendo la apertura; el gap es la zona de riesgo.</p>
+          <div style="font-size:11px;color:var(--text-muted)">Activos: ES, NQ, NVDA · Fuente: Titulares 09:00 ET del contexto</div>
+        </div>
+        <div style="border:1px solid var(--border,#334155);border-radius:10px;padding:12px 14px;margin-bottom:10px;background:var(--surface2)">
+          <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+            <strong style="font-size:14px">S&amp;P 500 en corrección: debate bajista vs alcista</strong>
+            <span style="font-size:11px;color:#dc2626;font-weight:700">IMPACTO ALTO</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin:4px 0 8px">
+            MACRO · The S&amp;P 500 is in a correction. Bear markets and recessions don&#x27;t always follow (09:00 ET, impacto ALTO) · confianza ALTA
+          </div>
+          <p style="margin:0 0 6px;font-size:13px"><strong>Hecho:</strong> El contexto confirma que el S&amp;P 500 está oficialmente en corrección y el artículo discute si derivará en bear market/recesión, sin conclusión confirmada.</p>
+          <p style="margin:0 0 6px;font-size:13px"><strong>Lectura fundamental:</strong> Marco de fondo bajista (20d negativo en ES/NQ/GC/CL) que limita la proyección del rebote: los rallies dentro de corrección suelen ser violentos pero de corta duración.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0">
+            <div style="background:rgba(22,163,74,.10);border-left:3px solid #16a34a;padding:7px 9px;border-radius:6px;font-size:12px">
+              <strong style="color:#16a34a">Escenario positivo</strong><br>Si el mercado ignora la corrección y defiende el gap, el rebote puede extenderse varios días (5d ya +5.36% en ES).
+            </div>
+            <div style="background:rgba(220,38,38,.10);border-left:3px solid #dc2626;padding:7px 9px;border-radius:6px;font-size:12px">
+              <strong style="color:#dc2626">Escenario negativo</strong><br>Si los vendedores aparecen en la zona alta del rango de hoy (7,343 ES), el rebote se convierte en un upthrust dentro de la corrección.
+            </div>
+          </div>
+          <p style="margin:0 0 4px;font-size:12px"><strong>Señal para hoy:</strong> No pasar de LONG táctico a LONG estructural; targets cortos y stops ajustados.</p>
+          <div style="font-size:11px;color:var(--text-muted)">Activos: ES, NQ · Fuente: Titular 09:00 ET del contexto</div>
+        </div>
+        <div style="border:1px solid var(--border,#334155);border-radius:10px;padding:12px 14px;margin-bottom:10px;background:var(--surface2)">
+          <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+            <strong style="font-size:14px">Oro: rebote desde mínimo de 15 meses con riesgo Fed</strong>
+            <span style="font-size:11px;color:#dc2626;font-weight:700">IMPACTO ALTO</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin:4px 0 8px">
+            MACRO · Gold rebounds from 15-month low but Fed risks linger (07:43 ET) / Gold price rebounds above $3,660 as tech stocks recover despite Fed rate hike fears (07:00 ET) / HSBC warns bullion could test $3,400 (06:47 ET) · confianza MEDIA
+          </div>
+          <p style="margin:0 0 6px;font-size:13px"><strong>Hecho:</strong> El contexto reporta que el oro rebota desde un mínimo de 15 meses y supera los 3,660, mientras HSBC advierte que podría probar los 3,400 por riesgos de la Fed. El precio actual es 3,662.80 (+3.21%).</p>
+          <p style="margin:0 0 6px;font-size:13px"><strong>Lectura fundamental:</strong> Rebote técnico dentro de una tendencia bajista de 20d (-5.83%) y con narrativa hawkish de la Fed; el oro sube hoy por refugio/dólar, no por cambio de régimen.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0">
+            <div style="background:rgba(22,163,74,.10);border-left:3px solid #16a34a;padding:7px 9px;border-radius:6px;font-size:12px">
+              <strong style="color:#16a34a">Escenario positivo</strong><br>Cierre sobre 3,712.80 confirmaría cambio de carácter y abriría 3,750.
+            </div>
+            <div style="background:rgba(220,38,38,.10);border-left:3px solid #dc2626;padding:7px 9px;border-radius:6px;font-size:12px">
+              <strong style="color:#dc2626">Escenario negativo</strong><br>Rechazo en 3,712.80 y pérdida de 3,578.80 reabre el camino hacia 3,535.80 y la zona HSBC de 3,400.
+            </div>
+          </div>
+          <p style="margin:0 0 4px;font-size:12px"><strong>Señal para hoy:</strong> GC NEUTRAL: no operar contra-tendencia sin confirmación; solo vigilar 3,712.80 como gatillo.</p>
+          <div style="font-size:11px;color:var(--text-muted)">Activos: GC, ES · Fuente: Titulares 06:47-07:43 ET del contexto</div>
+        </div>
+        <div style="border:1px solid var(--border,#334155);border-radius:10px;padding:12px 14px;margin-bottom:10px;background:var(--surface2)">
+          <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+            <strong style="font-size:14px">Aranceles de Trump: revisión republicana y nueva ronda</strong>
+            <span style="font-size:11px;color:#f59e0b;font-weight:700">IMPACTO MEDIO</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin:4px 0 8px">
+            MACRO · Republicans rethink tariffs, giving Democrats an opening to challenge Trump (08:33 ET) / New round of Trump tariffs should spur more front-loading - Kuehne+Nagel (04:54 ET) · confianza MEDIA
+          </div>
+          <p style="margin:0 0 6px;font-size:13px"><strong>Hecho:</strong> El contexto reporta que los republicanos replantean los aranceles y que una nueva ronda arancelaria podría adelantar pedidos (front-loading) según Kuehne+Nagel. No hay cifras ni fechas concretas en el contexto.</p>
+          <p style="margin:0 0 6px;font-size:13px"><strong>Lectura fundamental:</strong> Riesgo de política comercial que afecta márgenes, inflación de bienes y cadenas de suministro; es un factor de volatilidad más que un catalizador direccional de hoy.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0">
+            <div style="background:rgba(22,163,74,.10);border-left:3px solid #16a34a;padding:7px 9px;border-radius:6px;font-size:12px">
+              <strong style="color:#16a34a">Escenario positivo</strong><br>Si se modera el tono arancelario, alivio para importadores y para el sentimiento de riesgo.
+            </div>
+            <div style="background:rgba(220,38,38,.10);border-left:3px solid #dc2626;padding:7px 9px;border-radius:6px;font-size:12px">
+              <strong style="color:#dc2626">Escenario negativo</strong><br>Escalada arancelaria confirmada = presión inflacionaria y freno al rebote de índices.
+            </div>
+          </div>
+          <p style="margin:0 0 4px;font-size:12px"><strong>Señal para hoy:</strong> Solo vigilar titulares; no es gatillo de entrada en la ventana 9:00-11:30.</p>
+          <div style="font-size:11px;color:var(--text-muted)">Activos: ES, CL, NQ · Fuente: Titulares 48h del contexto (04:54 y 08:33 ET)</div>
+        </div>
+        <div style="border:1px solid var(--border,#334155);border-radius:10px;padding:12px 14px;margin-bottom:10px;background:var(--surface2)">
+          <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+            <strong style="font-size:14px">China impulsa tecnología y chips Nvidia Blackwell</strong>
+            <span style="font-size:11px;color:#f59e0b;font-weight:700">IMPACTO MEDIO</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin:4px 0 8px">
+            EMPRESA · China boost lifts tech (09:00 ET) / Nvidia Blackwell chips turn up at China site tied to Alice Huang (09:00 ET) · confianza BAJA
+          </div>
+          <p style="margin:0 0 6px;font-size:13px"><strong>Hecho:</strong> El contexto reporta que un impulso de China levanta al sector tecnológico y que aparecieron chips Nvidia Blackwell en un sitio de China vinculado a Alice Huang. No hay cifras ni confirmación oficial en el contexto.</p>
+          <p style="margin:0 0 6px;font-size:13px"><strong>Lectura fundamental:</strong> Noticia de flujo/ demanda de semis que sostiene la narrativa del rebote de IA; explica parte del gap en NQ, aunque NVDA cerró la sesión del 25-11 en -3.25%.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0">
+            <div style="background:rgba(22,163,74,.10);border-left:3px solid #16a34a;padding:7px 9px;border-radius:6px;font-size:12px">
+              <strong style="color:#16a34a">Escenario positivo</strong><br>Confirmación de demanda china = soporte para semis y para NQ hacia 26,868.75.
+            </div>
+            <div style="background:rgba(220,38,38,.10);border-left:3px solid #dc2626;padding:7px 9px;border-radius:6px;font-size:12px">
+              <strong style="color:#dc2626">Escenario negativo</strong><br>Si se interpreta como cumplimiento laxo de restricciones, riesgo regulatorio y reversión del rebote.
+            </div>
+          </div>
+          <p style="margin:0 0 4px;font-size:12px"><strong>Señal para hoy:</strong> Refuerza el sesgo LONG en NQ solo si 26,350 se mantiene como soporte.</p>
+          <div style="font-size:11px;color:var(--text-muted)">Activos: NQ, NVDA, MU · Fuente: Titulares 09:00 ET del contexto</div>
+        </div></div>
+
+<div class="alert-strip alert-info">
+    <div class="icon">⚠️</div>
+    <div>
+      <strong>Contexto de niveles NO DISPONIBLE (congelado 57.3h)</strong>
+      El EduS_ContextExport de MES/MNQ está congelado desde 2026-11-25 (máx. 36h). NO hay VAH/VAL, POC, ORB, gaps ni LVN válidos para hoy. Todo el plan usa exclusivamente los OHLC de last_session (27-11) y prior_session (25-11) de DATOS DE MERCADO; la tendencia dirAVWAP/LR89 no está disponible y se declara como tal.
+    </div>
+  </div>
+
+<div class="card"><div class="alert-strip alert-warning" style="border-left:4px solid #f59e0b;padding:10px 12px;background:var(--chop-bg);border-radius:8px;margin-bottom:14px">⚠️ <strong>Niveles: información no disponible para:</strong> MES: ctx congelado, último 2026-11-25 (57.4h); MNQ: ctx congelado, último 2026-11-25 (57.4h).</div><div style="margin-bottom:14px"><div style="font-weight:700;margin-bottom:6px">🌐 Panorama macro (~30 días)</div><table style="width:100%"><thead><tr><th>Mercado</th><th>Precio</th><th>5d</th><th>20d</th><th>Sesgo</th></tr></thead><tbody><tr><td><strong>ES</strong></td><td>7307.0</td><td>5.36%</td><td>-4.03%</td><td style="color:#dc2626;font-weight:700">bajista</td></tr><tr><td><strong>NQ</strong></td><td>26687.5</td><td>6.21%</td><td>-6.47%</td><td style="color:#dc2626;font-weight:700">bajista</td></tr><tr><td><strong>CL</strong></td><td>84.29</td><td>0.37%</td><td>-19.05%</td><td style="color:#dc2626;font-weight:700">bajista</td></tr><tr><td><strong>GC</strong></td><td>3671.5</td><td>4.44%</td><td>-5.83%</td><td style="color:#dc2626;font-weight:700">bajista</td></tr><tr><td><strong>VIX</strong></td><td>25.36</td><td>-4.73%</td><td>19.91%</td><td style="color:#16a34a;font-weight:700">alcista</td></tr></tbody></table></div><div><div style="font-weight:700;margin-bottom:6px">🧠 Reglas aprendidas (de la operativa real, verdad base = mercado)</div><ul style='margin:4px 0 0 18px'><li>**AM · ES sesgo SHORT** → acertó 8/9 (89%). Mantener este sesgo en ES durante AM. Evidencia: 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-20, 2026-11-23, 2026-11-24</li><li>**PM · NQ sesgo SHORT** → acertó 7/8 (88%). Mantener este sesgo en NQ durante PM. Evidencia: 2026-11-16, 2026-11-17, 2026-11-19, 2026-11-20, 2026-11-23, 2026-11-24</li><li>**PM · ES sesgo SHORT** → acertó 7/8 (88%). Mantener este sesgo en ES durante PM. Evidencia: 2026-11-17, 2026-11-18, 2026-11-19, 2026-11-20, 2026-11-23, 2026-11-24</li><li>**ASIA · NQ sesgo SHORT** → acertó 12/16 (75%). Mantener este sesgo en NQ durante ASIA. Evidencia: 2026-11-15, 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19, 2026-11-23</li><li>**PM · GC sesgo SHORT** → acertó 8/11 (73%). Mantener este sesgo en GC durante PM. Evidencia: 2026-11-17, 2026-11-18, 2026-11-19, 2026-11-20, 2026-11-23, 2026-11-24</li><li>**ASIA · ES sesgo SHORT** → acertó 5/7 (71%). Mantener este sesgo en ES durante ASIA. Evidencia: 2026-11-05, 2026-11-08, 2026-11-16, 2026-11-17, 2026-11-19, 2026-11-23</li></ul></div></div>
+
+<div class="section-title">
+  <span class="step">ESTRUCTURA</span>
+  <h2>Análisis Estructural — Niveles y Técnico</h2>
+</div>
+
+<div style="margin:0 0 16px"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px"><strong style="font-size:14px">📊 Estructura y áreas de ruptura</strong><span style="font-size:12px;color:var(--text-muted)">Sentimiento estructural: MIXTO</span></div><div style="font-size:13px;margin-bottom:10px;line-height:1.5">La última sesión completa (27-11, datos de mercado) dejó a ES en 7,299.75 (+1.45% vs 7,195.75), rango 7,187-7,343 y cierre en el 72% del rango; NQ 26,644.75 (+2.09%), rango 25,997.5-26,868.75, cierre en el 74%. CL cerró en 84.39 (+0.85%) pero en el 35.8% del rango (rechazo en 86.60) y GC en 3,662.20 (+3.57%) con cierre en el 62%. El VIX pasó de 26.80 a 25.59 (-4.51%), todavía en régimen ALTA: deja sentimiento de rebote con desconfianza.</div><table style="width:100%;margin-bottom:14px"><thead><tr><th>Mercado</th><th>Tendencia</th><th>Área sup. a romper</th><th>Área inf. a romper</th><th>Retroceso</th><th>LVN entrada</th></tr></thead><tbody><tr><td><strong>ES</strong></td><td><span style="color:#16a34a;font-weight:700">ALCISTA</span></td><td style="font-size:12px">7,343.00 (máx. de hoy); confirmación sobre 7,360.00</td><td style="font-size:12px">7,224.00 (máx. 25-11) y 7,190.50 (open de hoy); invalidación bajo 7,187.00</td><td style="font-size:12px">Retroceso esperado a 7,250-7,265 (zona entre open de hoy y máx. del 25-11). AVWAP dinámico/LR89 no disponible: usar 7,224 como referencia estructural.</td><td style="font-size:12px">7,385.00 (LVN de extensión), 7,187.00 (LVN del low de hoy)</td></tr><tr><td><strong>NQ</strong></td><td><span style="color:#16a34a;font-weight:700">ALCISTA</span></td><td style="font-size:12px">26,868.75 (máx. de hoy); confirmación sobre 26,900</td><td style="font-size:12px">26,350.75 (máx. 25-11) y 26,068.50 (open de hoy); invalidación bajo 25,997.50</td><td style="font-size:12px">Retroceso esperado a 26,400-26,480 (entre máx. 25-11 y open de hoy). Referencia estructural 26,350.75 al no haber AVWAP/LR89 válidos.</td><td style="font-size:12px">27,000.00 (LVN redondo), 25,997.50 (LVN del low de hoy)</td></tr><tr><td><strong>CL</strong></td><td><span style="color:#f59e0b;font-weight:700">LATERAL</span></td><td style="font-size:12px">86.60 (máx. de hoy); confirmación sobre 87.50</td><td style="font-size:12px">83.16 (low de hoy); siguiente 81.68 (open 25-11)</td><td style="font-size:12px">Sin AVWAP/LR89 válidos: referencia 84.27 (máx. 25-11) como pivote de retroceso tras ruptura de 86.60.</td><td style="font-size:12px">87.50 (LVN de extensión), 83.16 (LVN del low de hoy)</td></tr><tr><td><strong>GC</strong></td><td><span style="color:#16a34a;font-weight:700">ALCISTA</span></td><td style="font-size:12px">3,712.80 (máx. de hoy); confirmación sobre 3,725</td><td style="font-size:12px">3,578.80 (low de hoy) y 3,588.90 (máx. 25-11)</td><td style="font-size:12px">Sin AVWAP/LR89 válidos: referencia 3,588.90 (máx. 25-11) como pivote de retroceso tras ruptura de 3,712.80.</td><td style="font-size:12px">3,725.00 (LVN de extensión), 3,578.80 (LVN del low de hoy)</td></tr></tbody></table><div style="font-weight:700;margin:4px 0 8px">🚀 Plan de ruptura por escenario</div><div style="border:1px solid var(--border,#334155);border-radius:10px;padding:10px 12px;margin-bottom:10px"><div style="font-weight:700;margin-bottom:6px">ES · Rupturas y retroceso</div><div style="font-size:11px;color:var(--text-muted);margin:2px 0 6px">Tendencia: LARGO (~30d): BAJISTA (20d -4.03%, a -5.36% del máx. 20d). MEDIANO (~4d): rebote fuerte (5d +5.36%) con racha de 1 día. CORTO (~4h): alcista, gap up y precio en el 72% del rango. dirAVWAP y pendiente LR89 NO DISPONIBLES en el contexto (congelado 57.3h).</div><div style="border-left:3px solid #16a34a;padding:6px 9px;margin-bottom:6px;background:var(--surface2);border-radius:6px;font-size:12px"><strong style="color:#16a34a">Alcista</strong> · trigger: Ruptura y aceptación sobre 7,343.00 con volumen sostenido en la primera hora. · entrada: Long en retroceso a 7,325-7,335 tras confirmar el cierre de hora sobre 7,343 (entrar antes de tocar 7,343 de nuevo). · stop: 7,303.00 (bajo el mínimo de la vela de ruptura) · target: T1 7,385.00 / T2 7,400.00 · invalidación: Cierre de 15m de vuelta bajo 7,320 o fallo con volumen en 7,343.</div><div style="border-left:3px solid #dc2626;padding:6px 9px;margin-bottom:6px;background:var(--surface2);border-radius:6px;font-size:12px"><strong style="color:#dc2626">Bajista</strong> · trigger: Pérdida de 7,224.00 (máx. 25-11) con aceptación por debajo, rellenando el gap. · entrada: Short en retroceso a 7,235-7,245 tras ruptura confirmada de 7,224. · stop: 7,262.00 · target: T1 7,190.50 / T2 7,187.00 · invalidación: Recuperación y cierre de 15m sobre 7,255.</div><div style="border-left:3px solid #f59e0b;padding:6px 9px;margin-bottom:6px;background:var(--surface2);border-radius:6px;font-size:12px"><strong style="color:#f59e0b">Lateral</strong> · trigger: Rango 7,224-7,343 sin dirección clara durante la primera hora (escenario típico de Black Friday). · entrada: Fade de extremos: long cerca de 7,230-7,240 / short cerca de 7,335-7,343 con rechazo. · stop: 35-40 pts fuera del extremo operado · target: Media del rango 7,280-7,290 · invalidación: Aceptación fuera del rango con volumen (ruptura real).</div></div><div style="border:1px solid var(--border,#334155);border-radius:10px;padding:10px 12px;margin-bottom:10px"><div style="font-weight:700;margin-bottom:6px">NQ · Rupturas y retroceso</div><div style="font-size:11px;color:var(--text-muted);margin:2px 0 6px">Tendencia: LARGO (~30d): BAJISTA (20d -6.47%, a -6.58% del máx. 20d). MEDIANO (~4d): rebote muy fuerte (5d +6.21%). CORTO (~4h): alcista con gap y cierre en el 74% del rango. dirAVWAP y pendiente LR89 NO DISPONIBLES (contexto congelado).</div><div style="border-left:3px solid #16a34a;padding:6px 9px;margin-bottom:6px;background:var(--surface2);border-radius:6px;font-size:12px"><strong style="color:#16a34a">Alcista</strong> · trigger: Ruptura y aceptación sobre 26,868.75 con volumen. · entrada: Long en retroceso a 26,790-26,820 tras cierre de hora sobre 26,868.75. · stop: 26,700.00 · target: T1 27,000.00 / T2 27,150.00 · invalidación: Cierre de 15m bajo 26,760 o rechazo con volumen en 26,868.75.</div><div style="border-left:3px solid #dc2626;padding:6px 9px;margin-bottom:6px;background:var(--surface2);border-radius:6px;font-size:12px"><strong style="color:#dc2626">Bajista</strong> · trigger: Pérdida de 26,350.75 (máx. 25-11) con aceptación, rellenando el gap. · entrada: Short en retroceso a 26,400-26,440 tras ruptura de 26,350.75. · stop: 26,520.00 · target: T1 26,100.25 / T2 26,068.50 · invalidación: Recuperación y cierre de 15m sobre 26,480.</div><div style="border-left:3px solid #f59e0b;padding:6px 9px;margin-bottom:6px;background:var(--surface2);border-radius:6px;font-size:12px"><strong style="color:#f59e0b">Lateral</strong> · trigger: Rango 26,350-26,868 sin dirección en la primera hora. · entrada: Fade de extremos: long 26,380-26,420 / short 26,840-26,868 con rechazo. · stop: 90-110 pts fuera del extremo · target: Media del rango 26,600-26,650 · invalidación: Aceptación fuera del rango con volumen.</div></div><div style="border:1px solid var(--border,#334155);border-radius:10px;padding:10px 12px;margin-bottom:10px"><div style="font-weight:700;margin-bottom:6px">CL · Rupturas y retroceso</div><div style="font-size:11px;color:var(--text-muted);margin:2px 0 6px">Tendencia: LARGO (~30d): BAJISTA claro (20d -19.05%, en el mínimo de 20d). MEDIANO (~4d): rebote débil (5d +0.37%) con racha de 3 días. CORTO (~4h): rango con rechazo en 86.60 y cierre en el tercio bajo. dirAVWAP/LR89 NO DISPONIBLES.</div><div style="border-left:3px solid #16a34a;padding:6px 9px;margin-bottom:6px;background:var(--surface2);border-radius:6px;font-size:12px"><strong style="color:#16a34a">Alcista</strong> · trigger: Ruptura y aceptación sobre 86.60 con volumen. · entrada: Long en retroceso a 85.80-86.20 tras cierre de hora sobre 86.60. · stop: 85.20 · target: T1 87.50 / T2 88.00 · invalidación: Cierre de 15m bajo 85.60.</div><div style="border-left:3px solid #dc2626;padding:6px 9px;margin-bottom:6px;background:var(--surface2);border-radius:6px;font-size:12px"><strong style="color:#dc2626">Bajista</strong> · trigger: Pérdida de 83.16 con aceptación. · entrada: Short en retroceso a 83.60-83.90 tras ruptura de 83.16. · stop: 84.40 · target: T1 81.68 / T2 80.13 · invalidación: Recuperación y cierre de 15m sobre 84.00.</div><div style="border-left:3px solid #f59e0b;padding:6px 9px;margin-bottom:6px;background:var(--surface2);border-radius:6px;font-size:12px"><strong style="color:#f59e0b">Lateral</strong> · trigger: Rango 83.16-86.60 sin resolución (probable con volumen de festivo). · entrada: Fade de extremos: long 83.20-83.50 / short 86.20-86.60 con rechazo. · stop: 0.45 USD fuera del extremo · target: Media 84.80-85.00 · invalidación: Aceptación fuera del rango.</div></div><div style="border:1px solid var(--border,#334155);border-radius:10px;padding:10px 12px;margin-bottom:10px"><div style="font-weight:700;margin-bottom:6px">GC · Rupturas y retroceso</div><div style="font-size:11px;color:var(--text-muted);margin:2px 0 6px">Tendencia: LARGO (~30d): BAJISTA (20d -5.83%, a -10.77% del máx. 20d). MEDIANO (~4d): rebote fuerte (5d +4.44%). CORTO (~4h): alcista con gap y cierre en el 62% del rango. dirAVWAP/LR89 NO DISPONIBLES.</div><div style="border-left:3px solid #16a34a;padding:6px 9px;margin-bottom:6px;background:var(--surface2);border-radius:6px;font-size:12px"><strong style="color:#16a34a">Alcista</strong> · trigger: Ruptura y aceptación sobre 3,712.80 con volumen. · entrada: Long en retroceso a 3,690-3,700 tras cierre de hora sobre 3,712.80. · stop: 3,660.00 · target: T1 3,725.00 / T2 3,750.00 · invalidación: Cierre de 15m bajo 3,680.</div><div style="border-left:3px solid #dc2626;padding:6px 9px;margin-bottom:6px;background:var(--surface2);border-radius:6px;font-size:12px"><strong style="color:#dc2626">Bajista</strong> · trigger: Pérdida de 3,578.80 con aceptación. · entrada: Short en retroceso a 3,595-3,610 tras ruptura de 3,578.80. · stop: 3,640.00 · target: T1 3,535.80 / T2 3,500.00 · invalidación: Recuperación y cierre de 15m sobre 3,620.</div><div style="border-left:3px solid #f59e0b;padding:6px 9px;margin-bottom:6px;background:var(--surface2);border-radius:6px;font-size:12px"><strong style="color:#f59e0b">Lateral</strong> · trigger: Rango 3,578.80-3,712.80 sin resolución. · entrada: Fade de extremos: long 3,585-3,600 / short 3,695-3,712 con rechazo. · stop: 18-22 USD fuera del extremo · target: Media 3,640-3,650 · invalidación: Aceptación fuera del rango.</div></div></div>
+
+<div class="zones-grid">
+  <div class="zone-card">
+      <div class="zone-header">
+        <span>ES</span>
+        <span class="ticker">S&P 500 E-mini · 610 Tick</span>
+        <span class="price-ref">Ref: 7,299.75</span>
+      </div>
+      <div class="zone-body">
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">RESISTENCIAS</div>
+        <div class="zone-row"><span class="label">High de hoy <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">7,343.00</span></div>
+<div class="zone-row"><span class="label">Extensión 1 <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">7,360.00</span></div>
+<div class="zone-row"><span class="label">Extensión 2 <span class="zone-type type-lvn">LVN</span></span><span class="value value-res">7,385.00</span></div>
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px">SOPORTES</div>
+        <div class="zone-row"><span class="label">Máx. 25-11 <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">7,224.00</span></div>
+<div class="zone-row"><span class="label">Open de hoy <span class="zone-type type-poc">POC</span></span><span class="value value-sup">7,190.50</span></div>
+<div class="zone-row"><span class="label">Low de hoy <span class="zone-type type-lvn">LVN</span></span><span class="value value-sup">7,187.00</span></div>
+        <div class="zone-note"><strong>Wyckoff / Market Profile:</strong> Reacumulación tras el spring del 25-11 en 6,982.5: hoy gap up de 104 pts y cierre en el 72% del rango (7,187-7,343), señal de esfuerzo alcista con resultado. El VIX 25.6 sugiere que la subida es de cobertura/corto plazo: vigilar absorción en 7,343 y posible upthrust si el precio falla ahí. Sin niveles de perfil válidos (contexto congelado).</div>
+      </div>
+    </div>
+<div class="zone-card">
+      <div class="zone-header">
+        <span>NQ</span>
+        <span class="ticker">Nasdaq 100 E-mini · 377 Tick</span>
+        <span class="price-ref">Ref: 26,644.75</span>
+      </div>
+      <div class="zone-body">
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">RESISTENCIAS</div>
+        <div class="zone-row"><span class="label">High de hoy <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">26,868.75</span></div>
+<div class="zone-row"><span class="label">Redondo <span class="zone-type type-lvn">LVN</span></span><span class="value value-res">27,000.00</span></div>
+<div class="zone-row"><span class="label">Extensión <span class="zone-type type-lvn">LVN</span></span><span class="value value-res">27,150.00</span></div>
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px">SOPORTES</div>
+        <div class="zone-row"><span class="label">Máx. 25-11 <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">26,350.75</span></div>
+<div class="zone-row"><span class="label">Cierre 25-11 <span class="zone-type type-poc">POC</span></span><span class="value value-sup">26,100.25</span></div>
+<div class="zone-row"><span class="label">Open de hoy <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">26,068.50</span></div>
+<div class="zone-row"><span class="label">Low de hoy <span class="zone-type type-lvn">LVN</span></span><span class="value value-sup">25,997.50</span></div>
+        <div class="zone-note"><strong>Wyckoff / Market Profile:</strong> Shakeout del 25-11 hasta 25,027.5 seguido de rally de 871 pts hoy (open 26,068.5 → high 26,868.75): acumulación con gap de impulso. Riesgo de upthrust si 26,868.75 rechaza y el precio vuelve bajo 26,350.75. Volumen de Black Friday distorsiona la lectura de esfuerzo/resultado.</div>
+      </div>
+    </div>
+<div class="zone-card">
+      <div class="zone-header">
+        <span>CL</span>
+        <span class="ticker">Crude Oil WTI · Continuo</span>
+        <span class="price-ref">Ref: 84.39</span>
+      </div>
+      <div class="zone-body">
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">RESISTENCIAS</div>
+        <div class="zone-row"><span class="label">High de hoy <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">86.60</span></div>
+<div class="zone-row"><span class="label">Extensión <span class="zone-type type-lvn">LVN</span></span><span class="value value-res">87.50</span></div>
+<div class="zone-row"><span class="label">Extensión 2 <span class="zone-type type-lvn">LVN</span></span><span class="value value-res">88.00</span></div>
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px">SOPORTES</div>
+        <div class="zone-row"><span class="label">Máx. 25-11 <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">84.27</span></div>
+<div class="zone-row"><span class="label">Low de hoy <span class="zone-type type-lvn">LVN</span></span><span class="value value-sup">83.16</span></div>
+<div class="zone-row"><span class="label">Open 25-11 <span class="zone-type type-poc">POC</span></span><span class="value value-sup">81.68</span></div>
+<div class="zone-row"><span class="label">Low 25-11 <span class="zone-type type-lvn">LVN</span></span><span class="value value-sup">80.13</span></div>
+        <div class="zone-note"><strong>Wyckoff / Market Profile:</strong> Trading range amplio 80.13-86.60 con rechazo en 86.60 y cierre en solo el 35.8% del rango de hoy (open 84.09, high 86.60, low 83.16): patrón de upthrust/fallo tras el impulso. Distribución probable si pierde 83.16; reacumulación solo sobre 86.60 con volumen. Tendencia 20d -19.05% manda en el fondo.</div>
+      </div>
+    </div>
+<div class="zone-card">
+      <div class="zone-header">
+        <span>GC</span>
+        <span class="ticker">Gold · Continuo</span>
+        <span class="price-ref">Ref: 3,662.80</span>
+      </div>
+      <div class="zone-body">
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">RESISTENCIAS</div>
+        <div class="zone-row"><span class="label">High de hoy <span class="zone-type type-hvn">HVN</span></span><span class="value value-res">3,712.80</span></div>
+<div class="zone-row"><span class="label">Extensión <span class="zone-type type-lvn">LVN</span></span><span class="value value-res">3,725.00</span></div>
+<div class="zone-row"><span class="label">Extensión 2 <span class="zone-type type-lvn">LVN</span></span><span class="value value-res">3,750.00</span></div>
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px">SOPORTES</div>
+        <div class="zone-row"><span class="label">Máx. 25-11 <span class="zone-type type-hvn">HVN</span></span><span class="value value-sup">3,588.90</span></div>
+<div class="zone-row"><span class="label">Low de hoy <span class="zone-type type-lvn">LVN</span></span><span class="value value-sup">3,578.80</span></div>
+<div class="zone-row"><span class="label">Cierre 25-11 <span class="zone-type type-poc">POC</span></span><span class="value value-sup">3,535.80</span></div>
+<div class="zone-row"><span class="label">Low 25-11 <span class="zone-type type-lvn">LVN</span></span><span class="value value-sup">3,425.20</span></div>
+        <div class="zone-note"><strong>Wyckoff / Market Profile:</strong> Spring desde el mínimo de 15 meses (3,425.2) con gap up hasta 3,712.8 y cierre en el 62% del rango: posible cambio de carácter, pero dentro de tendencia bajista 20d (-5.83%). Solo se valida acumulación si cierra sobre 3,712.80; bajo 3,578.80 vuelve la distribución y la zona HSBC de 3,400.</div>
+      </div>
+    </div>
+</div>
+
+<div class="alert-strip alert-info">
+    <div class="icon">📊</div>
+    <div>
+      <strong>Contexto Market Profile / Wyckoff:</strong><br>
+      <strong>ES:</strong> Reacumulación tras el spring del 25-11 en 6,982.5: hoy gap up de 104 pts y cierre en el 72% del rango (7,187-7,343), señal de esfuerzo alcista con resultado. El VIX 25.6 sugiere que la subida es de cobertura/corto plazo: vigilar absorción en 7,343 y posible upthrust si el precio falla ahí. Sin niveles de perfil válidos (contexto congelado).<br><strong>NQ:</strong> Shakeout del 25-11 hasta 25,027.5 seguido de rally de 871 pts hoy (open 26,068.5 → high 26,868.75): acumulación con gap de impulso. Riesgo de upthrust si 26,868.75 rechaza y el precio vuelve bajo 26,350.75. Volumen de Black Friday distorsiona la lectura de esfuerzo/resultado.<br><strong>CL:</strong> Trading range amplio 80.13-86.60 con rechazo en 86.60 y cierre en solo el 35.8% del rango de hoy (open 84.09, high 86.60, low 83.16): patrón de upthrust/fallo tras el impulso. Distribución probable si pierde 83.16; reacumulación solo sobre 86.60 con volumen. Tendencia 20d -19.05% manda en el fondo.<br><strong>GC:</strong> Spring desde el mínimo de 15 meses (3,425.2) con gap up hasta 3,712.8 y cierre en el 62% del rango: posible cambio de carácter, pero dentro de tendencia bajista 20d (-5.83%). Solo se valida acumulación si cierra sobre 3,712.80; bajo 3,578.80 vuelve la distribución y la zona HSBC de 3,400.
+    </div>
+  </div>
+
+<div class="section-title">
+  <span class="step">BREADTH</span>
+  <h2>Contexto Corporativo — Market Breadth</h2>
+</div>
+
+<div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:10px;">4.1 &middot; Magníficas (Mag 7 + SPCX) — Sesgo Direccional</div>
+
+<div class="mag7-grid">
+  <div class="mag7-chip">
+        <div class="ticker">AAPL</div>
+        <div class="price" style="font-size:12px">$355.07</div>
+        <div class="change pos">+0.38%</div>
+        <div class="bias-dot dot-pos"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">MSFT</div>
+        <div class="price" style="font-size:12px">$489.52</div>
+        <div class="change neg">-1.15%</div>
+        <div class="bias-dot dot-neg"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">GOOGL</div>
+        <div class="price" style="font-size:12px">$273.10</div>
+        <div class="change neg">-2.15%</div>
+        <div class="bias-dot dot-neg"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">AMZN</div>
+        <div class="price" style="font-size:12px">$244.41</div>
+        <div class="change neg">-3.08%</div>
+        <div class="bias-dot dot-neg"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">NVDA</div>
+        <div class="price" style="font-size:12px">$148.98</div>
+        <div class="change neg">-3.25%</div>
+        <div class="bias-dot dot-neg"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">META</div>
+        <div class="price" style="font-size:12px">$608.56</div>
+        <div class="change pos">+3.30%</div>
+        <div class="bias-dot dot-pos"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">TSLA</div>
+        <div class="price" style="font-size:12px">$380.00</div>
+        <div class="change neg">-1.02%</div>
+        <div class="bias-dot dot-neg"></div>
+      </div>
+<div class="mag7-chip">
+        <div class="ticker">SPCX</div>
+        <div class="price" style="font-size:12px">$127.65</div>
+        <div class="change pos">+1.25%</div>
+        <div class="bias-dot dot-pos"></div>
+      </div>
+</div>
+
+<div class="directional-summary">
+    <div class="icon">🧭</div>
+    <div><strong>Sesgo Mag 7:</strong> El snapshot de MARKET BREADTH es del cierre del 25-11 (actualizado 09:20 ET del reporte): 3 de 8 Magníficas suben (AAPL +0.38%, META +3.30%, SPCX +1.25%) y 5 bajan (MSFT -1.15%, GOOGL -2.15%, AMZN -3.08%, NVDA -3.25%, TSLA -1.02%). Es decir, amplitud interna NEGATIVA (liderazgo estrecho en META/AAPL) que contrasta con el gap alcista de los futuros de HOY (+1.83% ES, +2.63% NQ) por el rebote del trade de IA. Lectura: la divergencia entre breadth débil y futuros fuertes es señal de rally de corto plazo con poca participación; en ES/NQ exige confirmación y favorece operar retrocesos, no rupturas perseguidas.</div>
+  </div>
+
+<div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:4px;">4.2 &middot; Top Movers S&amp;P 500 — Sesión 2026-11-25 · actualizado 09:20 ET</div>
+<div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">% CAMBIO = sesión del 2026-11-25 vs cierre anterior · TIEMPO REAL = after-hours vs cierre de la sesión · fuente: intradía 15m + after-hours</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>TICKER</th>
+        <th>% SESIÓN</th>
+        <th>TIEMPO REAL</th>
+        <th>VOL. RELATIVO</th>
+        <th>CAUSA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="mover-row-pos">
+          <td><strong>TXN</strong></td>
+          <td>+4.51%</td>
+          <td style="font-size:12px">—</td>
+          <td style="font-size:12px">0.9×</td>
+          <td style="font-size:12px">sin catalyst identificado en el contexto</td>
+        </tr>
+<tr class="mover-row-neg">
+          <td><strong>ORCL</strong></td>
+          <td>-4.44%</td>
+          <td style="font-size:12px">—</td>
+          <td style="font-size:12px">0.8×</td>
+          <td style="font-size:12px">sin catalyst identificado en el contexto</td>
+        </tr>
+<tr class="mover-row-neg">
+          <td><strong>AMAT</strong></td>
+          <td>-4.20%</td>
+          <td style="font-size:12px">—</td>
+          <td style="font-size:12px">1.1×</td>
+          <td style="font-size:12px">sin catalyst identificado en el contexto</td>
+        </tr>
+<tr class="mover-row-neg">
+          <td><strong>MU</strong></td>
+          <td>-4.19%</td>
+          <td style="font-size:12px">—</td>
+          <td style="font-size:12px">1.4×</td>
+          <td style="font-size:12px">sin catalyst identificado en el contexto</td>
+        </tr>
+<tr class="mover-row-pos">
+          <td><strong>META</strong></td>
+          <td>+3.30%</td>
+          <td style="font-size:12px">—</td>
+          <td style="font-size:12px">0.8×</td>
+          <td style="font-size:12px">sin catalyst identificado en el contexto</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+
+</div><!-- /#marco -->
+
+<!-- ═══════════ ÁREA 2 · PLAN Y RECOMENDACIONES ═══════════ -->
+<div id="plan" class="report-area">
+<div class="area-title">🎯 Plan y Recomendaciones <span>— qué hago hoy, según el análisis</span></div>
+
+<div class="card" style="border-left:4px solid var(--gold)"><div style="font-weight:700;margin-bottom:6px">🎯 Tesis del día — predicción verificable</div><table style="width:100%"><tr><td style="text-align:center;padding:8px"><strong>ES</strong><br><span style="color:#16a34a;font-weight:700">LONG</span></td><td style="text-align:center;padding:8px"><strong>NQ</strong><br><span style="color:#16a34a;font-weight:700">LONG</span></td><td style="text-align:center;padding:8px"><strong>CL</strong><br><span style="color:#6b7280;font-weight:700">NO_OPERAR</span></td><td style="text-align:center;padding:8px"><strong>GC</strong><br><span style="color:#9ca3af;font-weight:700">NEUTRAL</span></td></tr></table><div style="margin-top:8px;font-size:13px;color:var(--text-muted)">VIX proyectado <strong>27.5</strong> · Régimen <strong>Alta</strong> · No operar: CL</div><div style="margin-top:6px;font-style:italic">&ldquo;ES mantendrá el gap alcista y NO perderá 7,224.00 (máximo del 25-11) durante la ventana 9:30-11:30 ET, con el VIX abriendo entre 26 y 29.&rdquo;</div><div style="font-size:11px;color:var(--text-muted);margin-top:4px">Compromiso falsable: el agente lo puntúa solo al cierre (ciclo de aprendizaje). Todo el plan de abajo debe ser coherente con esta tesis.</div></div>
+
+<div class="section-title">
+  <span class="step">ESCENARIOS</span>
+  <h2>Matriz de Escenarios — Plan de Batalla</h2>
+</div>
+
+<div class="prob-bar-container">
+  <div class="prob-bar-title">Distribución de Probabilidades Estimadas</div>
+  <div class="prob-bar">
+    <div class="prob-segment-bull" style="width:45%"></div>
+    <div class="prob-segment-chop" style="width:35%"></div>
+    <div class="prob-segment-bear" style="width:20%"></div>
+  </div>
+  <div class="prob-labels">
+    <div class="prob-lbl"><div class="prob-dot dot-pos"></div> Alcista 45%</div>
+    <div class="prob-lbl"><div class="prob-dot dot-neu"></div> Lateral 35%</div>
+    <div class="prob-lbl"><div class="prob-dot dot-neg"></div> Bajista 20%</div>
+  </div>
+</div>
+
+<div class="scenarios-grid">
+  <div class="scenario-card bull">
+    <div class="scenario-header">
+      <span class="scenario-icon">🟢</span>
+      <div>
+        <div class="scenario-label">ESCENARIO A — ALCISTA</div>
+        <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--bull)">Bullish Case</div>
+      </div>
+      <div class="scenario-prob">45%</div>
+    </div>
+    <div class="scenario-body">
+      <div class="scenario-body-inner">
+        <div class="scenario-row">
+          <div class="s-label">Trigger / Condición</div>
+          <div class="s-value">Los futuros defienden el gap en la primera hora, ES mantiene 7,224 y NQ 26,350, y el trade de IA sigue rebotando con VIX cediendo hacia 26.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Estrategia</div>
+          <div class="s-value">Comprar retrocesos hacia 7,250-7,265 (ES) y 26,400-26,480 (NQ), nunca en la apertura. GC solo si rompe 3,712.80. CL fuera del plan.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Invalidación</div>
+          <div class="s-value" style="color:var(--bear)">Pérdida de 7,224 en ES o 26,350.75 en NQ con aceptación y VIX acelerando sobre 28.</div>
+        </div>
+      </div>
+      <div class="targets-grid"><div class="target-group"><div class="target-group-label">ES</div><div class="target-list"><span class="target-chip">T1: 7,343</span><span class="target-chip">T2: 7,385</span></div></div> <div class="target-group"><div class="target-group-label">NQ</div><div class="target-list"><span class="target-chip">T1: 26,868</span><span class="target-chip">T2: 27,000</span></div></div> <div class="target-group"><div class="target-group-label">CL</div><div class="target-list"><span class="target-chip">T1: 86.60</span><span class="target-chip">T2: 87.50</span></div></div> <div class="target-group"><div class="target-group-label">GC</div><div class="target-list"><span class="target-chip">T1: 3,712</span><span class="target-chip">T2: 3,750</span></div></div></div>
+      <div class="scenario-note" style="background:rgba(77,186,118,0.05)"><strong>Nota:</strong> El rebote es contra la tendencia de 20d: tomar beneficios parciales en T1 y no dejar correr más allá de T2.</div>
+    </div>
+  </div>
+<div class="scenario-card bear">
+    <div class="scenario-header">
+      <span class="scenario-icon">🔴</span>
+      <div>
+        <div class="scenario-label">ESCENARIO B — BAJISTA</div>
+        <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--bear)">Bearish Case</div>
+      </div>
+      <div class="scenario-prob">20%</div>
+    </div>
+    <div class="scenario-body">
+      <div class="scenario-body-inner">
+        <div class="scenario-row">
+          <div class="s-label">Trigger / Condición</div>
+          <div class="s-value">Fallo del gap en la primera hora, relleno hacia el open de hoy y VIX subiendo sobre 28-29 con ventas en tecnología.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Estrategia</div>
+          <div class="s-value">Short en retroceso a 7,235-7,245 (ES) tras perder 7,224 y a 26,400-26,440 (NQ) tras perder 26,350.75. GC como refugio si pierde 3,578.80 se opera short por tendencia.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Invalidación</div>
+          <div class="s-value" style="color:var(--bear)">Recuperación del open de hoy y cierre de hora sobre 7,280 en ES y 26,550 en NQ.</div>
+        </div>
+      </div>
+      <div class="targets-grid"><div class="target-group"><div class="target-group-label">ES</div><div class="target-list"><span class="target-chip">T1: 7,190.50</span><span class="target-chip">T2: 7,150</span></div></div> <div class="target-group"><div class="target-group-label">NQ</div><div class="target-list"><span class="target-chip">T1: 26,100</span><span class="target-chip">T2: 25,997</span></div></div> <div class="target-group"><div class="target-group-label">CL</div><div class="target-list"><span class="target-chip">T1: 83.16</span><span class="target-chip">T2: 81.68</span></div></div> <div class="target-group"><div class="target-group-label">GC</div><div class="target-list"><span class="target-chip">T1: 3,578</span><span class="target-chip">T2: 3,535</span></div></div></div>
+      <div class="scenario-note" style="background:rgba(224,82,82,0.05)"><strong>Nota:</strong> Escenario de relleno de gap típico de Black Friday: rápido y con poca continuidad; stops ajustados.</div>
+    </div>
+  </div>
+<div class="scenario-card chop">
+    <div class="scenario-header">
+      <span class="scenario-icon">🟡</span>
+      <div>
+        <div class="scenario-label">ESCENARIO C — LATERAL</div>
+        <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--chop)">Chop / Rango</div>
+      </div>
+      <div class="scenario-prob">35%</div>
+    </div>
+    <div class="scenario-body">
+      <div class="scenario-body-inner">
+        <div class="scenario-row">
+          <div class="s-label">Trigger / Condición</div>
+          <div class="s-value">Liquidez fina de festivo: ES entre 7,224-7,343 y NQ entre 26,350-26,868 durante toda la ventana, sin aceptación fuera de rango.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Estrategia</div>
+          <div class="s-value">Fade de extremos con MICRO: long en 7,230-7,240 y short en 7,335-7,343 (ES); long 26,380-26,420 y short 26,840-26,868 (NQ). CL y GC solo observación.</div>
+        </div>
+        <div class="scenario-row">
+          <div class="s-label">Invalidación</div>
+          <div class="s-value" style="color:var(--chop)">Aceptación con volumen fuera del rango (ruptura real) o VIX en Extrema.</div>
+        </div>
+      </div>
+      <div class="targets-grid"><div class="target-group"><div class="target-group-label">ES</div><div class="target-list"><span class="target-chip">T1 Long: 7,280</span><span class="target-chip">T1 Short: 7,280</span></div></div> <div class="target-group"><div class="target-group-label">NQ</div><div class="target-list"><span class="target-chip">T1 Long: 26,600</span><span class="target-chip">T1 Short: 26,600</span></div></div> <div class="target-group"><div class="target-group-label">CL</div><div class="target-list"><span class="target-chip">T1: 84.80-85.00</span></div></div> <div class="target-group"><div class="target-group-label">GC</div><div class="target-list"><span class="target-chip">T1: 3,640-3,650</span></div></div></div>
+      <div class="scenario-note" style="background:rgba(138,108,0,0.05)"><strong>Regla crítica:</strong> En rango, reducir tamaño y número de operaciones: el objetivo es 1-2 trades de media del rango, no forzar tendencia.</div>
+    </div>
+  </div>
+</div>
+
+<div class='card' style='border-left:4px solid #e67e22'><div style='font-size:17px;font-weight:800;margin-bottom:4px'>🌅 Plan de sesión — USA AM <span style='color:var(--text-muted);font-weight:500;font-size:14px'>(9:00-11:30 ET)</span></div><div style='font-size:13.5px;color:var(--text)'>Plan para la ventana USA AM de Black Friday: sesgo LONG táctico en MES/MNQ solo en retroceso (7,250-7,265 / 26,400-26,480), con 7,224 y 26,350.75 como invalidación estructural. CL NO se opera por rango errático y rechazo en 86.60; GC queda en NEUTRAL. VIX en 25.6 (régimen ALTA) y liquidez de festivo con cierre a las 13:00 ET obligan a MICRO y a cerrar antes de 11:30.</div><div style='overflow-x:auto'><table style='width:100%;border-collapse:collapse;font-size:13px;margin-top:8px'><thead><tr style='text-align:left;color:var(--text-muted)'><th style='padding:6px 8px'>Franja</th><th style='padding:6px 8px'>Volatilidad</th><th style='padding:6px 8px'>Mercados foco</th><th style='padding:6px 8px'>Plan</th><th style='padding:6px 8px'>Sizing</th></tr></thead><tbody><tr><td style='font-weight:600'>09:30-10:00 ET</td><td>Muy Alta</td><td>MES, MNQ</td><td>Esperar la definición del rango de apertura. Marcar 7,224/7,343 en MES y 26,350.75/26,868.75 en MNQ. No operar hasta que el precio haga un primer retroceso ordenado o una ruptura con volumen; sin LVN estructural disponible (contexto congelado), usar los extremos de last_session como áreas.</td><td>MICRO</td></tr><tr><td style='font-weight:600'>10:00-11:00 ET</td><td>Alta</td><td>MES, MNQ</td><td>Ventana principal: LONG en retroceso a 7,250-7,265 (MES) y 26,400-26,480 (MNQ) si el gap se defiende; alternativa SHORT solo si se pierde 7,224 / 26,350.75 con aceptación. GC en observación, sin operar salvo ruptura de 3,712.80. CL descartado.</td><td>MICRO</td></tr><tr><td style='font-weight:600'>11:00-11:30 ET</td><td>Media-Baja</td><td>MES, MNQ (gestión)</td><td>Cerrar posiciones y no abrir nuevas: la liquidez de Black Friday cae y el cierre es a las 13:00 ET. Si hay posición ganadora, asegurar en T1 (7,343 / 26,868) y dejar solo runner con stop a break-even.</td><td>MICRO / reducir</td></tr></tbody></table></div><div style='margin-top:12px;padding:12px;border:1px solid var(--border-color,#e2e8f0);border-radius:10px;background:var(--surface,#f8fafc)'><div style='font-weight:700;font-size:14px'>🎚️ BASE (más probable) <span style='color:var(--text-muted);font-weight:500'>· VIX 26-28 · Régimen Alta</span></div><div style='overflow-x:auto'><table style='width:100%;border-collapse:collapse;font-size:12px;margin-top:6px'><thead><tr style='text-align:left;color:var(--text-muted)'><th style='padding:5px 7px'>Mercado</th><th style='padding:5px 7px'>Tick-bar</th><th style='padding:5px 7px'>Tendencia</th><th style='padding:5px 7px'>Área sup.</th><th style='padding:5px 7px'>Área inf.</th><th style='padding:5px 7px'>Retroceso</th><th style='padding:5px 7px'>LVN</th><th style='padding:5px 7px'>Operar</th><th style='padding:5px 7px'>Sizing</th></tr></thead><tbody><tr><td style='font-weight:600'>MES</td><td>377</td><td style='font-size:12px'>LARGO bajista (20d -4.03%) / CORTO alcista por gap; dirAVWAP y LR89 NO DISPONIBLES (contexto congelado)</td><td style='font-size:12px'>7,343.00 (máx. de hoy)</td><td style='font-size:12px'>7,224.00 (máx. 25-11) → invalidación 7,187.00</td><td style='font-size:12px'>7,250-7,265 (entre open de hoy y máx. 25-11); referencia estructural 7,224.00</td><td style='font-size:12px'>7,385.00 (LVN de extensión), 7,187.00 (LVN del low de hoy)</td><td style='font-weight:700'>SÍ</td><td>MICRO</td></tr><tr><td style='font-weight:600'>MNQ</td><td>377</td><td style='font-size:12px'>LARGO bajista (20d -6.47%) / CORTO alcista por gap; dirAVWAP y LR89 NO DISPONIBLES</td><td style='font-size:12px'>26,868.75 (máx. de hoy)</td><td style='font-size:12px'>26,350.75 (máx. 25-11) → invalidación 25,997.50</td><td style='font-size:12px'>26,400-26,480; referencia estructural 26,350.75</td><td style='font-size:12px'>27,000.00 (LVN redondo), 25,997.50 (LVN del low de hoy)</td><td style='font-weight:700'>SÍ</td><td>MICRO</td></tr><tr><td style='font-weight:600'>CL</td><td>377</td><td style='font-size:12px'>LATERAL con sesgo bajista de fondo (20d -19.05%); rechazo en 86.60</td><td style='font-size:12px'>86.60</td><td style='font-size:12px'>83.16</td><td style='font-size:12px'>84.27 (máx. 25-11) como referencia; sin AVWAP/LR89 válidos</td><td style='font-size:12px'>87.50, 83.16</td><td style='font-weight:700'>NO</td><td>NO OPERAR</td></tr><tr><td style='font-weight:600'>GC</td><td>377</td><td style='font-size:12px'>Rebote contra tendencia (20d -5.83%); CORTO alcista pero sin confirmación</td><td style='font-size:12px'>3,712.80</td><td style='font-size:12px'>3,578.80</td><td style='font-size:12px'>3,588.90 (máx. 25-11); sin AVWAP/LR89 válidos</td><td style='font-size:12px'>3,725.00, 3,578.80</td><td style='font-weight:700'>NO</td><td>NO OPERAR (solo vigilar)</td></tr></tbody></table></div></div><div style='margin-top:12px;padding:12px;border:1px solid var(--border-color,#e2e8f0);border-radius:10px;background:var(--surface,#f8fafc)'><div style='font-weight:700;font-size:14px'>🎚️ ALTERNO (si la volatilidad sube durante la sesión) <span style='color:var(--text-muted);font-weight:500'>· VIX 29-33 · Régimen Extrema</span></div><div style='overflow-x:auto'><table style='width:100%;border-collapse:collapse;font-size:12px;margin-top:6px'><thead><tr style='text-align:left;color:var(--text-muted)'><th style='padding:5px 7px'>Mercado</th><th style='padding:5px 7px'>Tick-bar</th><th style='padding:5px 7px'>Tendencia</th><th style='padding:5px 7px'>Área sup.</th><th style='padding:5px 7px'>Área inf.</th><th style='padding:5px 7px'>Retroceso</th><th style='padding:5px 7px'>LVN</th><th style='padding:5px 7px'>Operar</th><th style='padding:5px 7px'>Sizing</th></tr></thead><tbody><tr><td style='font-weight:600'>MES</td><td>377</td><td style='font-size:12px'>Alcista de corto pero frágil: VIX > 29 suele romper los niveles de gap</td><td style='font-size:12px'>7,343.00 (solo con volumen y VIX cediendo)</td><td style='font-size:12px'>7,224.00 → 7,190.50</td><td style='font-size:12px'>No fiable en Extrema; usar solo el open de hoy 7,190.50 como pivote</td><td style='font-size:12px'>7,187.00</td><td style='font-weight:700'>NO</td><td>NO OPERAR o MICRO con confirmación explícita</td></tr><tr><td style='font-weight:600'>MNQ</td><td>377</td><td style='font-size:12px'>Alcista de corto pero frágil con VIX > 29; riesgo de relleno total del gap</td><td style='font-size:12px'>26,868.75</td><td style='font-size:12px'>26,350.75 → 26,068.50</td><td style='font-size:12px'>No fiable en Extrema; referencia 26,068.50</td><td style='font-size:12px'>25,997.50</td><td style='font-weight:700'>NO</td><td>NO OPERAR o MICRO con confirmación explícita</td></tr><tr><td style='font-weight:600'>CL</td><td>377</td><td style='font-size:12px'>Lateral/bajista; volatilidad extrema amplía el rango</td><td style='font-size:12px'>86.60</td><td style='font-size:12px'>83.16</td><td style='font-size:12px'>No fiable</td><td style='font-size:12px'>87.50, 83.16</td><td style='font-weight:700'>NO</td><td>NO OPERAR</td></tr><tr><td style='font-weight:600'>GC</td><td>377</td><td style='font-size:12px'>Rebote con volatilidad creciente; posible refugio si el VIX escala</td><td style='font-size:12px'>3,712.80</td><td style='font-size:12px'>3,578.80</td><td style='font-size:12px'>3,588.90</td><td style='font-size:12px'>3,725.00, 3,578.80</td><td style='font-weight:700'>NO</td><td>NO OPERAR (solo MICRO si rompe 3,712.80 con volumen)</td></tr></tbody></table></div></div></div>
+
+<div class="section-title">
+  <span class="step">EJECUCIÓN</span>
+  <h2>Estrategia Operativa — Mesa &lt; 9:00–11:30 ET ET</h2>
+</div>
+
+<div class="setup-box">
+    <div class="setup-header">⚡ SETUP PRIMARIO — Long en retroceso tras defender el gap (MES/MNQ)</div>
+    <div class="setup-body">
+      <div class="setup-item">
+        <div class="s-label">Descripción</div>
+        <div class="s-value">Con el gap alcista de Black Friday y sin niveles de perfil válidos, el plan es comprar el primer retroceso ordenado hacia la zona del open de hoy / máx. del 25-11, siempre que el precio no acepte por debajo. Entrada escalonada con MICRO, stop bajo el mínimo de la vela de rechazo y targets en el máximo de hoy y su extensión.</div>
+      </div>
+      <div class="setup-grid"><div class="setup-item"><div class="s-label">Entry ES</div><div class="s-value" style="font-weight:600">7,250-7,265</div></div><div class="setup-item"><div class="s-label">Entry NQ</div><div class="s-value" style="font-weight:600">26,400-26,480</div></div><div class="setup-item"><div class="s-label">Stop ES</div><div class="s-value" style="font-weight:600">7,205</div></div><div class="setup-item"><div class="s-label">Stop NQ</div><div class="s-value" style="font-weight:600">26,310</div></div><div class="setup-item"><div class="s-label">Target T1 ES</div><div class="s-value" style="font-weight:600">7,343</div></div><div class="setup-item"><div class="s-label">Target T2 ES</div><div class="s-value" style="font-weight:600">7,385</div></div><div class="setup-item"><div class="s-label">Target T1 NQ</div><div class="s-value" style="font-weight:600">26,868</div></div><div class="setup-item"><div class="s-label">Target T2 NQ</div><div class="s-value" style="font-weight:600">27,000</div></div><div class="setup-item"><div class="s-label">R:R</div><div class="s-value" style="font-weight:600">1:2.0 aprox.</div></div><div class="setup-item"><div class="s-label">Prob.</div><div class="s-value" style="font-weight:600">Media (35-45%)</div></div></div>
+    </div>
+  </div>
+<div class="setup-box">
+    <div class="setup-header">⚡ SETUP SECUNDARIO — Ruptura confirmada del máximo de hoy con retroceso</div>
+    <div class="setup-body">
+      <div class="setup-item">
+        <div class="s-label">Descripción</div>
+        <div class="s-value">Si ES acepta sobre 7,343 o NQ sobre 26,868.75 con volumen en la primera hora, esperar el retroceso a la zona de ruptura (7,320-7,335 ES / 26,790-26,820 NQ) y entrar a favor antes de que el precio vuelva a alejarse. Sin LVN estructural disponible, el stop es estructural (bajo el mínimo de la vela de ruptura).</div>
+      </div>
+      <div class="setup-grid"><div class="setup-item"><div class="s-label">Condicion</div><div class="s-value" style="font-weight:600">Cierre de hora sobre 7,343 (ES) / 26,868.75 (NQ) con volumen</div></div><div class="setup-item"><div class="s-label">Entry</div><div class="s-value" style="font-weight:600">Retroceso a 7,320-7,335 / 26,790-26,820</div></div><div class="setup-item"><div class="s-label">Stop</div><div class="s-value" style="font-weight:600">7,303 / 26,700</div></div><div class="setup-item"><div class="s-label">Target</div><div class="s-value" style="font-weight:600">T1 7,385 / 27,000</div></div><div class="setup-item"><div class="s-label">Prob.</div><div class="s-value" style="font-weight:600">Media-Baja</div></div></div>
+    </div>
+  </div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>HORA ET</th>
+        <th>ZONA CRÍTICA</th>
+        <th>ACCIÓN RECOMENDADA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+          <td><strong>09:20-09:30</strong></td>
+          <td><span class="badge badge-low">PRE-OPEN (sin liquidez de cash)</span></td>
+          <td style="font-size:12px">No iniciar posiciones; solo marcar niveles 7,224/7,343 y 26,350/26,868</td>
+        </tr>
+<tr>
+          <td><strong>09:30-09:45</strong></td>
+          <td><span class="badge badge-high">ALTA VOLATILIDAD Cash Open</span></td>
+          <td style="font-size:12px">Esperar 5-10 min; no perseguir el gap</td>
+        </tr>
+<tr>
+          <td><strong>09:45-10:30</strong></td>
+          <td><span class="badge badge-low">Ventana principal USA AM</span></td>
+          <td style="font-size:12px">Operar retroceso a 7,250-7,265 / 26,400-26,480 con MICRO</td>
+        </tr>
+<tr>
+          <td><strong>10:30-11:30</strong></td>
+          <td><span class="badge badge-low">Continuación / definición de tendencia</span></td>
+          <td style="font-size:12px">Solo rupturas confirmadas con retroceso; reducir si VIX > 28</td>
+        </tr>
+<tr>
+          <td><strong>11:30-13:00</strong></td>
+          <td><span class="badge badge-low">Liquidez decreciente + cierre anticipado 13:00 ET</span></td>
+          <td style="font-size:12px">Cerrar posiciones y no abrir nuevas</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="alert-strip alert-success">
+    <div class="icon">✅</div>
+    <div>
+      <strong>Reglas de la Mesa — 27 NOV 2026:</strong><br>
+            1. Respetar los datos económicos - no anticipar dirección<br>      2. Stops SIEMPRE activos<br>      3. MICRO obligatorio: VIX en régimen ALTA y cuenta fondeada<br>      4. No operar CL hoy (rango amplio, rechazo en 86.60, 20d -19%)<br>      5. Black Friday: cierre a las 13:00 ET, evitar posiciones abiertas después de 11:30<br>      6. Sin contexto de niveles VAH/VAL/ORB/LVN: no forzar setups de retroceso a LVN inexistente<br>
+    </div>
+  </div>
+
+
+
+<div class="section-title">
+  <span class="step">RECOMENDACIÓN</span>
+  <h2>Recomendación EduS Pro</h2>
+</div>
+
+<div class="rec-panel rec-panel-ia">
+  <div class="rec-panel-header">
+    <span class="rec-panel-tag rec-tag-ia">ESTRATEGIA</span>
+    <span class="rec-panel-title">🎯 Recomendación EduS Pro (estructura + volatilidad)</span>
+  </div>
+  <div class="rec-panel-body">
+    <div class="rec-narrativa">Este indicador NO tiene backtesting: la lectura es de ESTRUCTURA y VOLATILIDAD. MES y MNQ llegan con gap alcista fuerte pero el VIX en 25.6 (régimen ALTA) y la amplitud interna de las Magníficas negativa, así que la forma es de rebote contra-tendencia (20d bajista) y no de tendencia sana. Conviene operar solo retrocesos hacia 7,250-7,265 en MES y 26,400-26,480 en MNQ, con el área superior 7,343/26,868 como primer gatillo de ruptura y el área inferior 7,224/26,350 como invalidación estructural; al no haber contexto de niveles VAH/VAL/ORB/LVN, NO hay LVN estructural fiable en el camino y por tanto la probabilidad de un setup EduS Pro válido es MEDIA-BAJA (estimada 35-45%). CL se descarta por rango amplio con rechazo (cierre en 35.8%) y volatilidad errática; GC queda en NEUTRAL por rebote contra tendencia de 20d. Con cuenta fondeada, MICRO obligatorio en todos los casos mientras el VIX no baje de 22.</div>
+    <div style="font-size:11px;color:#64748b;margin-top:8px">Sin backtesting: la recomendación se basa en la tendencia (dirAVWAP + pendiente LR), las áreas de ruptura (superior/inferior) y la volatilidad del contexto.</div>
+  </div>
+</div>
+
+</div><!-- /#plan -->
+
+<!-- ═══════════ ÁREA 3 · MESA (INTERNO) ═══════════ -->
+<div id="privado" class="report-area">
+<div class="area-title">🔒 Mesa (interno) <span>— correos de fondeo/broker y alertas del log de NT8</span></div>
+
+<div style='margin-bottom:14px'><div style='font-weight:700;margin-bottom:6px'>🏦 Cuentas — fondeadoras &amp; brokers (2 remitentes, últimos 30 días)</div><table style='width:100%'><thead><tr><th>Remitente</th><th>Cat</th><th>Asunto</th></tr></thead><tbody><tr><td><strong>My Funded Futures</strong></td><td>fondeo</td><td>23-11 · Studio is now Signature. 50% OFF today</td></tr><tr><td><strong></strong></td><td>fondeo</td><td>15-11 · You could request a payout tonight</td></tr><tr><td><strong></strong></td><td>fondeo</td><td>03-11 · Your bonus pack has up to 99% OFF inside</td></tr><tr><td><strong></strong></td><td>fondeo</td><td>30-10 · Request your payouts anytime</td></tr><tr><td><strong></strong></td><td>fondeo</td><td>30-10 · Two payouts in 34 minutes. Here&#x27;s what made it possible</td></tr><tr><td><strong>Take Profit Trader</strong></td><td>fondeo</td><td>20-11 ·  ✅ EOD Is Coming…</td></tr><tr><td><strong></strong></td><td>fondeo</td><td>19-11 · 💎 The Live Program Worth A Damn?</td></tr><tr><td><strong></strong></td><td>fondeo</td><td>18-11 · Nvidia’s New CEO?</td></tr><tr><td><strong></strong></td><td>fondeo</td><td>17-11 · 🧩 Play &amp; Win A Free Account</td></tr><tr><td><strong></strong></td><td>fondeo</td><td>16-11 · Better Week, Worse P&amp;L?</td></tr><tr><td></td><td></td><td style='color:var(--text-muted);font-size:11px'>(+17 correos más de Take Profit Trader)</td></tr></tbody></table><div style='font-size:11px;color:var(--text-muted);margin-top:4px'>Antes de operar: revisa avisos de DD/pérdidas, payouts, cambios de reglas o suspensiones.</div></div><div class="alert-strip alert-success" style="border-left:4px solid #16a34a;padding:10px 12px;background:var(--chop-bg);border-radius:8px;margin-bottom:14px">✅ <strong>Log de NT8:</strong> sin alertas relevantes hoy.</div>
+
+</div><!-- /#privado -->
+
+</div><!-- /.container -->
+
+<div class="footer">
+  <span class="brand-ft">Edu<span class="gold">S</span> Trader</span> &middot; DAILY STRATEGIC GAME PLAN &middot; 27 NOV 2026 &middot; 9:23 AM ET &mdash; <span style="opacity:.7">PRE-MARKET</span><br>
+  Este documento es solo para uso interno de la mesa de dinero. No constituye asesoramiento financiero.<br>
+  ES SEP26 &middot; NQ SEP26 &middot; CL AUG26 &middot; GC AUG26
+</div>
+
+</body>
+</html>
